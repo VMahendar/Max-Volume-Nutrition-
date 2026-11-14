@@ -46,6 +46,8 @@ try {
   assert.ok(await showcase.isVisible(),size.name+' premium marketing hero must be visible');
   assert.match(await showcase.locator('h1').innerText(),/FUEL EVERY\s*REP/i,'performance headline is visible');
   const campaignImg=showcase.locator('.mvn-editorial-packpanel img.mvn-hero-pack-main');
+  assert.equal(await campaignImg.getAttribute('src'),'assets/potency-whey-coffee-5lb.webp',size.name+' exact owner-uploaded Potency Whey original is used');
+  assert.equal(await showcase.locator('.mvn-editorial-promo-mass img').getAttribute('src'),'assets/nitro-mass-3kg-double-rich-chocolate.webp',size.name+' corresponding 3 kg original pack photo displayed');
   assert.equal(await showcase.locator('.mvn-editorial-packpanel img.mvn-hero-pack').count(),1,size.name+' single original whey pack keeps hero uncluttered');
   await campaignImg.waitFor({state:'visible'});
   assert.ok(await campaignImg.evaluate(img=>img.complete&&img.naturalWidth>0),size.name+' original whey hero photo loads');
@@ -91,11 +93,11 @@ try {
     visibleWidth:el.getBoundingClientRect().width,
     imageMask:getComputedStyle(el.querySelector('img')).maskImage
   }));
-  assert.ok(heroSurface.background.includes('247')||heroSurface.background.includes('246'),size.name+' original rectangular photo is presented on an intentional neutral studio stage');
-  assert.equal(heroSurface.border,'7px',size.name+' studio product image uses intentional photographic frame');
+  assert.equal(heroSurface.background,'rgba(0, 0, 0, 0)',size.name+' product photo has no pasted white image frame');
+  assert.equal(heroSurface.border,'0px',size.name+' original pack photograph has no artificial border');
   assert.equal(heroSurface.transform,'none',size.name+' hero product is not a tilted sticker');
   assert.ok(heroSurface.visibleWidth>=180,size.name+' large product-centric image');
-  assert.equal(heroSurface.imageMask,'none',size.name+' original manufacturer pack photograph is not artificially masked');
+  assert.equal(heroSurface.imageMask,'none',size.name+' owner original photo has no artificial blur-mask');
 
   assert.ok(campaignGeometry.categoryBottom<=campaignGeometry.shopY+20,size.name+' visual categories precede retail collection');
   assert.ok(campaignGeometry.scrollWidth<=size.width+10,size.name+' campaign does not overflow viewport');
