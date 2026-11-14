@@ -76,6 +76,6 @@ test('static assets gain caching but protected staging and HTML remain uncached'
  const server=readFileSync('server.mjs','utf8');
  assert.ok(server.includes("if(process.env.STAGING_MODE!=='true')"));
  assert.ok(server.includes('max-age=3600'));
- assert.ok(server.includes('max-age=86400'));
+ assert.ok(server.includes('must-revalidate'));
  assert.ok(server.includes("res.setHeader('Cache-Control','no-store')"));
 });
