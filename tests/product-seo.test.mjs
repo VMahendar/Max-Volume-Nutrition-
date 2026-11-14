@@ -62,7 +62,7 @@ test('if no real price and no approved review, do not emit invalid Product schem
 test('public product pages host a single server rendered snippet and review interface',()=>{
  const server=readFileSync('server.mjs','utf8');
  assert.ok(server.includes('buildProductFragments(u.pathname,C.catalogue(null),approved)'));
- assert.ok(server.includes('r.status=\\'approved\\''));
+ assert.ok(server.includes("r.status='approved'"));
  for(const path of Object.keys(PRODUCT_PAGE_IDS)){
   const html=readFileSync('public'+path,'utf8');
   assert.ok(html.includes('<!-- MVN_PRODUCT_SEO -->'),path+' missing schema hook');
