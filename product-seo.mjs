@@ -2,9 +2,9 @@
 // Prices come from the same live SQLite retail catalogue used by the storefront.
 // Never synthesize ratings, reviews, stock status or wholesale offers.
 export const PRODUCT_PAGE_IDS=Object.freeze({
- '/potency-whey.html':{id:'potency-whey',name:'Unicorn Pro Series Potency Whey Protein',image:'/assets/potency-whey-coffee-5lb.webp'},
- '/nitro-mass.html':{id:'nitro-mass',name:'Unicorn Pro Series Nitro Mass Gainer',image:'/assets/Screenshot_2026_1103_003852.jpg'},
- '/pro-creatine.html':{id:'pro-creatine',name:'Unicorn Pro Series Pro Creatine'},
+ '/potency-whey.html':{primaryVariantId:'whey-coffee',id:'potency-whey',name:'Unicorn Pro Series Potency Whey Protein',image:'/assets/potency-whey-coffee-5lb.webp'},
+ '/nitro-mass.html':{primaryVariantId:'mass-5kg',id:'nitro-mass',name:'Unicorn Pro Series Nitro Mass Gainer',image:'/assets/Screenshot_2026_1103_003852.jpg'},
+ '/pro-creatine.html':{primaryVariantId:'creatine-cranberry',id:'pro-creatine',name:'Unicorn Pro Series Pro Creatine'},
  '/sturdy-pre-workout.html':{id:'sturdy-pre',name:'Unicorn Pro Series Sturdy Pre-Workout',image:'/assets/sturdy-watermelon-front.webp'},
  '/musclevite-multivitamin.html':{id:'musclevite',name:'Unicorn Pro Series Musclevite Multivitamin',image:'/assets/musclevite-front.webp'}
 });
@@ -22,16 +22,14 @@ export function buildProductFragments(path,catalogue,approvedReviews=[]){
  const product=(Array.isArray(catalogue)?catalogue:[]).find(p=>p.id===config.id);
  if(!product)return null;
  const variants=(product.variants||[]).filter(v=>Number.isSafeInteger(v.pricePaise)&&v.pricePaise>0);
- const prices=variants.map(v=>v.pricePaise);
- const minimum=prices.length?Math.min(...prices):null;
- const maximum=prices.length?Math.max(...prices):null;
+ const primary=variants.find(v=>v.id===(config.primaryVariantId||''))||variants[0]||null;
  const url=DOMAIN+path;
  const reviewRows=(Array.isArray(approvedReviews)?approvedReviews:[])
   .filter(r=>Number.isInteger(r.rating)&&r.rating>=1&&r.rating<=5&&r.status==='approved');
  const average=reviewRows.length?numberScore(reviewRows.reduce((sum,r)=>sum+r.rating,0)/reviewRows.length):null;
- const offer=minimum===null?null:minimum===maximum?
-  {'@type':'Offer',url,priceCurrency:'INR',price:(minimum/100).toFixed(2)}:
-  {'@type':'AggregateOffer',url,priceCurrency:'INR',lowPrice:(minimum/100).toFixed(2),highPrice:(maximum/100).toFixed(2),offerCount:variants.length};
+ // Advertise one precise, publicly visible variant. Google explicitly cautions
+ // against AggregateOffer for multiple sizes/flavours of a product.
+ const offer=primary?{'@type':'Offer',url,priceCurrency:'INR',price:(primary.pricePaise/100).toFixed(2)}:null;
  const jsonLd={
   '@context':'https://schema.org',
   '@type':'Product',
