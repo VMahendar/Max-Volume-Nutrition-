@@ -97,7 +97,17 @@ try {
   assert.equal(heroSurface.border,'0px',size.name+' original pack photograph has no artificial border');
   assert.equal(heroSurface.transform,'none',size.name+' hero product is not a tilted sticker');
   assert.ok(heroSurface.visibleWidth>=180,size.name+' large product-centric image');
-  assert.ok(heroSurface.imageMask.includes('radial-gradient'),size.name+' original pack photography fades into grouped hero rather than a pasted rectangle');
+  assert.equal(heroSurface.imageMask,'none',size.name+' pack edges use actual bottle shape rather than radial fade');
+  const originalCutout=await showcase.locator('.mvn-hero-pack-main').evaluate(img=>({
+    clip:getComputedStyle(img).clipPath,
+    blend:getComputedStyle(img).mixBlendMode
+  }));
+  assert.ok(originalCutout.clip.startsWith('polygon('),size.name+' original whey pack is cropped to its exact silhouette');
+  assert.equal(originalCutout.blend,'normal',size.name+' original whey label colors preserved');
+  const clearPacks=await showcase.locator('.mvn-hero-pack-nitro,.mvn-hero-pack-creatine').evaluateAll(imgs=>imgs.map(img=>({
+    mask:getComputedStyle(img).maskImage,blend:getComputedStyle(img).mixBlendMode
+  })));
+  assert.ok(clearPacks.every(img=>img.mask==='none'&&img.blend==='normal'),size.name+' already-transparent original products have no destructive fade or blend');
 
   assert.ok(campaignGeometry.categoryBottom<=campaignGeometry.shopY+20,size.name+' visual categories precede retail collection');
   assert.ok(campaignGeometry.scrollWidth<=size.width+10,size.name+' campaign does not overflow viewport');
