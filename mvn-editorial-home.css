@@ -250,3 +250,26 @@ body.retail-home:not(.app-store) .mvn-editorial-category:hover{
  body.retail-home:not(.app-store) .mvn-editorial-promo img{width:51%!important;max-width:51%!important;height:64%!important;bottom:20px!important}
  body.retail-home:not(.app-store) .mvn-editorial-category strong{max-width:47%!important;font-size:20px!important}
 }
+
+
+/* Final visual pass: prevent narrow-phone product/heading collisions. */
+@media(max-width:650px){
+ body.retail-home:not(.app-store) .mvn-editorial-promo strong{
+  max-width:49%!important;width:49%!important;
+  font-size:clamp(15px,4vw,18px)!important;
+  line-height:1.12!important;overflow-wrap:normal!important;
+ }
+ body.retail-home:not(.app-store) .mvn-editorial-promo-creatine strong{font-size:clamp(15px,3.9vw,18px)!important}
+ body.retail-home:not(.app-store) .mvn-editorial-promo img{
+  width:45%!important;max-width:45%!important;right:3px!important;
+  height:59%!important;bottom:26px!important;
+ }
+ body.retail-home:not(.app-store) .mvn-editorial-category strong{
+  max-width:50%!important;font-size:clamp(16px,4.2vw,19px)!important;
+  line-height:1.12!important;word-break:normal!important;
+ }
+ body.retail-home:not(.app-store) .mvn-editorial-category img{
+  width:50%!important;right:2px!important;top:58px!important;
+  height:106px!important;
+ }
+}
