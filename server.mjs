@@ -425,10 +425,10 @@ if(process.env.STAGING_MODE==='true'&&u.pathname==='/admin.html'){
 // versioned/static media on the real storefront, never password-protected staging.
 if(process.env.STAGING_MODE!=='true'){
  const extension=extname(path);
- if(['.css','.js'].includes(extension))res.setHeader('Cache-Control','public, max-age=3600, stale-while-revalidate=86400');
+ if(['.css','.js'].includes(extension))res.setHeader('Cache-Control','public, max-age=3600, must-revalidate');
  else if(/\.(?:png|jpe?g|webp|svg|ico)$/.test(u.pathname)&&
    /^(?:\/assets\/|\/icons\/|\/mvn-|\/max-volume-)/.test(u.pathname))
-   res.setHeader('Cache-Control','public, max-age=86400, stale-while-revalidate=604800');
+   res.setHeader('Cache-Control','public, max-age=3600, must-revalidate');
 }
 res.writeHead(200,{'Content-Type':mime[extname(path)]||'application/octet-stream'});res.end(req.method==='HEAD'?undefined:file);
 }catch(e){if(!(e instanceof Problem)&&!(e instanceof SyntaxError))console.error('Request failed:',e.code||e.name);json(res,e instanceof Problem?e.status:e instanceof SyntaxError?400:500,{error:e instanceof Problem?e.message:e instanceof SyntaxError?'Invalid request.':'Request could not be completed. Contact support before retrying.'});}});
