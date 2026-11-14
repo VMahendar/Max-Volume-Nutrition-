@@ -22,7 +22,7 @@ body.retail-home.mvn-fitness-refresh:not(.app-store) {
 }
 /* Sport-style masthead. Preserve original transparent MVN artwork. */
 body.retail-home.mvn-fitness-refresh:not(.app-store) .storehead {
-  background: #090b0d !important;
+  background: #0d1211 !important;
   border-bottom: 1px solid #292f35 !important;
   box-shadow: 0 6px 28px rgba(0,0,0,.12) !important;
 }
@@ -50,7 +50,7 @@ body.retail-home.mvn-fitness-refresh:not(.app-store) .storehead #search button {
   letter-spacing: .06em !important;
 }
 body.retail-home.mvn-fitness-refresh:not(.app-store) .storehead .head-actions :is(.account-link,.wa,.mvn-header-email,#bag) {
-  color: #fff !important;
+  color: #f7f3e9 !important;
 }
 body.retail-home.mvn-fitness-refresh:not(.app-store) .storehead .head-actions #bag em {
   background: #d6543e !important;
@@ -303,7 +303,7 @@ body.retail-home.mvn-fitness-refresh:not(.app-store) :is(a,button,select,input):
 }
 @media (max-width: 650px) {
   body.retail-home.mvn-fitness-refresh:not(.app-store) .storehead {
-    background: #090b0d !important;
+    background: #0d1211 !important;
     border-bottom-color: #343941 !important;
   }
   body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-feature.mvn-owner-banner-feature {
