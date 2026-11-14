@@ -46,9 +46,9 @@ try {
   assert.ok(await showcase.isVisible(),size.name+' premium marketing hero must be visible');
   assert.match(await showcase.locator('h1').innerText(),/STRENGTH\s*BUILDS/i,'performance headline is visible');
   const campaignImg=showcase.locator('.mvn-editorial-packpanel img.mvn-hero-pack-main');
-  assert.equal(await campaignImg.getAttribute('src'),'assets/potency-whey-coffee-5lb.webp',size.name+' exact owner-uploaded Potency Whey original is used');
-  assert.equal(await showcase.locator('.mvn-editorial-promo-mass img').getAttribute('src'),'assets/nitro-mass-3kg-double-rich-chocolate.webp',size.name+' corresponding 3 kg original pack photo displayed');
-  assert.equal(await showcase.locator('.mvn-editorial-packpanel img.mvn-hero-pack').count(),4,size.name+' reference-inspired original product group includes four pack families');
+  assert.equal(await campaignImg.getAttribute('src'),'assets/mvn-hero-whey-cutout.png',size.name+' source-backed transparent Potency Whey original is used');
+  assert.equal(await showcase.locator('.mvn-editorial-promo-mass img').getAttribute('src'),'assets/mvn-hero-nitro-cutout.png',size.name+' original Nitro Mass cutout is displayed');
+  assert.equal(await showcase.locator('.mvn-editorial-packpanel img.mvn-hero-pack').count(),3,size.name+' balanced original-product hero uses whey mass and creatine');
   await campaignImg.waitFor({state:'visible'});
   assert.ok(await campaignImg.evaluate(img=>img.complete&&img.naturalWidth>0),size.name+' original whey hero photo loads');
   await page.waitForFunction(()=>[...document.querySelectorAll('.mvn-editorial-packpanel img')].every(img=>img.complete&&img.naturalWidth>0),{timeout:12000});
@@ -102,12 +102,25 @@ try {
     clip:getComputedStyle(img).clipPath,
     blend:getComputedStyle(img).mixBlendMode
   }));
-  assert.ok(originalCutout.clip.startsWith('polygon('),size.name+' original whey pack is cropped to its exact silhouette');
+  assert.equal(originalCutout.clip,'none',size.name+' true-alpha original whey cutout has no artificial polygon crop');
   assert.equal(originalCutout.blend,'normal',size.name+' original whey label colors preserved');
   const clearPacks=await showcase.locator('.mvn-hero-pack-nitro,.mvn-hero-pack-creatine').evaluateAll(imgs=>imgs.map(img=>({
     mask:getComputedStyle(img).maskImage,blend:getComputedStyle(img).mixBlendMode
   })));
-  assert.ok(clearPacks.every(img=>img.mask==='none'&&img.blend==='normal'),size.name+' already-transparent original products have no destructive fade or blend');
+  assert.ok(clearPacks.every(img=>img.mask==='none'&&img.blend==='normal'),size.name+' transparent original products have no destructive fade or blend');
+
+  const alphaPacks=await showcase.locator('.mvn-editorial-packpanel .mvn-hero-pack').evaluateAll(async imgs=>{
+    return await Promise.all(imgs.map(async img=>{
+      const response=await fetch(img.currentSrc);
+      const blob=await response.blob();
+      const bmp=await createImageBitmap(blob);
+      const canvas=document.createElement('canvas');canvas.width=bmp.width;canvas.height=bmp.height;
+      const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(bmp,0,0);
+      const a=ctx.getImageData(0,0,1,1).data[3];
+      return {src:img.getAttribute('src'),cornerAlpha:a};
+    }));
+  });
+  assert.ok(alphaPacks.every(p=>p.cornerAlpha===0),size.name+' every hero product is a true alpha PNG with transparent corners');
 
   assert.ok(campaignGeometry.categoryBottom<=campaignGeometry.shopY+20,size.name+' visual categories precede retail collection');
   assert.ok(campaignGeometry.scrollWidth<=size.width+10,size.name+' campaign does not overflow viewport');
