@@ -1,0 +1,32 @@
+name: Build original-photo cutouts
+on:
+  push:
+    branches:
+      - design/real-product-cutouts-studio-20261115
+    paths:
+      - deploy/prepare-hero-cutouts.py
+      - .github/workflows/hero-photo-cutouts.yml
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  cutouts:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out only this design branch
+        uses: actions/checkout@v4
+        with:
+          ref: design/real-product-cutouts-studio-20261115
+          persist-credentials: true
+      - name: Install image processing dependencies
+        run: python3 -m pip install --break-system-packages --disable-pip-version-check opencv-python-headless==4.11.0.86 pillow==11.2.1 numpy==2.2.5
+      - name: Create original product photo cutouts
+        run: python3 deploy/prepare-hero-cutouts.py
+      - name: Commit cutouts to review branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/assets/mvn-hero-whey-cutout.png public/assets/mvn-hero-nitro-cutout.png public/assets/mvn-hero-creatine-cutout.png
+          git commit -m "Add natural transparent cutouts of original approved supplement photos"
+          git push origin HEAD:design/real-product-cutouts-studio-20261115
