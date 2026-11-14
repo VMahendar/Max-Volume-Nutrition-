@@ -74,3 +74,63 @@ body.retail-home:not(.app-store) .mvn-editorial-category{min-height:185px!import
  body.retail-home:not(.app-store) .mvn-editorial-category{height:181px!important;min-height:181px!important}
 }
 @media(prefers-reduced-motion:reduce){body.retail-home:not(.app-store) .mvn-editorial-buttons a{transition:none!important}}
+
+/* SOURCE-TRUE PRODUCT SILHOUETTES — corrective pass, 15 Nov 2026.
+   Original Potency Whey owner photo has white canvas: follow the ACTUAL pack contour.
+   Original Nitro Mass and Creatine assets already have real transparent backgrounds:
+   never use CSS radial fade, 'screen', or multiply on these original labels. */
+body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-pack{
+  -webkit-mask-image:none!important;mask-image:none!important;
+  mix-blend-mode:normal!important;opacity:1!important;
+  filter:drop-shadow(0 15px 9px rgba(0,0,0,.43))!important;
+  object-fit:contain!important;object-position:center!important;
+  background:transparent!important;padding:0!important;
+}
+body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-pack-main{
+  clip-path:polygon(70.65% 3.83%,54.07% 1.28%,33.65% 2.71%,29.35% 3.83%,27.91% 5.02%,27.51% 13.88%,28.31% 16.59%,24.00% 18.82%,20.73% 22.09%,18.34% 26.63%,17.30% 32.22%,17.70% 85.25%,20.49% 90.83%,23.29% 92.82%,29.82% 94.74%,39.95% 96.01%,60.29% 96.01%,74.72% 93.54%,78.55% 91.55%,81.26% 88.44%,82.54% 83.81%,82.38% 30.86%,81.42% 26.48%,78.63% 21.37%,75.44% 18.58%,71.29% 16.59%,72.09% 13.80%,71.85% 5.18%)!important;
+  -webkit-clip-path:polygon(70.65% 3.83%,54.07% 1.28%,33.65% 2.71%,29.35% 3.83%,27.91% 5.02%,27.51% 13.88%,28.31% 16.59%,24.00% 18.82%,20.73% 22.09%,18.34% 26.63%,17.30% 32.22%,17.70% 85.25%,20.49% 90.83%,23.29% 92.82%,29.82% 94.74%,39.95% 96.01%,60.29% 96.01%,74.72% 93.54%,78.55% 91.55%,81.26% 88.44%,82.54% 83.81%,82.38% 30.86%,81.42% 26.48%,78.63% 21.37%,75.44% 18.58%,71.29% 16.59%,72.09% 13.80%,71.85% 5.18%)!important;
+  aspect-ratio:1/1!important;width:30%!important;height:auto!important;
+  left:43%!important;bottom:0!important;
+}
+body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-pack-nitro{
+  clip-path:none!important;-webkit-clip-path:none!important;
+  aspect-ratio:1/1!important;width:29%!important;height:auto!important;
+  left:19%!important;bottom:0!important;
+}
+body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-pack-creatine{
+  clip-path:none!important;-webkit-clip-path:none!important;
+  aspect-ratio:1/1!important;width:27%!important;height:auto!important;
+  right:5%!important;bottom:0!important;
+}
+body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-pack-pre{
+  -webkit-mask-image:none!important;mask-image:none!important;
+  width:23%!important;height:auto!important;aspect-ratio:1/1!important;
+  left:3%!important;bottom:0!important;
+}
+body.retail-home:not(.app-store) .mvn-editorial-promo img{
+  -webkit-mask-image:none!important;mask-image:none!important;
+  mix-blend-mode:normal!important;filter:drop-shadow(0 9px 8px rgba(0,0,0,.27))!important;
+  opacity:1!important;
+}
+body.retail-home:not(.app-store) .mvn-editorial-category-creatine img,
+body.retail-home:not(.app-store) .mvn-editorial-category-mass img{
+  -webkit-mask-image:none!important;mask-image:none!important;
+  mix-blend-mode:normal!important;opacity:1!important;
+}
+body.retail-home:not(.app-store) .mvn-editorial-category-whey img{
+  clip-path:polygon(70.65% 3.83%,54.07% 1.28%,33.65% 2.71%,29.35% 3.83%,27.91% 5.02%,27.51% 13.88%,28.31% 16.59%,24.00% 18.82%,20.73% 22.09%,18.34% 26.63%,17.30% 32.22%,17.70% 85.25%,20.49% 90.83%,23.29% 92.82%,29.82% 94.74%,39.95% 96.01%,60.29% 96.01%,74.72% 93.54%,78.55% 91.55%,81.26% 88.44%,82.54% 83.81%,82.38% 30.86%,81.42% 26.48%,78.63% 21.37%,75.44% 18.58%,71.29% 16.59%,72.09% 13.80%,71.85% 5.18%)!important;
+  -webkit-clip-path:polygon(70.65% 3.83%,54.07% 1.28%,33.65% 2.71%,29.35% 3.83%,27.91% 5.02%,27.51% 13.88%,28.31% 16.59%,24.00% 18.82%,20.73% 22.09%,18.34% 26.63%,17.30% 32.22%,17.70% 85.25%,20.49% 90.83%,23.29% 92.82%,29.82% 94.74%,39.95% 96.01%,60.29% 96.01%,74.72% 93.54%,78.55% 91.55%,81.26% 88.44%,82.54% 83.81%,82.38% 30.86%,81.42% 26.48%,78.63% 21.37%,75.44% 18.58%,71.29% 16.59%,72.09% 13.80%,71.85% 5.18%)!important;
+  -webkit-mask-image:none!important;mask-image:none!important;
+  mix-blend-mode:normal!important;
+}
+@media(max-width:650px){
+ body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-pack-main{
+  width:31%!important;left:42%!important;bottom:2%!important;
+ }
+ body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-pack-nitro{
+  width:29%!important;left:19%!important;bottom:1%!important;
+ }
+ body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-pack-creatine{
+  width:27%!important;right:3%!important;bottom:1%!important;
+ }
+}
