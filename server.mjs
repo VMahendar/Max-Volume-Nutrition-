@@ -10,6 +10,7 @@ import {initializeLeadInbox,saveLead,listLeads,updateLead} from './lead-inbox.mj
 import {evaluateLaunch} from './deploy/launch-readiness.mjs';
 import {initializeMarketing,marketingReadiness,enqueueMarketing,startMarketingScheduler,verifyUnsubscribe} from './marketing-automation.mjs';
 import {stagingGate} from './staging.mjs';
+import {PRODUCT_PAGE_IDS,buildProductFragments} from './product-seo.mjs';
 const allowStaging=stagingGate();
 import {isIP} from 'node:net';
 import {readFileSync,realpathSync,existsSync} from 'node:fs';
@@ -404,11 +405,32 @@ if(path==='/api/admin/shipment'){if(!shippingReady())fail(503,'Shiprocket is dis
 if(path==='/api/admin/tracking'){const row=db.prepare('SELECT * FROM shipments WHERE order_id=?').get(String(b.id));const shipment=row?JSON.parse(row.data):null;if(!shipment?.shipmentId)fail(409,'No provider shipment to track.');const tracking=await ship.track(shipment.shipmentId);C.tx(()=>{const latest=JSON.parse(db.prepare('SELECT data FROM shipments WHERE order_id=?').get(b.id).data);db.prepare('UPDATE shipments SET data=? WHERE order_id=?').run(JSON.stringify({...latest,tracking}),b.id);});return json(res,200,{tracking});}
 fail(404,'Endpoint not found.');}
 fail(404,'Endpoint not found.');}
-if(!['GET','HEAD'].includes(req.method))fail(405,'Method not allowed.');const path=resolve(root,'.'+decodeURIComponent(u.pathname==='/'?'/index.html':u.pathname));if(!path.startsWith(root+sep))fail(403,'Forbidden');let file;try{if(!realpathSync(path).startsWith(root+sep))fail(403,'Forbidden');file=readFileSync(path);if(storePublicUrl!==previousStoreOrigin&&['/','/index.html','/robots.txt','/sitemap.xml'].includes(u.pathname))file=Buffer.from(file.toString('utf8').replaceAll(previousStoreOrigin,storePublicUrl).replaceAll(officialStoreOrigin,storePublicUrl));// Keep the staging status visible to operators, away from customer pages.
+if(!['GET','HEAD'].includes(req.method))fail(405,'Method not allowed.');const path=resolve(root,'.'+decodeURIComponent(u.pathname==='/'?'/index.html':u.pathname));if(!path.startsWith(root+sep))fail(403,'Forbidden');let file;try{if(!realpathSync(path).startsWith(root+sep))fail(403,'Forbidden');file=readFileSync(path);
+if(PRODUCT_PAGE_IDS[u.pathname]){
+ const productId=PRODUCT_PAGE_IDS[u.pathname].id;
+ const approved=db.prepare("SELECT r.rating,r.title,r.body,r.created,u.name FROM product_reviews r JOIN users u ON u.id=r.user_id WHERE r.product_id=? AND r.status='approved' ORDER BY r.created DESC").all(productId).map(r=>({...r,status:'approved'}));
+ const productHtml=buildProductFragments(u.pathname,C.catalogue(null),approved);
+ if(productHtml){
+  const html=file.toString('utf8')
+    .replace('<!-- MVN_PRODUCT_SEO -->',productHtml.schema)
+    .replace('<!-- MVN_PRODUCT_DETAILS -->',productHtml.content);
+  file=Buffer.from(html,'utf8');
+ }
+}
+if(storePublicUrl!==previousStoreOrigin&&['/','/index.html','/robots.txt','/sitemap.xml'].includes(u.pathname))file=Buffer.from(file.toString('utf8').replaceAll(previousStoreOrigin,storePublicUrl).replaceAll(officialStoreOrigin,storePublicUrl));// Keep the staging status visible to operators, away from customer pages.
 if(process.env.STAGING_MODE==='true'&&u.pathname==='/admin.html'){
  const banner='PRIVATE STAGING · TEST DATA ONLY · PAYMENTS AND SHIPPING DISABLED';
  file=Buffer.from(file.toString('utf8').replace(/<body(?:\s[^>]*)?>/i,openTag=>`${openTag}<div class="staging-banner owner-preview-status" role="status" title="${banner}" aria-label="${banner}">Preview</div>`));
-}}catch(e){if(e instanceof Problem)throw e;fail(404,'Page not found.');}const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.webmanifest':'application/manifest+json','.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.svg':'image/svg+xml','.xml':'application/xml; charset=utf-8','.txt':'text/plain; charset=utf-8'};res.writeHead(200,{'Content-Type':mime[extname(path)]||'application/octet-stream'});res.end(req.method==='HEAD'?undefined:file);
+}}catch(e){if(e instanceof Problem)throw e;fail(404,'Page not found.');}const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.webmanifest':'application/manifest+json','.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.svg':'image/svg+xml','.xml':'application/xml; charset=utf-8','.txt':'text/plain; charset=utf-8'};// Keep personalized pages, reviews and API responses uncached. Cache only public
+// versioned/static media on the real storefront, never password-protected staging.
+if(process.env.STAGING_MODE!=='true'){
+ const extension=extname(path);
+ if(['.css','.js'].includes(extension))res.setHeader('Cache-Control','public, max-age=3600, must-revalidate');
+ else if(/\.(?:png|jpe?g|webp|svg|ico)$/.test(u.pathname)&&
+   /^(?:\/assets\/|\/icons\/|\/mvn-|\/max-volume-)/.test(u.pathname))
+   res.setHeader('Cache-Control','public, max-age=3600, must-revalidate');
+}
+res.writeHead(200,{'Content-Type':mime[extname(path)]||'application/octet-stream'});res.end(req.method==='HEAD'?undefined:file);
 }catch(e){if(!(e instanceof Problem)&&!(e instanceof SyntaxError))console.error('Request failed:',e.code||e.name);json(res,e instanceof Problem?e.status:e instanceof SyntaxError?400:500,{error:e instanceof Problem?e.message:e instanceof SyntaxError?'Invalid request.':'Request could not be completed. Contact support before retrying.'});}});
 function validImages(value){
  if(value===null)return [];
