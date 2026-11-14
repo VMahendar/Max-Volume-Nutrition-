@@ -1,0 +1,26 @@
+/* Compact product-only review and verified retail detail presentation. */
+.mvn-live-retail,.mvn-reviews{background:#fff;border:1px solid #e5e8eb;border-radius:12px;padding:clamp(18px,3vw,28px);margin:26px 0;color:#182330}
+.mvn-live-retail h2,.mvn-reviews h2{font-size:clamp(20px,2.6vw,26px);letter-spacing:-.02em;margin:0 0 18px;color:#111d2e}
+.mvn-retail-variants{display:grid;gap:0}
+.mvn-retail-variant{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;padding:12px 0;border-top:1px solid #e9edf1}
+.mvn-retail-variant strong{font-size:21px;white-space:nowrap;color:#152b45}
+.mvn-review-note{color:#5a6470;font-size:14px;line-height:1.55}
+.mvn-rating-summary{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:0 0 16px}
+.mvn-rating-summary strong{font-size:24px;color:#0c2542}
+.mvn-rating-summary span,.mvn-review-card-top span{color:#b77a0f;font-size:18px;letter-spacing:2px}
+.mvn-rating-summary small{color:#556273}
+.mvn-review-list{display:grid;gap:12px}
+.mvn-review-card{border-top:1px solid #e7eaed;padding:14px 0}
+.mvn-review-card-top{display:flex;justify-content:space-between;align-items:start;flex-wrap:wrap;gap:8px}
+.mvn-review-card p{color:#263447;margin:8px 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.mvn-review-card small{color:#687688}
+.mvn-review-submit{margin-top:24px;padding-top:20px;border-top:1px solid #e3e7eb}
+.mvn-review-submit h3{margin:0 0 6px;font-size:19px}
+.mvn-review-submit form:not([hidden]){display:grid;grid-template-columns:1fr;gap:10px;max-width:580px}
+.mvn-review-submit label{font-weight:700;font-size:14px}
+.mvn-review-submit input,.mvn-review-submit select,.mvn-review-submit textarea{width:100%;box-sizing:border-box;padding:12px 13px;border:1px solid #a7b3c1;border-radius:7px;background:#fff;color:#172537;font:inherit}
+.mvn-review-submit button{background:#182f4a;color:#fff;padding:13px 20px;border:0;border-radius:7px;font:700 14px system-ui;cursor:pointer}
+.mvn-review-submit button:disabled{opacity:.65;cursor:wait}
+.mvn-review-submit input:focus-visible,.mvn-review-submit textarea:focus-visible,.mvn-review-submit select:focus-visible,.mvn-review-submit button:focus-visible{outline:3px solid #4c82bb;outline-offset:2px}
+#mvnReviewStatus{font-weight:600;font-size:14px}
+@media(max-width:700px){.mvn-live-retail,.mvn-reviews{margin:20px 0;padding:18px}.mvn-review-card-top{align-items:flex-start}}
