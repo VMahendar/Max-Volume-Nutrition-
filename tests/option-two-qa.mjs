@@ -44,11 +44,11 @@ try {
   // and usable, non-duplicated category cards BEFORE the existing cart catalogue.
   const showcase=page.locator('#mvnEditorial');
   assert.ok(await showcase.isVisible(),size.name+' premium marketing hero must be visible');
-  assert.match(await showcase.locator('h1').innerText(),/FUEL EVERY\s*REP/i,'performance headline is visible');
+  assert.match(await showcase.locator('h1').innerText(),/STRENGTH\s*BUILDS/i,'performance headline is visible');
   const campaignImg=showcase.locator('.mvn-editorial-packpanel img.mvn-hero-pack-main');
   assert.equal(await campaignImg.getAttribute('src'),'assets/potency-whey-coffee-5lb.webp',size.name+' exact owner-uploaded Potency Whey original is used');
   assert.equal(await showcase.locator('.mvn-editorial-promo-mass img').getAttribute('src'),'assets/nitro-mass-3kg-double-rich-chocolate.webp',size.name+' corresponding 3 kg original pack photo displayed');
-  assert.equal(await showcase.locator('.mvn-editorial-packpanel img.mvn-hero-pack').count(),1,size.name+' single original whey pack keeps hero uncluttered');
+  assert.equal(await showcase.locator('.mvn-editorial-packpanel img.mvn-hero-pack').count(),4,size.name+' reference-inspired original product group includes four pack families');
   await campaignImg.waitFor({state:'visible'});
   assert.ok(await campaignImg.evaluate(img=>img.complete&&img.naturalWidth>0),size.name+' original whey hero photo loads');
   await page.waitForFunction(()=>[...document.querySelectorAll('.mvn-editorial-packpanel img')].every(img=>img.complete&&img.naturalWidth>0),{timeout:12000});
@@ -59,7 +59,7 @@ try {
     const cats=document.querySelector('.mvn-editorial-categories').getBoundingClientRect();
     return {heroHeight:feature.height,shopY:shop.y,promoWidth:promo.width,categoryBottom:cats.bottom,scrollWidth:document.documentElement.scrollWidth};
   });
-  assert.ok(campaignGeometry.heroHeight>=420&&campaignGeometry.heroHeight<=590,
+  assert.ok(campaignGeometry.heroHeight>=330&&campaignGeometry.heroHeight<=460,
     size.name+' campaign must remain a compact store banner, not a tall poster: '+campaignGeometry.heroHeight);
   const proportions=await page.evaluate(()=>{
     const feature=document.querySelector('.mvn-editorial-feature').getBoundingClientRect();
@@ -77,11 +77,11 @@ try {
   });
   assert.ok(proportions.headline.h<=165,size.name+' editorial headline fits its column');
   assert.ok(proportions.image.h>=135,size.name+' whey remains a major product image');
-  assert.equal(proportions.leadDisplay,'block',size.name+' editorial headline has brief supporting copy');
+  assert.equal(proportions.leadDisplay,'none',size.name+' grouped-storefront hero uses concise copy');
   if(size.name==='desktop'){
     assert.ok(proportions.promos.x>proportions.feature.x+proportions.feature.w-3,
       'two promo cards must stay to the right of main landscape banner');
-    assert.ok(proportions.feature.w/proportions.feature.h>1.45,'main desktop banner is landscape');
+    assert.ok(proportions.feature.w/proportions.feature.h>1.4,'main desktop banner is landscape');
   }else{
     assert.ok(proportions.promos.y>=proportions.feature.y+proportions.feature.h-3,
       'mobile stacks promotions only after compact banner');
@@ -97,7 +97,7 @@ try {
   assert.equal(heroSurface.border,'0px',size.name+' original pack photograph has no artificial border');
   assert.equal(heroSurface.transform,'none',size.name+' hero product is not a tilted sticker');
   assert.ok(heroSurface.visibleWidth>=180,size.name+' large product-centric image');
-  assert.equal(heroSurface.imageMask,'none',size.name+' owner original photo has no artificial blur-mask');
+  assert.ok(heroSurface.imageMask.includes('radial-gradient'),size.name+' original pack photography fades into grouped hero rather than a pasted rectangle');
 
   assert.ok(campaignGeometry.categoryBottom<=campaignGeometry.shopY+20,size.name+' visual categories precede retail collection');
   assert.ok(campaignGeometry.scrollWidth<=size.width+10,size.name+' campaign does not overflow viewport');

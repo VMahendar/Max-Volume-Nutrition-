@@ -1,0 +1,76 @@
+/* MVN storefront layout follows the owner's ThemesPride screenshot:
+   wide grouped campaign (left ~75%), two promotions right, categories below.
+   Distinct branding + original, unaltered Unicorn Pro Series pack images. */
+body.retail-home:not(.app-store) .mvn-editorial,
+body.retail-home:not(.app-store) .mvn-editorial-categories{max-width:1440px!important;width:100%!important;margin:0 auto!important;padding:13px 20px 0!important}
+body.retail-home:not(.app-store) .mvn-editorial-layout{display:grid!important;grid-template-columns:minmax(0,2.65fr) minmax(242px,.86fr)!important;gap:12px!important}
+body.retail-home:not(.app-store) .mvn-editorial-feature{position:relative!important;min-width:0!important;min-height:435px!important;height:435px!important;overflow:hidden!important;border-radius:7px!important;isolation:isolate!important;
+ background:radial-gradient(ellipse 40% 90% at 50% 38%,rgba(140,53,38,.47),transparent 84%),radial-gradient(ellipse 35% 80% at 96% 95%,rgba(167,80,36,.21),transparent 80%),linear-gradient(114deg,#210d13 0%,#371118 52%,#1a0d12 100%)!important}
+body.retail-home:not(.app-store) .mvn-editorial-feature:before{content:"";pointer-events:none;position:absolute;z-index:0;inset:0;background:
+ radial-gradient(ellipse 45% 11% at 50% 78%,rgba(242,181,128,.24),transparent 90%),
+ linear-gradient(108deg,transparent 5%,rgba(251,191,140,.035) 31%,transparent 67%)!important}
+body.retail-home:not(.app-store) .mvn-editorial-feature:after{display:none!important}
+body.retail-home:not(.app-store) .mvn-editorial-glow{display:block!important;position:absolute!important;z-index:0!important;left:16%!important;top:28%!important;right:auto!important;width:70%!important;height:65%!important;filter:blur(36px)!important;pointer-events:none!important;background:radial-gradient(ellipse,rgba(227,156,110,.22),transparent 68%)!important}
+body.retail-home:not(.app-store) .mvn-editorial-copy{position:absolute!important;z-index:5!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;padding:22px 10px!important;
+ display:flex!important;align-items:center!important;justify-content:flex-start!important;flex-direction:column!important;text-align:center!important;pointer-events:none!important}
+body.retail-home:not(.app-store) .mvn-editorial-kicker{display:block!important;width:auto!important;color:#edd8c1!important;font-size:10px!important;letter-spacing:.19em!important;line-height:1.3!important;font-weight:700!important}
+body.retail-home:not(.app-store) .mvn-editorial-kicker span{display:none!important}
+body.retail-home:not(.app-store) .mvn-editorial-copy h1{font-family:Impact,"Arial Narrow",Arial,sans-serif!important;font-size:clamp(38px,3.5vw,54px)!important;line-height:.94!important;font-weight:900!important;letter-spacing:.005em!important;white-space:nowrap!important;color:#fdf9f2!important;margin:10px 0 0!important;text-align:center!important;text-shadow:0 3px 8px rgba(0,0,0,.45)!important}
+body.retail-home:not(.app-store) .mvn-editorial-copy h1 em{display:inline!important;margin:0!important;color:#e9a16c!important;font-style:normal!important}
+body.retail-home:not(.app-store) .mvn-editorial-lead{display:none!important}
+body.retail-home:not(.app-store) .mvn-editorial-subcopy{display:none!important}
+body.retail-home:not(.app-store) .mvn-editorial-smallprint{display:none!important}
+body.retail-home:not(.app-store) .mvn-editorial-buttons{position:absolute!important;top:auto!important;bottom:22px!important;left:0!important;right:0!important;z-index:12!important;margin:0!important;display:flex!important;justify-content:center!important;pointer-events:auto!important}
+body.retail-home:not(.app-store) .mvn-editorial-button-primary{display:inline-flex!important;align-items:center!important;justify-content:center!important;min-height:43px!important;padding:11px 24px!important;background:#e9a36a!important;border:1px solid #e9a36a!important;border-radius:3px!important;font-size:11px!important;color:#201111!important;font-weight:850!important;box-shadow:0 6px 24px rgba(0,0,0,.27)!important}
+body.retail-home:not(.app-store) .mvn-editorial-button-secondary{display:none!important}
+body.retail-home:not(.app-store) .mvn-editorial-packstage{position:absolute!important;z-index:2!important;inset:auto 5% 64px!important;width:90%!important;height:280px!important;display:block!important;background:transparent!important;box-shadow:none!important}
+body.retail-home:not(.app-store) .mvn-editorial-packstage:before{content:"";position:absolute;left:10%;right:10%;bottom:-1%;height:22px;z-index:0;background:radial-gradient(ellipse,rgba(0,0,0,.63),transparent 78%);filter:blur(10px)}
+body.retail-home:not(.app-store) .mvn-editorial-packstage:after{display:none!important}
+body.retail-home:not(.app-store) .mvn-editorial-ring{display:none!important}
+body.retail-home:not(.app-store) .mvn-editorial-packpanel{position:relative!important;width:100%!important;height:100%!important;max-width:none!important;aspect-ratio:auto!important;display:block!important;overflow:visible!important;border:0!important;border-radius:0!important;background:transparent!important;box-shadow:none!important;transform:none!important;padding:0!important}
+body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-pack{position:absolute!important;display:block!important;object-fit:contain!important;object-position:center center!important;margin:0!important;padding:0!important;background:transparent!important;border:0!important;box-shadow:none!important;
+ -webkit-mask-image:radial-gradient(ellipse 58% 57% at 50% 50%,#000 64%,transparent 99%)!important;mask-image:radial-gradient(ellipse 58% 57% at 50% 50%,#000 64%,transparent 99%)!important;
+ filter:drop-shadow(0 16px 10px rgba(0,0,0,.35))!important;mix-blend-mode:normal!important;opacity:1!important}
+body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-pack-pre{z-index:1!important;left:5%!important;bottom:2%!important;width:23%!important;height:66%!important;transform:rotate(-4deg)!important}
+body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-pack-nitro{z-index:2!important;left:22%!important;bottom:0!important;width:27%!important;height:86%!important;transform:rotate(-2deg)!important}
+body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-pack-main{z-index:4!important;left:43%!important;bottom:-2%!important;width:29%!important;height:105%!important;max-height:none!important;transform:none!important}
+body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-pack-creatine{z-index:3!important;right:4%!important;left:auto!important;bottom:1%!important;width:28%!important;height:78%!important;transform:rotate(4deg)!important}
+body.retail-home:not(.app-store) .mvn-editorial-packlabel{display:none!important}
+body.retail-home:not(.app-store) .mvn-editorial-promos{display:grid!important;grid-template-columns:1fr!important;grid-template-rows:1fr 1fr!important;gap:12px!important}
+body.retail-home:not(.app-store) .mvn-editorial-promo{position:relative!important;min-width:0!important;min-height:0!important;height:211.5px!important;overflow:hidden!important;padding:19px!important;border:0!important;border-radius:7px!important}
+body.retail-home:not(.app-store) .mvn-editorial-promo:after{display:none!important}
+body.retail-home:not(.app-store) .mvn-editorial-promo-mass{background:radial-gradient(ellipse 70% 110% at 91% 66%,rgba(59,114,124,.29),transparent 78%),linear-gradient(110deg,#102e37,#182a38 100%)!important}
+body.retail-home:not(.app-store) .mvn-editorial-promo-creatine{background:radial-gradient(ellipse 60% 80% at 91% 66%,rgba(166,97,74,.29),transparent 78%),linear-gradient(114deg,#392420,#261b21)!important}
+body.retail-home:not(.app-store) .mvn-editorial-promo-overline{display:block!important;position:relative!important;z-index:3!important;width:59%!important;max-width:59%!important;color:#e1cbb7!important;font-size:8px!important;letter-spacing:.1em!important;margin-bottom:14px!important}
+body.retail-home:not(.app-store) .mvn-editorial-promo strong{position:relative!important;z-index:3!important;display:block!important;width:54%!important;max-width:54%!important;color:#fff7f0!important;font-family:Impact,"Arial Narrow",Arial,sans-serif!important;font-size:clamp(23px,2.2vw,32px)!important;line-height:1.04!important;letter-spacing:.01em!important}
+body.retail-home:not(.app-store) .mvn-editorial-promo img{position:absolute!important;z-index:1!important;right:0!important;bottom:6px!important;top:auto!important;width:45%!important;max-width:45%!important;height:84%!important;object-fit:contain!important;background:transparent!important;mix-blend-mode:screen!important;opacity:.96!important;
+ -webkit-mask-image:radial-gradient(ellipse 55% 60% at 50% 50%,#000 69%,transparent 100%)!important;mask-image:radial-gradient(ellipse 55% 60% at 50% 50%,#000 69%,transparent 100%)!important}
+body.retail-home:not(.app-store) .mvn-editorial-promo-bottom{position:absolute!important;z-index:4!important;bottom:17px!important;left:19px!important;right:auto!important;display:inline-flex!important;background:rgba(240,175,113,.93)!important;color:#251814!important;border-radius:2px!important;padding:8px 10px!important;width:auto!important;font-size:9px!important;font-weight:850!important}
+body.retail-home:not(.app-store) .mvn-editorial-benefits{margin-top:12px!important;padding:12px 8px!important;background:transparent!important;border-top:1px solid #d5cbbb!important;border-bottom:1px solid #d5cbbb!important}
+body.retail-home:not(.app-store) .mvn-editorial-categories{padding-top:24px!important}
+body.retail-home:not(.app-store) .mvn-editorial-category-grid{display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:12px!important}
+body.retail-home:not(.app-store) .mvn-editorial-category{min-height:185px!important;height:185px!important;border-radius:5px!important}
+@media(max-width:860px){
+ body.retail-home:not(.app-store) .mvn-editorial-layout{grid-template-columns:1fr!important}
+ body.retail-home:not(.app-store) .mvn-editorial-feature{height:410px!important;min-height:410px!important}
+ body.retail-home:not(.app-store) .mvn-editorial-promos{grid-template-columns:repeat(2,minmax(0,1fr))!important;grid-template-rows:1fr!important;gap:9px!important}
+ body.retail-home:not(.app-store) .mvn-editorial-promo{height:185px!important}
+ body.retail-home:not(.app-store) .mvn-editorial-category-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:650px){
+ body.retail-home:not(.app-store) .mvn-editorial,body.retail-home:not(.app-store) .mvn-editorial-categories{padding:10px 10px 0!important}
+ body.retail-home:not(.app-store) .mvn-editorial-feature{min-height:335px!important;height:335px!important}
+ body.retail-home:not(.app-store) .mvn-editorial-copy{padding:19px 5px!important}
+ body.retail-home:not(.app-store) .mvn-editorial-kicker{font-size:8px!important;letter-spacing:.1em!important}
+ body.retail-home:not(.app-store) .mvn-editorial-copy h1{font-size:clamp(26px,7.4vw,36px)!important;margin:9px 0 0!important;white-space:nowrap!important}
+ body.retail-home:not(.app-store) .mvn-editorial-packstage{inset:auto 0 52px!important;width:100%!important;height:213px!important}
+ body.retail-home:not(.app-store) .mvn-editorial-buttons{bottom:10px!important}
+ body.retail-home:not(.app-store) .mvn-editorial-button-primary{min-height:35px!important;padding:8px 14px!important;font-size:10px!important}
+ body.retail-home:not(.app-store) .mvn-editorial-promo{height:151px!important;padding:11px!important}
+ body.retail-home:not(.app-store) .mvn-editorial-promo-overline{font-size:7px!important;width:60%!important;max-width:60%!important;margin-bottom:8px!important}
+ body.retail-home:not(.app-store) .mvn-editorial-promo strong{font-size:clamp(15px,4vw,21px)!important;width:55%!important;max-width:55%!important}
+ body.retail-home:not(.app-store) .mvn-editorial-promo img{height:68%!important;width:40%!important;right:2px!important;bottom:20px!important}
+ body.retail-home:not(.app-store) .mvn-editorial-promo-bottom{bottom:9px!important;left:10px!important;padding:5px!important;font-size:7px!important}
+ body.retail-home:not(.app-store) .mvn-editorial-category{height:181px!important;min-height:181px!important}
+}
+@media(prefers-reduced-motion:reduce){body.retail-home:not(.app-store) .mvn-editorial-buttons a{transition:none!important}}
