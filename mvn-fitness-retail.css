@@ -1,0 +1,332 @@
+/*
+ * MVN FITNESS RETAIL — isolated storefront presentation layer.
+ *
+ * Inspiration: the "Advance Fitness Gym" WordPress theme. The uploaded .pot
+ * is a gettext translation catalogue, not an installable theme.
+ * This is an original MVN adaptation, not a verbatim WordPress theme port.
+ *
+ * Scope: retail-home + five public product-info pages only.
+ * Never modify the supplied MVN logo, product pixels, product data, app,
+ * cart behaviour, enquiry links, wholesale access, payment or shipping.
+ */
+body.retail-home.mvn-fitness-refresh:not(.app-store) {
+  --mvn-fit-ink: #111820;
+  --mvn-fit-charcoal: #111519;
+  --mvn-fit-surface: #f4f5f6;
+  --mvn-fit-rule: #dfe3e6;
+  --mvn-fit-white: #fff;
+  --mvn-fit-accent: #d6543e;
+  background: var(--mvn-fit-white) !important;
+  color: var(--mvn-fit-ink) !important;
+  font-family: "Arial Narrow", "Helvetica Neue", Arial, sans-serif !important;
+}
+/* Sport-style masthead. Preserve original transparent MVN artwork. */
+body.retail-home.mvn-fitness-refresh:not(.app-store) .storehead {
+  background: #0d1211 !important;
+  border-bottom: 1px solid #292f35 !important;
+  box-shadow: 0 6px 28px rgba(0,0,0,.12) !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .storehead .brand-identity,
+body.retail-home.mvn-fitness-refresh:not(.app-store) .storehead .original-brand-logo {
+  background: transparent !important;
+  filter: none !important;
+  object-fit: contain !important;
+  object-position: left center !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .storehead .header-descriptor {
+  color: #d8dbe0 !important;
+  font-weight: 800 !important;
+  letter-spacing: .09em !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .storehead #search {
+  background: #fff !important;
+  border-color: #b9c0c6 !important;
+  border-radius: 3px !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .storehead #search button {
+  background: #d6543e !important;
+  color: #fff !important;
+  font-weight: 900 !important;
+  letter-spacing: .06em !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .storehead .head-actions :is(.account-link,.wa,.mvn-header-email,#bag) {
+  color: #f7f3e9 !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .storehead .head-actions #bag em {
+  background: #d6543e !important;
+  color: white !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .nav {
+  background: #1a2025 !important;
+  color: #fff !important;
+  border-color: #292e34 !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .nav a {
+  color: #f3f4f5 !important;
+  font-weight: 850 !important;
+  letter-spacing: .04em !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .nav a:hover,
+body.retail-home.mvn-fitness-refresh:not(.app-store) .nav a:focus-visible,
+body.retail-home.mvn-fitness-refresh:not(.app-store) .nav a.nav-featured {
+  color: #fff !important;
+  border-bottom-color: #e16954 !important;
+}
+/* Owner-supplied wide campaign image: always whole, never cut/recomposed. */
+body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial {
+  background: #101419 !important;
+  border-bottom: 1px solid #2b3037 !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-feature.mvn-owner-banner-feature {
+  background: #070b10 !important;
+  border: 1px solid #343941 !important;
+  border-radius: 4px !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-owner-banner-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  filter: none !important;
+  transform: none !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-promo {
+  border: 1px solid #353d44 !important;
+  border-radius: 4px !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-promo strong {
+  font-weight: 900 !important;
+  letter-spacing: -.035em !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-promo-bottom b {
+  color: #fff !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-benefits {
+  border-top: 1px solid #313740 !important;
+}
+/* Strong, magazine-like category navigation. */
+body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-categories {
+  background: #f4f5f6 !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-categories-heading h2 {
+  color: #141b21 !important;
+  font-weight: 950 !important;
+  line-height: 1.06 !important;
+  letter-spacing: -.05em !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-category {
+  border-radius: 3px !important;
+  border: 1px solid rgba(10,15,20,.14) !important;
+  overflow: hidden !important;
+  transition: transform .18s ease, box-shadow .18s ease !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-category:hover {
+  transform: translateY(-3px) !important;
+  box-shadow: 0 13px 28px rgba(0,0,0,.14) !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-category-action b {
+  color: #e86f56 !important;
+}
+/* E-commerce catalogue: white product imagery, serious legible type. */
+body.retail-home.mvn-fitness-refresh:not(.app-store) main#shop {
+  background: #f4f5f6 !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .section-title h2,
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .productbar h3 {
+  color: #111820 !important;
+  font-weight: 950 !important;
+  letter-spacing: -.055em !important;
+  line-height: 1.06 !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .cats button {
+  border-radius: 3px !important;
+  font-weight: 850 !important;
+  letter-spacing: .03em !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .cats button.active {
+  background: #111820 !important;
+  border-color: #111820 !important;
+  color: #fff !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .collection-results #grid {
+  gap: clamp(11px, 1.4vw, 20px) !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .collection-results .card {
+  background: #fff !important;
+  border: 1px solid #e0e4e7 !important;
+  border-radius: 4px !important;
+  box-shadow: 0 4px 18px rgba(17,24,32,.055) !important;
+  transition: box-shadow .18s ease, transform .18s ease !important;
+  overflow: hidden !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .collection-results .card:hover {
+  border-color: #bdc7ce !important;
+  box-shadow: 0 11px 30px rgba(17,24,32,.11) !important;
+  transform: translateY(-2px) !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .collection-results .card .photo {
+  background: #f7f8fa !important;
+  border-bottom: 1px solid #eef0f2 !important;
+  padding: 9px !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .collection-results .card .photo img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center !important;
+  filter: none !important;
+  padding: 0 !important;
+  mix-blend-mode: normal !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .collection-results .card .info {
+  background: #fff !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .collection-results .card .info > small:first-child {
+  background: #20272d !important;
+  color: #fff !important;
+  border-radius: 2px !important;
+  font-weight: 800 !important;
+  letter-spacing: .055em !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .collection-results .card .info > h3 {
+  font-weight: 900 !important;
+  color: #151b20 !important;
+  line-height: 1.17 !important;
+  letter-spacing: -.025em !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .collection-results .card .selling-price {
+  font-weight: 950 !important;
+  color: #111820 !important;
+  font-variant-numeric: tabular-nums !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .collection-results .card select.variant {
+  background: #fff !important;
+  color: #17222b !important;
+  border: 1px solid #bfc6cc !important;
+  border-radius: 3px !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .collection-results .card .add {
+  background: #d6543e !important;
+  color: #fff !important;
+  border-color: #d6543e !important;
+  border-radius: 3px !important;
+  font-weight: 900 !important;
+  letter-spacing: .02em !important;
+  min-height: 43px !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .collection-results .card .add:hover,
+body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .collection-results .card .add:focus-visible {
+  background: #ad3c2a !important;
+  border-color: #ad3c2a !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .site-footer {
+  background: #121619 !important;
+  border-top: 3px solid #d6543e !important;
+  color: #f4f5f6 !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .site-footer .footer-contact-card {
+  background: #20262a !important;
+}
+/* Product SEO pages: align the editorial product detail template with the shop. */
+body.mvn-fitness-product {
+  background: #f4f5f6 !important;
+  color: #141b21 !important;
+  font-family: "Helvetica Neue", Arial, sans-serif !important;
+}
+body.mvn-fitness-product > .top {
+  background: #1b2025 !important;
+  color: #e5e8ec !important;
+}
+body.mvn-fitness-product > header {
+  background: #090b0d !important;
+  border-bottom: 3px solid #d6543e !important;
+}
+body.mvn-fitness-product > header nav a {
+  color: #f4f5f6 !important;
+  font-weight: 850 !important;
+}
+body.mvn-fitness-product main { max-width: 1240px !important; }
+body.mvn-fitness-product main .breadcrumb {
+  font-size: 12px !important;
+  font-weight: 700 !important;
+  letter-spacing: .025em !important;
+}
+body.mvn-fitness-product main .grid { gap: clamp(22px,4vw,58px) !important; }
+body.mvn-fitness-product main .media {
+  background: #fff !important;
+  border: 1px solid #e0e4e7 !important;
+  border-radius: 4px !important;
+  box-shadow: 0 10px 35px rgba(17,24,32,.05) !important;
+}
+body.mvn-fitness-product main .media img {
+  object-fit: contain !important;
+  max-width: 100% !important;
+  filter: none !important;
+}
+body.mvn-fitness-product main .kicker {
+  color: #ad4434 !important;
+  font-weight: 900 !important;
+}
+body.mvn-fitness-product main h1 {
+  color: #10171d !important;
+  letter-spacing: -.052em !important;
+  font-weight: 950 !important;
+}
+body.mvn-fitness-product main .lead { color: #3b4750 !important; }
+body.mvn-fitness-product main .panel {
+  border-radius: 4px !important;
+  border: 1px solid #e0e4e7 !important;
+  background: #fff !important;
+}
+body.mvn-fitness-product main .button {
+  border-radius: 3px !important;
+  background: #d6543e !important;
+  border: 1px solid #d6543e !important;
+  color: #fff !important;
+  font-weight: 900 !important;
+}
+body.mvn-fitness-product main .button.alt {
+  background: #fff !important;
+  border-color: #19232c !important;
+  color: #19232c !important;
+}
+body.mvn-fitness-product > footer {
+  background: #141a1e !important;
+  border-top: 3px solid #d6543e !important;
+  color: #d5dce0 !important;
+}
+body.mvn-fitness-product > footer a { color: #fff !important; }
+/* Accessibility and small screens; no forced install, hidden controls or JS. */
+body.mvn-fitness-product :is(a,button,select,input):focus-visible,
+body.retail-home.mvn-fitness-refresh:not(.app-store) :is(a,button,select,input):focus-visible {
+  outline: 3px solid #eb876a !important;
+  outline-offset: 3px !important;
+}
+@media (max-width: 650px) {
+  body.retail-home.mvn-fitness-refresh:not(.app-store) .storehead {
+    background: #0d1211 !important;
+    border-bottom-color: #343941 !important;
+  }
+  body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-feature.mvn-owner-banner-feature {
+    border-radius: 0 !important;
+  }
+  body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-category:hover {
+    transform: none !important;
+  }
+  body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .collection-results .card .info {
+    padding: 11px 10px 13px !important;
+  }
+  body.mvn-fitness-product main { padding: 22px 16px 42px !important; }
+  body.mvn-fitness-product main .grid { grid-template-columns: minmax(0,1fr) !important; }
+  body.mvn-fitness-product main .media {
+    min-height: 250px !important;
+    padding: 16px !important;
+  }
+  body.mvn-fitness-product main h1 { font-size: clamp(31px,8vw,43px) !important; }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-category,
+  body.retail-home.mvn-fitness-refresh:not(.app-store) #shop .collection-results .card {
+    transition: none !important;
+    transform: none !important;
+  }
+}
