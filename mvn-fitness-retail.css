@@ -103,6 +103,41 @@ body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-promo-bottom
 body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-benefits {
   border-top: 1px solid #313740 !important;
 }
+/* CREATINE PROMO PHOTO FIT — 2026-11-15
+   The actual tile is .mvn-editorial-promo-creatine (not .creatine-card).
+   Keep the original transparent 250 g product photo, fully within the card,
+   clear of the label/CTA; do not affect Nitro Mass or category thumbnails. */
+body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-promo-creatine > img {
+  position: absolute !important;
+  top: auto !important;
+  right: 12px !important;
+  bottom: 35px !important;
+  width: 38% !important;
+  max-width: 38% !important;
+  height: 72% !important;
+  max-height: 72% !important;
+  object-fit: contain !important;
+  object-position: center bottom !important;
+  transform: none !important;
+  clip-path: none !important;
+  -webkit-clip-path: none !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+  mix-blend-mode: normal !important;
+  opacity: 1 !important;
+}
+/* On narrow phones, the promos share a row: preserve right-column clearance. */
+@media (max-width: 650px) {
+  body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-promo-creatine > img {
+    right: 5px !important;
+    bottom: 31px !important;
+    width: 36% !important;
+    max-width: 36% !important;
+    height: 56% !important;
+    max-height: 56% !important;
+  }
+}
+
 /* Strong, magazine-like category navigation. */
 body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-categories {
   background: #f4f5f6 !important;
