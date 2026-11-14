@@ -43,85 +43,39 @@ try {
   // Reference-inspired storefront should present substantial original merchandise imagery
   // and usable, non-duplicated category cards BEFORE the existing cart catalogue.
   const showcase=page.locator('#mvnEditorial');
-  assert.ok(await showcase.isVisible(),size.name+' premium marketing hero must be visible');
-  assert.match(await showcase.locator('h1').innerText(),/STRENGTH\s*BUILDS/i,'performance headline is visible');
-  const campaignImg=showcase.locator('.mvn-editorial-packpanel img.mvn-hero-pack-main');
-  assert.equal(await campaignImg.getAttribute('src'),'assets/mvn-hero-whey-cutout.png',size.name+' source-backed transparent Potency Whey original is used');
-  assert.equal(await showcase.locator('.mvn-editorial-promo-mass img').getAttribute('src'),'assets/mvn-hero-nitro-cutout.png',size.name+' original Nitro Mass cutout is displayed');
-  assert.equal(await showcase.locator('.mvn-editorial-packpanel img.mvn-hero-pack').count(),3,size.name+' balanced original-product hero uses whey mass and creatine');
+  assert.ok(await showcase.isVisible(),size.name+' landscape homepage banner must be visible');
+  assert.match(await showcase.locator('h1').textContent(),/Max Volume Nutrition supplement collection/i);
+  const campaignImg=showcase.locator('img.mvn-owner-banner-img');
+  assert.equal(await campaignImg.getAttribute('src'),'assets/mvn-owner-landscape-banner.webp',size.name+' exact owner-supplied product banner is displayed');
   await campaignImg.waitFor({state:'visible'});
-  assert.ok(await campaignImg.evaluate(img=>img.complete&&img.naturalWidth>0),size.name+' original whey hero photo loads');
-  await page.waitForFunction(()=>[...document.querySelectorAll('.mvn-editorial-packpanel img')].every(img=>img.complete&&img.naturalWidth>0),{timeout:12000});
+  await page.waitForFunction(()=>{const img=document.querySelector('.mvn-owner-banner-img');return img?.complete&&img.naturalWidth===1753&&img.naturalHeight===897},{timeout:12000});
   const campaignGeometry=await page.evaluate(()=>{
     const feature=document.querySelector('.mvn-editorial-feature').getBoundingClientRect();
     const shop=document.querySelector('#shop').getBoundingClientRect();
-    const promo=document.querySelector('.mvn-editorial-promos').getBoundingClientRect();
-    const cats=document.querySelector('.mvn-editorial-categories').getBoundingClientRect();
-    return {heroHeight:feature.height,shopY:shop.y,promoWidth:promo.width,categoryBottom:cats.bottom,scrollWidth:document.documentElement.scrollWidth};
-  });
-  assert.ok(campaignGeometry.heroHeight>=330&&campaignGeometry.heroHeight<=460,
-    size.name+' campaign must remain a compact store banner, not a tall poster: '+campaignGeometry.heroHeight);
-  const proportions=await page.evaluate(()=>{
-    const feature=document.querySelector('.mvn-editorial-feature').getBoundingClientRect();
-    const headline=document.querySelector('.mvn-editorial-copy h1').getBoundingClientRect();
-    const copy=document.querySelector('.mvn-editorial-copy');
-    const image=document.querySelector('.mvn-editorial-packpanel .mvn-hero-pack-main').getBoundingClientRect();
     const promos=document.querySelector('.mvn-editorial-promos').getBoundingClientRect();
-    const layout=document.querySelector('.mvn-editorial-layout').getBoundingClientRect();
-    return {feature:{x:feature.x,y:feature.y,w:feature.width,h:feature.height},
-      headline:{x:headline.x,y:headline.y,w:headline.width,h:headline.height},
-      image:{x:image.x,y:image.y,w:image.width,h:image.height},
+    const cats=document.querySelector('.mvn-editorial-categories').getBoundingClientRect();
+    const image=document.querySelector('.mvn-owner-banner-img').getBoundingClientRect();
+    return {
+      heroHeight:feature.height,shopY:shop.y,promoWidth:promos.width,
+      categoryBottom:cats.bottom,scrollWidth:document.documentElement.scrollWidth,
+      hero:{x:feature.x,y:feature.y,w:feature.width,h:feature.height},
       promos:{x:promos.x,y:promos.y,w:promos.width,h:promos.height},
-      layout:{x:layout.x,y:layout.y,w:layout.width,h:layout.height},
-      leadDisplay:getComputedStyle(document.querySelector('.mvn-editorial-lead')).display};
+      img:{x:image.x,y:image.y,w:image.width,h:image.height},
+      fit:getComputedStyle(document.querySelector('.mvn-owner-banner-img')).objectFit,
+      heroSrc:document.querySelector('.mvn-owner-banner-img').currentSrc
+    };
   });
-  assert.ok(proportions.headline.h<=165,size.name+' editorial headline fits its column');
-  assert.ok(proportions.image.h>=135,size.name+' whey remains a major product image');
-  assert.equal(proportions.leadDisplay,'none',size.name+' grouped-storefront hero uses concise copy');
+  assert.ok(campaignGeometry.heroHeight>=150&&campaignGeometry.heroHeight<=530,size.name+' full banner fits without poster-like height');
+  assert.equal(campaignGeometry.fit,'contain',size.name+' full artwork must not be cropped');
+  assert.ok(campaignGeometry.heroSrc.includes('mvn-owner-landscape-banner.webp'),size.name+' owner artwork loaded');
   if(size.name==='desktop'){
-    assert.ok(proportions.promos.x>proportions.feature.x+proportions.feature.w-3,
-      'two promo cards must stay to the right of main landscape banner');
-    assert.ok(proportions.feature.w/proportions.feature.h>1.4,'main desktop banner is landscape');
+    assert.ok(campaignGeometry.hero.w/campaignGeometry.hero.h>1.4,'desktop banner remains landscape');
+    assert.ok(campaignGeometry.promos.x>=campaignGeometry.hero.x+campaignGeometry.hero.w-3,'two promo panels remain to the right');
+    assert.ok(Math.abs(campaignGeometry.hero.h-campaignGeometry.promos.h)<3,'promo stack equals main banner height');
   }else{
-    assert.ok(proportions.promos.y>=proportions.feature.y+proportions.feature.h-3,
-      'mobile stacks promotions only after compact banner');
+    assert.ok(campaignGeometry.promos.y>=campaignGeometry.hero.y+campaignGeometry.hero.h-3,'mobile panels stack below the landscape banner');
   }
-  const heroSurface=await page.locator('.mvn-editorial-packpanel').evaluate(el=>({
-    background:getComputedStyle(el).backgroundColor,
-    border:getComputedStyle(el).borderTopWidth,
-    transform:getComputedStyle(el).transform,
-    visibleWidth:el.getBoundingClientRect().width,
-    imageMask:getComputedStyle(el.querySelector('img')).maskImage
-  }));
-  assert.equal(heroSurface.background,'rgba(0, 0, 0, 0)',size.name+' product photo has no pasted white image frame');
-  assert.equal(heroSurface.border,'0px',size.name+' original pack photograph has no artificial border');
-  assert.equal(heroSurface.transform,'none',size.name+' hero product is not a tilted sticker');
-  assert.ok(heroSurface.visibleWidth>=180,size.name+' large product-centric image');
-  assert.equal(heroSurface.imageMask,'none',size.name+' pack edges use actual bottle shape rather than radial fade');
-  const originalCutout=await showcase.locator('.mvn-hero-pack-main').evaluate(img=>({
-    clip:getComputedStyle(img).clipPath,
-    blend:getComputedStyle(img).mixBlendMode
-  }));
-  assert.equal(originalCutout.clip,'none',size.name+' true-alpha original whey cutout has no artificial polygon crop');
-  assert.equal(originalCutout.blend,'normal',size.name+' original whey label colors preserved');
-  const clearPacks=await showcase.locator('.mvn-hero-pack-nitro,.mvn-hero-pack-creatine').evaluateAll(imgs=>imgs.map(img=>({
-    mask:getComputedStyle(img).maskImage,blend:getComputedStyle(img).mixBlendMode
-  })));
-  assert.ok(clearPacks.every(img=>img.mask==='none'&&img.blend==='normal'),size.name+' transparent original products have no destructive fade or blend');
-
-  const alphaPacks=await showcase.locator('.mvn-editorial-packpanel .mvn-hero-pack').evaluateAll(async imgs=>{
-    return await Promise.all(imgs.map(async img=>{
-      const response=await fetch(img.currentSrc);
-      const blob=await response.blob();
-      const bmp=await createImageBitmap(blob);
-      const canvas=document.createElement('canvas');canvas.width=bmp.width;canvas.height=bmp.height;
-      const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(bmp,0,0);
-      const a=ctx.getImageData(0,0,1,1).data[3];
-      return {src:img.getAttribute('src'),cornerAlpha:a};
-    }));
-  });
-  assert.ok(alphaPacks.every(p=>p.cornerAlpha===0),size.name+' every hero product is a true alpha PNG with transparent corners');
-
+  assert.equal(await showcase.locator('.mvn-editorial-promo').count(),2,'two original right-side promo cards remain');
   assert.ok(campaignGeometry.categoryBottom<=campaignGeometry.shopY+20,size.name+' visual categories precede retail collection');
   assert.ok(campaignGeometry.scrollWidth<=size.width+10,size.name+' campaign does not overflow viewport');
   assert.equal(await page.locator('.mvn-editorial-category').count(),4,'show four photo-led verified categories');
