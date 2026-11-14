@@ -63,7 +63,7 @@ body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-platform{
 }
 body.retail-home:not(.app-store) .mvn-editorial-packpanel img.mvn-hero-pack{
  display:block!important;position:absolute!important;
- width:auto!important;max-width:none!important;height:auto!important;
+ max-width:none!important;
  object-fit:contain!important;object-position:center bottom!important;
  padding:0!important;margin:0!important;
  border:0!important;background:transparent!important;box-shadow:none!important;
