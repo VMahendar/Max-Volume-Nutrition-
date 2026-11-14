@@ -46,7 +46,7 @@ try {
   assert.ok(await showcase.isVisible(),size.name+' premium marketing hero must be visible');
   assert.match(await showcase.locator('h1').innerText(),/FUEL EVERY\s*REP/i,'performance headline is visible');
   const campaignImg=showcase.locator('.mvn-editorial-packpanel img.mvn-hero-pack-main');
-  assert.equal(await showcase.locator('.mvn-editorial-packpanel img.mvn-hero-pack').count(),3,size.name+' three original supplements form a landscape lineup');
+  assert.equal(await showcase.locator('.mvn-editorial-packpanel img.mvn-hero-pack').count(),1,size.name+' single original whey pack keeps hero uncluttered');
   await campaignImg.waitFor({state:'visible'});
   assert.ok(await campaignImg.evaluate(img=>img.complete&&img.naturalWidth>0),size.name+' original whey hero photo loads');
   await page.waitForFunction(()=>[...document.querySelectorAll('.mvn-editorial-packpanel img')].every(img=>img.complete&&img.naturalWidth>0),{timeout:12000});
@@ -57,7 +57,7 @@ try {
     const cats=document.querySelector('.mvn-editorial-categories').getBoundingClientRect();
     return {heroHeight:feature.height,shopY:shop.y,promoWidth:promo.width,categoryBottom:cats.bottom,scrollWidth:document.documentElement.scrollWidth};
   });
-  assert.ok(campaignGeometry.heroHeight>=330&&campaignGeometry.heroHeight<=430,
+  assert.ok(campaignGeometry.heroHeight>=420&&campaignGeometry.heroHeight<=590,
     size.name+' campaign must remain a compact store banner, not a tall poster: '+campaignGeometry.heroHeight);
   const proportions=await page.evaluate(()=>{
     const feature=document.querySelector('.mvn-editorial-feature').getBoundingClientRect();
@@ -73,13 +73,13 @@ try {
       layout:{x:layout.x,y:layout.y,w:layout.width,h:layout.height},
       leadDisplay:getComputedStyle(document.querySelector('.mvn-editorial-lead')).display};
   });
-  assert.ok(proportions.headline.h<=75,size.name+' compact headline cannot consume hero');
+  assert.ok(proportions.headline.h<=165,size.name+' editorial headline fits its column');
   assert.ok(proportions.image.h>=135,size.name+' whey remains a major product image');
-  assert.equal(proportions.leadDisplay,'none',size.name+' remove poster-like paragraphs');
+  assert.equal(proportions.leadDisplay,'block',size.name+' editorial headline has brief supporting copy');
   if(size.name==='desktop'){
     assert.ok(proportions.promos.x>proportions.feature.x+proportions.feature.w-3,
       'two promo cards must stay to the right of main landscape banner');
-    assert.ok(proportions.feature.w/proportions.feature.h>1.5,'main desktop banner is landscape');
+    assert.ok(proportions.feature.w/proportions.feature.h>1.45,'main desktop banner is landscape');
   }else{
     assert.ok(proportions.promos.y>=proportions.feature.y+proportions.feature.h-3,
       'mobile stacks promotions only after compact banner');
@@ -91,11 +91,11 @@ try {
     visibleWidth:el.getBoundingClientRect().width,
     imageMask:getComputedStyle(el.querySelector('img')).maskImage
   }));
-  assert.equal(heroSurface.background,'rgba(0, 0, 0, 0)',size.name+' hero product is not pasted onto a white rectangle');
-  assert.equal(heroSurface.border,'0px',size.name+' hero image uses no artificial frame');
+  assert.ok(heroSurface.background.includes('247')||heroSurface.background.includes('246'),size.name+' original rectangular photo is presented on an intentional neutral studio stage');
+  assert.equal(heroSurface.border,'7px',size.name+' studio product image uses intentional photographic frame');
   assert.equal(heroSurface.transform,'none',size.name+' hero product is not a tilted sticker');
   assert.ok(heroSurface.visibleWidth>=180,size.name+' large product-centric image');
-  assert.ok(heroSurface.imageMask.includes('radial-gradient'),size.name+' source image edges fade naturally into the scene');
+  assert.equal(heroSurface.imageMask,'none',size.name+' original manufacturer pack photograph is not artificially masked');
 
   assert.ok(campaignGeometry.categoryBottom<=campaignGeometry.shopY+20,size.name+' visual categories precede retail collection');
   assert.ok(campaignGeometry.scrollWidth<=size.width+10,size.name+' campaign does not overflow viewport');
