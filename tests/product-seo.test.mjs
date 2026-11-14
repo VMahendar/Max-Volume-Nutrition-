@@ -26,9 +26,8 @@ test('rich product snippet uses real catalog retail offers and visible matching 
  assert.ok(whey.content.includes('₹5,500'));
  assert.ok(whey.content.includes('No published customer reviews yet'));
  const mass=buildProductFragments('/nitro-mass.html',catalogue,[]);
- assert.equal(schema(mass).offers['@type'],'AggregateOffer');
- assert.equal(schema(mass).offers.lowPrice,'2599.00');
- assert.equal(schema(mass).offers.highPrice,'3499.00');
+ assert.equal(schema(mass).offers['@type'],'Offer');
+ assert.equal(schema(mass).offers.price,'3499.00','Offer must refer to the displayed 5 kg image/pack');
  assert.ok(mass.content.includes('₹2,599'));
  assert.ok(mass.content.includes('₹3,499'));
 });
