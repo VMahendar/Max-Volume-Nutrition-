@@ -1,0 +1,72 @@
+/* Homepage owner-approved banner: render the exact uploaded composition whole.
+   No product photo reassembly, no cropping, no overlay over official artwork. */
+body.retail-home:not(.app-store) .mvn-editorial-feature.mvn-owner-banner-feature{
+ position:relative!important;
+ height:clamp(350px,35.7vw,510px)!important;
+ min-height:0!important;
+ overflow:hidden!important;
+ padding:0!important;
+ background:#070c13!important;
+ border-radius:7px!important;
+}
+body.retail-home:not(.app-store) .mvn-editorial-feature.mvn-owner-banner-feature::before,
+body.retail-home:not(.app-store) .mvn-editorial-feature.mvn-owner-banner-feature::after{
+ display:none!important;content:none!important;
+}
+body.retail-home:not(.app-store) .mvn-owner-banner-link{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ width:100%!important;height:100%!important;
+ padding:0!important;margin:0!important;
+ overflow:hidden!important;position:relative!important;
+ cursor:pointer;
+}
+body.retail-home:not(.app-store) .mvn-owner-banner-img{
+ display:block!important;width:100%!important;height:100%!important;
+ object-fit:contain!important;object-position:center center!important;
+ background:#070c13!important;
+ filter:none!important;clip-path:none!important;
+ border:0!important;max-width:none!important;
+}
+body.retail-home:not(.app-store) .mvn-owner-banner-sr{
+ position:absolute!important;width:1px!important;height:1px!important;
+ padding:0!important;margin:-1px!important;overflow:hidden!important;
+ clip:rect(0,0,0,0)!important;white-space:nowrap!important;
+ border:0!important;
+}
+body.retail-home:not(.app-store) .mvn-owner-banner-link:focus-visible{
+ outline:3px solid #edba71!important;outline-offset:-5px!important;
+}
+body.retail-home:not(.app-store) .mvn-editorial-promos{
+ height:clamp(350px,35.7vw,510px)!important;
+ grid-template-rows:repeat(2,minmax(0,1fr))!important;
+}
+body.retail-home:not(.app-store) .mvn-editorial-promo{
+ min-height:0!important;height:100%!important;
+}
+@media(max-width:860px){
+ body.retail-home:not(.app-store) .mvn-editorial-feature.mvn-owner-banner-feature{
+  height:auto!important;min-height:0!important;
+  aspect-ratio:1753 / 897!important;
+ }
+ body.retail-home:not(.app-store) .mvn-editorial-promos{
+  height:auto!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  grid-template-rows:1fr!important;
+ }
+ body.retail-home:not(.app-store) .mvn-editorial-promo{
+  min-height:165px!important;height:165px!important;
+ }
+}
+@media(max-width:650px){
+ body.retail-home:not(.app-store) .mvn-editorial-feature.mvn-owner-banner-feature{
+  height:auto!important;min-height:0!important;
+  aspect-ratio:1753 / 897!important;
+ }
+ body.retail-home:not(.app-store) .mvn-owner-banner-img{
+  width:100%!important;height:100%!important;
+  object-fit:contain!important;
+ }
+ body.retail-home:not(.app-store) .mvn-editorial-promo{
+  min-height:150px!important;height:150px!important;
+ }
+}
