@@ -134,3 +134,16 @@ body.retail-home:not(.app-store) .mvn-editorial-category-whey img{
   width:27%!important;right:3%!important;bottom:1%!important;
  }
 }
+
+/* Mobile priority: central owner-original whey pack stays larger than flank packs. */
+@media(max-width:650px){
+ body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-pack-main{
+  width:41%!important;left:35%!important;bottom:0!important;
+ }
+ body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-pack-nitro{
+  width:30%!important;left:16%!important;bottom:0!important;
+ }
+ body.retail-home:not(.app-store) .mvn-editorial-packpanel .mvn-hero-pack-creatine{
+  width:26%!important;right:1%!important;bottom:0!important;
+ }
+}
