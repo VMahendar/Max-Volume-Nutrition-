@@ -49,7 +49,7 @@ jobs:
           const testId='doEpl2JC-Azlt-OuFvhwGA';
           for(const type of ['local-business','organization-info']){
             try{
-              const r=await fetch('https://search.google.com/test/rich-results/result/r/'+type+'?id='+testId);
+              const r=await fetch('https://search.google.com/test/rich-results/result/r%2F'+type+'?id='+testId);
               const h=await r.text();
               const plain=h.replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ');
               console.log('DETAIL',type,JSON.stringify({status:r.status,url:r.url,warnings:[...plain.matchAll(/.{0,90}(?:Missing field|warning|Invalid|recommended|optional|error).{0,140}/gi)].slice(0,24).map(x=>x[0]),text:plain.slice(700,2100)}).slice(0,8000));
