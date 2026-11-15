@@ -9,7 +9,8 @@ test('supplement store screenshot reference drives the actual homepage structure
  assert.match(html,/mvn-supplement-store-reference\.css\?v=20261115-ref1/);
  assert.match(html,/class="mvn-theme-categories"/);
  assert.match(html,/class="mvn-theme-main-nav"/);
- assert.match(html,/class="mvn-theme-slider-copy"/);
+ assert.doesNotMatch(html,/class="mvn-theme-slider-copy"/, "hero pack photo must remain unobstructed");
+ assert.match(html,/class="mvn-hero-action-strip"/, "CTA lives below pack photograph");
  assert.match(html,/class="mvn-editorial-promos"/);
  assert.match(html,/mvn-theme-shop-goals/);
  assert.equal((html.match(/class="mvn-editorial-category mvn-editorial-category-/g)||[]).length,3);
@@ -27,8 +28,9 @@ test('supplement store screenshot reference drives the actual homepage structure
 test('existing MVN commerce, search and independent mobile app are preserved',()=>{
  const html=readFileSync('public/index.html','utf8');
  const native=readFileSync('public/mobile-app.html','utf8');
- for(const token of ['id="grid"','id="search"','id="bag"','id="shop"','id="priceRange"','id="dealer"','id="checkoutFields"','id="drawer"'])assert.ok(html.includes(token),'retail hook '+token);
+ for(const token of ['id="grid"','id="search"','id="bag"','id="shop"','id="priceRange"','id="checkoutFields"','id="drawer"'])assert.ok(html.includes(token),'retail hook '+token);
  assert.equal(readFileSync('index.html','utf8'),html,'production/public page and mirrored homepage match');
+ assert.match(html,/href="dealer.html"/,"wholesale remains reachable");
  assert.equal(readFileSync('mvn-supplement-store-reference.css','utf8'),readFileSync('public/mvn-supplement-store-reference.css','utf8'));
  assert.doesNotMatch(native,/mvn-supplement-store-reference\.css/,'native app layout remains independent');
 });

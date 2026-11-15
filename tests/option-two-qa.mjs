@@ -143,15 +143,16 @@ try {
   assert.equal(await email.getAttribute('href'),'mailto:maxvolumenutrition@gmail.com');
   assert.equal(await email.isVisible(),false,'contact email moves to theme utility strip');
   const topContact=page.locator('.announce a[href="contact.html"]');
-  assert.equal(await topContact.isVisible(),true,size.name+' top bar provides Contact link rather than displaying personal contact details');
-  assert.doesNotMatch(await page.locator('.announce').innerText(),/77088|@gmail/,'contact information appears only after opening Contact page');
+  assert.equal(await topContact.count(),0,size.name+' top bar does not duplicate Contact');
+  assert.equal(await page.locator('.announce').isVisible(),false,size.name+' extra top strip is hidden');
   await more.locator('summary').click();
   assert.equal(await menuPanel.isVisible(),true,size.name+' three-dot menu opens');
   assert.equal(await menuPanel.locator('a[href="mailto:maxvolumenutrition@gmail.com"]').count(),0,'do not duplicate contact methods in menu');
-  assert.equal(await menuPanel.locator('a[href="dealer.html"]').count(),1,'menu includes wholesale enquiries');
-  assert.equal(await menuPanel.locator('a[href="support.html"]').count(),1,'menu includes support');
-  assert.equal(await menuPanel.locator('a[href="https://wa.me/917708830513"]').count(),0,'WhatsApp contact belongs on support page');
-  assert.equal(await menuPanel.locator('a[href="support.html"]').count(),1,'only one support destination');
+  assert.equal(await menuPanel.locator('a').count(),3,'only three menu links');
+  assert.equal(await menuPanel.locator('a[href="about.html"]').count(),1,'menu includes About Us');
+  assert.equal(await menuPanel.locator('a[href="contact.html"]').count(),1,'menu includes Contact');
+  assert.equal(await menuPanel.locator('a[href="dealer.html"]').count(),1,'menu includes Wholesale');
+  assert.equal(await menuPanel.locator('a[href="support.html"]').count(),0,'support not duplicated in menu');
   await page.keyboard.press('Escape');
   assert.equal(await menuPanel.isVisible(),false,size.name+' Escape closes menu');
   await more.locator('summary').click();
@@ -176,7 +177,7 @@ try {
    };
   });
   console.log('SUPPLEMENT_REFERENCE_VISUAL',size.name,JSON.stringify(visual));
-  assert.ok(visual.headerBackgroundImage.includes('linear-gradient')||visual.headerBackground==='rgb(23, 25, 26)',size.name+' orange-and-black header');
+  assert.equal(visual.headerBackground,'rgb(20, 26, 33)',size.name+' clean charcoal header');
   assert.equal(await page.locator('.mvn-theme-main-nav').isVisible(),true,size.name+' reference nav is visible');
   assert.ok(visual.logoLoaded,'original gold MVN header artwork loads');
   assert.equal(visual.accountColor,'rgb(255, 255, 255)','account icon is legible on dark/orange masthead');
@@ -203,23 +204,27 @@ try {
   assert.equal(await page.locator('#drawer').getAttribute('aria-hidden'),'false',size.name+' cart drawer opens');
   await page.locator('#close').click();
   await page.screenshot({path:folder+'/'+size.name+'.png',animations:'disabled'});
-  await page.locator('.mvn-quick-page[href="contact.html"]').click();
+  await more.locator('summary').click();
+  await menuPanel.locator('a[href="contact.html"]').click();
   await page.waitForURL('**/contact.html');
-  assert.equal(await page.locator('main .mvn-info-contact-value').count(),2,size.name+' contact page shows phone and email only after being opened');
-  assert.ok((await page.locator('main').innerText()).includes('+91 77088 30513'),size.name+' official phone appears on Contact page');
-  assert.ok((await page.locator('main').innerText()).includes('maxvolumenutrition@gmail.com'),size.name+' official email appears on Contact page');
+  assert.equal(await page.locator('main .mvn-info-contact-value').count(),2,size.name+' Contact page presents phone and email');
+  assert.ok((await page.locator('main').innerText()).includes('+91 77088 30513'),size.name+' official phone');
+  assert.ok((await page.locator('main').innerText()).includes('maxvolumenutrition@gmail.com'),size.name+' official email');
   await page.goBack({waitUntil:'domcontentloaded'});
-  await page.locator('.mvn-quick-page[href="certificate.html"]').click();
-  await page.waitForURL('**/certificate.html');
-  assert.ok(await page.locator('.mvn-info-document img').isVisible(),size.name+' full original certificate appears only on certificate page');
-  await page.waitForFunction(()=>{const i=document.querySelector('.mvn-info-document img');return i?.complete&&i.naturalWidth>200;});
-  await page.goBack({waitUntil:'domcontentloaded'});
-  for(const file of ['about.html','offers.html','brands.html']){
-    await page.locator('.mvn-quick-page[href="'+file+'"]').click();
+  await more.locator('summary').click();
+  await menuPanel.locator('a[href="about.html"]').click();
+  await page.waitForURL('**/about.html');
+  assert.equal(await page.locator('main.mvn-info-main').isVisible(),true,size.name+' About Us opens');
+  const issued=page.locator('.mvn-about-certificate-image img');
+  assert.ok(await issued.isVisible(),size.name+' issued certificate displayed within About Us');
+  await page.waitForFunction(()=>{const i=document.querySelector('.mvn-about-certificate-image img');return i?.complete&&i.naturalWidth>200;});
+  for(const file of ['offers.html','brands.html']){
+    await page.locator('.mvn-about-explore .mvn-quick-page[href="'+file+'"]').click();
     await page.waitForURL('**/'+file);
-    assert.equal(await page.locator('main.mvn-info-main').isVisible(),true,size.name+' '+file+' opens its own information page');
+    assert.equal(await page.locator('main.mvn-info-main').isVisible(),true,size.name+' '+file+' opens from About Us');
     await page.goBack({waitUntil:'domcontentloaded'});
   }
+  await page.goBack({waitUntil:'domcontentloaded'});
   assert.equal(await page.locator('#grid article.card').count()>=5,true,size.name+' after browsing info pages the working catalogue is restored');
 
   assert.deepEqual(errors,[],size.name+' unexpected browser Javascript errors');

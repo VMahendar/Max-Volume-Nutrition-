@@ -197,6 +197,7 @@
 <link rel="stylesheet" href="/mvn-homepage-consistency.css?v=20261115-1">
 <link rel="stylesheet" href="/mvn-supplement-store-reference.css?v=20261115-ref1">
 <link rel="stylesheet" href="/mvn-info-pages.css?v=20261115-info1">
+<link rel="stylesheet" href="/mvn-storefront-cleanup.css?v=20261115-nav-cleanup-1">
 
 </head>
 <body class="retail-home mvn-fitness-refresh mvn-advance-layout mvn-supplement-theme">
@@ -208,7 +209,6 @@
 </svg>
 <div class="announce">
   <span><span class="live-dot" aria-hidden="true"></span> CHENNAI · TAMIL NADU</span>
-  <a class="mvn-top-contact" href="contact.html">CONTACT US ↗</a>
 </div>
 <header class="storehead">
   <a class="brand brand-identity" href="index.html" aria-label="Max Volume Nutrition home"><img class="original-brand-logo" src="mvn-app-header-logo.webp" alt="Max Volume Nutrition — original business logo"><span class="mvn-header-wordmark" aria-hidden="true"><strong>MAX VOLUME</strong><span>NUTRITION</span></span></a>
@@ -244,47 +244,30 @@
     <button id="bag" type="button" aria-label="Open shopping cart"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 9V6a3 3 0 0 1 6 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>My bag</span> <em id="count" aria-live="polite">0</em></button>
     <details class="mvn-header-more">
       <summary aria-label="More options and contact details" title="More options"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></summary>
-      <nav class="mvn-more-panel" aria-label="More links and contact details">
-        <span class="mvn-more-heading">SHOP &amp; EXPLORE</span>
-        <a href="#shop">All supplements</a>
-        <a href="potency-whey.html">Whey protein</a>
-        <a href="nitro-mass.html">Mass gainers</a>
-        <a href="pro-creatine.html">Creatine</a>
-        <a href="sturdy-pre-workout.html">Pre-workout</a>
-        <a href="dealer.html">Wholesale enquiries</a>
-        <a href="wholesale-account.html">Wholesale login</a>
-        <a href="about.html">About Max Volume Nutrition</a>
-        <a href="certificate.html">Distributor certificate</a>
-        <a href="brands.html">Our brands</a>
-        <a href="offers.html">Retail offers</a>
-        <a href="contact.html">Contact us</a>
-        <a class="mvn-more-support" href="support.html">Help &amp; support</a>
+      <nav class="mvn-more-panel" aria-label="More website pages">
+        <a href="about.html">About Us</a>
+        <a href="contact.html">Contact</a>
+        <a href="dealer.html">Wholesale</a>
       </nav>
     </details>
   </div>
 </header>
-<nav class="mvn-theme-main-nav" aria-label="Main website pages">
+<nav class="mvn-theme-main-nav" aria-label="Supplement shopping navigation">
   <a class="mvn-theme-home-link" href="/">HOME</a>
-  <a href="about.html">ABOUT US</a>
-  <a href="#shop">SUPPLEMENTS</a>
-  <a href="certificate.html">CERTIFICATE</a>
-  <a href="brands.html">BRANDS</a>
-  <a href="offers.html">OFFERS</a>
-  <a href="dealer.html">WHOLESALE</a>
-  <a href="contact.html">CONTACT US</a>
+  <a href="#shop" data-cat="all">SHOP ALL</a>
+  <a href="#shop" data-cat="whey">WHEY PROTEIN</a>
+  <a href="#shop" data-cat="mass">MASS GAINER</a>
+  <a href="#shop" data-cat="creatine">CREATINE</a>
+  <a href="#shop" data-cat="pre">PRE-WORKOUT</a>
 </nav>
 <section id="mvnEditorial" class="mvn-editorial" aria-labelledby="mvnEditorialTitle">
   <div class="mvn-editorial-layout">
     <div class="mvn-editorial-feature mvn-owner-banner-feature">
       <h1 id="mvnEditorialTitle" class="mvn-owner-banner-sr">Max Volume Nutrition full sports supplement product collection</h1>
-      <div class="mvn-theme-slider-copy">
-        <span class="mvn-theme-slide-kicker">ORIGINAL SPORTS NUTRITION · MAX VOLUME NUTRITION</span>
-        <h2>STRENGTH <em>BUILDS.</em></h2>
-        <a href="#shop">SHOP NOW <span aria-hidden="true">↗</span></a>
-      </div>
       <a class="mvn-owner-banner-link" href="#shop" aria-label="Shop Max Volume Nutrition supplements shown together in the original product lineup">
         <img class="mvn-owner-banner-img" src="assets/mvn-banner-20261115-no-logo-no-pineapple.webp" alt="Full Max Volume Nutrition product lineup: Sturdy Pre-Workout, Potency Whey, Nitro Mass, GLOB-TECH Platinum Whey, Creatine Monohydrate, Crea Pump, Musclevite, Amino Lean Edge, Force 1 and L-Arginine, each retained in its original banner position" width="1753" height="897" decoding="async" fetchpriority="high">
       </a>
+      <div class="mvn-hero-action-strip"><strong>Original supplements. Clear retail prices.</strong><a href="#shop">SHOP THE COLLECTION <span aria-hidden="true">↗</span></a></div>
     </div>
     <div class="mvn-editorial-promos" aria-label="Featured supplement ranges">
       <a class="mvn-editorial-promo mvn-editorial-promo-mass" href="nitro-mass.html">
@@ -311,15 +294,15 @@
   <div class="mvn-editorial-categories-heading"><h2 id="mvnEditorialCategoriesTitle">SHOP BY <em>GOAL</em></h2></div>
   <div class="mvn-editorial-category-grid">
     <a class="mvn-editorial-category mvn-editorial-category-whey" data-cat="whey" href="#shop">
-      <div class="mvn-theme-goal-art"><img class="goal-main" src="assets/mvn-hero-whey-cutout-card.webp" alt="Unicorn Pro Series Potency Whey Coffee 5 lb original product photo" width="420" height="420" loading="lazy"><img class="goal-support" src="assets/musclevite-front.webp" alt="Musclevite multivitamin" width="220" height="220" loading="lazy"></div>
+      <div class="mvn-theme-goal-art"><img class="goal-main" src="assets/mvn-hero-whey-cutout-card.webp" alt="Unicorn Pro Series Potency Whey Coffee 5 lb original product photo" width="420" height="420" loading="lazy"></div>
       <strong>BUILD YOUR RECOVERY</strong><small>Get Protein</small>
     </a>
     <a class="mvn-editorial-category mvn-editorial-category-pre" data-cat="pre" href="#shop">
-      <div class="mvn-theme-goal-art"><img class="goal-main" src="assets/sturdy-watermelon-front-card.webp" alt="Unicorn Pro Series Sturdy Pre-Workout original front pack" width="420" height="420" loading="lazy"><img class="goal-support" src="assets/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout.webp" alt="Unicorn Pro Series Nitro Mass 3 kg original pack" width="220" height="220" loading="lazy"></div>
+      <div class="mvn-theme-goal-art"><img class="goal-main" src="assets/sturdy-watermelon-front-card.webp" alt="Unicorn Pro Series Sturdy Pre-Workout original front pack" width="420" height="420" loading="lazy"></div>
       <strong>BUILD YOUR PERFORMANCE</strong><small>Get Powerful</small>
     </a>
     <a class="mvn-editorial-category mvn-editorial-category-creatine" data-cat="creatine" href="#shop">
-      <div class="mvn-theme-goal-art"><img class="goal-main" src="assets/mvn-hero-creatine-cutout-card.webp" alt="Unicorn Pro Series Creatine Monohydrate 250 g original pack" width="420" height="420" loading="lazy"><img class="goal-support" src="assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp" alt="Unicorn Pro Series Nitro Mass 5 kg original pack" width="220" height="220" loading="lazy"></div>
+      <div class="mvn-theme-goal-art"><img class="goal-main" src="assets/mvn-hero-creatine-cutout-card.webp" alt="Unicorn Pro Series Creatine Monohydrate 250 g original pack" width="420" height="420" loading="lazy"></div>
       <strong>BUILD YOUR STRENGTH</strong><small>Get Stronger</small>
     </a>
   </div>
@@ -401,22 +384,11 @@
   
 </main>
 <section class="recent-section" id="recentSection" hidden aria-labelledby="recentTitle"><div class="recent-heading"><div><span class="eyebrow dark">PICK UP WHERE YOU LEFT OFF</span><h2 id="recentTitle">Recently viewed</h2></div><button type="button" id="clearRecent">Clear history</button></div><p class="recent-note">Saved only in this browser.</p><div id="recentProducts" class="recent-products"></div></section>
-<section class="mvn-quick-pages" aria-labelledby="mvnExplorePagesTitle">
-  <header><span>MAX VOLUME NUTRITION / EXPLORE MORE</span><h2 id="mvnExplorePagesTitle">FIND WHAT YOU NEED.</h2><p>Tap any section to open its own page. Detailed contact information, certificates and brand updates are no longer repeated on the shopping homepage.</p></header>
-  <div class="mvn-quick-page-grid">
-    <a class="mvn-quick-page" href="about.html" id="about"><small>01 / THE BUSINESS</small><strong>ABOUT US</strong><span>Get to know Max Volume Nutrition and how we serve gyms and customers.</span><b>READ ABOUT MVN ↗</b></a>
-    <a class="mvn-quick-page" href="certificate.html" id="certificate"><small>02 / DISTRIBUTOR DOCUMENT</small><strong>OUR CERTIFICATE</strong><span>Open the original issued Unicorn Pro Series distributor certificate.</span><b>VIEW CERTIFICATE ↗</b></a>
-    <a class="mvn-quick-page" href="offers.html" id="offers"><small>03 / RETAIL PROMOTIONS</small><strong>CURRENT OFFERS</strong><span>View published promotions, eligibility and terms on a separate page.</span><b>EXPLORE OFFERS ↗</b></a>
-    <a class="mvn-quick-page" href="brands.html" id="brands"><small>04 / WHAT'S NEXT</small><strong>OUR BRANDS</strong><span>See the Unicorn Pro Series collection and upcoming GLOB TECH information.</span><b>EXPLORE BRANDS ↗</b></a>
-    <a class="mvn-quick-page" href="dealer.html" id="dealer"><small>05 / BUSINESS PARTNERS</small><strong>GYM &amp; WHOLESALE</strong><span>Register your business or request private dealer supply information.</span><b>WHOLESALE ENQUIRIES ↗</b></a>
-    <a class="mvn-quick-page" href="contact.html" id="contact"><small>06 / REACH OUR TEAM</small><strong>CONTACT US</strong><span>Tap to see our phone number, WhatsApp, email and business location.</span><b>OPEN CONTACT PAGE ↗</b></a>
-  </div>
-  <div id="offerCards" hidden aria-hidden="true"></div>
-</section>
+<div id="offerCards" hidden aria-hidden="true"></div>
 <footer class="site-footer mvn-home-footer">
   <div class="footer-brand"><span class="footer-logo-frame"><img class="original-brand-logo original-footer-logo" src="max-volume-logo-wide.png" alt="Original Max Volume Nutrition logo" loading="lazy"></span><p>Sports nutrition retail enquiries and wholesale distribution · Tamil Nadu</p></div>
   <div><b>SHOP</b><a href="#shop">All supplements</a><a href="potency-whey.html">Potency Whey</a><a href="nitro-mass.html">Nitro Mass</a><a href="pro-creatine.html">Pro Creatine</a><a href="sturdy-pre-workout.html">Sturdy Pre-Workout</a><a href="musclevite-multivitamin.html">Musclevite</a></div>
-  <div><b>EXPLORE</b><a href="about.html">About us</a><a href="certificate.html">Distributor certificate</a><a href="brands.html">Our brands</a><a href="offers.html">Current offers</a><a href="dealer.html">Wholesale enquiries</a><a href="wholesale-account.html">Wholesale account</a></div>
+  <div><b>OUR BUSINESS</b><a href="about.html">About us &amp; certificate</a><a href="dealer.html">Wholesale enquiries</a><a href="wholesale-account.html">Wholesale account</a></div>
   <div><b>HELP &amp; CONTACT</b><a href="contact.html">Contact us — phone, email &amp; address</a><a href="support.html">Help Center</a><a href="account.html">My account</a><a href="shipping.html">Shipping information</a><a href="returns.html">Returns</a><a href="privacy.html">Privacy policy</a><a href="terms.html">Terms of sale</a></div>
   <p class="fine">© 2026 Max Volume Nutrition. Retail prices are shown on product cards. Stock, payment and delivery arrangements are confirmed manually on WhatsApp.</p>
 </footer>

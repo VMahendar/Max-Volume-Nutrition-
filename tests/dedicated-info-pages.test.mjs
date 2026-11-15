@@ -3,37 +3,36 @@ import assert from 'node:assert/strict';
 import {readFileSync,existsSync} from 'node:fs';
 
 const home=()=>readFileSync('public/index.html','utf8');
-test('contact, certificate and other detailed sections open their own pages',()=>{
- const html=home();
- const links=['about','certificate','offers','brands','contact'];
- for(const name of links){
+test('business, certificate and support details live in About Us rather than homepage',()=>{
+ const html=home(),about=readFileSync('public/about.html','utf8');
+ for(const name of ['about','certificate','offers','brands','contact']){
   const url=name+'.html';
   assert.ok(existsSync('public/'+url),'dedicated page exists: '+url);
   const page=readFileSync('public/'+url,'utf8');
-  assert.match(page,new RegExp('rel="canonical" href="https://maxvolumenutriton\\.shop/'+name+'\\.html"'),url+' canonical SEO URL');
-  assert.match(page,/mvn-info-pages\.css/,'same navigation and typography for '+name);
-  assert.ok(html.includes('href="'+url+'"'),'homepage provides dedicated link '+name);
+  assert.ok(page.includes('rel="canonical" href="https://maxvolumenutriton.shop/'+url+'"'),url+' canonical SEO URL');
+  assert.ok(page.includes('mvn-info-pages.css'),'consistent information page typography');
  }
- assert.equal((html.match(/class="mvn-quick-page"/g)||[]).length,6,'six genuine click-through destinations on homepage');
- assert.match(html,/<a class="mvn-quick-page" href="contact\.html" id="contact"/);
- assert.match(html,/<a class="mvn-quick-page" href="certificate\.html" id="certificate"/);
- assert.doesNotMatch(html,/class="certificate-photo"/,'original certificate picture not dumped into homepage');
- assert.doesNotMatch(html,/class="brands-coming glotech-launch"/,'large brand launch is on its own page');
- assert.doesNotMatch(html,/class="dealer dealer-promo"/,'detailed dealer page replaces repeated giant homepage block');
- assert.match(html,/id="offerCards" hidden/,'offer application widget stays present for cart JS without displaying details');
+ assert.ok(!html.includes('class="mvn-quick-pages"'),'no six-card directory on homepage');
+ assert.ok(about.includes('id="certificate"'),'certificate on About Us');
+ assert.ok(about.includes('assets/IMG-20261102-WA0019.jpg'),'original certificate photo');
+ assert.equal((about.match(/class="mvn-quick-page"/g)||[]).length,4,'business and service links on About Us');
+ for(const path of ['offers.html','brands.html','dealer.html','contact.html'])assert.ok(about.includes('href="'+path+'"'),'business link on About Us: '+path);
+ assert.ok(!html.includes('class="certificate-photo"'),'certificate not repeated on homepage');
+ assert.ok(!html.includes('class="brands-coming glotech-launch"'),'brand launch not duplicated');
+ assert.ok(!html.includes('class="dealer dealer-promo"'),'no duplicate dealer panel');
+ assert.ok(html.includes('id="offerCards" hidden'),'hidden offers hook preserved');
  assert.equal(readFileSync('index.html','utf8'),html,'compatibility mirror matches homepage');
 });
-test('contact data appears on contact page, not the top homepage strip',()=>{
+test('three-dot menu has exactly About Us, Contact and Wholesale; contact data stays separate',()=>{
  const html=home();
- const strip=html.match(/<div class="announce">[\s\S]*?<\/div>/)?.[0]||'';
- assert.match(strip,/href="contact\.html"/);
- assert.doesNotMatch(strip,/mailto:|wa\.me|77088|@gmail/,'top strip invites opening Contact page rather than repeating contact details');
+ const menu=html.split('<nav class="mvn-more-panel"')[1]?.split('</nav>')[0]||'';
+ assert.equal((menu.match(/<a /g)||[]).length,3,'exactly three links in header menu');
+ for(const target of ['about.html','contact.html','dealer.html'])assert.ok(menu.includes('href="'+target+'"'),'menu destination '+target);
+ for(const target of ['certificate.html','offers.html','brands.html'])assert.ok(!menu.includes(target),'information grouped under About Us');
+ const strip=html.split('<div class="announce">')[1]?.split('</div>')[0]||'';
+ assert.ok(!strip.includes('href=')&&!strip.includes('wa.me')&&!strip.includes('mailto:'),'no duplicate contact in top strip');
  const c=readFileSync('public/contact.html','utf8');
- assert.match(c,/\+91 77088 30513/);
- assert.match(c,/maxvolumenutrition@gmail\.com/);
- assert.match(c,/href="tel:\+917708830513"/);
- assert.match(c,/href="https:\/\/wa\.me\/917708830513"/);
- assert.match(c,/Kelambakkam/);
+ for(const value of ['+91 77088 30513','maxvolumenutrition@gmail.com','href="tel:+917708830513"','href="https://wa.me/917708830513"','Kelambakkam'])assert.ok(c.includes(value),'contact detail '+value);
 });
 test('certificate is viewable in full on the dedicated page',()=>{
  const c=readFileSync('public/certificate.html','utf8');
