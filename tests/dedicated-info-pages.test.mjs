@@ -41,7 +41,7 @@ test('certificate is viewable in full on the dedicated page',()=>{
  assert.match(c,/Revakanya Industries Pvt\. Ltd\./);
  assert.match(c,/assets\/IMG-20261102-WA0019\.jpg/);
  assert.match(c,/OPEN ORIGINAL CERTIFICATE/);
- assert.doesNotMatch(c,/exclusive territory rights, GMP, ISO or laboratory certification\.<\/p>/,'certificate does not claim certifications or exclusivity'); 
+ assert.match(c,/not presented here as proof of exclusive territory rights/,'certificate does not claim unsupported exclusive rights');
 });
 test('offers page follows live published promotional feed, keeps cart price validation',()=>{
  const offers=readFileSync('public/offers.html','utf8');
