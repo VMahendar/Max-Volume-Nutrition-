@@ -112,8 +112,17 @@ function appPriceMarkup(v){
  return '<strong class="price-current">'+money(v.price)+'</strong>'+(Number.isSafeInteger(v.mrp)&&v.mrp>v.price?'<span class="price-original">MRP <del>'+money(v.mrp)+'</del></span>':'')+'<span class="price-note">Regular selling price</span>';
 }
 function purchasedPack(variantId){for(const p of P){const i=retailVariantIds[p.id]?.indexOf(variantId);if(i!==undefined&&i>=0&&p.variants[i])return {p,i,v:p.variants[i]};}return null;}
+// Only the small retail grid uses reduced photo derivatives; the product detail
+// gallery and zoom still display the owner's full-resolution original artwork.
+const smallCardImages={
+ 'assets/pro-creatine.png':'assets/pro-creatine-card.webp',
+ 'assets/sturdy-watermelon-front.webp':'assets/sturdy-watermelon-front-card.webp',
+ 'assets/mvn-hero-creatine-cutout.png':'assets/mvn-hero-creatine-cutout-card.webp',
+ 'assets/mvn-hero-whey-cutout.png':'assets/mvn-hero-whey-cutout-card.webp',
+ 'assets/mvn-hero-nitro-cutout.png':'assets/mvn-hero-nitro-cutout-card.webp'
+};
 function card(p){
-const featured=displayVariant(p);const originalCover=coverImage(p,featured);const cover=failedPackPhotos.has(originalCover)?'':originalCover;const pic=cover?'<img loading="lazy" src="'+safe(cover)+'" alt="'+safe(p.name)+'"><div class="placeholder" hidden><b>'+safe(p.name)+'</b>Photo coming soon</div>':'<div class="placeholder"><b>'+safe(p.name)+'</b>Correct pack photo being verified</div>';
+const featured=displayVariant(p);const originalCover=coverImage(p,featured);const cover=failedPackPhotos.has(originalCover)?'':originalCover;const thumbnail=smallCardImages[cover]||cover;const pic=cover?'<img loading="lazy" decoding="async" src="'+safe(thumbnail)+'" alt="'+safe(p.name)+'"><div class="placeholder" hidden><b>'+safe(p.name)+'</b>Photo coming soon</div>':'<div class="placeholder"><b>'+safe(p.name)+'</b>Correct pack photo being verified</div>';
 return '<article class="card"><div class="photo">'+pic+'</div><div class="info"><small>'+safe(p.brand||'Unicorn Pro Series')+'</small><h3>'+safe(p.name)+'</h3><p>'+safe(p.desc)+'</p><label class="variant-label" for="v-'+p.id+'">FLAVOUR / PACK SIZE</label><select id="v-'+p.id+'" class="variant">'+visiblePackOptions(p).map(({v,i})=>'<option value="'+i+'"'+(i===featured?' selected':'')+'>'+safe(v.label)+'</option>').join("")+'</select><div class="price" id="price-'+p.id+'">'+priceMarkup(p.variants[featured])+'</div><button class="details-link" type="button" data-detail="'+p.id+'">VIEW PRODUCT DETAILS →</button><button class="add" data-id="'+p.id+'">ADD TO CART +</button></div></article>';
 }
 
