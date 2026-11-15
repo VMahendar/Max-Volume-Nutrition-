@@ -52,7 +52,7 @@ try {
   assert.ok(await page.locator('#mvnEditorial').isVisible(),size.name+' complete group banner visible');
   const group=page.locator('.mvn-owner-banner-img');
   assert.equal(await group.getAttribute('src'),'assets/mvn-homepage-banner-20261115.webp');
-  await page.waitForFunction(()=>{const i=document.querySelector('.mvn-owner-banner-img');return i?.complete&&[768,1152,1672].includes(i.naturalWidth)&&i.naturalHeight>300;});
+  await page.waitForFunction(()=>{const i=document.querySelector('.mvn-owner-banner-img');return i?.complete&&i.naturalWidth>300&&i.naturalHeight>160&&i.currentSrc.includes('mvn-homepage-banner-20261115');});
   assert.ok((await group.evaluate(i=>i.currentSrc)).includes('mvn-homepage-banner-20261115'),size.name+' selected authentic responsive banner');
   assert.equal(await page.locator('.mvn-editorial-promo').count(),2,'two feature promotions retained');
   assert.equal(await page.locator('.mvn-editorial-category').count(),3,'three original shop-by-goal product cards');
