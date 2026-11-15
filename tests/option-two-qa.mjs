@@ -38,6 +38,17 @@ try {
 
   const homeResponse=await page.goto(origin+'/',{waitUntil:'domcontentloaded'});
   assert.equal(homeResponse.status(),200,size.name+' home loads');
+  if(size.name==='desktop'){
+    assert.match(homeResponse.headers()['cache-control']||'',/no-store/,'personalized HTML remains uncached');
+    const stylesheet=await page.request.get(origin+'/mvn-shopping-bundle-20261115.css?v=1',{headers:{'Accept-Encoding':'br'}});
+    assert.equal(stylesheet.status(),200,'bundled CSS served');
+    assert.match(stylesheet.headers()['cache-control']||'',/max-age=604800/,'versioned public CSS cached for one week');
+    assert.match(stylesheet.headers()['content-encoding']||'',/br/,'CSS transfers via Brotli');
+    assert.match(stylesheet.headers()['vary']||'',/Accept-Encoding/,'compression variants cache safely');
+    const media=await page.request.head(origin+'/assets/mvn-homepage-banner-20261115-768.webp');
+    assert.equal(media.status(),200,'responsive hero exists on Render');
+    assert.match(media.headers()['cache-control']||'',/max-age=2592000/,'dated original image has long-lived cache');
+  }
   assert.ok(await page.locator('#mvnEditorial').isVisible(),size.name+' complete group banner visible');
   const group=page.locator('.mvn-owner-banner-img');
   assert.equal(await group.getAttribute('src'),'assets/mvn-homepage-banner-20261115.webp');
