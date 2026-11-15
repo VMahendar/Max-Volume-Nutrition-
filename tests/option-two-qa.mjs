@@ -48,7 +48,7 @@ try {
   const campaignImg=showcase.locator('img.mvn-owner-banner-img');
   assert.equal(await campaignImg.getAttribute('src'),'assets/mvn-owner-landscape-banner.webp',size.name+' exact owner-supplied product banner is displayed');
   await campaignImg.waitFor({state:'visible'});
-  await page.waitForFunction(()=>{const img=document.querySelector('.mvn-owner-banner-img');return img?.complete&&img.naturalWidth===1753&&img.naturalHeight===897},{timeout:12000});
+  await page.waitForFunction(({width})=>{const img=document.querySelector('.mvn-owner-banner-img');return img?.complete&&img.naturalWidth>=width&&img.naturalHeight>0;},{width:size.name==='android'?960:1753},{timeout:12000});
   const campaignGeometry=await page.evaluate(()=>{
     const feature=document.querySelector('.mvn-editorial-feature').getBoundingClientRect();
     const shop=document.querySelector('#shop').getBoundingClientRect();
@@ -67,7 +67,8 @@ try {
   });
   assert.ok(campaignGeometry.heroHeight>=150&&campaignGeometry.heroHeight<=530,size.name+' full banner fits without poster-like height');
   assert.equal(campaignGeometry.fit,'contain',size.name+' full artwork must not be cropped');
-  assert.ok(campaignGeometry.heroSrc.includes('mvn-owner-landscape-banner.webp'),size.name+' owner artwork loaded');
+  assert.ok(campaignGeometry.heroSrc.includes('mvn-owner-landscape-banner'),size.name+' owner artwork loaded');
+   assert.ok(campaignGeometry.heroSrc.includes(size.name==='android'?'mvn-owner-landscape-banner-mobile.webp':'mvn-owner-landscape-banner.webp'),size.name+' receives right-sized original-photo derivative');
   if(size.name==='desktop'){
     assert.ok(campaignGeometry.hero.w/campaignGeometry.hero.h>1.4,'desktop banner remains landscape');
     assert.ok(campaignGeometry.promos.x>=campaignGeometry.hero.x+campaignGeometry.hero.w-3,'two promo panels remain to the right');
