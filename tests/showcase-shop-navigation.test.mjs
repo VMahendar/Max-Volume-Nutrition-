@@ -33,7 +33,7 @@ test('home presents original supplements once; shopping catalogue opens on a sep
 test('goal photography is grounded and source product packs remain unchanged',()=>{
  assert.equal((home.match(/class="mvn-editorial-category mvn-editorial-category-/g)||[]).length,3);
  assert.match(home,/src="assets\/mvn-banner-20261115-no-logo-no-pineapple\.webp"/);
- assert.match(home,/src="assets\/mvn-hero-creatine-cutout-card\.webp"/);
+ assert.match(home,/src="https:\/\/revakanya\.com\/assets\/imgs\/Pro%20Creatine%20Blueberry\.png"/,'genuine manufacturer Blueberry pack used in homepage');
  assert.match(home,/src="assets\/sturdy-watermelon-front-card\.webp"/);
  assert.match(css,/\.mvn-theme-goal-art::after/,'grounded floor shadows');
  assert.match(css,/\.mvn-editorial-promo > img/,'right promo pack is resized safely');
@@ -51,11 +51,20 @@ test('category and search router only redirects on homepage, keeps shop and app 
  assert.ok(!home.match(/href="#shop"/),'home category links open the new page');
 });
 
-test('homepage footer does not repeat contact details; Contact page remains canonical',()=>{
- const foot=home.match(/<footer class="site-footer[\s\S]*?<\/footer>/)?.[0]||'';
- assert.match(foot,/href="contact\.html"/);
- assert.doesNotMatch(foot,/mailto:|tel:|wa\.me|77088|@gmail/i);
+test('homepage has no large multi-column footer; essential links live on separate pages',()=>{
+ assert.doesNotMatch(home,/<footer\s/,'homepage footer is removed, not merely hidden');
+ assert.match(shop,/<footer class="site-footer/,'shopping page retains standard policy navigation');
+ assert.match(home,/href="contact\.html"/,'Contact is available through the existing 3-dot menu');
  const c=readFileSync('public/contact.html','utf8');
  assert.match(c,/maxvolumenutrition@gmail\.com/);
  assert.match(c,/\+91 77088 30513/);
+});
+test('Blueberry and Cranberry images are never mixed',()=>{
+ const product=readFileSync('public/pro-creatine.html','utf8');
+ const original='https://revakanya.com/assets/imgs/Pro%20Creatine%20Blueberry.png';
+ assert.ok((home.match(/Pro%20Creatine%20Blueberry\.png/g)||[]).length===2,'the home promo and goal show the same Blueberry pack');
+ assert.ok(product.includes(original),'product details use the same official Blueberry pack');
+ assert.ok(app.includes(original),'Blueberry retail option uses that pack');
+ assert.match(app,/name:"Pro Creatine",cat:"creatine",featuredIndex:0/,'Blueberry is selected first');
+ assert.match(app,/label:"Cranberry · 250 g"/,'Cranberry remains an independent pack option');
 });
