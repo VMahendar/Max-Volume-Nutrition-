@@ -13,7 +13,8 @@ import {stagingGate} from './staging.mjs';
 import {PRODUCT_PAGE_IDS,buildProductFragments} from './product-seo.mjs';
 const allowStaging=stagingGate();
 import {isIP} from 'node:net';
-import {readFileSync,realpathSync,existsSync} from 'node:fs';
+import {readFileSync,realpathSync,existsSync,statSync} from 'node:fs';
+import {brotliCompressSync,gzipSync,constants as zlibConstants} from 'node:zlib';
 import {resolve,extname,sep,posix} from 'node:path';
 import {randomUUID,randomBytes,timingSafeEqual} from 'node:crypto';
 import {signatureMatches,quote,customerValid} from './lib.mjs';
@@ -21,6 +22,8 @@ import {openCommerce,Problem,fail,hash,clean,integer,email,passwordHash,password
 import {razor,shippingReady,shiprocketClient,shipmentPayload} from './integrations.mjs';
 import {courierChoices} from './courier-preference.mjs';
 const root=realpathSync(resolve('public')),C=openCommerce(resolve(process.env.DATA_DIR||'runtime')),db=C.db;
+// Cache a bounded set of precompressed public assets to avoid repeat CPU cost.
+const staticCompressionCache=new Map();
 // First-run retail campaign configuration; later admin edits and deactivations win.
 const campaignSeed=resolve('data/retail-campaigns.json');
 if(C.setting('campaigns')===null&&existsSync(campaignSeed)){
@@ -422,16 +425,46 @@ if(storePublicUrl!==previousStoreOrigin&&['/','/index.html','/robots.txt','/site
 if(process.env.STAGING_MODE==='true'&&u.pathname==='/admin.html'){
  const banner='PRIVATE STAGING · TEST DATA ONLY · PAYMENTS AND SHIPPING DISABLED';
  file=Buffer.from(file.toString('utf8').replace(/<body(?:\s[^>]*)?>/i,openTag=>`${openTag}<div class="staging-banner owner-preview-status" role="status" title="${banner}" aria-label="${banner}">Preview</div>`));
-}}catch(e){if(e instanceof Problem)throw e;fail(404,'Page not found.');}const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.webmanifest':'application/manifest+json','.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.avif':'image/avif','.svg':'image/svg+xml','.xml':'application/xml; charset=utf-8','.txt':'text/plain; charset=utf-8'};// Keep personalized pages, reviews and API responses uncached. Cache only public
-// versioned/static media on the real storefront, never password-protected staging.
+}}catch(e){if(e instanceof Problem)throw e;fail(404,'Page not found.');}const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.webmanifest':'application/manifest+json','.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.avif':'image/avif','.svg':'image/svg+xml','.xml':'application/xml; charset=utf-8','.txt':'text/plain; charset=utf-8'};// Static files only: HTML, authenticated responses, generated review data,
+// API routes and owner previews remain no-store. Product media may be replaced,
+// so only dated media/icons get the longest cache period.
+const extension=extname(path);
 if(process.env.STAGING_MODE!=='true'){
- const extension=extname(path);
- if(['.css','.js'].includes(extension))res.setHeader('Cache-Control','public, max-age=3600, must-revalidate');
- else if(/\.(?:png|jpe?g|webp|svg|ico)$/.test(u.pathname)&&
-   /^(?:\/assets\/|\/icons\/|\/mvn-|\/max-volume-)/.test(u.pathname))
-   res.setHeader('Cache-Control','public, max-age=3600, must-revalidate');
+ if(['.css','.js'].includes(extension)){
+  const versioned=u.searchParams.has('v')||/mvn-shopping-bundle-\d+\.css$/.test(u.pathname);
+  res.setHeader('Cache-Control',versioned?'public, max-age=604800, must-revalidate':'public, max-age=86400, must-revalidate');
+ }else if(/\.(?:png|jpe?g|webp|avif|svg|ico)$/.test(u.pathname)&&
+   /^(?:\/assets\/|\/icons\/|\/mvn-|\/max-volume-)/.test(u.pathname)){
+  const dated=/20\d{6}/.test(u.pathname)||u.pathname.startsWith('/icons/');
+  res.setHeader('Cache-Control',dated?'public, max-age=2592000, must-revalidate':'public, max-age=604800, must-revalidate');
+ }
 }
-res.writeHead(200,{'Content-Type':mime[extname(path)]||'application/octet-stream'});res.end(req.method==='HEAD'?undefined:file);
+// Compress text assets; never recompress existing WebP, AVIF, PNG or JPEG.
+// The Vary header keeps CDN/browser variants separate and correctly reusable.
+let payload=file;
+if(['.css','.js','.svg','.json','.xml'].includes(extension)&&file.length>1024&&
+   ['GET','HEAD'].includes(req.method)){
+ const accepts=String(req.headers['accept-encoding']||'');
+ const algorithm=/\bbr\b/.test(accepts)?'br':/\bgzip\b/.test(accepts)?'gzip':null;
+ if(algorithm){
+  const cacheKey=path+'|'+algorithm;
+  const modified=statSync(path).mtimeMs;
+  const cached=staticCompressionCache.get(cacheKey);
+  if(cached&&cached.modified===modified){
+   payload=cached.payload;
+  }else{
+   payload=algorithm==='br'
+    ?brotliCompressSync(file,{params:{[zlibConstants.BROTLI_PARAM_QUALITY]:4}})
+    :gzipSync(file,{level:6});
+   staticCompressionCache.delete(cacheKey);
+   if(staticCompressionCache.size>=96)staticCompressionCache.delete(staticCompressionCache.keys().next().value);
+   staticCompressionCache.set(cacheKey,{modified,payload});
+  }
+  res.setHeader('Content-Encoding',algorithm);
+ }
+ res.setHeader('Vary','Accept-Encoding');
+}
+res.writeHead(200,{'Content-Type':mime[extension]||'application/octet-stream'});res.end(req.method==='HEAD'?undefined:payload);
 }catch(e){if(!(e instanceof Problem)&&!(e instanceof SyntaxError))console.error('Request failed:',e.code||e.name);json(res,e instanceof Problem?e.status:e instanceof SyntaxError?400:500,{error:e instanceof Problem?e.message:e instanceof SyntaxError?'Invalid request.':'Request could not be completed. Contact support before retrying.'});}});
 function validImages(value){
  if(value===null)return [];
