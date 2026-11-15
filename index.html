@@ -195,9 +195,10 @@
 
 <link rel="stylesheet" href="/mvn-advance-layout.css?v=20261115-theme-layout-1">
 <link rel="stylesheet" href="/mvn-homepage-consistency.css?v=20261115-1">
+<link rel="stylesheet" href="/mvn-supplement-store-reference.css?v=20261115-ref1">
 
 </head>
-<body class="retail-home mvn-fitness-refresh mvn-advance-layout">
+<body class="retail-home mvn-fitness-refresh mvn-advance-layout mvn-supplement-theme">
 <!-- Keep original MVN artwork; remove only its dark rectangle at display time. -->
 <svg class="logo-filter-defs" xmlns="http://www.w3.org/2000/svg" width="0" height="0" aria-hidden="true" focusable="false">
  <defs><filter id="mvnGoldKey" color-interpolation-filters="sRGB" x="-2%" y="-2%" width="104%" height="104%">
@@ -210,6 +211,17 @@
 </div>
 <header class="storehead">
   <a class="brand brand-identity" href="index.html" aria-label="Max Volume Nutrition home"><img class="original-brand-logo" src="mvn-app-header-logo.webp" alt="Max Volume Nutrition — original business logo"><span class="mvn-header-wordmark" aria-hidden="true"><strong>MAX VOLUME</strong><span>NUTRITION</span></span></a>
+  <details class="mvn-theme-categories" id="mvnThemeCategories">
+    <summary><span aria-hidden="true">☰</span><span>Shop By Category</span><span aria-hidden="true">⌄</span></summary>
+    <div class="mvn-theme-category-menu" aria-label="Product categories">
+      <a href="#shop" data-cat="all">All Supplements</a>
+      <a href="#shop" data-cat="whey">Whey Protein</a>
+      <a href="#shop" data-cat="mass">Mass Gainers</a>
+      <a href="#shop" data-cat="creatine">Creatine</a>
+      <a href="#shop" data-cat="pre">Pre-Workout</a>
+      <a href="#shop" data-cat="vitamins">Multivitamins</a>
+    </div>
+  </details>
   <nav class="option2-site-nav" aria-label="Store navigation" style="display:none">
     <a href="#shop" data-cat="all">PRODUCTS</a>
     <a href="#shop" data-cat="whey">WHEY PROTEIN</a>
@@ -245,26 +257,42 @@
     </details>
   </div>
 </header>
+<nav class="mvn-theme-main-nav" aria-label="Main website pages">
+  <a class="mvn-theme-home-link" href="/">HOME</a>
+  <a href="#shop">SUPPLEMENTS</a>
+  <a href="#mvnEditorial">FEATURED</a>
+  <a href="#shop" data-cat="whey">WHEY PROTEIN</a>
+  <a href="#shop" data-cat="mass">MASS GAINER</a>
+  <a href="#certificate">ABOUT US</a>
+  <a href="dealer.html">WHOLESALE</a>
+  <a href="#offers">OFFERS</a>
+  <a href="support.html">CONTACT</a>
+</nav>
 <section id="mvnEditorial" class="mvn-editorial" aria-labelledby="mvnEditorialTitle">
   <div class="mvn-editorial-layout">
     <div class="mvn-editorial-feature mvn-owner-banner-feature">
       <h1 id="mvnEditorialTitle" class="mvn-owner-banner-sr">Max Volume Nutrition full sports supplement product collection</h1>
+      <div class="mvn-theme-slider-copy">
+        <span class="mvn-theme-slide-kicker">ORIGINAL SPORTS NUTRITION · MAX VOLUME NUTRITION</span>
+        <h2>STRENGTH <em>BUILDS.</em></h2>
+        <a href="#shop">SHOP NOW <span aria-hidden="true">↗</span></a>
+      </div>
       <a class="mvn-owner-banner-link" href="#shop" aria-label="Shop Max Volume Nutrition supplements shown together in the original product lineup">
         <img class="mvn-owner-banner-img" src="assets/mvn-banner-20261115-no-logo-no-pineapple.webp" alt="Full Max Volume Nutrition product lineup: Sturdy Pre-Workout, Potency Whey, Nitro Mass, GLOB-TECH Platinum Whey, Creatine Monohydrate, Crea Pump, Musclevite, Amino Lean Edge, Force 1 and L-Arginine, each retained in its original banner position" width="1753" height="897" decoding="async" fetchpriority="high">
       </a>
     </div>
     <div class="mvn-editorial-promos" aria-label="Featured supplement ranges">
       <a class="mvn-editorial-promo mvn-editorial-promo-mass" href="nitro-mass.html">
-        <span class="mvn-editorial-promo-overline">MASS GAINER COLLECTION</span>
-        <strong>NITRO<br>MASS.</strong>
+        <span class="mvn-editorial-promo-overline">TOP PRODUCT</span>
+        <strong>BUILD YOUR<br>SIZE.</strong>
         <img src="assets/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout.webp" alt="Unicorn Pro Series Nitro Mass Gainer 3 kg jar Double Rich Chocolate product cutout" width="260" height="260" loading="eager" decoding="async">
-        <span class="mvn-editorial-promo-bottom">NITRO MASS · 3 KG <b aria-hidden="true">↗</b></span>
+        <span class="mvn-editorial-promo-bottom">SHOP NITRO MASS <b aria-hidden="true">↗</b></span>
       </a>
       <a class="mvn-editorial-promo mvn-editorial-promo-creatine" href="pro-creatine.html">
-        <span class="mvn-editorial-promo-overline">TRAINING ESSENTIAL</span>
-        <strong>PRO<br>CREATINE</strong>
+        <span class="mvn-editorial-promo-overline">BUILD YOUR STRENGTH</span>
+        <strong>CREATINE<br>ESSENTIALS.</strong>
         <img src="assets/mvn-hero-creatine-cutout-card.webp" srcset="assets/mvn-hero-creatine-cutout-card.webp 420w, assets/mvn-hero-creatine-cutout.png 960w" sizes="(max-width: 860px) 160px, 260px" alt="Unicorn Pro Series Pro Creatine Cranberry 250 g current product pack" width="260" height="260" loading="lazy">
-        <span class="mvn-editorial-promo-bottom">CREATINE · 250 G <b aria-hidden="true">↗</b></span>
+        <span class="mvn-editorial-promo-bottom">SHOP CREATINE <b aria-hidden="true">↗</b></span>
       </a>
     </div>
   </div>
@@ -274,59 +302,24 @@
     <span><b aria-hidden="true">◆</b> DIRECT WHATSAPP CONFIRMATION</span>
   </div>
 </section>
-<section class="mvn-editorial-categories" aria-labelledby="mvnEditorialCategoriesTitle">
-  <div class="mvn-editorial-categories-heading">
-    <div><span>YOUR TRAINING ESSENTIALS</span><h2 id="mvnEditorialCategoriesTitle">FIND YOUR <em>FIT.</em></h2></div>
-    <a href="#shop">VIEW ALL SUPPLEMENTS <span aria-hidden="true">↗</span></a>
-  </div>
+<section class="mvn-editorial-categories mvn-theme-shop-goals" aria-labelledby="mvnEditorialCategoriesTitle">
+  <div class="mvn-editorial-categories-heading"><h2 id="mvnEditorialCategoriesTitle">SHOP BY <em>GOAL</em></h2></div>
   <div class="mvn-editorial-category-grid">
     <a class="mvn-editorial-category mvn-editorial-category-whey" data-cat="whey" href="#shop">
-      <span class="mvn-editorial-category-number">01 / PROTEIN</span>
-      <span class="mvn-advance-service-icon" aria-hidden="true">◈</span><strong>WHEY PROTEIN</strong><small>Daily protein and recovery</small>
-      <img src="assets/mvn-hero-whey-cutout-card.webp" srcset="assets/mvn-hero-whey-cutout-card.webp 420w, assets/mvn-hero-whey-cutout.png 960w" sizes="(max-width: 860px) 160px, 260px" alt="Potency Whey Protein Coffee 5 lb product" width="200" height="200" loading="lazy">
-      <span class="mvn-editorial-category-action">SHOP WHEY <b aria-hidden="true">↗</b></span>
-    </a>
-    <a class="mvn-editorial-category mvn-editorial-category-mass" data-cat="mass" href="#shop">
-      <span class="mvn-editorial-category-number">02 / SIZE</span>
-      <span class="mvn-advance-service-icon" aria-hidden="true">✦</span><strong>MASS GAINER</strong><small>Nutrition for size goals</small>
-      <img src="assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp" alt="Unicorn Pro Series Nitro Mass Gainer 5 kg bucket Double Rich Chocolate product cutout" width="200" height="200" loading="lazy" decoding="async">
-      <span class="mvn-editorial-category-action">SHOP GAINER <b aria-hidden="true">↗</b></span>
-    </a>
-    <a class="mvn-editorial-category mvn-editorial-category-creatine" data-cat="creatine" href="#shop">
-      <span class="mvn-editorial-category-number">03 / ESSENTIALS</span>
-      <span class="mvn-advance-service-icon" aria-hidden="true">ϟ</span><strong>CREATINE</strong><small>Strength and power essentials</small>
-      <img src="assets/mvn-hero-creatine-cutout-card.webp" srcset="assets/mvn-hero-creatine-cutout-card.webp 420w, assets/mvn-hero-creatine-cutout.png 960w" sizes="(max-width: 860px) 160px, 260px" alt="Pro Creatine 250 g Cranberry pack" width="200" height="200" loading="lazy">
-      <span class="mvn-editorial-category-action">SHOP CREATINE <b aria-hidden="true">↗</b></span>
+      <div class="mvn-theme-goal-art"><img class="goal-main" src="assets/mvn-hero-whey-cutout-card.webp" alt="Unicorn Pro Series Potency Whey Coffee 5 lb original product photo" width="420" height="420" loading="lazy"><img class="goal-support" src="assets/musclevite-front.webp" alt="Musclevite multivitamin" width="220" height="220" loading="lazy"></div>
+      <strong>BUILD YOUR RECOVERY</strong><small>Get Protein</small>
     </a>
     <a class="mvn-editorial-category mvn-editorial-category-pre" data-cat="pre" href="#shop">
-      <span class="mvn-editorial-category-number">04 / PRE-TRAINING</span>
-      <span class="mvn-advance-service-icon" aria-hidden="true">✳</span><strong>PRE-WORKOUT</strong><small>Get ready for training</small>
-      <img src="assets/sturdy-watermelon-front-card.webp" srcset="assets/sturdy-watermelon-front-card.webp 540w, assets/sturdy-watermelon-front.webp 1254w" sizes="(max-width: 860px) 160px, 260px" alt="Sturdy Pre-Workout Watermelon 250 g original front pack" width="200" height="200" loading="lazy">
-      <span class="mvn-editorial-category-action">SHOP PRE-WORKOUT <b aria-hidden="true">↗</b></span>
+      <div class="mvn-theme-goal-art"><img class="goal-main" src="assets/sturdy-watermelon-front-card.webp" alt="Unicorn Pro Series Sturdy Pre-Workout original front pack" width="420" height="420" loading="lazy"><img class="goal-support" src="assets/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout.webp" alt="Unicorn Pro Series Nitro Mass 3 kg original pack" width="220" height="220" loading="lazy"></div>
+      <strong>BUILD YOUR PERFORMANCE</strong><small>Get Powerful</small>
+    </a>
+    <a class="mvn-editorial-category mvn-editorial-category-creatine" data-cat="creatine" href="#shop">
+      <div class="mvn-theme-goal-art"><img class="goal-main" src="assets/mvn-hero-creatine-cutout-card.webp" alt="Unicorn Pro Series Creatine Monohydrate 250 g original pack" width="420" height="420" loading="lazy"><img class="goal-support" src="assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp" alt="Unicorn Pro Series Nitro Mass 5 kg original pack" width="220" height="220" loading="lazy"></div>
+      <strong>BUILD YOUR STRENGTH</strong><small>Get Stronger</small>
     </a>
   </div>
 </section>
-<section class="mvn-advance-welcome" aria-labelledby="mvnAdvanceWelcomeTitle">
-  <div class="mvn-advance-welcome-visual" aria-label="Max Volume Nutrition shopping benefits">
-    <span class="mvn-advance-welcome-label">THE MAX VOLUME APPROACH</span>
-    <div class="mvn-home-feature-stack">
-      <div><span>01 / ORIGINAL</span><strong>REAL PRODUCT PACKS.</strong></div>
-      <div><span>02 / TRANSPARENT</span><strong>CLEAR RETAIL PRICES.</strong></div>
-      <div><span>03 / DIRECT</span><strong>WHATSAPP ORDER SUPPORT.</strong></div>
-    </div>
-  </div>
-  <div class="mvn-advance-welcome-content">
-    <span class="mvn-advance-section-kicker">WELCOME TO MAX VOLUME NUTRITION</span>
-    <h2 id="mvnAdvanceWelcomeTitle">PERFORMANCE BEGINS<br>WITH THE <em>RIGHT FUEL.</em></h2>
-    <span class="mvn-advance-short-line" aria-hidden="true"></span>
-    <p>Find supplements that match your training. Browse original product packs, compare retail prices and select a flavour or size with confidence.</p>
-    <p>We serve fitness customers and work with gyms and supplement retailers across Tamil Nadu. Review your cart and confirm your enquiry directly on WhatsApp.</p>
-    <div class="mvn-advance-welcome-actions">
-      <a class="mvn-advance-primary" href="#shop">SHOP THE COLLECTION <span aria-hidden="true">↗</span></a>
-      <a class="mvn-advance-secondary" href="dealer.html">GYM &amp; WHOLESALE ENQUIRIES</a>
-    </div>
-  </div>
-</section>
+
 <nav class="nav" aria-label="Shop categories">
   <a class="nav-featured" href="#shop" data-cat="all">Shop all</a>
   <a href="#shop" data-cat="whey">Whey protein</a>
