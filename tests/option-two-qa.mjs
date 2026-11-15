@@ -51,50 +51,46 @@ try {
   await groupImage.waitFor({state:'visible'});
   await page.waitForFunction(()=>{const img=document.querySelector('.mvn-owner-banner-img');return img?.complete&&img.naturalWidth===1753&&img.naturalHeight===897;},null,{timeout:12000});
   const campaignGeometry=await page.evaluate(()=>{
-    const feature=document.querySelector('.mvn-editorial-feature').getBoundingClientRect();
-    const shop=document.querySelector('#shop').getBoundingClientRect();
-    const promos=document.querySelector('.mvn-editorial-promos').getBoundingClientRect();
-    const cats=document.querySelector('.mvn-editorial-categories').getBoundingClientRect();
-    const images=[...document.querySelectorAll('.mvn-owner-banner-img')].map(i=>({src:i.currentSrc,fit:getComputedStyle(i).objectFit,width:i.naturalWidth,height:i.naturalHeight}));
-    return {
-      heroHeight:feature.height,shopY:shop.y,promoWidth:promos.width,
-      categoryBottom:cats.bottom,scrollWidth:document.documentElement.scrollWidth,
-      hero:{x:feature.x,y:feature.y,w:feature.width,h:feature.height},
-      promos:{x:promos.x,y:promos.y,w:promos.width,h:promos.height},
-      images,
-      promosHidden:getComputedStyle(document.querySelector('.mvn-editorial-promos')).display==='none',
-      welcome:document.querySelector('.mvn-advance-welcome').getBoundingClientRect().toJSON(),
-      serviceCards:[...document.querySelectorAll('.mvn-editorial-category')].map(e=>e.getBoundingClientRect().toJSON())
-    };
+    const q=x=>document.querySelector(x);
+    const hero=q('.mvn-editorial-feature').getBoundingClientRect();
+    const promos=q('.mvn-editorial-promos').getBoundingClientRect();
+    const categories=q('.mvn-editorial-categories').getBoundingClientRect();
+    const goalCards=[...document.querySelectorAll('.mvn-theme-goal-art')].map(x=>x.getBoundingClientRect().toJSON());
+    const img=q('.mvn-owner-banner-img');
+    return {hero:hero.toJSON(),promos:promos.toJSON(),categories:categories.toJSON(),goalCards,
+      heroFit:getComputedStyle(img).objectFit,
+      heroNaturalWidth:img.naturalWidth,heroNaturalHeight:img.naturalHeight,
+      promoDisplay:getComputedStyle(q('.mvn-editorial-promos')).display,
+      siteWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth,
+      shopY:q('#shop').getBoundingClientRect().top};
   });
-  console.log('ADVANCE_CAMPAIGN_GEOMETRY',size.name,JSON.stringify(campaignGeometry));
-  assert.ok(campaignGeometry.heroHeight>=175&&campaignGeometry.heroHeight<=900,size.name+' full-width hero stays within a usable viewport');
-  assert.ok(campaignGeometry.images.every(i=>i.fit==='contain'&&i.width===1753&&i.height===897),size.name+' full product-lineup image loads uncropped');
-  assert.deepEqual(campaignGeometry.images.map(i=>i.src.split('/').pop()),['mvn-banner-20261115-no-logo-no-pineapple.webp']);
-  assert.ok(campaignGeometry.hero.w>=size.width-2,size.name+' hero is full width, not a 75% image beside old promos');
-  assert.ok(campaignGeometry.promosHidden,size.name+' old promo side cards are hidden');
-  assert.equal(await groupImage.isVisible(),true,size.name+' entire product lineup is visible without text overlay');
-  assert.ok(campaignGeometry.categoryBottom<=campaignGeometry.shopY+20,size.name+' category row comes before shop');
-  assert.ok(campaignGeometry.welcome.y>=campaignGeometry.categoryBottom-2,size.name+' welcome follows category row');
-  assert.ok(campaignGeometry.welcome.y<campaignGeometry.shopY,size.name+' welcome precedes the retail shop');
-  assert.ok(campaignGeometry.scrollWidth<=size.width+10,size.name+' no horizontal overflow');
-  assert.equal(await page.locator('.mvn-editorial-category').count(),4,'four gym-themed service categories');
-  assert.equal(await page.locator('.mvn-advance-service-icon').count(),4,'four category icons present');
-  await page.locator('.mvn-editorial-categories').scrollIntoViewIfNeeded();
-  assert.ok(await page.locator('.mvn-editorial-category').first().isVisible(),size.name+' service category is visible');
-  assert.equal(await page.locator('.mvn-advance-welcome-visual img').count(),0,size.name+' no duplicate Potency Whey in intro');
-  assert.equal(await page.locator('.mvn-home-feature-stack > div').count(),3,size.name+' real benefits replace redundant product promo');
-  assert.ok(await page.locator('#shop > .section-title').isVisible(),size.name+' cohesive catalogue heading is visible');
-  assert.equal(await page.locator('#shop .option2-shop-heading').count(),0,size.name+' old left sidebar heading removed');
+  console.log('SUPPLEMENT_THEME_CAMPAIGN',size.name,JSON.stringify(campaignGeometry));
+  assert.equal(campaignGeometry.heroFit,'contain',size.name+' group-product photo must be uncropped');
+  assert.equal(campaignGeometry.heroNaturalWidth,1753,size.name+' original banner source is intact');
+  assert.equal(campaignGeometry.heroNaturalHeight,897,size.name+' approved full landscape banner retained');
+  assert.equal(campaignGeometry.promoDisplay,'grid',size.name+' two authentic promo cards are displayed');
+  assert.equal(await showcase.locator('.mvn-editorial-promo').count(),2,size.name+' two product promos');
+  assert.equal(await page.locator('.mvn-theme-goal-art').count(),3,size.name+' three image-led shop-by-goal cards');
+  assert.equal(await page.locator('.mvn-advance-welcome').count(),0,size.name+' no duplicate text-heavy middle section');
+  assert.ok(campaignGeometry.categories.top>=campaignGeometry.hero.top,size.name+' goals follow hero');
+  assert.ok(campaignGeometry.categories.bottom<=campaignGeometry.shopY+24,size.name+' goals precede commerce');
+  assert.ok(campaignGeometry.siteWidth<=size.width+10,size.name+' no horizontal page overflow');
+  assert.ok(campaignGeometry.goalCards.every(x=>x.width>65&&x.height>100),size.name+' goal photo cards are visible');
   if(size.name==='desktop'){
-    assert.ok(campaignGeometry.hero.w/campaignGeometry.hero.h>1.4,'desktop slider hero stays landscape');
-    assert.ok(campaignGeometry.serviceCards[0].width>200,'desktop has four spacious services');
+    assert.ok(campaignGeometry.hero.width>size.width*.55,size.name+' left banner is larger than right promos');
+    assert.ok(campaignGeometry.promos.x>=campaignGeometry.hero.right-5,size.name+' two promos stand to the right');
+    assert.ok(campaignGeometry.promos.height>=campaignGeometry.hero.height*.85,size.name+' promos align to hero height');
+    assert.ok(campaignGeometry.goalCards[0].width>=200,size.name+' desktop 3-column goal imagery');
   }else{
-    assert.ok(campaignGeometry.serviceCards[0].width>110,'mobile service tiles remain readable');
+    assert.ok(campaignGeometry.hero.width>=size.width-40,size.name+' mobile full-width group photo');
+    assert.ok(campaignGeometry.promos.y>=campaignGeometry.hero.bottom-2,size.name+' promo cards move below photo on mobile');
+    assert.ok(campaignGeometry.goalCards[0].width>=80,size.name+' Android goal photos remain legible');
   }
+  await page.locator('.mvn-editorial-categories').scrollIntoViewIfNeeded();
+  assert.equal(await page.locator('.mvn-editorial-category[data-cat="pre"]').isVisible(),true,size.name+' performance goal can be selected');
   await page.screenshot({path:folder+'/'+size.name+'-campaign.png',animations:'disabled'});
-  await page.locator('.mvn-editorial-category[data-cat="mass"]').click();
-  assert.equal(await page.locator('#grid article.card').count(),1,size.name+' hero category card filters mass gainer');
+  await page.locator('.mvn-editorial-category[data-cat="pre"]').click();
+  assert.equal(await page.locator('#grid article.card').count(),1,size.name+' performance goal filters pre-workout');
   await page.locator('.cats [data-cat="all"]').click();
   const geometry=await page.evaluate(()=>{
    const get=x=>document.querySelector(x);
@@ -178,12 +174,12 @@ try {
     photoNaturalWidth:image.naturalWidth
    };
   });
-  console.log('ADVANCE_FITNESS_VISUAL',size.name,JSON.stringify(visual));
-  assert.ok(['rgb(253, 253, 252)','rgb(255, 255, 255)'].includes(visual.headerBackground),'theme header has white navigation rather than charcoal');
-  assert.equal(visual.headerBackgroundImage,'none','header must not display grey gradients');
+  console.log('SUPPLEMENT_REFERENCE_VISUAL',size.name,JSON.stringify(visual));
+  assert.ok(visual.headerBackgroundImage.includes('linear-gradient')||visual.headerBackground==='rgb(23, 25, 26)',size.name+' orange-and-black header');
+  assert.equal(await page.locator('.mvn-theme-main-nav').isVisible(),true,size.name+' reference nav is visible');
   assert.ok(visual.logoLoaded,'original gold MVN header artwork loads');
-  assert.equal(visual.accountColor,'rgb(29, 40, 47)','account icon is visible on white theme header');
-  assert.equal(visual.cartColor,'rgb(29, 40, 47)','cart icon is visible on white theme header');
+  assert.equal(visual.accountColor,'rgb(255, 255, 255)','account icon is legible on dark/orange masthead');
+  assert.equal(visual.cartColor,'rgb(255, 255, 255)','cart icon is legible on dark/orange masthead');
   assert.ok(visual.nameFontSize>=15,'product titles are legible and prominent');
   assert.ok(visual.nameFontWeight>=800,'product titles use strong weight');
   assert.ok(visual.sellingFontSize>=19,'retail selling price stands out');
@@ -207,7 +203,7 @@ try {
   await page.locator('#close').click();
   await page.screenshot({path:folder+'/'+size.name+'.png',animations:'disabled'});
   assert.deepEqual(errors,[],size.name+' unexpected browser Javascript errors');
-  console.log('PASS Advance Fitness '+size.name+' layout, merchandise photos, filters, cart and no JS errors');
+  console.log('PASS Supplement Store reference '+size.name+' layout, photos, filters, cart and no JS errors');
   await context.close();
  }
 } finally {
