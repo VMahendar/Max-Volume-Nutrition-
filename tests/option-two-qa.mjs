@@ -82,7 +82,10 @@ try {
   assert.equal(await page.locator('.mvn-advance-service-icon').count(),4,'four category icons present');
   await page.locator('.mvn-editorial-categories').scrollIntoViewIfNeeded();
   assert.ok(await page.locator('.mvn-editorial-category').first().isVisible(),size.name+' service category is visible');
-  assert.ok(await page.locator('.mvn-advance-welcome-visual img').isVisible(),size.name+' intro product photo visible');
+  assert.equal(await page.locator('.mvn-advance-welcome-visual img').count(),0,size.name+' no duplicate Potency Whey in intro');
+  assert.equal(await page.locator('.mvn-home-feature-stack > div').count(),3,size.name+' real benefits replace redundant product promo');
+  assert.ok(await page.locator('#shop > .section-title').isVisible(),size.name+' cohesive catalogue heading is visible');
+  assert.equal(await page.locator('#shop .option2-shop-heading').count(),0,size.name+' old left sidebar heading removed');
   if(size.name==='desktop'){
     assert.ok(campaignGeometry.hero.w/campaignGeometry.hero.h>1.4,'desktop slider hero stays landscape');
     assert.ok(campaignGeometry.serviceCards[0].width>200,'desktop has four spacious services');
