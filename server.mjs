@@ -296,6 +296,38 @@ if(path==='/api/enquiries'&&req.method==='POST'){
  return json(res,201,lead);
 }
 if(path.startsWith('/api/admin/')){admin(user);
+if(path==='/api/admin/layout-draft'){
+ if(req.method==='GET')return json(res,200,{draft:C.setting('ownerLayoutDraftV1')});
+ if(req.method==='POST'){
+  if(!rate('layout-draft:'+user.id,20))fail(429,'Too many layout saves. Try again shortly.');
+  const submitted=JSON.parse(await body(req,30000));
+  const incoming=submitted?.draft;
+  if(!incoming||incoming.version!==1||!Array.isArray(incoming.sections)||incoming.sections.length!==5)fail(400,'Invalid layout draft format.');
+  const ids=new Set(['collection','banner','products','highlights','wholesale']);
+  const images=new Set(['assets/mvn-homepage-banner-20261115.webp','assets/mvn-hero-whey-cutout-card.webp','assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp']);
+  const seen=new Set();
+  const sections=incoming.sections.map(section=>{
+   if(!section||typeof section!=='object'||!ids.has(section.id)||seen.has(section.id))fail(400,'Invalid or duplicate layout section.');
+   seen.add(section.id);
+   if(typeof section.title!=='string'||section.title.length>90||
+      typeof section.subtitle!=='string'||section.subtitle.length>240||
+      typeof section.cta!=='string'||section.cta.length>48||
+      typeof section.visible!=='boolean'||!images.has(section.image))fail(400,'Invalid layout section content.');
+   return {id:section.id,visible:section.visible,title:clean(section.title,90),subtitle:clean(section.subtitle,240),cta:clean(section.cta,48),image:section.image};
+  });
+  const theme=incoming.theme;
+  if(!theme||typeof theme!=='object')fail(400,'Invalid layout theme.');
+  const color=value=>typeof value==='string'&&/^#[a-fA-F0-9]{6}$/.test(value);
+  const ranged=(value,min,max)=>Number.isInteger(value)&&value>=min&&value<=max;
+  if(!color(theme.navy)||!color(theme.accent)||!color(theme.paper)||
+     !ranged(theme.spacing,0,48)||!ranged(theme.radius,0,28)||!ranged(theme.logo,65,150))fail(400,'Invalid layout colours or dimensions.');
+  const draft={version:1,theme:{navy:theme.navy,accent:theme.accent,paper:theme.paper,spacing:theme.spacing,radius:theme.radius,logo:theme.logo},sections,updatedAt:new Date().toISOString()};
+  C.tx(()=>{C.set('ownerLayoutDraftV1',draft);C.audit(user.id,'layout.draft.save','shop-layout');});
+  return json(res,200,{ok:true,draft});
+ }
+ fail(405,'Method not allowed.');
+}
+
 if(path==='/api/admin/shipping-setup'&&req.method==='GET'){
  const productionMode=process.env.STAGING_MODE!=='true'&&process.env.NODE_ENV==='production';
  const apiCredentialsPresent=!!process.env.SHIPROCKET_EMAIL&&!!process.env.SHIPROCKET_PASSWORD;
@@ -408,6 +440,14 @@ if(path==='/api/admin/shipment'){if(!shippingReady())fail(503,'Shiprocket is dis
 if(path==='/api/admin/tracking'){const row=db.prepare('SELECT * FROM shipments WHERE order_id=?').get(String(b.id));const shipment=row?JSON.parse(row.data):null;if(!shipment?.shipmentId)fail(409,'No provider shipment to track.');const tracking=await ship.track(shipment.shipmentId);C.tx(()=>{const latest=JSON.parse(db.prepare('SELECT data FROM shipments WHERE order_id=?').get(b.id).data);db.prepare('UPDATE shipments SET data=? WHERE order_id=?').run(JSON.stringify({...latest,tracking}),b.id);});return json(res,200,{tracking});}
 fail(404,'Endpoint not found.');}
 fail(404,'Endpoint not found.');}
+if(u.pathname==='/layout-editor.html'){
+ const account=C.session(req);
+ if(!account||account.role!=='admin'){
+  res.writeHead(302,{'Location':'/account.html','Cache-Control':'no-store','X-Robots-Tag':'noindex,nofollow'});
+  return res.end();
+ }
+ res.setHeader('X-Robots-Tag','noindex,nofollow,noarchive');
+}
 if(!['GET','HEAD'].includes(req.method))fail(405,'Method not allowed.');const path=resolve(root,'.'+decodeURIComponent(u.pathname==='/'?'/index.html':u.pathname));if(!path.startsWith(root+sep))fail(403,'Forbidden');let file;try{if(!realpathSync(path).startsWith(root+sep))fail(403,'Forbidden');file=readFileSync(path);
 if(PRODUCT_PAGE_IDS[u.pathname]){
  const productId=PRODUCT_PAGE_IDS[u.pathname].id;
