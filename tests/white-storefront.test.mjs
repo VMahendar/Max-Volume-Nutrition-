@@ -27,7 +27,7 @@ test('homepage excludes demonstrably incorrect product photos and retains verifi
  const seed=JSON.parse(read('data/products.json'));
  const pub=JSON.parse(read('public/catalog.json'));
  assert.ok(!both.includes('static.wixstatic.com'),'no stale Wix-hosted hero or product photos');
- for(const name of ['potency-whey-coffee-5lb.webp','Screenshot_2026_1103_003852.jpg']){
+ for(const name of ['potency-whey-coffee-5lb.webp','unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout.webp','unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp']){
   assert.ok(existsSync(new URL('../public/assets/'+name,import.meta.url)),name+' exists');
   assert.ok(both.includes('assets/'+name),name+' used');
  }
@@ -45,7 +45,8 @@ test('homepage excludes demonstrably incorrect product photos and retains verifi
  assert.ok(existsSync(new URL('../data/image-assets/sturdy-watermelon-front.webp.b64',import.meta.url)),'isolated Sturdy front is stored in repo');
  assert.ok(existsSync(new URL('../data/image-assets/sturdy-watermelon-back.webp.b64',import.meta.url)),'isolated original back is stored in repo');
  assert.ok(app.includes('assets/sturdy-watermelon-front.webp'));
- assert.match(app,/3 kg · Double Rich Chocolate",price:2599,img:"assets\/nitro-mass-3kg-double-rich-chocolate\.webp"/,'3 kg must use its own verified jar photo');
+ assert.match(app,/3 kg · Double Rich Chocolate",price:2599,img:"assets\/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout\.webp"/,'3 kg must use its own verified jar photo');
+ assert.match(app,/5 kg · Bucket",price:3499,img:"assets\\/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout\\.webp/,'5 kg must use its own bucket cutout');
  assert.match(app,/Chocolate · 5 lbs.*?img:null/,'Chocolate must not use Coffee photo');
  assert.match(app,/Blueberry · 250 g.*?img:\"https:\/\/unicornproseries.com\/wp-content\/uploads\/2026\/05\/Pro-Creatine-Blueberry-1.png\"/,'Blueberry must use the official Blueberry photo');
 });
