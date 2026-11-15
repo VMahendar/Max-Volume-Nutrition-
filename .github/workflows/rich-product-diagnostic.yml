@@ -40,3 +40,14 @@ jobs:
             console.log('GOOGLE_SAVED_TEST',JSON.stringify({status:r.status,url:r.url,chars:h.length,errorSnippets:[...unescaped.matchAll(/.{0,100}(?:invalid items|critical issue|missing field|error|non-critical issue|product snippets|merchant listings|no items detected).{0,180}/gi)].slice(0,18).map(x=>x[0]),intro:unescaped.slice(0,700)}).slice(0,7000));
           }catch(e){console.log('GOOGLE_SAVED_TEST_ERROR',String(e));}
           NODE
+
+      - name: Save exact Google test HTML for detailed audit
+        run: |
+          curl -fsSL --max-time 40 'https://search.google.com/test/rich-results/result?id=doEpl2JC-Azlt-OuFvhwGA' -o google-rich-results.html
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: exact-rich-results-snapshot
+          path: google-rich-results.html
+          if-no-files-found: warn
+          retention-days: 2
