@@ -47,9 +47,15 @@ try {
   assert.equal(await page.locator('#shop').isVisible(),false,size.name+' catalogue hidden on homepage');
   assert.equal(await page.locator('#mvn-quick-categories').isVisible(),false,size.name+' auto category bar hidden on home');
   assert.equal((await page.locator('body').innerText()).match(/SHOP THE COLLECTION/g)?.length,1,size.name+' one Shop the Collection button');
-  assert.ok(!(await page.locator('.mvn-home-footer').innerText()).includes('+91 77088 30513'),size.name+' no repeated footer phone');
-  assert.ok(!(await page.locator('.mvn-home-footer').innerText()).includes('maxvolumenutrition@gmail.com'),size.name+' no repeated footer email');
-  assert.equal(await page.locator('.mvn-home-footer a[href="contact.html"]').count(),1,size.name+' dedicated Contact link');
+  assert.equal(await page.locator('footer.mvn-home-footer').count(),0,size.name+' no duplicated large footer on the homepage');
+  assert.equal(await page.locator('.mvn-header-more a[href="contact.html"]').count(),1,size.name+' Contact still opens its own page');
+  const goalCreatine=page.locator('.mvn-editorial-category-creatine img.goal-main');
+  const promoCreatine=page.locator('.mvn-editorial-promo-creatine > img');
+  const genuinePhoto='https://revakanya.com/assets/imgs/Pro%20Creatine%20Blueberry.png';
+  assert.equal(await goalCreatine.getAttribute('src'),genuinePhoto,size.name+' correct Blueberry 250 g photo in goal card');
+  assert.equal(await promoCreatine.getAttribute('src'),genuinePhoto,size.name+' same correct original photo in promotion');
+  await promoCreatine.scrollIntoViewIfNeeded();
+  await page.waitForFunction(()=>[...document.querySelectorAll('.mvn-editorial-category-creatine img,.mvn-editorial-promo-creatine img')].every(x=>x.complete&&x.naturalWidth>200),null,{timeout:16000});
   assert.ok((await page.locator('.mvn-theme-goal-art').first().evaluate(e=>getComputedStyle(e).backgroundImage)).includes('gradient'),size.name+' studio photo background');
   for(const img of await page.locator('.mvn-editorial-category .goal-main').all()){
     await img.scrollIntoViewIfNeeded();await img.evaluate(e=>e.decode());assert.ok(await img.evaluate(e=>e.naturalWidth>0),size.name+' photo loads');
