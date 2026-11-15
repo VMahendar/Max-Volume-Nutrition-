@@ -15,7 +15,7 @@ jobs:
           node --input-type=module <<'NODE'
           const id='TYwXo6BteQZlFpnpzqzrig';
           for(const type of ['', 'r%2Fproduct-snippets', 'r%2Fmerchant-listings', 'r%2Forganization-info', 'r%2Flocal-business','r%2Fbreadcrumbs']){
-            const url='https://search.google.com/test/rich-results/result/'+type+(type?'?id=':'?id=')+id;
+            const url=type?'https://search.google.com/test/rich-results/result/'+type+'?id='+id:'https://search.google.com/test/rich-results/result?id='+id;
             try{
               const response=await fetch(url,{signal:AbortSignal.timeout(20000)});
               const html=await response.text();
