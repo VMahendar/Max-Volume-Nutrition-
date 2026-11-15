@@ -45,24 +45,22 @@ try {
   const showcase=page.locator('#mvnEditorial');
   assert.ok(await showcase.isVisible(),size.name+' landscape homepage banner must be visible');
   assert.match(await showcase.locator('h1').textContent(),/BUILD YOUR BODY.*FUEL YOUR GOALS/i);
-  const campaignImg=showcase.locator('img.mvn-owner-banner-img');
-  assert.equal(await campaignImg.getAttribute('src'),'assets/mvn-banner-20261115-no-logo-no-pineapple.webp',size.name+' approved brand-free banner is displayed');
-  await campaignImg.waitFor({state:'visible'});
-  await page.waitForFunction(()=>{const img=document.querySelector('.mvn-owner-banner-img');return img?.complete&&img.naturalWidth>0&&img.naturalHeight>0;},null,{timeout:12000});
+  const originalPhotos=showcase.locator('.mvn-real-banner-products img');
+  assert.equal(await originalPhotos.count(),3,size.name+' banner uses three original owner photos');
+  for(const img of await originalPhotos.all())await img.waitFor({state:'visible'});
+  await page.waitForFunction(()=>[...document.querySelectorAll('.mvn-real-banner-products img')].length===3&&[...document.querySelectorAll('.mvn-real-banner-products img')].every(img=>img.complete&&img.naturalWidth>0&&img.naturalHeight>0),null,{timeout:12000});
   const campaignGeometry=await page.evaluate(()=>{
     const feature=document.querySelector('.mvn-editorial-feature').getBoundingClientRect();
     const shop=document.querySelector('#shop').getBoundingClientRect();
     const promos=document.querySelector('.mvn-editorial-promos').getBoundingClientRect();
     const cats=document.querySelector('.mvn-editorial-categories').getBoundingClientRect();
-    const image=document.querySelector('.mvn-owner-banner-img').getBoundingClientRect();
+    const images=[...document.querySelectorAll('.mvn-real-banner-products img')].map(i=>({src:i.currentSrc,fit:getComputedStyle(i).objectFit,width:i.naturalWidth,height:i.naturalHeight}));
     return {
       heroHeight:feature.height,shopY:shop.y,promoWidth:promos.width,
       categoryBottom:cats.bottom,scrollWidth:document.documentElement.scrollWidth,
       hero:{x:feature.x,y:feature.y,w:feature.width,h:feature.height},
       promos:{x:promos.x,y:promos.y,w:promos.width,h:promos.height},
-      img:{x:image.x,y:image.y,w:image.width,h:image.height},
-      fit:getComputedStyle(document.querySelector('.mvn-owner-banner-img')).objectFit,
-      heroSrc:document.querySelector('.mvn-owner-banner-img').currentSrc,
+      images,
       promosHidden:getComputedStyle(document.querySelector('.mvn-editorial-promos')).display==='none',
       welcome:document.querySelector('.mvn-advance-welcome').getBoundingClientRect().toJSON(),
       serviceCards:[...document.querySelectorAll('.mvn-editorial-category')].map(e=>e.getBoundingClientRect().toJSON())
@@ -70,8 +68,8 @@ try {
   });
   console.log('ADVANCE_CAMPAIGN_GEOMETRY',size.name,JSON.stringify(campaignGeometry));
   assert.ok(campaignGeometry.heroHeight>=240&&campaignGeometry.heroHeight<=900,size.name+' full-width hero stays within a usable viewport');
-  assert.equal(campaignGeometry.fit,'contain',size.name+' source product lineup is not cropped');
-  assert.ok(campaignGeometry.heroSrc.includes('mvn-banner-20261115-no-logo-no-pineapple.webp'),size.name+' approved image is loaded');
+  assert.ok(campaignGeometry.images.every(i=>i.fit==='contain'&&i.width>0&&i.height>0),size.name+' original product photos load without being cropped');
+  assert.deepEqual(campaignGeometry.images.map(i=>i.src.split('/').pop()),['mvn-pro-plus-isolate-1kg.avif','potency-whey-coffee-5lb.webp','mvn-nitro-mass-3kg-photo.avif']);
   assert.ok(campaignGeometry.hero.w>=size.width-2,size.name+' hero is full width, not a 75% image beside old promos');
   assert.ok(campaignGeometry.promosHidden,size.name+' old promo side cards are hidden');
   assert.equal(await showcase.locator('.mvn-advance-hero-title').isVisible(),true,size.name+' visible theme-style headline');
