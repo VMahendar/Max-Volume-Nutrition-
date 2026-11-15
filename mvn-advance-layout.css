@@ -1,0 +1,677 @@
+/*
+ * MVN Advance Fitness Gym layout adaptation (2026-11-15)
+ * Based on the WordPress.org published Advance Fitness Gym homepage structure:
+ * utility strip -> primary navigation -> full-width slider-style hero ->
+ * four training categories -> image/text welcome panel -> retail catalogue.
+ * Original implementation for MVN's existing Node e-commerce backend; no
+ * WordPress runtime, data migration, or third-party theme assets.
+ */
+body.retail-home.mvn-advance-layout:not(.app-store) {
+  --mvn-advance-ink: #1a1d21;
+  --mvn-advance-orange: #ec592c;
+  --mvn-advance-white: #fff;
+  --mvn-advance-muted: #5a6469;
+  background: #fff !important;
+  color: #161a1d !important;
+  font-family: "Arial Narrow", "Helvetica Neue", Arial, sans-serif !important;
+}
+/* 1 — Utility contact/social strip above the primary site navigation. */
+body.retail-home.mvn-advance-layout:not(.app-store) .announce {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  gap: 12px !important;
+  min-height: 35px !important;
+  margin: 0 !important;
+  padding: 6px max(18px,calc((100vw - 1360px)/2)) !important;
+  background: #171b1e !important;
+  border: none !important;
+  color: #e9ebed !important;
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  letter-spacing: .04em !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .announce :is(span,a) {
+  color: inherit !important;
+  font-size: inherit !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .announce a {
+  color: #ff855c !important;
+  text-decoration: none !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .announce-right {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  text-align: right !important;
+}
+/* 2 — Reference theme's clear, single main navigation row. */
+body.retail-home.mvn-advance-layout:not(.app-store) .storehead {
+  display: grid !important;
+  grid-template-columns: minmax(170px,225px) minmax(290px,1fr) minmax(170px,215px) auto !important;
+  grid-template-rows: minmax(66px,auto) !important;
+  gap: clamp(9px,1.3vw,22px) !important;
+  align-items: center !important;
+  position: relative !important;
+  top: auto !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 71px !important;
+  margin: 0 !important;
+  padding: 10px max(18px,calc((100vw - 1360px)/2)) !important;
+  background: #fdfdfc !important;
+  border-bottom: 2px solid #ed5e32 !important;
+  box-shadow: 0 4px 19px rgba(7,11,15,.065) !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .storehead .brand-identity {
+  width: 100% !important;
+  height: 55px !important;
+  max-width: 225px !important;
+  background: transparent !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .storehead .original-brand-logo {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 55px !important;
+  object-fit: contain !important;
+  object-position: left center !important;
+  filter: drop-shadow(0 1px 1px rgba(0,0,0,.3)) !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .storehead .option2-site-nav {
+  display: flex !important;
+  min-width: 0 !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+  justify-content: center !important;
+  gap: clamp(10px,1.5vw,25px) !important;
+  background: transparent !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .storehead .option2-site-nav a {
+  color: #1c2428 !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: .04em !important;
+  border: 0 !important;
+  padding: 18px 0 !important;
+  text-decoration: none !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .storehead .option2-site-nav a:is(:hover,:focus-visible) {
+  color: #d34b28 !important;
+  text-decoration: underline !important;
+  text-underline-offset: 6px !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .storehead .header-search {
+  display: block !important;
+  width: 100% !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .storehead #search {
+  display: flex !important;
+  width: 100% !important;
+  height: 38px !important;
+  min-height: 38px !important;
+  background: #f3f5f6 !important;
+  border: 1px solid #d7dfe2 !important;
+  border-radius: 3px !important;
+  padding: 0 9px !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .storehead #search :is(input,span) {
+  color: #1f2930 !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .storehead #search input::placeholder {
+  color: #657077 !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .storehead .head-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: end !important;
+  gap: 12px !important;
+  color: #1d282f !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .storehead .head-actions :is(.account-link,#bag,.wa,.mvn-header-email) {
+  color: #1d282f !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .storehead .head-actions .mvn-header-email,
+body.retail-home.mvn-advance-layout:not(.app-store) .storehead .head-actions > .wa {
+  display: none !important; /* Contact is in the utility strip and More menu. */
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .storehead #bag em {
+  background: #ec592c !important;
+  color: #fff !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-header-more .mvn-more-panel {
+  background: #fff !important;
+  border-color: #e0e0e0 !important;
+}
+/* 3 — Full-bleed slider-style hero, not a 75% banner + two promo tiles. */
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial {
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  background: #0a121d !important;
+  border: 0 !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-layout {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-feature.mvn-owner-banner-feature {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  min-height: 0 !important;
+  height: auto !important;
+  aspect-ratio: 1753 / 897 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: #0a121d !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-owner-banner-link {
+  position: absolute !important;
+  inset: 0 !important;
+  display: block !important;
+  height: 100% !important;
+  width: 100% !important;
+  z-index: 1 !important;
+  overflow: hidden !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-owner-banner-link::after,
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-owner-banner-link::before {
+  display: none !important;
+  content: none !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-owner-banner-img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: 100% !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+  filter: none !important;
+  clip-path: none !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-promos {
+  display: none !important; /* Old side cards do not belong in theme hero. */
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-benefits {
+  display: none !important; /* Replaced with 4 real category/service panels. */
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-hero-copy {
+  position: absolute !important;
+  top: clamp(20px,3.1vw,56px) !important;
+  left: max(24px,calc((100vw - 1180px)/2)) !important;
+  z-index: 3 !important;
+  width: min(520px,50%) !important;
+  max-width: 520px !important;
+  color: #fff !important;
+  pointer-events: none !important;
+  text-align: left !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-hero-kicker {
+  display: block !important;
+  color: #ff9168 !important;
+  font-size: clamp(9px,.95vw,12px) !important;
+  font-weight: 850 !important;
+  letter-spacing: .15em !important;
+  text-transform: uppercase !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-hero-title {
+  display: block !important;
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  clip: auto !important;
+  overflow: visible !important;
+  white-space: normal !important;
+  margin: 11px 0 8px !important;
+  padding: 0 !important;
+  font-size: clamp(29px,3.3vw,57px) !important;
+  font-weight: 950 !important;
+  letter-spacing: -.046em !important;
+  line-height: 1.02 !important;
+  color: #fff !important;
+  text-shadow: 0 2px 10px rgba(0,0,0,.5) !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-hero-title em {
+  color: #ff774b !important;
+  font-style: normal !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-hero-copy > p {
+  color: #eceeef !important;
+  font-size: clamp(10px,1.05vw,15px) !important;
+  line-height: 1.5 !important;
+  max-width: 470px !important;
+  margin: 10px 0 15px !important;
+  text-shadow: 0 1px 7px #000 !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-hero-cta {
+  display: inline-flex !important;
+  position: relative !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  gap: 20px !important;
+  min-height: 42px !important;
+  width: auto !important;
+  padding: 12px 17px !important;
+  background: #ef5a30 !important;
+  border: 1px solid #ef5a30 !important;
+  border-radius: 2px !important;
+  color: #fff !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: .055em !important;
+  text-decoration: none !important;
+  box-shadow: 0 6px 20px rgba(0,0,0,.22) !important;
+  pointer-events: auto !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-hero-cta:hover {
+  background: #d84a24 !important;
+}
+/* 4 — Four gym-service feature panels in place of the old photo-tile grid. */
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-categories {
+  display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 max(15px,calc((100vw - 1250px)/2)) !important;
+  background: #fff !important;
+  border-bottom: 1px solid #e5e7e9 !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-categories-heading {
+  display: none !important; /* Service categories follow hero directly. */
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-category-grid {
+  display: grid !important;
+  grid-template-columns: repeat(4,minmax(0,1fr)) !important;
+  gap: 0 !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-category {
+  display: flex !important;
+  position: relative !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 9px !important;
+  min-width: 0 !important;
+  height: 187px !important;
+  min-height: 187px !important;
+  padding: 20px 13px !important;
+  overflow: hidden !important;
+  background: #fff !important;
+  border: 0 !important;
+  border-right: 1px solid #e8e8e8 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: #242c30 !important;
+  text-align: center !important;
+  text-decoration: none !important;
+  transform: none !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-category:last-child {
+  border-right: 0 !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-category:is(:hover,:focus-visible) {
+  background: #faf7f4 !important;
+  box-shadow: inset 0 -3px #ef5a30 !important;
+  transform: none !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-category-number,
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-category img {
+  display: none !important; /* Reference uses service illustrations, not retail tiles. */
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-service-icon {
+  display: block !important;
+  position: relative !important;
+  z-index: 2 !important;
+  font-family: Georgia,serif !important;
+  color: #f15c30 !important;
+  font-size: 33px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-category strong {
+  display: block !important;
+  position: relative !important;
+  z-index: 2 !important;
+  width: auto !important;
+  max-width: 100% !important;
+  font-family: Arial,Helvetica,sans-serif !important;
+  font-size: 14px !important;
+  font-weight: 900 !important;
+  color: #222a2f !important;
+  letter-spacing: .035em !important;
+  line-height: 1.2 !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-category > small {
+  display: block !important;
+  position: relative !important;
+  z-index: 2 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  color: #677078 !important;
+  font-size: 11px !important;
+  font-weight: 450 !important;
+  line-height: 1.4 !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-category-action {
+  display: inline-block !important;
+  position: relative !important;
+  z-index: 2 !important;
+  color: #c94725 !important;
+  font-size: 9px !important;
+  font-weight: 850 !important;
+  letter-spacing: .045em !important;
+}
+/* 5 — Theme-like welcome area with a visual on left and business intro right. */
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-welcome {
+  display: grid !important;
+  grid-template-columns: minmax(0,1fr) minmax(0,1fr) !important;
+  gap: clamp(25px,4vw,70px) !important;
+  align-items: center !important;
+  max-width: 1250px !important;
+  min-height: 420px !important;
+  margin: 54px auto !important;
+  padding: 0 20px !important;
+  background: #fff !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-welcome-visual {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  overflow: hidden !important;
+  min-height: 398px !important;
+  height: 100% !important;
+  padding: 30px !important;
+  background: radial-gradient(circle at 60% 65%,#344a55,#0a121a 68%) !important;
+  border: 0 !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-welcome-visual img {
+  position: relative !important;
+  z-index: 1 !important;
+  display: block !important;
+  max-width: 81% !important;
+  max-height: 380px !important;
+  width: auto !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  filter: drop-shadow(0 18px 16px rgba(0,0,0,.35)) !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-welcome-label {
+  display: inline-block !important;
+  position: absolute !important;
+  top: 20px !important;
+  left: 22px !important;
+  z-index: 3 !important;
+  color: #d8e1e5 !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  letter-spacing: .12em !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-welcome-content {
+  padding: 12px 0 !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-section-kicker {
+  display: block !important;
+  color: #e7562c !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+  letter-spacing: .11em !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-welcome-content h2 {
+  margin: 13px 0 17px !important;
+  font-family: Arial,Helvetica,sans-serif !important;
+  font-weight: 950 !important;
+  font-size: clamp(26px,2.9vw,43px) !important;
+  line-height: 1.12 !important;
+  letter-spacing: -.045em !important;
+  color: #1c2529 !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-welcome-content h2 em {
+  font-style: normal !important;
+  color: #e7562c !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-short-line {
+  display: block !important;
+  height: 3px !important;
+  width: 45px !important;
+  margin: 0 0 21px !important;
+  background: #ec592c !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-welcome-content p {
+  max-width: 570px !important;
+  margin: 0 0 14px !important;
+  color: #4c565d !important;
+  line-height: 1.7 !important;
+  font-size: 14px !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-welcome-actions {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 11px !important;
+  margin: 20px 0 0 !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-welcome-actions a {
+  display: inline-flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  min-height: 43px !important;
+  padding: 11px 16px !important;
+  border-radius: 2px !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  letter-spacing: .035em !important;
+  text-decoration: none !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-primary {
+  background: #ec592c !important;
+  border: 1px solid #ec592c !important;
+  color: #fff !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-secondary {
+  background: #fff !important;
+  border: 1px solid #1a262b !important;
+  color: #1a262b !important;
+}
+/* Existing commerce area retains JS hooks and backend order logic. */
+body.retail-home.mvn-advance-layout:not(.app-store) #shop {
+  background: #f5f6f6 !important;
+  border-top: 1px solid #e0e3e5 !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) #shop .productbar {
+  background: #1c252b !important;
+  color: #fff !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) #shop .productbar h3 {
+  color: #fff !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) #shop .collection-results .card .add {
+  background: #ed5d31 !important;
+  border-color: #ed5d31 !important;
+  color: #fff !important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) #shop .collection-results .card .photo img {
+  object-fit: contain !important;
+  filter: none !important;
+}
+@media (max-width: 1170px) {
+  body.retail-home.mvn-advance-layout:not(.app-store) .storehead {
+    grid-template-columns: 190px minmax(0,1fr) 180px auto !important;
+    gap: 10px !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .storehead .option2-site-nav {
+    gap: 10px !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .storehead .option2-site-nav a {
+    font-size: 10px !important;
+  }
+}
+@media (max-width: 970px) {
+  body.retail-home.mvn-advance-layout:not(.app-store) .storehead {
+    grid-template-columns: 180px minmax(0,1fr) auto !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .storehead .option2-site-nav {
+    display: none !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-hero-copy {
+    width: 55% !important;
+    left: 22px !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-hero-title {
+    font-size: clamp(23px,3.2vw,42px) !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-hero-copy > p {
+    font-size: 11px !important;
+  }
+}
+@media (max-width: 700px) {
+  body.retail-home.mvn-advance-layout:not(.app-store) .announce {
+    display: flex !important;
+    justify-content: center !important;
+    min-height: 28px !important;
+    font-size: 9px !important;
+    padding: 6px 12px !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .announce-right {
+    display: none !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .storehead {
+    grid-template-columns: minmax(0,1fr) auto !important;
+    grid-template-rows: 49px 39px !important;
+    gap: 4px 7px !important;
+    min-height: 0 !important;
+    padding: 7px 12px 10px !important;
+    background: #fff !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .storehead .brand-identity {
+    grid-column: 1 !important;
+    grid-row: 1 !important;
+    max-width: 185px !important;
+    height: 46px !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .storehead .header-search {
+    grid-column: 1/-1 !important;
+    grid-row: 2 !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .storehead .head-actions {
+    grid-column: 2 !important;
+    grid-row: 1 !important;
+    gap: 7px !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .storehead .head-actions > .account-link span,
+  body.retail-home.mvn-advance-layout:not(.app-store) .storehead #bag > span {
+    display: none !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-feature.mvn-owner-banner-feature {
+    display: flex !important;
+    flex-direction: column !important;
+    aspect-ratio: auto !important;
+    height: auto !important;
+    min-height: 0 !important;
+    background: #0d1622 !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-hero-copy {
+    position: relative !important;
+    inset: auto !important;
+    order: 1 !important;
+    z-index: 3 !important;
+    width: 100% !important;
+    max-width: none !important;
+    padding: 25px 18px 18px !important;
+    background: #101a27 !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-hero-kicker {
+    font-size: 9px !important;
+    letter-spacing: .07em !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-hero-title {
+    font-size: clamp(27px,7.4vw,42px) !important;
+    line-height: 1.02 !important;
+    margin: 10px 0 !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-hero-copy > p {
+    font-size: 11px !important;
+    line-height: 1.42 !important;
+    margin: 10px 0 13px !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-hero-cta {
+    min-height: 39px !important;
+    font-size: 10px !important;
+    padding: 10px 12px !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-owner-banner-link {
+    display: block !important;
+    position: relative !important;
+    order: 2 !important;
+    flex: none !important;
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 1753 / 897 !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-owner-banner-img {
+    position: absolute !important;
+    inset: 0 !important;
+    height: 100% !important;
+    width: 100% !important;
+    object-fit: contain !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-category-grid {
+    grid-template-columns: repeat(2,minmax(0,1fr)) !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-category {
+    min-height: 147px !important;
+    height: 147px !important;
+    gap: 6px !important;
+    padding: 14px 8px !important;
+    border-bottom: 1px solid #e8e8e8 !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-category:nth-child(2) {
+    border-right: none !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-service-icon {
+    font-size: 26px !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-category strong {
+    font-size: 12px !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-category > small {
+    font-size: 10px !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-welcome {
+    grid-template-columns: minmax(0,1fr) !important;
+    gap: 0 !important;
+    margin: 25px auto 30px !important;
+    padding: 0 14px !important;
+    min-height: 0 !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-welcome-visual {
+    min-height: 275px !important;
+    height: 275px !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-welcome-visual img {
+    max-height: 255px !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-welcome-content {
+    padding: 25px 2px 0 !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-welcome-content h2 {
+    font-size: clamp(26px,7vw,34px) !important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-advance-welcome-content p {
+    font-size: 13px !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body.retail-home.mvn-advance-layout:not(.app-store) * {
+    scroll-behavior: auto !important;
+  }
+}
