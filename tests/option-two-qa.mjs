@@ -85,12 +85,14 @@ try {
   assert.equal(columns,size.columns,size.name+' responsive shop grid');
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)<=10,size.name+' no shop overflow');
   await page.screenshot({path:folder+'/'+size.name+'-shop.png',fullPage:true,animations:'disabled'});
-  await page.locator('#priceRange').selectOption('under1000');
+  // The shop's approved compact design hides redundant price/category controls.
+  // Exercise the underlying price filter without asking Playwright to click a hidden select.
+  await page.locator('#priceRange').evaluate(el=>{el.value='under1000';el.dispatchEvent(new Event('change',{bubbles:true}));});
   assert.ok(await page.locator('#grid article.card').count()>=1,size.name+' price filtering');
-  await page.locator('#priceRange').selectOption('all');
-  await page.locator('.cats [data-cat="mass"]').click();
-  assert.equal(await page.locator('#grid article.card').count(),1,size.name+' mass-gainer filter');
-  await page.locator('.cats [data-cat="all"]').click();
+  await page.locator('#priceRange').evaluate(el=>{el.value='all';el.dispatchEvent(new Event('change',{bubbles:true}));});
+  await page.locator('.mvn-theme-main-nav [data-cat="mass"]').click();
+  assert.equal(await page.locator('#grid article.card').count(),1,size.name+' visible main-nav mass-gainer filter');
+  await page.locator('.mvn-theme-main-nav [data-cat="all"]').click();
   await page.locator('#grid .add[data-id="whey"]').click();
   assert.equal(await page.locator('#count').innerText(),'1',size.name+' cart increments');
   assert.equal(await page.locator('#drawer').getAttribute('aria-hidden'),'false',size.name+' cart drawer opens');
