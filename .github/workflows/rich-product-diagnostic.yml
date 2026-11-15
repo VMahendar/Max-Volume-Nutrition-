@@ -1,0 +1,42 @@
+name: Inspect current MVN Product rich results
+on:
+  pull_request:
+    branches: [main]
+    paths: ['.github/workflows/rich-product-diagnostic.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Verify live product rich-result code and user-provided Google test snapshot
+        run: |
+          node --input-type=module <<'NODE'
+          const base='https://maxvolumenutriton.shop';
+          for(const path of ['/potency-whey.html','/nitro-mass.html','/pro-creatine.html','/sturdy-pre-workout.html','/musclevite-multivitamin.html']){
+            try{
+              const r=await fetch(base+path);
+              const html=await r.text();
+              const scripts=[...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)];
+              const schemas=scripts.map(m=>{try{return JSON.parse(m[1]);}catch{return {error:'INVALID_JSON'}};});
+              console.log('PAGE',path,JSON.stringify({status:r.status,robots:r.headers.get('x-robots-tag'),schema:schemas.map(s=>({type:s['@type'],name:s.name,offers:s.offers,aggregateRating:s.aggregateRating,error:s.error})),retailSection:html.includes('Current retail prices'),reviewSection:html.includes('Customer ratings &amp; reviews'),injectionMarker:html.includes('<!-- MVN_PRODUCT_SEO -->')}));
+            }catch(e){console.log('PAGE_ERROR',path,String(e));}
+          }
+          try{
+            const r=await fetch(base+'/api/retail/catalog');
+            const j=await r.json();
+            console.log('CATALOG',JSON.stringify({status:r.status,products:(j.products||[]).map(p=>({id:p.id,variants:(p.variants||[]).map(v=>({id:v.id,pricePaise:v.pricePaise}))}))}).slice(0,6000));
+          }catch(e){console.log('CATALOG_ERROR',String(e));}
+          try{
+            const r=await fetch('https://search.google.com/test/rich-results/result?id=doEpl2JC-Azlt-OuFvhwGA');
+            const h=await r.text();
+            const unescaped=h.replace(/\\u003c/g,'<').replace(/\\u003e/g,'>').replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&quot;/g,'"').replace(/&amp;/g,'&').replace(/\s+/g,' ');
+            console.log('GOOGLE_SAVED_TEST',JSON.stringify({status:r.status,url:r.url,chars:h.length,errorSnippets:[...unescaped.matchAll(/.{0,100}(?:invalid items|critical issue|missing field|error|non-critical issue|product snippets|merchant listings|no items detected).{0,180}/gi)].slice(0,18).map(x=>x[0]),intro:unescaped.slice(0,700)}).slice(0,7000));
+          }catch(e){console.log('GOOGLE_SAVED_TEST_ERROR',String(e));}
+          NODE
