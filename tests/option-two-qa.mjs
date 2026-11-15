@@ -68,6 +68,7 @@ try {
       serviceCards:[...document.querySelectorAll('.mvn-editorial-category')].map(e=>e.getBoundingClientRect().toJSON())
     };
   });
+  console.log('ADVANCE_CAMPAIGN_GEOMETRY',size.name,JSON.stringify(campaignGeometry));
   assert.ok(campaignGeometry.heroHeight>=240&&campaignGeometry.heroHeight<=900,size.name+' full-width hero stays within a usable viewport');
   assert.equal(campaignGeometry.fit,'contain',size.name+' source product lineup is not cropped');
   assert.ok(campaignGeometry.heroSrc.includes('mvn-banner-20261115-no-logo-no-pineapple.webp'),size.name+' approved image is loaded');
