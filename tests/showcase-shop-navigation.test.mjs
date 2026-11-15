@@ -53,7 +53,9 @@ test('category and search router only redirects on homepage, keeps shop and app 
 
 test('homepage has no large multi-column footer; essential links live on separate pages',()=>{
  assert.doesNotMatch(home,/<footer\s/,'homepage footer is removed, not merely hidden');
- assert.match(shop,/<footer class="site-footer/,'shopping page retains standard policy navigation');
+ assert.match(shop,/<footer class="mvn-compact-footer"/,'shop has compact policy footer');
+ assert.doesNotMatch(shop,/class="site-footer mvn-home-footer"/,'oversized 4-section footer is removed');
+ for (const link of ['contact.html','shipping.html','returns.html','privacy.html','terms.html']) assert.ok(shop.includes('href="'+link+'"'),'essential policy or contact link '+link);
  assert.match(home,/href="contact\.html"/,'Contact is available through the existing 3-dot menu');
  const c=readFileSync('public/contact.html','utf8');
  assert.match(c,/maxvolumenutrition@gmail\.com/);
