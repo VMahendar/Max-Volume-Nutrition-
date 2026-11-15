@@ -40,7 +40,7 @@ test('verified certificate, territorial launch, responsible media and Help Cente
  assert.match(brands,/GLOB TECH/);
  assert.match(html,/href="brands.html"/,'brand launches open on their own page');
  assert.match(html,/TAMIL NADU/);
- assert.match(html,/PUDUCHERRY/);
+ assert.match(read('public/dealer.html'),/Puducherry/,'wholesale service territory remains described on the dedicated dealer page');
  assert.match(css,/mvnProgress/);
  assert.match(css,/prefers-reduced-motion:reduce/);
  assert.ok(!html.includes('class="store-notice"'),'duplicate bottom banner removed');
