@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 test('screenshot reference maintains a consistent scrolling storefront without duplicated Whey panels',()=>{
  const html=readFileSync('public/index.html','utf8'),css=readFileSync('public/mvn-supplement-store-reference.css','utf8');
- assert.match(html,/mvn-supplement-store-reference\.css\?v=20261115-ref1/);
+ assert.match(html,/mvn-shopping-bundle-20261115\.css\?v=1/);
  assert.match(html,/SHOP BY <em>GOAL<\/em>/);
  assert.equal((html.match(/class="mvn-theme-goal-art"/g)||[]).length,3);
  assert.doesNotMatch(html,/class="mvn-advance-welcome"/,'no redundant large product/promo panel');
