@@ -9,7 +9,7 @@ const server=spawn(process.execPath,['server.mjs'],{env:{...process.env,PORT:'34
 try{
  await new Promise((ok,no)=>{const timeout=setTimeout(()=>no(Error('Startup timeout')),5000);server.stdout.once('data',()=>{clearTimeout(timeout);ok();});});
  browser=await chromium.launch({...(process.env.CHROMIUM_EXECUTABLE_PATH?{executablePath:process.env.CHROMIUM_EXECUTABLE_PATH}:{}),args:['--no-sandbox']});
- for(const path of ['/','/mobile-app.html']){
+ for(const path of ['/shop.html','/mobile-app.html']){
   const page=await browser.newPage({viewport:{width:390,height:844}});
   await page.addInitScript(()=>{const match=window.matchMedia.bind(window);window.matchMedia=q==='(display-mode: standalone)'?{...match(q),matches:true,addListener(){},removeListener(){},addEventListener(){},removeEventListener(){}}:match(q);});
   await page.clock.install({time:new Date('2026-11-08T05:29:50Z')});await page.goto(base+path);
@@ -19,6 +19,12 @@ try{
   assert.equal(await page.locator('#mvn-opening-countdown').count(),0,'promotional countdown must not cover storefront');
   await page.close();
  }
+ const homepage=await browser.newPage({viewport:{width:390,height:844}});
+ await homepage.goto(base+'/');
+ await homepage.locator('#mvnEditorial').waitFor({state:'visible'});
+ assert.equal(await homepage.locator('#shop').isVisible(),false,'showcase homepage intentionally does not repeat catalogue');
+ assert.equal(await homepage.locator('#mvn-opening-countdown').count(),0,'showcase remains accessible without launch countdown');
+ await homepage.close();
  const page=await browser.newPage({viewport:{width:390,height:844}});
  await page.clock.install({time:new Date('2026-11-08T05:29:50Z')});await page.goto(base+'/scan.html');
  await page.locator('#mvn-opening-countdown').waitFor();
