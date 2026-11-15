@@ -14,7 +14,7 @@ test('home presents original supplements once; shopping catalogue opens on a sep
  assert.match(home,/href="shop\.html\?cat=pre"/);
  assert.match(home,/href="shop\.html\?cat=creatine"/);
  assert.equal((home.match(/SHOP THE COLLECTION/g)||[]).length,1,'no repeated Shop the Collection button');
- assert.match(css,/mvn-showcase-home[^\n]* #shop/,'homepage visually hides full catalogue');
+ assert.match(css,/mvn-showcase-home[^\n]* main#shop/,'homepage visually hides full catalogue');
  assert.match(css,/mvn-full-shop[^\n]* #shop/,'separate shop displays catalogue');
  assert.doesNotMatch(shop,/id="mvnEditorial"/,'shop does not repeat full group banner');
  assert.doesNotMatch(shop,/mvn-theme-shop-goals/,'shop does not repeat goal cards');
