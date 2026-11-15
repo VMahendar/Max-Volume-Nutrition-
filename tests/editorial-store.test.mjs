@@ -7,7 +7,7 @@ test('store remains a multi-brand retailer and does not make unverified territor
  assert.match(index,/UNICORN PRO SERIES/,'current verified brand displayed');
  assert.match(index,/GLOB TECH is on our upcoming-brand roadmap/,'upcoming brand clearly labelled');
  assert.doesNotMatch(index,/Max Volume Nutrition is the authorized exclusive distributor for Tamil Nadu and Puducherry/);
- assert.match(index,/assets\/mvn-owner-landscape-banner\.webp/);
+ assert.match(index,/assets\/mvn-banner-20261115-no-logo-no-pineapple\.webp/);
  assert.ok(readFileSync('public/assets/potency-whey-coffee-5lb.webp').length>10000,'original Potency Whey source photo remains preserved');
  assert.match(index,/assets\/Screenshot_2026_1103_003852\.jpg/);
  for(const id of ['search','q','bag','shop','grid','priceRange','sort','drawer','checkoutFields','certificate','brands','dealer']){
