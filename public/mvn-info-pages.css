@@ -1,0 +1,138 @@
+/* MVN dedicated information pages + compact homepage links.
+   Keep retail prices, stock, checkout, cart, account and promotions logic unchanged. */
+:root{--mvni-ink:#15191d;--mvni-orange:#f15b09;--mvni-grey:#5a626a;--mvni-paper:#f7f7f5}
+.mvn-info-page{margin:0;background:#fff;color:var(--mvni-ink);font:15px/1.65 Arial,Helvetica,sans-serif}
+.mvn-info-page *{box-sizing:border-box}
+.mvn-info-page a{color:inherit}
+.mvn-info-utility{background:#131617;color:#e6e7e7;padding:7px max(17px,calc((100vw - 1200px)/2));font-size:11px;display:flex;justify-content:space-between;gap:12px}
+.mvn-info-utility a{color:#ffa46f;text-decoration:none;font-weight:750}
+.mvn-info-header{background:#17191b;border-bottom:5px solid var(--mvni-orange);color:#fff}
+.mvn-info-header-inner{max-width:1240px;margin:auto;padding:13px 20px;display:flex;align-items:center;gap:26px;justify-content:space-between}
+.mvn-info-logo{display:block;flex:0 0 228px;max-width:228px;background:#24282c;padding:7px 10px;border-left:4px solid var(--mvni-orange)}
+.mvn-info-logo img{display:block;max-width:100%;width:100%;height:51px;object-fit:contain}
+.mvn-info-nav{display:flex;align-items:center;justify-content:flex-end;gap:clamp(9px,1.5vw,22px);flex-wrap:wrap}
+.mvn-info-nav a{color:#fff;text-decoration:none;font-size:11px;font-weight:850;letter-spacing:.025em;white-space:nowrap}
+.mvn-info-nav a:hover,.mvn-info-nav a[aria-current="page"]{color:#ff8c4a}
+.mvn-info-hero{background:#f5f5f3;border-bottom:1px solid #e5e6e5;padding:50px max(20px,calc((100vw - 1200px)/2))}
+.mvn-info-kicker{display:block;color:#b74d17;font-size:11px;font-weight:900;letter-spacing:.12em;margin-bottom:11px}
+.mvn-info-hero h1{margin:0;font-family:Impact,'Arial Narrow',Arial,sans-serif;font-size:clamp(37px,5vw,67px);line-height:1.06;letter-spacing:.005em;font-weight:950}
+.mvn-info-hero h1 em{color:var(--mvni-orange);font-style:normal}
+.mvn-info-hero p{color:#566066;font-size:15px;max-width:790px;margin:17px 0 0}
+.mvn-info-main{max-width:1240px;margin:0 auto;padding:38px 20px 78px}
+.mvn-info-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.mvn-info-panel{background:#fff;border:1px solid #e0e4e6;padding:28px;border-radius:6px;min-width:0}
+.mvn-info-panel.dark{background:#182026;color:#fff;border-color:#182026}
+.mvn-info-panel h2{margin:6px 0 11px;font-size:clamp(23px,2.3vw,33px);line-height:1.18;color:inherit}
+.mvn-info-panel p{color:#5a6369;margin:9px 0 14px}
+.mvn-info-panel.dark p{color:#d9e0e2}
+.mvn-info-panel small,.mvn-info-panel .mvn-info-eyebrow{font-size:11px;font-weight:850;letter-spacing:.09em;color:#bd5722}
+.mvn-info-panel.dark small,.mvn-info-panel.dark .mvn-info-eyebrow{color:#ffaa76}
+.mvn-info-link{display:inline-flex;align-items:center;gap:9px;min-height:43px;padding:11px 18px;margin:8px 8px 0 0;background:var(--mvni-orange);border:1px solid var(--mvni-orange);border-radius:4px;color:#fff!important;text-decoration:none;font-weight:850;font-size:12px;letter-spacing:.025em}
+.mvn-info-link.secondary{background:#fff;border-color:#30363a;color:#262b2f!important}
+.mvn-info-panel.dark .mvn-info-link.secondary{color:#fff!important;border-color:#e6e6e6;background:transparent}
+.mvn-info-contact-value{display:block;font-size:clamp(17px,2vw,26px);font-weight:900;word-break:break-word;margin:14px 0}
+.mvn-info-document{max-width:950px;margin:auto;padding:20px;border:1px solid #d9dddf;background:#f4f4f4;text-align:center}
+.mvn-info-document img{max-width:100%;height:auto;display:block;margin:auto;object-fit:contain}
+.mvn-info-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:30px 0}
+.mvn-info-steps>div{border-top:3px solid var(--mvni-orange);padding:17px;background:var(--mvni-paper)}
+.mvn-info-steps h3{font-size:18px;line-height:1.25;margin:6px 0}
+.mvn-info-steps p{font-size:13px;color:#5b6369;margin:7px 0}
+.mvn-info-notice{padding:16px 20px;border-left:4px solid var(--mvni-orange);background:#f7f7f5;color:#4e565d;font-size:13px;margin:19px 0}
+.mvn-info-offers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;margin:20px 0}
+.mvn-info-offers article{border:1px solid #dfe2e3;padding:23px;border-radius:4px;background:#fff}
+.mvn-info-offers article h2{font-size:23px;margin:8px 0}
+.mvn-info-offers article small{font-size:11px;color:#ac4e1a}
+.mvn-info-offers article p{color:#5b646b}
+.mvn-info-offers article details{padding:6px 0;border-top:1px solid #eee}
+.mvn-info-offers article summary{cursor:pointer;font-weight:750}
+.mvn-info-footer{padding:25px max(20px,calc((100vw - 1200px)/2));background:#171b1f;color:#d9dcde;border-top:4px solid var(--mvni-orange);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;font-size:12px}
+.mvn-info-footer nav{display:flex;gap:16px;flex-wrap:wrap}
+.mvn-info-footer a{color:#fff;text-decoration:none}
+.mvn-quick-pages{padding:clamp(36px,5vw,68px) max(17px,calc((100vw - 1260px)/2));background:#f9f9f7;border-top:1px solid #e7e8e6}
+.mvn-quick-pages>header{display:block;max-width:850px;margin:0 0 22px}
+.mvn-quick-pages>header span{color:#cc551d;font-size:11px;letter-spacing:.13em;font-weight:900}
+.mvn-quick-pages>header h2{font-family:Impact,'Arial Narrow',Arial,sans-serif;font-size:clamp(28px,3.5vw,43px);margin:7px 0;color:#1c2227;letter-spacing:0}
+.mvn-quick-pages>header p{max-width:690px;margin:0;color:#5a6269;font-size:13px}
+.mvn-quick-page-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:15px}
+.mvn-quick-page{display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:10px!important;min-height:156px!important;padding:25px!important;border:1px solid #dee2e4!important;border-top:3px solid #f15b09!important;border-radius:4px!important;background:#fff!important;color:#222b30!important;text-decoration:none!important;box-shadow:none!important;overflow:hidden!important}
+.mvn-quick-page:hover,.mvn-quick-page:focus-visible{background:#fff7f3!important;border-color:#f15b09!important}
+.mvn-quick-page small{color:#cc571a!important;font-size:10px!important;font-weight:900!important;letter-spacing:.1em!important}
+.mvn-quick-page strong{font:900 clamp(18px,2vw,24px)/1.2 Arial,sans-serif!important;color:#192125!important}
+.mvn-quick-page span{color:#5f6870!important;font-size:12px!important;line-height:1.4!important}
+.mvn-quick-page b{font-weight:900!important;color:#e35a17!important;margin-top:auto!important}
+body.retail-home #offerCards[hidden],body.retail-home [data-store-updates][hidden]{display:none!important}
+@media(max-width:800px){
+.mvn-info-header-inner{flex-direction:column;align-items:flex-start;gap:12px}
+.mvn-info-nav{justify-content:flex-start}
+.mvn-info-logo{flex-basis:auto;width:210px}
+.mvn-info-grid,.mvn-info-offers{grid-template-columns:minmax(0,1fr)}
+.mvn-quick-page-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:520px){
+.mvn-info-utility{font-size:9px}
+.mvn-info-header-inner{padding:10px 13px}
+.mvn-info-nav{gap:11px;row-gap:7px}
+.mvn-info-nav a{font-size:10px}
+.mvn-info-hero{padding:33px 17px}
+.mvn-info-main{padding:22px 14px 40px}
+.mvn-info-panel{padding:20px}
+.mvn-info-steps{grid-template-columns:1fr}
+.mvn-quick-pages{padding:32px 12px}
+.mvn-quick-page-grid{grid-template-columns:minmax(0,1fr);gap:10px}
+.mvn-quick-page{min-height:130px!important;padding:19px!important}
+}
+
+/* Home footer stays a small navigation directory; full contact information opens separately. */
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer{
+  display:grid!important;grid-template-columns:minmax(220px,1.4fr) repeat(3,minmax(0,1fr))!important;
+  column-gap:clamp(16px,3vw,44px)!important;row-gap:24px!important;
+  padding:40px max(17px,calc((100vw - 1260px)/2))!important;
+  background:#171a1c!important;border-top:4px solid #f15b09!important;
+}
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer>div{
+  display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:9px!important;
+  min-width:0!important;color:#ddd!important;
+}
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer>div>b{
+  font-weight:900!important;color:#ff8749!important;letter-spacing:.055em!important;
+}
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer>div>a{
+  color:#e5e7e9!important;text-decoration:none!important;line-height:1.35!important;
+  font-size:12px!important;
+}
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer>div>a:hover{color:#ff9558!important}
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer .fine{
+  grid-column:1/-1!important;margin:10px 0 0!important;border-top:1px solid #343b3f!important;
+  padding-top:15px!important;color:#bec5c9!important;font-size:11px!important;
+}
+@media(max-width:800px){
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:560px){
+body.retail-home.mvn-supplement-theme:not(.app-store) .announce{justify-content:space-between!important}
+body.retail-home.mvn-supplement-theme:not(.app-store) .announce-right{
+  display:flex!important;align-items:center!important;margin-left:auto!important;
+  color:#ffaf83!important;white-space:nowrap!important;
+}
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;padding:31px 13px!important;column-gap:14px!important;
+}
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer>div:first-child{
+  grid-column:1/-1!important;
+}
+}
+
+body.retail-home.mvn-supplement-theme:not(.app-store) .announce > .mvn-top-contact{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  margin-left:auto!important;min-height:20px!important;flex:0 0 auto!important;
+  color:#ffb482!important;font-size:10px!important;font-weight:900!important;
+  text-decoration:none!important;letter-spacing:.045em!important;white-space:nowrap!important;
+}
+body.retail-home.mvn-supplement-theme:not(.app-store) .announce > .mvn-top-contact:hover{
+  color:#fff!important;text-decoration:underline!important;text-underline-offset:3px!important;
+}
+@media(max-width:560px){
+ body.retail-home.mvn-supplement-theme:not(.app-store) .announce > .mvn-top-contact{
+  display:inline-flex!important;font-size:10px!important;
+ }
+}

@@ -33,12 +33,14 @@ test('existing SQLite schema is preserved with separate dealer profiles and opt-
 });
 
 test('verified certificate, territorial launch, responsible media and Help Center appear without repeated checkout banner',()=>{
- const html=read('public/index.html'),support=read('public/support.html'),css=read('public/flagship.css');
- assert.match(html,/assets\/IMG-20261102-WA0019.jpg/);
+ const html=read('public/index.html'),support=read('public/support.html'),certificate=read('public/certificate.html'),brands=read('public/brands.html'),css=read('public/flagship.css');
+ assert.match(certificate,/assets\/IMG-20261102-WA0019.jpg/);
+ assert.match(html,/href="certificate.html"/,'certificate opens its own page rather than displaying full image on homepage');
  assert.match(support,/assets\/IMG-20261102-WA0019.jpg/);
- assert.match(html,/GLOB TECH/);
+ assert.match(brands,/GLOB TECH/);
+ assert.match(html,/href="brands.html"/,'brand launches open on their own page');
  assert.match(html,/TAMIL NADU/);
- assert.match(html,/PUDUCHERRY/);
+ assert.match(read('public/dealer.html'),/Puducherry/,'wholesale service territory remains described on the dedicated dealer page');
  assert.match(css,/mvnProgress/);
  assert.match(css,/prefers-reduced-motion:reduce/);
  assert.ok(!html.includes('class="store-notice"'),'duplicate bottom banner removed');

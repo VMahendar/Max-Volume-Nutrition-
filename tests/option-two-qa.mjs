@@ -142,8 +142,9 @@ try {
   assert.equal(await menuPanel.isVisible(),false,size.name+' menu closed by default');
   assert.equal(await email.getAttribute('href'),'mailto:maxvolumenutrition@gmail.com');
   assert.equal(await email.isVisible(),false,'contact email moves to theme utility strip');
-  const topEmail=page.locator('.announce a[href="mailto:maxvolumenutrition@gmail.com"]');
-  assert.equal(await topEmail.isVisible(),size.name==='desktop',size.name+' desktop contact information bar');
+  const topContact=page.locator('.announce a[href="contact.html"]');
+  assert.equal(await topContact.isVisible(),true,size.name+' top bar provides Contact link rather than displaying personal contact details');
+  assert.doesNotMatch(await page.locator('.announce').innerText(),/77088|@gmail/,'contact information appears only after opening Contact page');
   await more.locator('summary').click();
   assert.equal(await menuPanel.isVisible(),true,size.name+' three-dot menu opens');
   assert.equal(await menuPanel.locator('a[href="mailto:maxvolumenutrition@gmail.com"]').count(),0,'do not duplicate contact methods in menu');
@@ -202,6 +203,25 @@ try {
   assert.equal(await page.locator('#drawer').getAttribute('aria-hidden'),'false',size.name+' cart drawer opens');
   await page.locator('#close').click();
   await page.screenshot({path:folder+'/'+size.name+'.png',animations:'disabled'});
+  await page.locator('.mvn-quick-page[href="contact.html"]').click();
+  await page.waitForURL('**/contact.html');
+  assert.equal(await page.locator('main .mvn-info-contact-value').count(),2,size.name+' contact page shows phone and email only after being opened');
+  assert.ok((await page.locator('main').innerText()).includes('+91 77088 30513'),size.name+' official phone appears on Contact page');
+  assert.ok((await page.locator('main').innerText()).includes('maxvolumenutrition@gmail.com'),size.name+' official email appears on Contact page');
+  await page.goBack({waitUntil:'domcontentloaded'});
+  await page.locator('.mvn-quick-page[href="certificate.html"]').click();
+  await page.waitForURL('**/certificate.html');
+  assert.ok(await page.locator('.mvn-info-document img').isVisible(),size.name+' full original certificate appears only on certificate page');
+  await page.waitForFunction(()=>{const i=document.querySelector('.mvn-info-document img');return i?.complete&&i.naturalWidth>200;});
+  await page.goBack({waitUntil:'domcontentloaded'});
+  for(const file of ['about.html','offers.html','brands.html']){
+    await page.locator('.mvn-quick-page[href="'+file+'"]').click();
+    await page.waitForURL('**/'+file);
+    assert.equal(await page.locator('main.mvn-info-main').isVisible(),true,size.name+' '+file+' opens its own information page');
+    await page.goBack({waitUntil:'domcontentloaded'});
+  }
+  assert.equal(await page.locator('#grid article.card').count()>=5,true,size.name+' after browsing info pages the working catalogue is restored');
+
   assert.deepEqual(errors,[],size.name+' unexpected browser Javascript errors');
   console.log('PASS Supplement Store reference '+size.name+' layout, photos, filters, cart and no JS errors');
   await context.close();
