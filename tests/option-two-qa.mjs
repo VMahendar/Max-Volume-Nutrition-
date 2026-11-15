@@ -40,8 +40,8 @@ try {
   assert.equal(homeResponse.status(),200,size.name+' home loads');
   assert.ok(await page.locator('#mvnEditorial').isVisible(),size.name+' complete group banner visible');
   const group=page.locator('.mvn-owner-banner-img');
-  assert.equal(await group.getAttribute('src'),'assets/mvn-banner-20261115-no-logo-no-pineapple.webp');
-  await page.waitForFunction(()=>{const i=document.querySelector('.mvn-owner-banner-img');return i?.complete&&i.naturalWidth===1753&&i.naturalHeight===897;});
+  assert.equal(await group.getAttribute('src'),'assets/mvn-homepage-banner-20261115.webp');
+  await page.waitForFunction(()=>{const i=document.querySelector('.mvn-owner-banner-img');return i?.complete&&i.naturalWidth===1672&&i.naturalHeight===941;});
   assert.equal(await page.locator('.mvn-editorial-promo').count(),2,'two feature promotions retained');
   assert.equal(await page.locator('.mvn-editorial-category').count(),3,'three original shop-by-goal product cards');
   assert.equal(await page.locator('#shop').isVisible(),false,size.name+' catalogue hidden on homepage');

@@ -16,8 +16,8 @@ test('supplement store screenshot reference drives the actual homepage structure
  assert.equal((html.match(/class="mvn-editorial-category mvn-editorial-category-/g)||[]).length,3);
  assert.equal((html.match(/class="mvn-theme-goal-art"/g)||[]).length,3);
  assert.doesNotMatch(html,/class="mvn-advance-welcome"/,'do not insert text-heavy repeat section between goals and catalogue');
- assert.match(html,/assets\/mvn-banner-20261115-no-logo-no-pineapple\.webp/);
- assert.ok(readFileSync('public/assets/mvn-banner-20261115-no-logo-no-pineapple.webp').length>100000);
+ assert.match(html,/assets\/mvn-homepage-banner-20261115\.webp/);
+ assert.ok(readFileSync('public/assets/mvn-homepage-banner-20261115.webp').length>100000);
  assert.ok(html.indexOf('class="mvn-editorial"')<html.indexOf('class="mvn-editorial-categories'),'hero before goals');
  assert.ok(html.indexOf('mvn-theme-shop-goals')<html.indexOf('id="shop"'),'goals before merchandise');
  assert.match(css,/mvn-editorial-layout\s*\{/,'split-screen campaign layout');

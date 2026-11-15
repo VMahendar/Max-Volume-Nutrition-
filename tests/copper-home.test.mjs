@@ -9,8 +9,8 @@ test('presentation change preserves the correct product images and live storefro
 
 
 
- assert.match(index,/src="assets\/mvn-banner-20261115-no-logo-no-pineapple\.webp"/,'keep complete all-products banner as requested');
- assert.ok(readFileSync('public/assets/mvn-banner-20261115-no-logo-no-pineapple.webp').length>100000,'approved original group lineup is available');
+ assert.match(index,/src="assets\/mvn-homepage-banner-20261115\.webp"/,'keep complete all-products banner as requested');
+ assert.ok(readFileSync('public/assets/mvn-homepage-banner-20261115.webp').length>100000,'approved original group lineup is available');
  assert.ok(readFileSync('public/assets/potency-whey-coffee-5lb.webp').length>10000,'owner original Whey source is retained unaltered');
  assert.match(index,/assets\/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout\.webp/,'5 kg pack photo is correctly isolated');
  for(const id of ['shop','grid','search','bag','checkoutFields','send','productDialog'])

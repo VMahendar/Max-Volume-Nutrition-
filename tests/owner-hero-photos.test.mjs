@@ -17,8 +17,8 @@ test('original owner photo sources are valid AVIF and cannot become synthetic su
   }
 });
 
-test('homepage banner keeps all original group-product positions',()=>{
-  const banner='assets/mvn-banner-20261115-no-logo-no-pineapple.webp';
+test('homepage banner preserves the owner-uploaded group photograph',()=>{
+  const banner='assets/mvn-homepage-banner-20261115.webp';
   const file=readFileSync('public/'+banner);
   assert.ok(file.length>100000,'full-resolution product lineup must be shipped');
   assert.equal(file.toString('ascii',0,4),'RIFF','hero is a valid RIFF image');
