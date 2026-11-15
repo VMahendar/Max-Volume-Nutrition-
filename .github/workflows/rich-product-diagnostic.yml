@@ -41,6 +41,27 @@ jobs:
           }catch(e){console.log('GOOGLE_SAVED_TEST_ERROR',String(e));}
           NODE
 
+      - name: Inspect optional LocalBusiness and Organization warnings and public assets
+        run: |
+          node --input-type=module <<'NODE'
+          import {execFileSync} from 'node:child_process';
+          const origin='https://maxvolumenutriton.shop';
+          const testId='doEpl2JC-Azlt-OuFvhwGA';
+          for(const type of ['local-business','organization-info']){
+            try{
+              const r=await fetch('https://search.google.com/test/rich-results/result/r/'+type+'?id='+testId);
+              const h=await r.text();
+              const plain=h.replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ');
+              console.log('DETAIL',type,JSON.stringify({status:r.status,url:r.url,warnings:[...plain.matchAll(/.{0,90}(?:Missing field|warning|Invalid|recommended|optional|error).{0,140}/gi)].slice(0,24).map(x=>x[0]),text:plain.slice(700,2100)}).slice(0,8000));
+            }catch(e){console.log('DETAIL_ERROR',type,String(e));}
+          }
+          for(const path of ['/api/promotions?surface=web','/api/retail/catalog','/api/store-updates?surface=web','/assets/IMG-20261102-WA0019.jpg','/assets/mvn-nitro-mass-3kg-photo.avif','/assets/mvn-pro-plus-isolate-1kg.avif']){
+            try{
+              const r=await fetch(origin+path,{headers:{'User-Agent':'Googlebot/2.1 (+http://www.google.com/bot.html)'}});
+              console.log('RESOURCE',path,r.status,r.headers.get('content-type'),r.headers.get('content-length'),r.headers.get('x-robots-tag'));
+            }catch(e){console.log('RESOURCE_ERROR',path,String(e));}
+          }
+          NODE
       - name: Save exact Google test HTML for detailed audit
         run: |
           curl -fsSL --max-time 40 'https://search.google.com/test/rich-results/result?id=doEpl2JC-Azlt-OuFvhwGA' -o google-rich-results.html
