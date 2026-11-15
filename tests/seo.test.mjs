@@ -5,6 +5,7 @@ import {readFileSync,existsSync} from 'node:fs';
 const domain='https://maxvolumenutriton.shop';
 const publicPages=[
   '/',
+  '/shop.html',
   '/dealer.html',
   '/support.html',
   '/about.html',
