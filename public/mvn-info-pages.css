@@ -81,3 +81,43 @@ body.retail-home #offerCards[hidden],body.retail-home [data-store-updates][hidde
 .mvn-quick-page-grid{grid-template-columns:minmax(0,1fr);gap:10px}
 .mvn-quick-page{min-height:130px!important;padding:19px!important}
 }
+
+/* Home footer stays a small navigation directory; full contact information opens separately. */
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer{
+  display:grid!important;grid-template-columns:minmax(220px,1.4fr) repeat(3,minmax(0,1fr))!important;
+  column-gap:clamp(16px,3vw,44px)!important;row-gap:24px!important;
+  padding:40px max(17px,calc((100vw - 1260px)/2))!important;
+  background:#171a1c!important;border-top:4px solid #f15b09!important;
+}
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer>div{
+  display:flex!important;flex-direction:column!important;align-items:flex-start!important;gap:9px!important;
+  min-width:0!important;color:#ddd!important;
+}
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer>div>b{
+  font-weight:900!important;color:#ff8749!important;letter-spacing:.055em!important;
+}
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer>div>a{
+  color:#e5e7e9!important;text-decoration:none!important;line-height:1.35!important;
+  font-size:12px!important;
+}
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer>div>a:hover{color:#ff9558!important}
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer .fine{
+  grid-column:1/-1!important;margin:10px 0 0!important;border-top:1px solid #343b3f!important;
+  padding-top:15px!important;color:#bec5c9!important;font-size:11px!important;
+}
+@media(max-width:800px){
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}
+@media(max-width:560px){
+body.retail-home.mvn-supplement-theme:not(.app-store) .announce{justify-content:space-between!important}
+body.retail-home.mvn-supplement-theme:not(.app-store) .announce-right{
+  display:flex!important;align-items:center!important;margin-left:auto!important;
+  color:#ffaf83!important;white-space:nowrap!important;
+}
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;padding:31px 13px!important;column-gap:14px!important;
+}
+body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer>div:first-child{
+  grid-column:1/-1!important;
+}
+}
