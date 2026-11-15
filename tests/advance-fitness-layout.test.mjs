@@ -9,7 +9,10 @@ test('MVN homepage uses an adapted Advance Fitness Gym page structure',()=>{
   assert.match(html,/mvn-advance-layout\.css\?v=20261115-theme-layout-1/);
   assert.match(html,/class="mvn-advance-hero-title"/);
   assert.match(html,/class="mvn-advance-welcome"/);
-  assert.match(html,/assets\/mvn-banner-20261115-no-logo-no-pineapple\.webp/);
+  assert.match(html,/class="mvn-real-banner-products"/);
+  assert.match(html,/assets\/mvn-pro-plus-isolate-1kg\.avif/);
+  assert.match(html,/assets\/mvn-nitro-mass-3kg-photo\.avif/);
+  assert.match(html,/assets\/potency-whey-coffee-5lb\.webp/);
   assert.match(html,/class="mvn-editorial-category-grid"/);
   assert.equal((html.match(/class="mvn-advance-service-icon"/g)||[]).length,4);
   assert.ok(html.indexOf('class="mvn-editorial"') < html.indexOf('class="mvn-editorial-categories"'),'hero comes before features');
