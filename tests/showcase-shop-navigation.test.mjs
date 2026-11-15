@@ -75,10 +75,10 @@ test('Blueberry and Cranberry images are never mixed',()=>{
 // while making the in-page shopping controls less crowded on phone screens.
 test('shop only uses dark-blue brand panel, compact collection header and hidden duplicate filters',()=>{
  const theme=readFileSync('public/mvn-shop-cleanup.css','utf8');
- assert.match(shop,/mvn-shop-hero-logo/,'official logo appears in shop blue header');
- assert.match(shop,/src="max-volume-logo-wide.png"/,'reuse existing official logo asset');
+ assert.doesNotMatch(shop,/mvn-shop-hero-logo/,'remove the second logo from the deleted shop banner');
+ assert.match(shop,/class="original-brand-logo" src="mvn-app-header-logo.webp"/,'keep one actual header logo');
  assert.match(shop,/mvn-shop-cleanup\.css\?v=20261115-dark-blue-1/);
- assert.match(theme,/#07162f/,'shop hero uses dark blue palette');
+ assert.match(theme,/#112f55/,'single collection area has a dark-blue palette');
  assert.match(theme,/#shop > \.section-title/,'collection title has the shop-only blue treatment');
  assert.match(theme,/#shop \.cats,/,'remove duplicate category chip row visually');
  assert.match(theme,/\.productbar \.sort-label/,'hide sort dropdown visually');
@@ -112,7 +112,7 @@ test('shop uses exactly one physical dark-blue navigation/header row on mobile a
  const header=shop.slice(shop.indexOf('<header class="storehead">'),shop.indexOf('</header>')+9);
  const style=shop.match(/<style id="mvn-compact-dark-blue-shop-v2">([\s\S]*?)<\/style>/)?.[1]||'';
  assert.ok(header.includes('class="mvn-theme-main-nav"'),'shopping navigation sits inside the only header row');
- assert.doesNotMatch(shop.slice(shop.indexOf('</header>')+9,shop.indexOf('<section class="mvn-shop-page-heading"')),/<nav\s/,'no second navigation bar below the header');
+ assert.doesNotMatch(shop.slice(shop.indexOf('</header>')+9,shop.indexOf('<main id="shop">')),/<nav\s/,'no second navigation bar below the header');
  assert.match(header,/class="mvn-shop-search-disclosure"/,'search remains accessible via a compact icon');
  assert.match(header,/id="search"/,'search form retained');
  assert.match(header,/href="account.html"/,'My Account remains accessible');
@@ -121,4 +121,19 @@ test('shop uses exactly one physical dark-blue navigation/header row on mobile a
  assert.doesNotMatch(style,/grid-template-rows:58px 44px|grid-template-rows:52px 44px 42px/,'old layered layout removed');
  assert.equal(root,shop,'mirrored shop pages match');
  assert.doesNotMatch(home,/mvn-shop-search-disclosure/,'unrelated homepage left untouched');
+});
+
+test('shop has one logo, one navigation header, and one visible shop heading',()=>{
+ const source=readFileSync('public/shop.html','utf8');
+ const home=readFileSync('public/index.html','utf8');
+ const beforeProducts=source.slice(source.indexOf('<body '),source.indexOf('<div class="productbar">'));
+ assert.equal((beforeProducts.match(/<header class="storehead">/g)||[]).length,1,'exactly one header');
+ assert.equal((beforeProducts.match(/class="mvn-theme-main-nav"/g)||[]).length,1,'exactly one navigation');
+ assert.equal((beforeProducts.match(/class="original-brand-logo"/g)||[]).length,1,'exactly one brand image');
+ assert.doesNotMatch(beforeProducts,/mvn-shop-hero-logo|mvn-shop-page-heading|SHOP <em>SUPPLEMENTS/,'remove duplicate hero and title');
+ assert.doesNotMatch(beforeProducts,/mvn-header-wordmark|option2-site-nav|mvn-theme-categories|class="announce"/,'remove redundant old header elements');
+ assert.equal((beforeProducts.match(/SHOP THE <strong>COLLECTION\.<\/strong>/g)||[]).length,1,'single collection title');
+ assert.match(beforeProducts,/<h1 id="mvnShopPageTitle">/,'collection title is semantic page heading');
+ for(const id of ['id="bag"','id="search"','id="q"'])assert.ok(beforeProducts.includes(id),'shopping control kept: '+id);
+ assert.doesNotMatch(home,/mvnShopPageTitle/,'homepage not modified');
 });

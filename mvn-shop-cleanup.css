@@ -1,35 +1,5 @@
-/* MVN collection page refinement, 15 Nov 2026.
-   Scope: /shop.html ONLY. The homepage and navigation remain untouched.
-   Keep #sort and .cats in the DOM because app.js relies on those controls. */
-body.retail-home.mvn-full-shop:not(.app-store) .mvn-shop-page-heading {
-  position: relative!important;
-  isolation: isolate;
-  box-sizing: border-box!important;
-  min-height: 250px;
-  padding-right: max(330px,calc((100vw - 1260px)/2 + 330px))!important;
-  background: linear-gradient(112deg,#07162f 0%,#0c254a 57%,#153a61 100%)!important;
-  color: #fff!important;
-}
-body.retail-home.mvn-full-shop:not(.app-store) .mvn-shop-page-heading > span {
-  color: #f9b17b!important;
-}
-body.retail-home.mvn-full-shop:not(.app-store) .mvn-shop-page-heading p {
-  color: #e1eaf5!important;
-}
-body.retail-home.mvn-full-shop:not(.app-store) .mvn-shop-hero-logo {
-  display: block;
-  position: absolute;
-  top: 50%;
-  right: max(20px,calc((100vw - 1260px)/2));
-  width: clamp(235px,24vw,310px);
-  max-width: 30%;
-  height: auto;
-  max-height: 160px;
-  object-fit: contain;
-  object-position: center;
-  transform: translateY(-50%);
-  filter: drop-shadow(0 10px 20px rgba(0,0,0,.19));
-}
+/* One shop header logo and one collection title. Scoped to /shop.html only.
+   Preserve #sort and .cats in the DOM because app.js uses those controls. */
 body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop > .section-title {
   box-sizing: border-box!important;
   padding: 26px clamp(17px,2.4vw,32px) 22px!important;
@@ -40,7 +10,7 @@ body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop > .secti
   margin: 0!important;
   width: 100%!important;
 }
-body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop > .section-title h2 {
+body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop > .section-title h1 {
   color: #fff!important;
 }
 body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop > .section-title .eyebrow {
@@ -75,26 +45,28 @@ body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop .cats,
 body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop .productbar .sort-label {
   display: none!important;
 }
+
+body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop > .section-title h1 {
+  font-family: Impact, "Arial Narrow", Arial, sans-serif!important;
+  font-size: clamp(28px, 4vw, 46px)!important;
+  font-weight: 900!important;
+  line-height: 1.1!important;
+  letter-spacing: -.025em!important;
+  margin: 7px 0 0!important;
+}
+body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop > .section-title h1 strong {
+  color: #f47c40!important;
+}
 @media (max-width: 720px) {
-  body.retail-home.mvn-full-shop:not(.app-store) .mvn-shop-page-heading {
-    min-height: 0!important;
-    padding: 29px 17px 23px!important;
-  }
-  body.retail-home.mvn-full-shop:not(.app-store) .mvn-shop-hero-logo {
-    position: static;
-    transform: none;
-    width: min(200px,60vw);
-    max-width: 100%;
-    max-height: 85px;
-    margin: 17px auto 0;
-    object-position: center;
-  }
   body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop > .section-title {
-    padding: 20px 17px 15px!important;
+    padding: 18px 16px 13px!important;
+  }
+  body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop > .section-title h1 {
+    font-size: clamp(25px, 7vw, 34px)!important;
   }
   body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop .productbar {
     margin: 0 0 12px!important;
-    padding: 11px 17px 15px!important;
+    padding: 11px 16px 15px!important;
     min-height: 50px!important;
   }
 }

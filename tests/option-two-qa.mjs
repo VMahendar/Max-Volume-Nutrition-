@@ -76,7 +76,10 @@ try {
   await page.screenshot({path:folder+'/'+size.name+'-home.png',fullPage:true,animations:'disabled'});
   await page.locator('.mvn-hero-action-strip a').click();
   await page.waitForURL('**/shop.html');
-  assert.ok(await page.locator('.mvn-shop-page-heading').isVisible(),size.name+' separate shop opens');
+  assert.ok(await page.locator('#shop > .section-title h1').isVisible(),size.name+' single shop collection title visible');
+  assert.equal(await page.locator('header.storehead .original-brand-logo').count(),1,size.name+' one logo in navigation');
+  assert.equal(await page.locator('.mvn-shop-page-heading,.mvn-shop-hero-logo').count(),0,size.name+' redundant banner/logo removed');
+  assert.equal(await page.locator('header.storehead .mvn-theme-main-nav').count(),1,size.name+' one navigation header');
   assert.equal(await page.locator('#mvnEditorial').count(),0,size.name+' no hero repeated on shop');
   await page.locator('#grid .variant').first().waitFor({state:'visible',timeout:15000});
   assert.ok(await page.locator('#grid article.card').count()>=5,size.name+' five retail product families visible');
