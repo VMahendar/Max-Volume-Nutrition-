@@ -121,3 +121,18 @@ body.retail-home.mvn-supplement-theme:not(.app-store) .mvn-home-footer>div:first
   grid-column:1/-1!important;
 }
 }
+
+body.retail-home.mvn-supplement-theme:not(.app-store) .announce > .mvn-top-contact{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  margin-left:auto!important;min-height:20px!important;flex:0 0 auto!important;
+  color:#ffb482!important;font-size:10px!important;font-weight:900!important;
+  text-decoration:none!important;letter-spacing:.045em!important;white-space:nowrap!important;
+}
+body.retail-home.mvn-supplement-theme:not(.app-store) .announce > .mvn-top-contact:hover{
+  color:#fff!important;text-decoration:underline!important;text-underline-offset:3px!important;
+}
+@media(max-width:560px){
+ body.retail-home.mvn-supplement-theme:not(.app-store) .announce > .mvn-top-contact{
+  display:inline-flex!important;font-size:10px!important;
+ }
+}
