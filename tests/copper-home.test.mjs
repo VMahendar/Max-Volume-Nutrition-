@@ -6,7 +6,13 @@ test('presentation change preserves the correct product images and live storefro
  const index=readFileSync('public/index.html','utf8');
  const script=readFileSync('public/app.js','utf8');
  assert.match(index,/max-volume-logo-wide\.png/);
- assert.match(index,/assets\/mvn-owner-landscape-banner\.webp/);
+ assert.match(index,/assets\/mvn-banner-20261115-no-logo-no-pineapple\.webp/);
+ const newBanner=readFileSync('public/assets/mvn-banner-20261115-no-logo-no-pineapple.webp');
+ assert.ok(newBanner.length>100000,'logo-free landscape image must be shipped in the public assets');
+ assert.equal(newBanner.toString('ascii',0,4),'RIFF');
+ assert.equal(newBanner.toString('ascii',8,12),'WEBP');
+ const themeCss=readFileSync('public/mvn-fitness-retail.css','utf8');
+ assert.doesNotMatch(themeCss,/\.mvn-owner-banner-link::after/,'do not cover approved image with the former logo mask');
  assert.ok(readFileSync('public/assets/potency-whey-coffee-5lb.webp').length>10000,'owner original Whey source is retained unaltered');
  assert.match(index,/assets\/Screenshot_2026_1103_003852\.jpg/);
  for(const id of ['shop','grid','search','bag','checkoutFields','send','productDialog','dealer'])

@@ -46,7 +46,7 @@ try {
   assert.ok(await showcase.isVisible(),size.name+' landscape homepage banner must be visible');
   assert.match(await showcase.locator('h1').textContent(),/Max Volume Nutrition supplement collection/i);
   const campaignImg=showcase.locator('img.mvn-owner-banner-img');
-  assert.equal(await campaignImg.getAttribute('src'),'assets/mvn-owner-landscape-banner.webp',size.name+' exact owner-supplied product banner is displayed');
+  assert.equal(await campaignImg.getAttribute('src'),'assets/mvn-banner-20261115-no-logo-no-pineapple.webp',size.name+' exact owner-approved logo-free product banner is displayed');
   await campaignImg.waitFor({state:'visible'});
   await page.waitForFunction(()=>{const img=document.querySelector('.mvn-owner-banner-img');return img?.complete&&img.naturalWidth===1753&&img.naturalHeight===897},{timeout:12000});
   const campaignGeometry=await page.evaluate(()=>{
@@ -67,7 +67,7 @@ try {
   });
   assert.ok(campaignGeometry.heroHeight>=150&&campaignGeometry.heroHeight<=530,size.name+' full banner fits without poster-like height');
   assert.equal(campaignGeometry.fit,'contain',size.name+' full artwork must not be cropped');
-  assert.ok(campaignGeometry.heroSrc.includes('mvn-owner-landscape-banner.webp'),size.name+' owner artwork loaded');
+  assert.ok(campaignGeometry.heroSrc.includes('mvn-banner-20261115-no-logo-no-pineapple.webp'),size.name+' owner artwork loaded');
   if(size.name==='desktop'){
     assert.ok(campaignGeometry.hero.w/campaignGeometry.hero.h>1.4,'desktop banner remains landscape');
     assert.ok(campaignGeometry.promos.x>=campaignGeometry.hero.x+campaignGeometry.hero.w-3,'two promo panels remain to the right');
