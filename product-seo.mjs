@@ -3,11 +3,15 @@
 // Never synthesize ratings, reviews, stock status or wholesale offers.
 export const PRODUCT_PAGE_IDS=Object.freeze({
  '/potency-whey.html':{primaryVariantId:'whey-coffee',id:'potency-whey',name:'Unicorn Pro Series Potency Whey Protein',image:'/assets/potency-whey-coffee-5lb.webp'},
- '/nitro-mass.html':{primaryVariantId:'mass-5kg',id:'nitro-mass',name:'Unicorn Pro Series Nitro Mass Gainer',image:'/assets/Screenshot_2026_1103_003852.jpg'},
+ '/nitro-mass.html':{primaryVariantId:'mass-5kg',id:'nitro-mass',name:'Unicorn Pro Series Nitro Mass Gainer',image:'/assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp'},
  '/pro-creatine.html':{primaryVariantId:'creatine-cranberry',id:'pro-creatine',name:'Unicorn Pro Series Pro Creatine'},
  '/sturdy-pre-workout.html':{id:'sturdy-pre',name:'Unicorn Pro Series Sturdy Pre-Workout',image:'/assets/sturdy-watermelon-front.webp'},
  '/musclevite-multivitamin.html':{id:'musclevite',name:'Unicorn Pro Series Musclevite Multivitamin',image:'/assets/musclevite-front.webp'}
 });
+export const NITRO_MASS_PACKS=Object.freeze([
+ {id:'mass-3kg',pack:'3kg',size:'3 kg',servings:'30 servings',name:'Unicorn Pro Series Nitro Mass Gainer 3 kg Double Rich Chocolate',image:'/assets/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout.webp'},
+ {id:'mass-5kg',pack:'5kg',size:'5 kg',servings:'50 servings',name:'Unicorn Pro Series Nitro Mass Gainer 5 kg Double Rich Chocolate',image:'/assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp'}
+]);
 const DOMAIN='https://maxvolumenutriton.shop';
 const ESC={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};
 const escapeHtml=value=>String(value??'').replace(/[&<>"']/g,c=>ESC[c]);
@@ -16,7 +20,7 @@ const rupees=paise=>'₹'+(paise/100).toLocaleString('en-IN',{minimumFractionDig
 const numberScore=value=>Math.round(value*10)/10;
 const firstName=value=>String(value||'Customer').trim().split(/\s+/)[0].slice(0,80)||'Customer';
 
-export function buildProductFragments(path,catalogue,approvedReviews=[]){
+export function buildProductFragments(path,catalogue,approvedReviews=[],{selectedPack='5kg'}={}){
  const config=PRODUCT_PAGE_IDS[path];
  if(!config)return null;
  const product=(Array.isArray(catalogue)?catalogue:[]).find(p=>p.id===config.id);
@@ -51,9 +55,49 @@ export function buildProductFragments(path,catalogue,approvedReviews=[]){
    datePublished:String(r.created||'').slice(0,10)
   }));
  }
- // A Product with no real public offer or review is not rich-result eligible.
- const schema=(offer||reviewRows.length)?'<script type="application/ld+json">'+safeJson(jsonLd)+'</script>':'';
- const pricing=variants.length?
+ // The existing canonical page exposes separately selectable 3 kg and 5 kg offers.
+ // Each size is a Product variant with its own real offer, image, SKU and link.
+ // No stock assertion or customer rating is invented.
+ const isNitro=path==='/nitro-mass.html';
+ const nitroPacks=isNitro?NITRO_MASS_PACKS.map(meta=>({...meta,variant:variants.find(v=>v.id===meta.id)})).filter(meta=>meta.variant):[];
+ const nitroSchema=isNitro?{
+  '@context':'https://schema.org','@type':'ProductGroup','@id':url+'#product-group',
+  name:'Unicorn Pro Series Nitro Mass Gainer – Double Rich Chocolate',
+  description:product.description||'Nitro Mass Gainer in 3 kg and 5 kg Double Rich Chocolate packs.',
+  brand:{'@type':'Brand',name:product.brand||'Unicorn Pro Series'},
+  url,productGroupID:'nitro-mass',
+  variesBy:['https://schema.org/size'],
+  image:NITRO_MASS_PACKS.map(v=>DOMAIN+v.image),
+  hasVariant:nitroPacks.map(v=>({
+   '@type':'Product','@id':url+'#'+v.id,sku:v.id,name:v.name,
+   size:v.size,image:DOMAIN+v.image,
+   description:v.name+'; verify the printed label for exact ingredients and nutrition.',
+   offers:{'@type':'Offer',url:url+'?pack='+v.pack,priceCurrency:'INR',price:(v.variant.pricePaise/100).toFixed(2)}
+  }))
+ }:null;
+ if(nitroSchema&&reviewRows.length){
+  nitroSchema.aggregateRating=jsonLd.aggregateRating;
+  nitroSchema.review=jsonLd.review;
+ }
+ const richData=isNitro?nitroSchema:jsonLd;
+ const schema=(isNitro?nitroPacks.length>0:(offer||reviewRows.length))?
+  '<script type="application/ld+json">'+safeJson(richData)+'</script>':'';
+ const selected=selectedPack==='3kg'?'3kg':'5kg';
+ const gallery=isNitro?
+  '<section class="nitro-pack-gallery" aria-label="Nitro Mass 3 kg and 5 kg product-only photographs"><h2>Choose your Nitro Mass pack</h2>'+
+  '<div class="nitro-pack-grid">'+nitroPacks.map(v=>{
+   const current=v.pack===selected;
+   const query='?pack='+v.pack;
+   const enquiry='Hello Max Volume Nutrition, please confirm availability of '+v.name+'.';
+   return '<article class="nitro-pack-card'+(current?' is-selected':'')+'" id="nitro-'+v.pack+'">'+
+    '<a href="'+query+'" class="nitro-pack-choose"'+(current?' aria-current="page"':'')+' aria-label="View '+v.name+'">'+
+    '<img src="'+v.image+'" width="760" height="950" alt="'+v.name+' official-style product-only pack cutout" decoding="async" loading="'+(current?'eager':'lazy')+'"'+(current?' fetchpriority="high"':'')+'>'+
+    '<strong>'+v.size+' · Double Rich Chocolate</strong>'+
+    '<span class="nitro-pack-price">'+rupees(v.variant.pricePaise)+'</span><small>'+v.servings+' shown on front label</small>'+
+    '<span class="nitro-pack-select">'+(current?'Selected pack':'View this pack')+'</span></a>'+
+    '<a class="nitro-pack-enquire" href="https://wa.me/917708830513?text='+encodeURIComponent(enquiry)+'" target="_blank" rel="noopener noreferrer">Enquire about '+v.size+'</a></article>';
+  }).join('')+'</div><p class="mvn-review-note">Both packs are shown without store backgrounds. Confirm current stock, nutritional panel and delivery before ordering.</p></section>':'';
+ const pricing=isNitro?'':variants.length?
   '<section class="mvn-live-retail" aria-label="Current retail prices"><h2>Current retail prices</h2>'+
   '<div class="mvn-retail-variants">'+variants.map(v=>
    '<div class="mvn-retail-variant"><span>'+escapeHtml(v.label)+'</span><strong>'+rupees(v.pricePaise)+'</strong></div>'
@@ -80,5 +124,5 @@ export function buildProductFragments(path,catalogue,approvedReviews=[]){
   '<label for="mvnReviewTitle">Review title</label><input id="mvnReviewTitle" name="title" type="text" maxlength="120" required>'+
   '<label for="mvnReviewBody">Your review</label><textarea id="mvnReviewBody" name="body" minlength="20" maxlength="3000" rows="4" required></textarea>'+
   '<button type="submit">Submit review for approval</button></form><p id="mvnReviewStatus" role="status" aria-live="polite"></p></div></section>';
- return {schema,content:pricing+reviews,productId:config.id,offer,reviewCount:reviewRows.length};
+ return {schema,gallery,content:pricing+reviews,productId:config.id,offer,reviewCount:reviewRows.length};
 }
