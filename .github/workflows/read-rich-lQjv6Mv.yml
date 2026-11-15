@@ -1,0 +1,29 @@
+name: Read exact rich results test lQjv6Mv
+on:
+  pull_request:
+    branches: [main]
+    paths: ['.github/workflows/read-rich-lQjv6Mv.yml']
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    steps:
+      - name: Retrieve Google's saved report and category details
+        run: |
+          node --input-type=module <<'NODE'
+          const id='lQjv6MvMw0o5JCeSjidRag';
+          for(const type of ['','r%2Fproduct-snippets','r%2Fmerchant-listings','r%2Freview-snippets','r%2Flocal-business','r%2Forganization-info','r%2Fbreadcrumbs']){
+            const url='https://search.google.com/test/rich-results/result'+(type?'/'+type:'')+'?id='+id;
+            try{
+              const r=await fetch(url,{signal:AbortSignal.timeout(18000)});
+              const html=await r.text();
+              const plain=html.replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&quot;/g,'"').replace(/&amp;/g,'&').replace(/&#39;/g,"'").replace(/\s+/g,' ');
+              const excerpt=plain.slice(0,4300);
+              const warnings=[...plain.matchAll(/.{0,100}(?:Missing field|critical issue|invalid item|non-critical|error|cannot be|couldn't be loaded|not indexed|Googlebot blocked).{0,180}/gi)].slice(0,20).map(m=>m[0]);
+              const mvnURLs=[...new Set([...html.matchAll(/https?:\/\/maxvolumenutriton\.shop(?:\/[^"'<>\\ ]*)?/gi)].map(m=>m[0]))].slice(0,14);
+              console.log('REPORT',type||'MAIN',JSON.stringify({status:r.status,size:html.length,start:excerpt,warnings,mvnURLs,mvnCount:html.split('maxvolumenutriton.shop').length-1,sampleCount:html.split('Executive Anvil').length-1}).slice(0,12000));
+            }catch(e){console.log('REPORT_ERROR',type,String(e));}
+          }
+          NODE
