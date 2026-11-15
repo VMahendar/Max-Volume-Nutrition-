@@ -13,7 +13,7 @@ test('retail flagship keeps original logo, integrates masthead and leads with pr
  assert.match(css,/background-image:url\('max-volume-logo-wide.png'\)/,'original source artwork is scaled as a continuous masthead image');
  assert.match(css,/mix-blend-mode:screen/,'original black-background logo integrates with masthead');
  assert.match(css,/\.retail-home \.placeholder\[hidden\]/,'hidden placeholders must remain hidden after a real product image loads');
- assert.ok(html.includes('src="max-volume-logo-wide.png"'),'original full logo retained');
+ assert.ok(html.includes('src="mvn-app-header-logo.webp"'),'approved original MVN header image is retained without repeating it in a huge footer');
  assert.ok(html.includes('FUEL EVERY<br><strong>REP.</strong>'),'product-first hero rather than duplicating company name');
  assert.ok(!html.includes('distribution-feature'),'repeated Unicorn promotion removed');
  assert.ok(!html.includes('category-tiles'),'no duplicated category lists');
@@ -48,7 +48,7 @@ test('homepage excludes demonstrably incorrect product photos and retains verifi
  assert.match(app,/3 kg · Double Rich Chocolate",price:2599,img:"assets\/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout\.webp"/,'3 kg must use its own verified jar photo');
  assert.match(app,/5 kg · Bucket",price:3499,img:"assets\/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout\.webp/,'5 kg must use its own bucket cutout');
  assert.match(app,/Chocolate · 5 lbs.*?img:null/,'Chocolate must not use Coffee photo');
- assert.match(app,/Blueberry · 250 g.*?img:\"https:\/\/unicornproseries.com\/wp-content\/uploads\/2026\/05\/Pro-Creatine-Blueberry-1.png\"/,'Blueberry must use the official Blueberry photo');
+ assert.match(app,/Blueberry · 250 g.*?img:"https:\/\/revakanya\.com\/assets\/imgs\/Pro%20Creatine%20Blueberry\.png"/,'Blueberry uses manufacturer original white-and-blue pack');
 });
 
 test('public retail offers use verified MRP and keep confidential wholesale pricing private',()=>{
