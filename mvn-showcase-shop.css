@@ -3,7 +3,7 @@
  * Preserve approved original photos; never recompose the owner-supplied banner.
  * Full interactive store remains served from /shop.html.
  */
-body.retail-home.mvn-showcase-home:not(.app-store) #shop,
+body.retail-home.mvn-showcase-home:not(.app-store) main#shop,
 body.retail-home.mvn-showcase-home:not(.app-store) #mvn-quick-categories,
 body.retail-home.mvn-showcase-home:not(.app-store) #recentSection,
 body.retail-home.mvn-showcase-home:not(.app-store) .mvn-spotlight,
