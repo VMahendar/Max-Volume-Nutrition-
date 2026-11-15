@@ -16,19 +16,28 @@ async function refreshRetailPrices(){
  if(!response.ok)throw Error('Current prices are unavailable. Please reconnect and try again.');
  const data=await response.json();
  if(!Array.isArray(data.products)||data.tier!=='retail')throw Error('Current retail prices could not be verified.');
+ let changed=false;
  const mappedIds=new Set(Object.entries(retailVariantIds).filter(([id])=>!id.startsWith('catalog-')).flatMap(([,ids])=>ids));
  for(const product of data.products){
   const packs=(product.variants||[]).filter(v=>Number.isSafeInteger(v.pricePaise)&&v.pricePaise>0);
   if(!packs.length||packs.every(v=>mappedIds.has(v.id)))continue;
   const id='catalog-'+product.id;if(!/^[a-z0-9-]+$/.test(id))continue;
-  let item=P.find(p=>p.id===id);if(!item){item={id,name:product.name,brand:product.brand,cat:['whey','mass','pre','creatine','vitamins'].includes(product.category)?product.category:'other',desc:product.description||product.subtitle||'',img:product.image||'',variants:[]};P.push(item);}
+  let item=P.find(p=>p.id===id);if(!item){item={id,name:product.name,brand:product.brand,cat:['whey','mass','pre','creatine','vitamins'].includes(product.category)?product.category:'other',desc:product.description||product.subtitle||'',img:product.image||'',variants:[]};P.push(item);changed=true;}
+  if(item.name!==product.name||item.brand!==product.brand||item.desc!==(product.description||product.subtitle||'')||item.img!==(product.image||''))changed=true;
   item.name=product.name;item.brand=product.brand;item.desc=product.description||product.subtitle||'';item.img=product.image||'';
   const previous=new Map(item.variants.map((v,i)=>[retailVariantIds[id]?.[i],v]));
+  changed=true;
   item.variants=packs.map(v=>({...previous.get(v.id),label:v.label,price:v.pricePaise/100,img:v.image||product.image||'',...(Number.isSafeInteger(v.mrpPaise)?{mrp:v.mrpPaise/100}:{})}));retailVariantIds[id]=packs.map(v=>v.id);
  }
  const variants=new Map(data.products.flatMap(p=>p.variants||[]).map(v=>[v.id,v]));
  const updates=P.flatMap(p=>p.variants.map((v,index)=>{const current=variants.get(retailVariantIds[p.id][index]);if(!current||!Number.isSafeInteger(current.pricePaise)||current.pricePaise<=0)throw Error('A selected pack needs price confirmation. Please contact our team.');return {v,current}}));
- for(const {v,current} of updates){v.price=current.pricePaise/100;delete v.mrp;if(Number.isSafeInteger(current.mrpPaise)&&current.mrpPaise>current.pricePaise)v.mrp=current.mrpPaise/100;}
+ for(const {v,current} of updates){
+  const price=current.pricePaise/100;
+  const mrp=Number.isSafeInteger(current.mrpPaise)&&current.mrpPaise>current.pricePaise?current.mrpPaise/100:null;
+  if(v.price!==price||(v.mrp??null)!==mrp)changed=true;
+  v.price=price;delete v.mrp;if(mrp!==null)v.mrp=mrp;
+ }
+ return changed;
 }
 const $=id=>document.getElementById(id);
 const safe=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -392,7 +401,7 @@ document.addEventListener("keydown",e=>{
  if(e.key==="Tab"){const controls=[...$("drawer").querySelectorAll('button:not(:disabled),input,a[href],select')].filter(el=>el.getClientRects().length);const first=controls[0],last=controls.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
 });
 installCategoryShortcuts();render();drawCart();renderRecent();
-refreshRetailPrices().then(()=>{render();drawCart();renderRecent()}).catch(error=>{if($("priceMessage"))$("priceMessage").textContent=error.message});
+refreshRetailPrices().then(changed=>{if(changed){render();drawCart();renderRecent()}}).catch(error=>{if($("priceMessage"))$("priceMessage").textContent=error.message});
 
 
 /* Website-only premium product detail. The installed app intentionally retains its own layout. */
