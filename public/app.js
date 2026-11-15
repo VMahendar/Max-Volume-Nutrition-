@@ -42,7 +42,7 @@ async function refreshRetailPrices(){
 const $=id=>document.getElementById(id);
 const safe=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>"₹"+Number(n).toLocaleString("en-IN");
-let cat="all",q="",cart={},mode="retail";
+let cat=(["whey","mass","creatine","pre","vitamins"].includes(new URLSearchParams(location.search).get("cat"))?new URLSearchParams(location.search).get("cat"):"all"),q="",cart={},mode="retail";
 let priceRange="all",recent=[],appliedOffer=null,availableOffers=[];
 const offerSurface=document.body.classList.contains("app-store")?"app":"web";
 const cartSignature=()=>JSON.stringify(Object.entries(cart).sort().map(([key,qty])=>[key,qty,getItem(key)?.v.price]));
