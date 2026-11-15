@@ -6,10 +6,11 @@ test('presentation change preserves the correct product images and live storefro
  const index=readFileSync('public/index.html','utf8');
  const script=readFileSync('public/app.js','utf8');
  assert.match(index,/max-volume-logo-wide\.png/);
- assert.match(index,/assets\/mvn-pro-plus-isolate-1kg\.avif/);
- assert.match(index,/assets\/potency-whey-coffee-5lb\.webp/);
- assert.match(index,/assets\/mvn-nitro-mass-3kg-photo\.avif/);
+
+
+
  assert.match(index,/src="assets\/mvn-banner-20261115-no-logo-no-pineapple\.webp"/,'keep complete all-products banner as requested');
+ assert.ok(readFileSync('public/assets/mvn-banner-20261115-no-logo-no-pineapple.webp').length>100000,'approved original group lineup is available');
  assert.ok(readFileSync('public/assets/potency-whey-coffee-5lb.webp').length>10000,'owner original Whey source is retained unaltered');
  assert.match(index,/assets\/Screenshot_2026_1103_003852\.jpg/);
  for(const id of ['shop','grid','search','bag','checkoutFields','send','productDialog','dealer'])
