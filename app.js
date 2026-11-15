@@ -401,6 +401,7 @@ document.addEventListener("keydown",e=>{
  if(e.key==="Tab"){const controls=[...$("drawer").querySelectorAll('button:not(:disabled),input,a[href],select')].filter(el=>el.getClientRects().length);const first=controls[0],last=controls.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
 });
 installCategoryShortcuts();render();drawCart();renderRecent();
+if(new URLSearchParams(location.search).get("cart")==="open")openBag();
 refreshRetailPrices().then(changed=>{if(changed){render();drawCart();renderRecent()}}).catch(error=>{if($("priceMessage"))$("priceMessage").textContent=error.message});
 
 
