@@ -1,0 +1,97 @@
+/* Authentic owner-supplied supplement photography for the homepage hero.
+ * Only public banner presentation changes; no catalogue, pricing, or payment code.
+ * Images are unaltered product photos on clean white cards rather than AI composites.
+ */
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-feature.mvn-owner-banner-feature {
+  background:linear-gradient(122deg,#101b27 0%,#172535 58%,#223243 100%)!important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-real-banner-products {
+  position:absolute!important;
+  z-index:2!important;
+  top:8%!important;bottom:8%!important;
+  left:47%!important;right:3.5%!important;
+  display:grid!important;
+  grid-template-columns:minmax(0,.86fr) minmax(0,1fr) minmax(0,.88fr)!important;
+  align-items:stretch!important;
+  gap:clamp(7px,1.1vw,17px)!important;
+  min-width:0!important;
+  pointer-events:none!important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-real-banner-pack {
+  position:relative!important;
+  margin:0!important;
+  display:flex!important;
+  flex-direction:column!important;
+  min-width:0!important;
+  min-height:0!important;
+  overflow:hidden!important;
+  background:#fff!important;
+  border:1px solid #e6e7e7!important;
+  border-radius:7px!important;
+  box-shadow:0 17px 38px rgba(0,0,0,.16)!important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-real-banner-pack img {
+  display:block!important;
+  flex:1 1 auto!important;
+  min-height:0!important;
+  width:100%!important;
+  height:calc(100% - 51px)!important;
+  max-width:100%!important;
+  object-fit:contain!important;
+  object-position:center center!important;
+  background:#fff!important;
+  filter:none!important;
+  transform:none!important;
+  clip-path:none!important;
+  -webkit-mask-image:none!important;
+  mask-image:none!important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-real-banner-pack figcaption {
+  flex:0 0 51px!important;
+  display:flex!important;
+  flex-direction:column!important;
+  justify-content:center!important;
+  gap:3px!important;
+  padding:5px 9px!important;
+  background:#f6f7f7!important;
+  color:#1c2835!important;
+  border-top:1px solid #e9ebee!important;
+  font-size:clamp(9px,.78vw,12px)!important;
+  line-height:1.2!important;
+  font-weight:800!important;
+  letter-spacing:.025em!important;
+  text-transform:uppercase!important;
+}
+body.retail-home.mvn-advance-layout:not(.app-store) .mvn-real-banner-pack figcaption small{
+  color:#637181!important;
+  font-size:clamp(8px,.68vw,10px)!important;
+  font-weight:700!important;
+  letter-spacing:.045em!important;
+}
+@media(max-width:970px) and (min-width:701px) {
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-real-banner-products {left:52%!important;right:2%!important;}
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-real-banner-pack figcaption {padding:5px!important;}
+}
+@media(max-width:700px){
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-real-banner-products{
+    position:relative!important;
+    inset:auto!important;
+    order:2!important;
+    flex:none!important;
+    display:grid!important;
+    width:100%!important;
+    height:clamp(235px,63vw,350px)!important;
+    padding:10px 11px 16px!important;
+    gap:8px!important;
+    background:#142131!important;
+    pointer-events:auto!important;
+  }
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-real-banner-pack{border-radius:5px!important;box-shadow:0 8px 18px #0002!important;}
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-real-banner-pack img{height:calc(100% - 45px)!important;}
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-real-banner-pack figcaption{flex-basis:45px!important;padding:5px 6px!important;font-size:9px!important;}
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-real-banner-pack figcaption small{font-size:8px!important;}
+}
+@media(max-width:380px){
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-real-banner-products{gap:5px!important;padding-left:6px!important;padding-right:6px!important;}
+  body.retail-home.mvn-advance-layout:not(.app-store) .mvn-real-banner-pack figcaption{font-size:8px!important;}
+}
