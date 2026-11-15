@@ -138,9 +138,11 @@ const smallCardImages={
  'assets/mvn-hero-whey-cutout.png':'assets/mvn-hero-whey-cutout-card.webp',
  'assets/mvn-hero-nitro-cutout.png':'assets/mvn-hero-nitro-cutout-card.webp'
 };
+/* Crawlable product-detail links complement the existing quick-detail modal and cart. */
+const seoProductDetailUrls=Object.freeze({whey:'potency-whey.html',mass:'nitro-mass.html',pre:'sturdy-pre-workout.html',creatine:'pro-creatine.html',vitamins:'musclevite-multivitamin.html'});
 function card(p){
 const featured=displayVariant(p);const originalCover=coverImage(p,featured);const cover=failedPackPhotos.has(originalCover)?'':originalCover;const thumbnail=smallCardImages[cover]||cover;const pic=cover?'<img loading="lazy" decoding="async" src="'+safe(thumbnail)+'" alt="'+safe(p.name)+'"><div class="placeholder" hidden><b>'+safe(p.name)+'</b>Photo coming soon</div>':'<div class="placeholder"><b>'+safe(p.name)+'</b>Correct pack photo being verified</div>';
-return '<article class="card"><div class="photo">'+pic+'</div><div class="info"><small>'+safe(p.brand||'Unicorn Pro Series')+'</small><h3>'+safe(p.name)+'</h3><p>'+safe(p.desc)+'</p><label class="variant-label" for="v-'+p.id+'">FLAVOUR / PACK SIZE</label><select id="v-'+p.id+'" class="variant">'+visiblePackOptions(p).map(({v,i})=>'<option value="'+i+'"'+(i===featured?' selected':'')+'>'+safe(v.label)+'</option>').join("")+'</select><div class="price" id="price-'+p.id+'">'+priceMarkup(p.variants[featured])+'</div><button class="details-link" type="button" data-detail="'+p.id+'">VIEW PRODUCT DETAILS →</button><button class="add" data-id="'+p.id+'">ADD TO CART +</button></div></article>';
+return '<article class="card"><div class="photo">'+pic+'</div><div class="info"><small>'+safe(p.brand||'Unicorn Pro Series')+'</small><h3>'+(seoProductDetailUrls[p.id]?'<a href="'+safe(seoProductDetailUrls[p.id])+'">'+safe(p.name)+'</a>':safe(p.name))+'</h3><p>'+safe(p.desc)+'</p><label class="variant-label" for="v-'+p.id+'">FLAVOUR / PACK SIZE</label><select id="v-'+p.id+'" class="variant">'+visiblePackOptions(p).map(({v,i})=>'<option value="'+i+'"'+(i===featured?' selected':'')+'>'+safe(v.label)+'</option>').join("")+'</select><div class="price" id="price-'+p.id+'">'+priceMarkup(p.variants[featured])+'</div><button class="details-link" type="button" data-detail="'+p.id+'">VIEW PRODUCT DETAILS →</button><button class="add" data-id="'+p.id+'">ADD TO CART +</button></div></article>';
 }
 
 function installCategoryShortcuts(){
