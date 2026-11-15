@@ -2,7 +2,7 @@
 // The app.js filter handler runs first; this adds only the expected jump to results.
 (() => {
   const shop=document.getElementById('shop');
-  if(!shop)return;
+  if(!shop||document.body.classList.contains('mvn-showcase-home'))return; // Go to the separate collection page instead of scrolling hidden catalogue.
   const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)');
   document.querySelectorAll('.mvn-editorial-category[data-cat]').forEach(link=>{
     link.addEventListener('click',()=>{
