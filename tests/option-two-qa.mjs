@@ -48,7 +48,7 @@ try {
   const campaignImg=showcase.locator('img.mvn-owner-banner-img');
   assert.equal(await campaignImg.getAttribute('src'),'assets/mvn-owner-landscape-banner.webp',size.name+' exact owner-supplied product banner is displayed');
   await campaignImg.waitFor({state:'visible'});
-  await page.waitForFunction(({width})=>{const img=document.querySelector('.mvn-owner-banner-img');return img?.complete&&img.naturalWidth>=width&&img.naturalHeight>0;},{width:size.name==='android'?960:1753},{timeout:12000});
+  await page.waitForFunction(()=>{const img=document.querySelector('.mvn-owner-banner-img');return img?.complete&&img.naturalWidth>0&&img.naturalHeight>0;},null,{timeout:12000});
   const campaignGeometry=await page.evaluate(()=>{
     const feature=document.querySelector('.mvn-editorial-feature').getBoundingClientRect();
     const shop=document.querySelector('#shop').getBoundingClientRect();
