@@ -166,7 +166,7 @@ body.retail-home.mvn-advance-layout:not(.app-store) .mvn-editorial-feature.mvn-o
   max-width: none !important;
   min-height: 0 !important;
   height: auto !important;
-  aspect-ratio: 1753 / 897 !important;
+  aspect-ratio: 1672 / 941 !important;
   margin: 0 !important;
   padding: 0 !important;
   overflow: hidden !important;
@@ -615,7 +615,7 @@ body.retail-home.mvn-advance-layout:not(.app-store) #shop .collection-results .c
     flex: none !important;
     width: 100% !important;
     height: auto !important;
-    aspect-ratio: 1753 / 897 !important;
+    aspect-ratio: 1672 / 941 !important;
   }
   body.retail-home.mvn-advance-layout:not(.app-store) .mvn-owner-banner-img {
     position: absolute !important;
