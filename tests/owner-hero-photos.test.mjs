@@ -17,19 +17,20 @@ test('original owner photo sources are valid AVIF and cannot become synthetic su
   }
 });
 
-test('homepage banner uses the owner photos, not the synthetic product group',()=>{
-  const images=[
-    '/assets/mvn-pro-plus-isolate-1kg.avif',
-    '/assets/potency-whey-coffee-5lb.webp',
-    '/assets/mvn-nitro-mass-3kg-photo.avif'
-  ];
+test('homepage banner keeps all original group-product positions',()=>{
+  const banner='assets/mvn-banner-20261115-no-logo-no-pineapple.webp';
+  const file=readFileSync('public/'+banner);
+  assert.ok(file.length>100000,'full-resolution product lineup must be shipped');
+  assert.equal(file.toString('ascii',0,4),'RIFF','hero is a valid RIFF image');
+  assert.equal(file.toString('ascii',8,12),'WEBP','hero is a WebP image');
   for(const path of ['index.html','public/index.html']){
     const html=readFileSync(path,'utf8');
-    assert.ok(html.includes('class="mvn-real-banner-products"'),path);
-    for(const img of images)assert.ok(html.includes('src="'+img+'"'),path+' missing '+img);
-    assert.ok(html.includes('mvn-real-product-banner.css'),path+' missing mobile/desktop photo styling');
-    assert.ok(!html.includes('src="assets/mvn-banner-20261115-no-logo-no-pineapple.webp"'),path+' still displays the synthetic composite');
-    assert.ok(!html.includes('href="/assets/mvn-banner-20261115-no-logo-no-pineapple.webp"'),path+' still preloads the composite');
+    assert.ok(html.includes('src="'+banner+'"'),path+' must load approved full-product montage');
+    assert.ok(html.includes('href="/'+banner+'"'),path+' must preload this exact photo');
+    assert.ok(!html.includes('class="mvn-real-banner-products"'),path+' must not show 3 substitute product cards');
+    assert.ok(!html.includes('mvn-real-product-banner.css'),path+' must not load 3-card presentation CSS');
+    assert.match(html,/GLOB-TECH Platinum Whey/,'photo describes correct replacement container');
+    assert.match(html,/Creatine Monohydrate/,'photo describes original Creatine replacement');
   }
 });
 

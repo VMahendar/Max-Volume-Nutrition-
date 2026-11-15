@@ -44,17 +44,18 @@ try {
   // and usable, non-duplicated category cards BEFORE the existing cart catalogue.
   const showcase=page.locator('#mvnEditorial');
   assert.ok(await showcase.isVisible(),size.name+' landscape homepage banner must be visible');
-  assert.match(await showcase.locator('h1').textContent(),/BUILD YOUR BODY.*FUEL YOUR GOALS/i);
-  const originalPhotos=showcase.locator('.mvn-real-banner-products img');
-  assert.equal(await originalPhotos.count(),3,size.name+' banner uses three original owner photos');
-  for(const img of await originalPhotos.all())await img.waitFor({state:'visible'});
-  await page.waitForFunction(()=>[...document.querySelectorAll('.mvn-real-banner-products img')].length===3&&[...document.querySelectorAll('.mvn-real-banner-products img')].every(img=>img.complete&&img.naturalWidth>0&&img.naturalHeight>0),null,{timeout:12000});
+  assert.match(await showcase.locator('h1').textContent(),/Max Volume Nutrition full sports supplement product collection/i);
+  const groupImage=showcase.locator('.mvn-owner-banner-img');
+  assert.equal(await groupImage.count(),1,size.name+' one group banner retains all original product positions');
+  assert.equal(await groupImage.getAttribute('src'),'assets/mvn-banner-20261115-no-logo-no-pineapple.webp',size.name+' expected complete approved banner');
+  await groupImage.waitFor({state:'visible'});
+  await page.waitForFunction(()=>{const img=document.querySelector('.mvn-owner-banner-img');return img?.complete&&img.naturalWidth===1753&&img.naturalHeight===897;},null,{timeout:12000});
   const campaignGeometry=await page.evaluate(()=>{
     const feature=document.querySelector('.mvn-editorial-feature').getBoundingClientRect();
     const shop=document.querySelector('#shop').getBoundingClientRect();
     const promos=document.querySelector('.mvn-editorial-promos').getBoundingClientRect();
     const cats=document.querySelector('.mvn-editorial-categories').getBoundingClientRect();
-    const images=[...document.querySelectorAll('.mvn-real-banner-products img')].map(i=>({src:i.currentSrc,fit:getComputedStyle(i).objectFit,width:i.naturalWidth,height:i.naturalHeight}));
+    const images=[...document.querySelectorAll('.mvn-owner-banner-img')].map(i=>({src:i.currentSrc,fit:getComputedStyle(i).objectFit,width:i.naturalWidth,height:i.naturalHeight}));
     return {
       heroHeight:feature.height,shopY:shop.y,promoWidth:promos.width,
       categoryBottom:cats.bottom,scrollWidth:document.documentElement.scrollWidth,
@@ -67,12 +68,12 @@ try {
     };
   });
   console.log('ADVANCE_CAMPAIGN_GEOMETRY',size.name,JSON.stringify(campaignGeometry));
-  assert.ok(campaignGeometry.heroHeight>=240&&campaignGeometry.heroHeight<=900,size.name+' full-width hero stays within a usable viewport');
-  assert.ok(campaignGeometry.images.every(i=>i.fit==='contain'&&i.width>0&&i.height>0),size.name+' original product photos load without being cropped');
-  assert.deepEqual(campaignGeometry.images.map(i=>i.src.split('/').pop()),['mvn-pro-plus-isolate-1kg.avif','potency-whey-coffee-5lb.webp','mvn-nitro-mass-3kg-photo.avif']);
+  assert.ok(campaignGeometry.heroHeight>=175&&campaignGeometry.heroHeight<=900,size.name+' full-width hero stays within a usable viewport');
+  assert.ok(campaignGeometry.images.every(i=>i.fit==='contain'&&i.width===1753&&i.height===897),size.name+' full product-lineup image loads uncropped');
+  assert.deepEqual(campaignGeometry.images.map(i=>i.src.split('/').pop()),['mvn-banner-20261115-no-logo-no-pineapple.webp']);
   assert.ok(campaignGeometry.hero.w>=size.width-2,size.name+' hero is full width, not a 75% image beside old promos');
   assert.ok(campaignGeometry.promosHidden,size.name+' old promo side cards are hidden');
-  assert.equal(await showcase.locator('.mvn-advance-hero-title').isVisible(),true,size.name+' visible theme-style headline');
+  assert.equal(await groupImage.isVisible(),true,size.name+' entire product lineup is visible without text overlay');
   assert.ok(campaignGeometry.categoryBottom<=campaignGeometry.shopY+20,size.name+' category row comes before shop');
   assert.ok(campaignGeometry.welcome.y>=campaignGeometry.categoryBottom-2,size.name+' welcome follows category row');
   assert.ok(campaignGeometry.welcome.y<campaignGeometry.shopY,size.name+' welcome precedes the retail shop');

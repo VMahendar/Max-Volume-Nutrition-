@@ -7,12 +7,12 @@ test('MVN homepage uses an adapted Advance Fitness Gym page structure',()=>{
   const css=readFileSync('public/mvn-advance-layout.css','utf8');
   assert.match(html,/<body class="retail-home mvn-fitness-refresh mvn-advance-layout">/);
   assert.match(html,/mvn-advance-layout\.css\?v=20261115-theme-layout-1/);
-  assert.match(html,/class="mvn-advance-hero-title"/);
+  assert.match(html,/class="mvn-owner-banner-img"/);
   assert.match(html,/class="mvn-advance-welcome"/);
-  assert.match(html,/class="mvn-real-banner-products"/);
-  assert.match(html,/assets\/mvn-pro-plus-isolate-1kg\.avif/);
-  assert.match(html,/assets\/mvn-nitro-mass-3kg-photo\.avif/);
-  assert.match(html,/assets\/potency-whey-coffee-5lb\.webp/);
+  assert.doesNotMatch(html,/class="mvn-real-banner-products"/,'do not replace group banner with a three-product grid');
+  assert.match(html,/src="assets\/mvn-banner-20261115-no-logo-no-pineapple\.webp"/);
+  assert.ok(readFileSync('public/assets/mvn-banner-20261115-no-logo-no-pineapple.webp').length>100000,'all-product group banner image is included');
+  assert.doesNotMatch(html,/mvn-real-product-banner\.css/,'old three-photo banner styling is removed');
   assert.match(html,/class="mvn-editorial-category-grid"/);
   assert.equal((html.match(/class="mvn-advance-service-icon"/g)||[]).length,4);
   assert.ok(html.indexOf('class="mvn-editorial"') < html.indexOf('class="mvn-editorial-categories"'),'hero comes before features');
