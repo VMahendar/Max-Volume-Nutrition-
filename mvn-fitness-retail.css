@@ -460,3 +460,12 @@ body.retail-home.mvn-fitness-refresh:not(.app-store) :is(a,button,select,input):
     transform: none !important;
   }
 }
+
+/* Lighthouse mobile accessibility 2026-11-15:
+   contrast fixes for small UI captions against their existing surfaces. */
+body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-benefits span {
+  color: #d5dce3 !important;
+}
+body.retail-home.mvn-fitness-refresh:not(.app-store) .mvn-editorial-categories-heading > div > span {
+  color: #74513c !important;
+}
