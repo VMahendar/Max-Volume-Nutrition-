@@ -104,3 +104,21 @@ test('shop dark-blue header exposes account/cart, hides redundant controls, and 
  assert.ok(!home.includes('mvn-compact-dark-blue-shop-v2'),'Home styling is unchanged');
  assert.equal(readFileSync('shop.html','utf8'),shop,'served and root shop stay identical');
 });
+
+test('shop uses exactly one physical dark-blue navigation/header row on mobile and desktop',()=>{
+ const shop=readFileSync('public/shop.html','utf8');
+ const home=readFileSync('public/index.html','utf8');
+ const root=readFileSync('shop.html','utf8');
+ const header=shop.slice(shop.indexOf('<header class="storehead">'),shop.indexOf('</header>')+9);
+ const style=shop.match(/<style id="mvn-compact-dark-blue-shop-v2">([\s\S]*?)<\/style>/)?.[1]||'';
+ assert.ok(header.includes('class="mvn-theme-main-nav"'),'shopping navigation sits inside the only header row');
+ assert.doesNotMatch(shop.slice(shop.indexOf('</header>')+9,shop.indexOf('<section class="mvn-shop-page-heading"')),/<nav\s/,'no second navigation bar below the header');
+ assert.match(header,/class="mvn-shop-search-disclosure"/,'search remains accessible via a compact icon');
+ assert.match(header,/id="search"/,'search form retained');
+ assert.match(header,/href="account.html"/,'My Account remains accessible');
+ assert.match(header,/id="bag"/,'cart button remains accessible');
+ assert.match(style,/flex-flow:row nowrap!important/,'header cannot stack into multiple rows');
+ assert.doesNotMatch(style,/grid-template-rows:58px 44px|grid-template-rows:52px 44px 42px/,'old layered layout removed');
+ assert.equal(root,shop,'mirrored shop pages match');
+ assert.doesNotMatch(home,/mvn-shop-search-disclosure/,'unrelated homepage left untouched');
+});

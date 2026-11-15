@@ -274,144 +274,210 @@ body.retail-home.mvn-full-shop .mvn-compact-footer-links a:focus-visible {
 <link rel="stylesheet" href="/mvn-shop-cleanup.css?v=20261115-dark-blue-1">
 
 <style id="mvn-compact-dark-blue-shop-v2">
-/* Scoped ONLY to dedicated shop: retain Home nav and all cart/filter app hooks. */
-body.retail-home.mvn-full-shop:not(.app-store) .storehead{
- background:#091e3a!important;border-bottom:1px solid #2b5078!important;
- grid-template-columns:minmax(130px,185px) minmax(170px,1fr) max-content!important;
+/* One physical navigation row on /shop.html (all viewport widths).
+   No duplicate white menu strip, no stacked header/search rows.
+   Keep original navigation links, #search, account, and #bag functional. */
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead{
+ box-sizing:border-box!important;display:flex!important;flex-flow:row nowrap!important;
+ align-items:center!important;justify-content:space-between!important;
+ gap:clamp(4px,.8vw,13px)!important;grid-template-columns:none!important;
+ grid-template-rows:none!important;row-gap:0!important;
+ width:100%!important;height:70px!important;min-height:70px!important;
+ padding:0 clamp(9px,1.6vw,24px)!important;margin:0!important;
+ background:#091e3a!important;border:0!important;border-bottom:1px solid #2a5079!important;
+ overflow:visible!important;position:relative!important;
 }
-body.retail-home.mvn-full-shop:not(.app-store) .storehead .mvn-theme-categories{
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.brand-identity{
+ flex:0 0 clamp(100px,13vw,162px)!important;align-self:center!important;
+ display:flex!important;align-items:center!important;justify-content:flex-start!important;
+ width:auto!important;min-width:0!important;max-width:162px!important;
+ height:55px!important;padding:0!important;margin:0!important;
+ border:0!important;background:none!important;box-shadow:none!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead .brand-identity img{
+ display:block!important;object-fit:contain!important;object-position:left center!important;
+ max-width:100%!important;width:100%!important;height:100%!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.mvn-theme-categories,
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.option2-site-nav{
  display:none!important;
 }
-body.retail-home.mvn-full-shop:not(.app-store) .storehead .brand-identity{
- grid-column:1!important;grid-row:1!important;justify-content:flex-start!important;
+/* Navigation is now a CHILD of the dark-blue header, not a second bar. */
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.mvn-theme-main-nav{
+ box-sizing:border-box!important;display:flex!important;flex:1 1 auto!important;
+ align-self:stretch!important;align-items:center!important;justify-content:flex-start!important;
+ min-width:0!important;width:auto!important;height:100%!important;max-width:none!important;
+ min-height:0!important;max-height:none!important;margin:0!important;padding:0 6px!important;
+ gap:clamp(10px,1.45vw,22px)!important;flex-wrap:nowrap!important;
+ overflow-x:auto!important;overflow-y:hidden!important;
+ background:transparent!important;border:0!important;box-shadow:none!important;
+ white-space:nowrap!important;scrollbar-width:none!important;
 }
-body.retail-home.mvn-full-shop:not(.app-store) .storehead .header-search{
- grid-column:2!important;grid-row:1!important;width:100%!important;min-width:0!important;margin:0!important;
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.mvn-theme-main-nav::-webkit-scrollbar{
+ display:none!important;
 }
-body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions{
- grid-column:3!important;grid-row:1!important;
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.mvn-theme-main-nav a{
+ flex:0 0 auto!important;display:inline-flex!important;align-items:center!important;
+ justify-content:center!important;width:auto!important;max-width:none!important;
+ height:100%!important;min-height:0!important;margin:0!important;
+ padding:3px 0 0!important;border:0!important;border-bottom:2px solid transparent!important;
+ color:#e9eef7!important;background:transparent!important;white-space:nowrap!important;
+ font-size:clamp(10px,1vw,12px)!important;font-weight:800!important;
+ text-decoration:none!important;letter-spacing:.015em!important;
 }
-body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>a.account-link,
-body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>button#bag{
- background:#174474!important;border:1px solid #51749b!important;color:#fff!important;
- border-radius:6px!important;min-width:105px!important;min-height:44px!important;
- padding:0 12px!important;gap:7px!important;
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.mvn-theme-main-nav a:is(:hover,:focus-visible){
+ border-bottom-color:#f27a3c!important;color:#fff!important;
 }
-body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>a.account-link>span,
-body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>button#bag>span{
- display:inline!important;visibility:visible!important;
- color:#fff!important;font-size:12px!important;font-weight:800!important;
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.header-search{
+ box-sizing:border-box!important;display:block!important;position:relative!important;
+ flex:0 0 42px!important;order:0!important;grid-column:auto!important;grid-row:auto!important;
+ width:42px!important;min-width:42px!important;max-width:42px!important;
+ height:42px!important;min-height:42px!important;margin:0!important;padding:0!important;
+ overflow:visible!important;z-index:45!important;
 }
-body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions :is(a.account-link,button#bag):is(:hover,:focus-visible){
- background:#235b93!important;border-color:#8dbbe5!important;
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead .mvn-shop-search-disclosure{
+ position:relative!important;display:block!important;width:42px!important;height:42px!important;
 }
-body.retail-home.mvn-full-shop:not(.app-store) .storehead .mvn-header-more summary{
- background:#123657!important;border-color:#51749b!important;
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead .mvn-shop-search-disclosure>summary{
+ box-sizing:border-box!important;display:flex!important;align-items:center!important;
+ justify-content:center!important;list-style:none!important;cursor:pointer!important;
+ width:42px!important;height:42px!important;margin:0!important;padding:0!important;
+ border:1px solid #416387!important;border-radius:6px!important;
+ background:#16385b!important;color:#fff!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead .mvn-shop-search-disclosure>summary::-webkit-details-marker{
+ display:none!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead .mvn-shop-search-panel{
+ box-sizing:border-box!important;position:absolute!important;top:calc(100% + 13px)!important;
+ right:0!important;width:min(330px,calc(100vw - 24px))!important;max-width:calc(100vw - 24px)!important;
+ padding:12px!important;z-index:990!important;border:1px solid #395c83!important;
+ border-radius:8px!important;background:#102b4b!important;
+ box-shadow:0 12px 32px #0007!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead .mvn-shop-search-panel #search{
+ box-sizing:border-box!important;display:flex!important;width:100%!important;min-width:0!important;
+ max-width:none!important;height:44px!important;min-height:44px!important;margin:0!important;
+ border-radius:5px!important;background:#fff!important;overflow:hidden!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead .mvn-shop-search-panel #q{
+ min-width:0!important;flex:1 1 auto!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.head-actions{
+ box-sizing:border-box!important;display:flex!important;flex:0 0 auto!important;
+ align-items:center!important;justify-content:flex-end!important;flex-wrap:nowrap!important;
+ grid-column:auto!important;grid-row:auto!important;order:0!important;
+ min-width:0!important;width:auto!important;max-width:none!important;
+ height:44px!important;margin:0!important;padding:0!important;gap:6px!important;
+ color:#fff!important;overflow:visible!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions>a.account-link,
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions>button#bag{
+ display:inline-flex!important;flex:0 0 auto!important;align-items:center!important;
+ justify-content:center!important;gap:6px!important;
+ box-sizing:border-box!important;position:relative!important;
+ width:auto!important;min-width:93px!important;max-width:none!important;
+ height:42px!important;min-height:42px!important;margin:0!important;padding:0 9px!important;
+ color:#fff!important;background:#174474!important;
+ border:1px solid #537ba7!important;border-radius:6px!important;
+ line-height:1!important;white-space:nowrap!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions :is(a.account-link,button#bag)>span{
+ display:inline!important;color:#fff!important;font-size:11px!important;
+ font-weight:800!important;opacity:1!important;white-space:nowrap!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions :is(a.account-link,button#bag) svg{
+ display:block!important;flex:0 0 17px!important;width:17px!important;height:17px!important;color:#fff!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions>button#bag em{
+ flex:0 0 auto!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ position:static!important;min-width:17px!important;height:17px!important;padding:0 3px!important;
+ border-radius:20px!important;background:#f36528!important;color:#fff!important;font-size:10px!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead .mvn-header-more summary{
+ width:42px!important;min-width:42px!important;height:42px!important;
+ background:#153859!important;border:1px solid #537ba7!important;color:#fff!important;
+ border-radius:6px!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) header.storehead .mvn-header-more .mvn-more-panel{
+ right:0!important;left:auto!important;max-width:calc(100vw - 24px)!important;z-index:999!important;
 }
 body.retail-home.mvn-full-shop:not(.app-store) .mvn-shop-page-heading{
- background:linear-gradient(112deg,#071a32,#0d3057 83%)!important;
- border-bottom:3px solid #e8632a!important;
+ background:linear-gradient(112deg,#07162f,#12375f 86%)!important;
 }
-/* Two coherent dark-blue headings instead of repeated white panels. */
 body.retail-home.mvn-full-shop:not(.app-store) main#shop > .section-title{
  background:#0c2a4d!important;color:#fff!important;
- padding:21px clamp(16px,2.5vw,28px) 16px!important;
- border:0!important;border-radius:6px 6px 0 0!important;
- margin:0!important;box-sizing:border-box!important;
 }
-body.retail-home.mvn-full-shop:not(.app-store) main#shop > .section-title .eyebrow{
- color:#b9d3ee!important;
-}
-body.retail-home.mvn-full-shop:not(.app-store) main#shop > .section-title h2{
- color:#fff!important;
-}
-body.retail-home.mvn-full-shop:not(.app-store) main#shop > .section-title p{
- color:#d4e3ef!important;
-}
-body.retail-home.mvn-full-shop:not(.app-store) main#shop > .productbar{
- background:#0c2a4d!important;background-image:none!important;color:#fff!important;
- margin:0 0 20px!important;min-height:54px!important;
- padding:6px clamp(16px,2.5vw,28px) 18px!important;
- border:0!important;border-top:1px solid #305477!important;
- border-radius:0 0 6px 6px!important;box-sizing:border-box!important;
-}
-body.retail-home.mvn-full-shop:not(.app-store) main#shop .productbar h3{
- color:#fff!important;
-}
-body.retail-home.mvn-full-shop:not(.app-store) main#shop .productbar .eyebrow,
-body.retail-home.mvn-full-shop:not(.app-store) main#shop .productbar #resultText{
- color:#b9d3ee!important;
-}
-/* Hide duplicate category chips, goal/price sidebar, and sort UI.
-   Keep their underlying HTML controls so existing app.js cannot break. */
 body.retail-home.mvn-full-shop:not(.app-store) main#shop .cats,
 body.retail-home.mvn-full-shop:not(.app-store) main#shop .productbar .sort-label,
 body.retail-home.mvn-full-shop:not(.app-store) main#shop .collection-filters{
  display:none!important;
 }
-body.retail-home.mvn-full-shop:not(.app-store) main#shop .collection-results{
- width:100%!important;max-width:none!important;min-width:0!important;
- margin:0!important;
-}
-@media(max-width:900px){
- body.retail-home.mvn-full-shop:not(.app-store) .storehead{
-  grid-template-columns:minmax(0,1fr) max-content!important;
-  grid-template-rows:58px 44px!important;
+@media(max-width:950px){
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead{
+  gap:5px!important;padding:0 10px!important;height:64px!important;min-height:64px!important;
  }
- body.retail-home.mvn-full-shop:not(.app-store) .storehead .brand-identity{
-  grid-column:1!important;grid-row:1!important;
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.brand-identity{
+  flex:0 0 117px!important;max-width:117px!important;height:49px!important;
  }
- body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions{
-  grid-column:2!important;grid-row:1!important;
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.mvn-theme-main-nav{
+  gap:12px!important;padding:0 3px!important;
  }
- body.retail-home.mvn-full-shop:not(.app-store) .storehead .header-search{
-  grid-column:1/-1!important;grid-row:2!important;
-  margin:0!important;width:100%!important;
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.header-search{
+  flex-basis:38px!important;width:38px!important;min-width:38px!important;max-width:38px!important;height:38px!important;min-height:38px!important;
  }
-}
-@media(max-width:560px){
- body.retail-home.mvn-full-shop:not(.app-store) .storehead .brand-identity{
-  max-width:145px!important;
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead .mvn-shop-search-disclosure,
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead .mvn-shop-search-disclosure>summary{
+  width:38px!important;height:38px!important;
  }
- body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>a.account-link,
- body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>button#bag{
-  width:auto!important;min-width:86px!important;padding:0 7px!important;
-  height:40px!important;min-height:40px!important;
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions>a.account-link,
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions>button#bag{
+  min-width:0!important;padding:0 6px!important;height:38px!important;min-height:38px!important;
  }
- body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>a.account-link>span,
- body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>button#bag>span{
-  display:inline!important;font-size:10px!important;
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead .mvn-header-more summary{
+  width:38px!important;min-width:38px!important;height:38px!important;
  }
- body.retail-home.mvn-full-shop:not(.app-store) main#shop > .section-title{
-  padding:18px 16px 13px!important;
- }
- body.retail-home.mvn-full-shop:not(.app-store) main#shop > .productbar{
-  padding:9px 16px 15px!important;min-height:48px!important;
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions{
+  height:38px!important;gap:4px!important;
  }
 }
-@media(max-width:420px){
- body.retail-home.mvn-full-shop:not(.app-store) .storehead{
-  grid-template-columns:minmax(0,1fr) max-content!important;
-  grid-template-rows:52px 44px 42px!important;
-  row-gap:5px!important;padding:7px 10px 10px!important;
+@media(max-width:590px){
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead{
+  height:60px!important;min-height:60px!important;padding:0 7px!important;gap:4px!important;
  }
- body.retail-home.mvn-full-shop:not(.app-store) .storehead .brand-identity{
-  grid-column:1!important;grid-row:1!important;max-width:185px!important;
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.brand-identity{
+  flex:0 0 100px!important;max-width:100px!important;height:44px!important;
  }
- body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions{
-  grid-column:1/-1!important;grid-row:2!important;
-  justify-content:flex-start!important;width:100%!important;min-width:0!important;
-  gap:7px!important;
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.mvn-theme-main-nav{
+  gap:12px!important;padding:0 2px!important;
  }
- body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>a.account-link,
- body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>button#bag{
-  flex:1 1 0!important;min-width:0!important;
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.mvn-theme-main-nav a{
+  font-size:10px!important;
  }
- body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>.mvn-header-more{
-  flex:0 0 40px!important;
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions>a.account-link,
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions>button#bag{
+  width:36px!important;min-width:36px!important;max-width:36px!important;
+  height:36px!important;min-height:36px!important;padding:0!important;
  }
- body.retail-home.mvn-full-shop:not(.app-store) .storehead .header-search{
-  grid-column:1/-1!important;grid-row:3!important;width:100%!important;margin:0!important;
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions :is(a.account-link,button#bag)>span{
+  display:none!important;
+ }
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions>button#bag em{
+  position:absolute!important;top:-5px!important;right:-4px!important;min-width:15px!important;height:15px!important;font-size:9px!important;
+ }
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead .mvn-header-more summary,
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.header-search,
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead .mvn-shop-search-disclosure,
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead .mvn-shop-search-disclosure>summary{
+  width:36px!important;min-width:36px!important;height:36px!important;
+ }
+}
+@media(max-width:380px){
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead>.brand-identity{
+  flex:0 0 84px!important;max-width:84px!important;
+ }
+ body.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions{
+  gap:3px!important;
  }
 }
 </style>
@@ -446,9 +512,19 @@ body.retail-home.mvn-full-shop:not(.app-store) main#shop .collection-results{
     <a href="dealer.html">WHOLESALE</a>
     <a href="support.html">SUPPORT</a>
   </nav>
+  <nav class="mvn-theme-main-nav" aria-label="Supplement shopping navigation">
+    <a class="mvn-theme-home-link" href="/">HOME</a>
+    <a href="#shop" data-cat="all">SHOP ALL</a>
+    <a href="#shop" data-cat="whey">WHEY PROTEIN</a>
+    <a href="#shop" data-cat="mass">MASS GAINER</a>
+    <a href="#shop" data-cat="creatine">CREATINE</a>
+    <a href="#shop" data-cat="pre">PRE-WORKOUT</a>
+  </nav>
   <div class="header-search">
-    <span class="header-descriptor">SPORTS NUTRITION • RETAIL & DISTRIBUTION</span>
-    <form id="search" role="search"><span aria-hidden="true">⌕</span><input id="q" autocomplete="off" aria-label="Search products" placeholder="Search supplements"><button type="submit">SEARCH</button></form>
+    <details class="mvn-shop-search-disclosure">
+      <summary aria-label="Search supplements" title="Search supplements"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.4" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 4.3 4.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></summary>
+      <div class="mvn-shop-search-panel"><form id="search" role="search"><span aria-hidden="true">⌕</span><input id="q" autocomplete="off" aria-label="Search products" placeholder="Search supplements"><button type="submit">SEARCH</button></form></div>
+    </details>
   </div>
   <div class="head-actions">
     <a class="mvn-header-email" href="mailto:maxvolumenutrition@gmail.com" aria-label="Email Max Volume Nutrition at maxvolumenutrition@gmail.com"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>maxvolumenutrition@gmail.com</a>
@@ -468,14 +544,6 @@ body.retail-home.mvn-full-shop:not(.app-store) main#shop .collection-results{
     </details>
   </div>
 </header>
-<nav class="mvn-theme-main-nav" aria-label="Supplement shopping navigation">
-  <a class="mvn-theme-home-link" href="/">HOME</a>
-  <a href="#shop" data-cat="all">SHOP ALL</a>
-  <a href="#shop" data-cat="whey">WHEY PROTEIN</a>
-  <a href="#shop" data-cat="mass">MASS GAINER</a>
-  <a href="#shop" data-cat="creatine">CREATINE</a>
-  <a href="#shop" data-cat="pre">PRE-WORKOUT</a>
-</nav>
 <section class="mvn-shop-page-heading" aria-labelledby="mvnShopPageTitle">
   <img class="mvn-shop-hero-logo" src="max-volume-logo-wide.png" alt="Max Volume Nutrition official logo" width="520" height="185" loading="eager" decoding="async">
   <span>MAX VOLUME NUTRITION · ALL PRODUCTS</span>
