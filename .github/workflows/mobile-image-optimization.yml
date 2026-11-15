@@ -27,10 +27,13 @@ jobs:
         run: node deploy/prepare-product-media.mjs
       - name: Create responsive WebP derivatives
         run: python scripts/optimize-storefront-images.py
-      - name: Commit only the generated image files
+      - name: Bundle existing CSS without changing its cascade order
+        run: node scripts/build-home-css.mjs
+      - name: Commit optimized images and CSS bundles
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add public/mvn-home-base.bundle.css public/mvn-home-layout.bundle.css
           git add public/assets/mvn-owner-landscape-banner-mobile.webp
           git add public/assets/mvn-hero-creatine-cutout-card.webp
           git add public/assets/mvn-hero-whey-cutout-card.webp
