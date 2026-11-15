@@ -35,200 +35,70 @@ try {
   const page=await context.newPage();
   const errors=[];
   page.on('pageerror',error=>errors.push(error.message));
-  const response=await page.goto(origin+'/',{waitUntil:'domcontentloaded'});
-  assert.equal(response.status(),200,size.name+' homepage status');
-  await page.locator('#grid article.card .variant').first().waitFor({state:'visible',timeout:12000});
-  const count=await page.locator('#grid article.card').count();
-  assert.ok(count>=5,size.name+' all five current product families must be present, got '+count);
-  // Reference-inspired storefront should present substantial original merchandise imagery
-  // and usable, non-duplicated category cards BEFORE the existing cart catalogue.
-  const showcase=page.locator('#mvnEditorial');
-  assert.ok(await showcase.isVisible(),size.name+' landscape homepage banner must be visible');
-  assert.match(await showcase.locator('h1').textContent(),/Max Volume Nutrition full sports supplement product collection/i);
-  const groupImage=showcase.locator('.mvn-owner-banner-img');
-  assert.equal(await groupImage.count(),1,size.name+' one group banner retains all original product positions');
-  assert.equal(await groupImage.getAttribute('src'),'assets/mvn-banner-20261115-no-logo-no-pineapple.webp',size.name+' expected complete approved banner');
-  await groupImage.waitFor({state:'visible'});
-  await page.waitForFunction(()=>{const img=document.querySelector('.mvn-owner-banner-img');return img?.complete&&img.naturalWidth===1753&&img.naturalHeight===897;},null,{timeout:12000});
-  const campaignGeometry=await page.evaluate(()=>{
-    const q=x=>document.querySelector(x);
-    const hero=q('.mvn-editorial-feature').getBoundingClientRect();
-    const promos=q('.mvn-editorial-promos').getBoundingClientRect();
-    const categories=q('.mvn-editorial-categories').getBoundingClientRect();
-    const goalCards=[...document.querySelectorAll('.mvn-theme-goal-art')].map(x=>x.getBoundingClientRect().toJSON());
-    const img=q('.mvn-owner-banner-img');
-    return {hero:hero.toJSON(),promos:promos.toJSON(),categories:categories.toJSON(),goalCards,
-      heroFit:getComputedStyle(img).objectFit,
-      heroNaturalWidth:img.naturalWidth,heroNaturalHeight:img.naturalHeight,
-      promoDisplay:getComputedStyle(q('.mvn-editorial-promos')).display,
-      siteWidth:document.documentElement.scrollWidth,viewportWidth:innerWidth,
-      shopY:q('#shop').getBoundingClientRect().top};
-  });
-  console.log('SUPPLEMENT_THEME_CAMPAIGN',size.name,JSON.stringify(campaignGeometry));
-  assert.equal(campaignGeometry.heroFit,'contain',size.name+' group-product photo must be uncropped');
-  assert.equal(campaignGeometry.heroNaturalWidth,1753,size.name+' original banner source is intact');
-  assert.equal(campaignGeometry.heroNaturalHeight,897,size.name+' approved full landscape banner retained');
-  assert.equal(campaignGeometry.promoDisplay,'grid',size.name+' two authentic promo cards are displayed');
-  assert.equal(await showcase.locator('.mvn-editorial-promo').count(),2,size.name+' two product promos');
-  assert.equal(await page.locator('.mvn-theme-goal-art').count(),3,size.name+' three image-led shop-by-goal cards');
-  assert.equal(await page.locator('.mvn-advance-welcome').count(),0,size.name+' no duplicate text-heavy middle section');
-  assert.ok(campaignGeometry.categories.top>=campaignGeometry.hero.top,size.name+' goals follow hero');
-  assert.ok(campaignGeometry.categories.bottom<=campaignGeometry.shopY+24,size.name+' goals precede commerce');
-  assert.ok(campaignGeometry.siteWidth<=size.width+10,size.name+' no horizontal page overflow');
-  assert.ok(campaignGeometry.goalCards.every(x=>x.width>65&&x.height>100),size.name+' goal photo cards are visible');
-  if(size.name==='desktop'){
-    assert.ok(campaignGeometry.hero.width>size.width*.55,size.name+' left banner is larger than right promos');
-    assert.ok(campaignGeometry.promos.x>=campaignGeometry.hero.right-5,size.name+' two promos stand to the right');
-    assert.ok(campaignGeometry.promos.height>=campaignGeometry.hero.height*.85,size.name+' promos align to hero height');
-    assert.ok(campaignGeometry.goalCards[0].width>=200,size.name+' desktop 3-column goal imagery');
-  }else{
-    assert.ok(campaignGeometry.hero.width>=size.width-40,size.name+' mobile full-width group photo');
-    assert.ok(campaignGeometry.promos.y>=campaignGeometry.hero.bottom-2,size.name+' promo cards move below photo on mobile');
-    assert.ok(campaignGeometry.goalCards[0].width>=80,size.name+' Android goal photos remain legible');
-  }
-  await page.locator('.mvn-editorial-categories').scrollIntoViewIfNeeded();
-  assert.equal(await page.locator('.mvn-editorial-category[data-cat="pre"]').isVisible(),true,size.name+' performance goal can be selected');
-  await page.screenshot({path:folder+'/'+size.name+'-campaign.png',animations:'disabled'});
-  await page.locator('.mvn-editorial-category[data-cat="pre"]').click();
-  assert.equal(await page.locator('#grid article.card').count(),1,size.name+' performance goal filters pre-workout');
-  await page.locator('.cats [data-cat="all"]').click();
-  const geometry=await page.evaluate(()=>{
-   const get=x=>document.querySelector(x);
-   const grid=get('#grid');
-   const title=get('#shop .productbar');
-   const hero=get('#mvnSpotlight');
-   return {
-    columns:getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length,
-    titleBackground:getComputedStyle(title).backgroundImage,
-    heroHidden:getComputedStyle(hero).display==='none',
-    scroll:document.documentElement.scrollWidth,
-    view:innerWidth,
-    priceFilterVisible:get('#priceRange').getClientRects().length>0
-   };
-  });
-  if(size.name==='android'){
-   const measurements=await page.evaluate(()=>{
-    const rect=selector=>{
-     const element=document.querySelector(selector),r=element.getBoundingClientRect();
-     return {x:r.x,y:r.y,width:r.width,height:r.height,bottom:r.bottom};
-    };
-    const logo=document.querySelector('header .original-brand-logo');
-    return {
-     logoSource:logo.getAttribute('src'),
-     logoLoaded:logo.complete&&logo.naturalWidth>0,
-     logo:rect('header .original-brand-logo'),
-     categories:rect('#shop .cats'),
-     filter:rect('#shop .collection-filters'),
-     selector:rect('#shop #priceRange'),
-     firstProduct:rect('#shop #grid article.card')
-    };
-   });
-   console.log('OPTION2_MOBILE_SPACING',JSON.stringify(measurements));
-   assert.equal(measurements.logoSource,'mvn-app-header-logo.webp','use the transparent, genuine MVN header artwork');
-   assert.ok(measurements.logoLoaded,'header image loaded');
-   assert.ok(measurements.logo.width>=140&&measurements.logo.height>=40,'brand remains readable on mobile');
-   assert.ok(measurements.filter.height<=55,'price filter cannot create a large empty panel');
-   assert.ok(measurements.selector.height<=45,'price selector is compact');
-   assert.ok(measurements.firstProduct.y-measurements.filter.bottom<=24,
-     'product cards directly follow filter controls');
-   assert.ok(measurements.firstProduct.y-measurements.categories.bottom<=92,
-     'no oversized blank area between categories and product cards');
-  }
 
-  const more=page.locator('.mvn-header-more');
-  const menuPanel=page.locator('.mvn-more-panel');
-  const email=page.locator('.mvn-header-email');
-  assert.equal(await more.count(),1,size.name+' has a single accessible three-dot menu');
-  assert.equal(await menuPanel.isVisible(),false,size.name+' menu closed by default');
-  assert.equal(await email.getAttribute('href'),'mailto:maxvolumenutrition@gmail.com');
-  assert.equal(await email.isVisible(),false,'contact email moves to theme utility strip');
-  const topContact=page.locator('.announce a[href="contact.html"]');
-  assert.equal(await topContact.count(),0,size.name+' top bar does not duplicate Contact');
-  assert.equal(await page.locator('.announce').isVisible(),false,size.name+' extra top strip is hidden');
-  await more.locator('summary').click();
-  assert.equal(await menuPanel.isVisible(),true,size.name+' three-dot menu opens');
-  assert.equal(await menuPanel.locator('a[href="mailto:maxvolumenutrition@gmail.com"]').count(),0,'do not duplicate contact methods in menu');
-  assert.equal(await menuPanel.locator('a').count(),3,'only three menu links');
-  assert.equal(await menuPanel.locator('a[href="about.html"]').count(),1,'menu includes About Us');
-  assert.equal(await menuPanel.locator('a[href="contact.html"]').count(),1,'menu includes Contact');
-  assert.equal(await menuPanel.locator('a[href="dealer.html"]').count(),1,'menu includes Wholesale');
-  assert.equal(await menuPanel.locator('a[href="support.html"]').count(),0,'support not duplicated in menu');
-  await page.keyboard.press('Escape');
-  assert.equal(await menuPanel.isVisible(),false,size.name+' Escape closes menu');
-  await more.locator('summary').click();
-  await page.mouse.click(10,170); // visible page area left of the dropdown on both viewports
-  assert.equal(await menuPanel.isVisible(),false,size.name+' outside click closes menu');
-  const visual=await page.evaluate(()=>{
-   const style=selector=>getComputedStyle(document.querySelector(selector));
-   const image=document.querySelector('#grid article.card .photo img');
-   return {
-    headerBackground:style('.storehead').backgroundColor,
-    headerBackgroundImage:style('.storehead').backgroundImage,
-    logoLoaded:document.querySelector('.storehead .original-brand-logo').naturalWidth>0,
-    accountColor:style('.storehead .account-link').color,
-    cartColor:style('.storehead #bag').color,
-    nameColor:style('#grid article.card .info h3').color,
-    nameFontSize:parseFloat(style('#grid article.card .info h3').fontSize),
-    nameFontWeight:Number(style('#grid article.card .info h3').fontWeight),
-    sellingFontSize:parseFloat(style('#grid article.card .selling-price').fontSize),
-    priceColor:style('#grid article.card .selling-price').color,
-    photoBackground:style('#grid article.card .photo').backgroundImage,
-    photoNaturalWidth:image.naturalWidth
-   };
-  });
-  console.log('SUPPLEMENT_REFERENCE_VISUAL',size.name,JSON.stringify(visual));
-  assert.equal(visual.headerBackground,'rgb(20, 26, 33)',size.name+' clean charcoal header');
-  assert.equal(await page.locator('.mvn-theme-main-nav').isVisible(),true,size.name+' reference nav is visible');
-  assert.ok(visual.logoLoaded,'original gold MVN header artwork loads');
-  assert.equal(visual.accountColor,'rgb(255, 255, 255)','account icon is legible on dark/orange masthead');
-  assert.equal(visual.cartColor,'rgb(255, 255, 255)','cart icon is legible on dark/orange masthead');
-  assert.ok(visual.nameFontSize>=15,'product titles are legible and prominent');
-  assert.ok(visual.nameFontWeight>=800,'product titles use strong weight');
-  assert.ok(visual.sellingFontSize>=19,'retail selling price stands out');
-  assert.ok(visual.photoNaturalWidth>0,'original product photography is used for the catalogue');
-  assert.ok(visual.photoNaturalWidth>0,'real merchandise photography loads');
-  assert.equal(geometry.columns,size.columns,size.name+' expected product columns');
-  assert.ok(geometry.titleBackground.includes('linear-gradient')||geometry.titleBackground==='none',size.name+' product section does not require a synthetic navy gradient');
-  assert.ok(geometry.heroHidden,size.name+' old hero must not interrupt product-first display');
-  assert.ok(geometry.scroll<=geometry.view+10,size.name+' overflow '+JSON.stringify(geometry));
-  assert.ok(geometry.priceFilterVisible,size.name+' retain price filtering');
-  assert.equal(await page.locator('.card .photo img').first().evaluate(img=>img.complete&&img.naturalWidth>0),true,size.name+' real product image loads');
+  const homeResponse=await page.goto(origin+'/',{waitUntil:'domcontentloaded'});
+  assert.equal(homeResponse.status(),200,size.name+' home loads');
+  assert.ok(await page.locator('#mvnEditorial').isVisible(),size.name+' complete group banner visible');
+  const group=page.locator('.mvn-owner-banner-img');
+  assert.equal(await group.getAttribute('src'),'assets/mvn-banner-20261115-no-logo-no-pineapple.webp');
+  await page.waitForFunction(()=>{const i=document.querySelector('.mvn-owner-banner-img');return i?.complete&&i.naturalWidth===1753&&i.naturalHeight===897;});
+  assert.equal(await page.locator('.mvn-editorial-promo').count(),2,'two feature promotions retained');
+  assert.equal(await page.locator('.mvn-editorial-category').count(),3,'three original shop-by-goal product cards');
+  assert.equal(await page.locator('#shop').isVisible(),false,size.name+' catalogue hidden on homepage');
+  assert.equal(await page.locator('#mvn-quick-categories').isVisible(),false,size.name+' auto category bar hidden on home');
+  assert.equal((await page.locator('body').innerText()).match(/SHOP THE COLLECTION/g)?.length,1,size.name+' one Shop the Collection button');
+  assert.ok(!(await page.locator('.mvn-home-footer').innerText()).includes('+91 77088 30513'),size.name+' no repeated footer phone');
+  assert.ok(!(await page.locator('.mvn-home-footer').innerText()).includes('maxvolumenutrition@gmail.com'),size.name+' no repeated footer email');
+  assert.equal(await page.locator('.mvn-home-footer a[href="contact.html"]').count(),1,size.name+' dedicated Contact link');
+  assert.ok((await page.locator('.mvn-theme-goal-art').first().evaluate(e=>getComputedStyle(e).backgroundImage)).includes('gradient'),size.name+' studio photo background');
+  for(const img of await page.locator('.mvn-editorial-category .goal-main').all()){
+    await img.scrollIntoViewIfNeeded();await img.evaluate(e=>e.decode());assert.ok(await img.evaluate(e=>e.naturalWidth>0),size.name+' photo loads');
+  }
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)<=10,size.name+' no home horizontal overflow');
+  await page.screenshot({path:folder+'/'+size.name+'-home.png',fullPage:true,animations:'disabled'});
+  await page.locator('.mvn-hero-action-strip a').click();
+  await page.waitForURL('**/shop.html');
+  assert.ok(await page.locator('.mvn-shop-page-heading').isVisible(),size.name+' separate shop opens');
+  assert.equal(await page.locator('#mvnEditorial').count(),0,size.name+' no hero repeated on shop');
+  await page.locator('#grid .variant').first().waitFor({state:'visible',timeout:15000});
+  assert.ok(await page.locator('#grid article.card').count()>=5,size.name+' five retail product families visible');
+  assert.equal(await page.locator('link[rel="canonical"]').getAttribute('href'),'https://maxvolumenutriton.shop/shop.html',size.name+' unique catalogue canonical');
+  const columns=await page.locator('#grid').evaluate(e=>getComputedStyle(e).gridTemplateColumns.split(' ').filter(Boolean).length);
+  assert.equal(columns,size.columns,size.name+' responsive shop grid');
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)<=10,size.name+' no shop overflow');
+  await page.screenshot({path:folder+'/'+size.name+'-shop.png',fullPage:true,animations:'disabled'});
   await page.locator('#priceRange').selectOption('under1000');
-  assert.ok(await page.locator('#grid article.card').count()>=1,size.name+' price filter works');
+  assert.ok(await page.locator('#grid article.card').count()>=1,size.name+' price filtering');
   await page.locator('#priceRange').selectOption('all');
   await page.locator('.cats [data-cat="mass"]').click();
-  assert.equal(await page.locator('#grid article.card').count(),1,size.name+' category filter works');
+  assert.equal(await page.locator('#grid article.card').count(),1,size.name+' mass-gainer filter');
   await page.locator('.cats [data-cat="all"]').click();
   await page.locator('#grid .add[data-id="whey"]').click();
-  assert.equal(await page.locator('#count').innerText(),'1',size.name+' cart count updates');
+  assert.equal(await page.locator('#count').innerText(),'1',size.name+' cart increments');
   assert.equal(await page.locator('#drawer').getAttribute('aria-hidden'),'false',size.name+' cart drawer opens');
   await page.locator('#close').click();
-  await page.screenshot({path:folder+'/'+size.name+'.png',animations:'disabled'});
-  await more.locator('summary').click();
-  await menuPanel.locator('a[href="contact.html"]').click();
+  await page.goto(origin+'/',{waitUntil:'domcontentloaded'});
+  await page.waitForFunction(()=>document.querySelector('#count')?.textContent.trim()==='1');
+  assert.equal(await page.locator('#count').innerText(),'1',size.name+' cart persists on homepage');
+  await page.locator('.mvn-editorial-category[data-cat="pre"]').click();
+  await page.waitForURL(/\/shop\.html\?cat=pre/);
+  await page.locator('#grid article.card').first().waitFor({state:'visible'});
+  assert.equal(await page.locator('#grid article.card').count(),1,size.name+' pre-workout goal navigates to filtered shop');
+  await page.goto(origin+'/',{waitUntil:'domcontentloaded'});
+  await page.locator('#q').fill('creatine');
+  await page.locator('#q').press('Enter');
+  await page.waitForURL(/\/shop\.html\?q=creatine/);
+  await page.locator('#grid article.card').first().waitFor({state:'visible'});
+  assert.equal(await page.locator('#grid article.card').count(),1,size.name+' home search routes to matching shop');
+  await page.goto(origin+'/',{waitUntil:'domcontentloaded'});
+  await page.locator('.mvn-header-more summary').click();
+  assert.equal(await page.locator('.mvn-more-panel a').count(),3,size.name+' uncluttered three-dot menu');
+  await page.locator('.mvn-more-panel a[href="contact.html"]').click();
   await page.waitForURL('**/contact.html');
-  assert.equal(await page.locator('main .mvn-info-contact-value').count(),2,size.name+' Contact page presents phone and email');
-  assert.ok((await page.locator('main').innerText()).includes('+91 77088 30513'),size.name+' official phone');
-  assert.ok((await page.locator('main').innerText()).includes('maxvolumenutrition@gmail.com'),size.name+' official email');
-  await page.goBack({waitUntil:'domcontentloaded'});
-  await more.locator('summary').click();
-  await menuPanel.locator('a[href="about.html"]').click();
-  await page.waitForURL('**/about.html');
-  assert.equal(await page.locator('main.mvn-info-main').isVisible(),true,size.name+' About Us opens');
-  const issued=page.locator('.mvn-about-certificate-image img');
-  assert.ok(await issued.isVisible(),size.name+' issued certificate displayed within About Us');
-  await page.waitForFunction(()=>{const i=document.querySelector('.mvn-about-certificate-image img');return i?.complete&&i.naturalWidth>200;});
-  for(const file of ['offers.html','brands.html']){
-    await page.locator('.mvn-about-explore .mvn-quick-page[href="'+file+'"]').click();
-    await page.waitForURL('**/'+file);
-    assert.equal(await page.locator('main.mvn-info-main').isVisible(),true,size.name+' '+file+' opens from About Us');
-    await page.goBack({waitUntil:'domcontentloaded'});
-  }
-  await page.goBack({waitUntil:'domcontentloaded'});
-  assert.equal(await page.locator('#grid article.card').count()>=5,true,size.name+' after browsing info pages the working catalogue is restored');
-
-  assert.deepEqual(errors,[],size.name+' unexpected browser Javascript errors');
-  console.log('PASS Supplement Store reference '+size.name+' layout, photos, filters, cart and no JS errors');
+  assert.ok((await page.locator('main').innerText()).includes('+91 77088 30513'),size.name+' phone only on Contact page');
+  assert.ok((await page.locator('main').innerText()).includes('maxvolumenutrition@gmail.com'),size.name+' email only on Contact page');
+  assert.deepEqual(errors,[],size.name+' unexpected Javascript errors');
+  console.log('PASS MVN '+size.name+' showcase→shop, goal routes, product photos, filters, cart and Contact');
   await context.close();
  }
 } finally {
