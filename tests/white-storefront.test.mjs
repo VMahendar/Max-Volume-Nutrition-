@@ -46,7 +46,7 @@ test('homepage excludes demonstrably incorrect product photos and retains verifi
  assert.ok(existsSync(new URL('../data/image-assets/sturdy-watermelon-back.webp.b64',import.meta.url)),'isolated original back is stored in repo');
  assert.ok(app.includes('assets/sturdy-watermelon-front.webp'));
  assert.match(app,/3 kg · Double Rich Chocolate",price:2599,img:"assets\/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout\.webp"/,'3 kg must use its own verified jar photo');
- assert.match(app,/5 kg · Bucket",price:3499,img:"assets\\/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout\\.webp/,'5 kg must use its own bucket cutout');
+ assert.match(app,/5 kg · Bucket",price:3499,img:"assets\/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout\.webp/,'5 kg must use its own bucket cutout');
  assert.match(app,/Chocolate · 5 lbs.*?img:null/,'Chocolate must not use Coffee photo');
  assert.match(app,/Blueberry · 250 g.*?img:\"https:\/\/unicornproseries.com\/wp-content\/uploads\/2026\/05\/Pro-Creatine-Blueberry-1.png\"/,'Blueberry must use the official Blueberry photo');
 });
