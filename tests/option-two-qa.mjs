@@ -41,7 +41,8 @@ try {
   assert.ok(await page.locator('#mvnEditorial').isVisible(),size.name+' complete group banner visible');
   const group=page.locator('.mvn-owner-banner-img');
   assert.equal(await group.getAttribute('src'),'assets/mvn-homepage-banner-20261115.webp');
-  await page.waitForFunction(()=>{const i=document.querySelector('.mvn-owner-banner-img');return i?.complete&&i.naturalWidth===1672&&i.naturalHeight===941;});
+  await page.waitForFunction(()=>{const i=document.querySelector('.mvn-owner-banner-img');return i?.complete&&[768,1152,1672].includes(i.naturalWidth)&&i.naturalHeight>300;});
+  assert.ok((await group.evaluate(i=>i.currentSrc)).includes('mvn-homepage-banner-20261115'),size.name+' selected authentic responsive banner');
   assert.equal(await page.locator('.mvn-editorial-promo').count(),2,'two feature promotions retained');
   assert.equal(await page.locator('.mvn-editorial-category').count(),3,'three original shop-by-goal product cards');
   assert.equal(await page.locator('#shop').isVisible(),false,size.name+' catalogue hidden on homepage');
@@ -51,7 +52,7 @@ try {
   assert.equal(await page.locator('.mvn-header-more a[href="contact.html"]').count(),1,size.name+' Contact still opens its own page');
   const goalCreatine=page.locator('.mvn-editorial-category-creatine img.goal-main');
   const promoCreatine=page.locator('.mvn-editorial-promo-creatine > img');
-  const genuinePhoto='https://revakanya.com/assets/imgs/Pro%20Creatine%20Blueberry.png';
+  const genuinePhoto='assets/mvn-creatine-blueberry-official-250g.webp';
   assert.equal(await goalCreatine.getAttribute('src'),genuinePhoto,size.name+' correct Blueberry 250 g photo in goal card');
   assert.equal(await promoCreatine.getAttribute('src'),genuinePhoto,size.name+' same correct original photo in promotion');
   await promoCreatine.scrollIntoViewIfNeeded();
