@@ -32,7 +32,7 @@ test('home presents original supplements once; shopping catalogue opens on a sep
 
 test('goal photography is grounded and source product packs remain unchanged',()=>{
  assert.equal((home.match(/class="mvn-editorial-category mvn-editorial-category-/g)||[]).length,3);
- assert.match(home,/src="assets\/mvn-banner-20261115-no-logo-no-pineapple\.webp"/);
+ assert.match(home,/src="assets\/mvn-homepage-banner-20261115\.webp"/);
  assert.match(home,/src="https:\/\/revakanya\.com\/assets\/imgs\/Pro%20Creatine%20Blueberry\.png"/,'genuine manufacturer Blueberry pack used in homepage');
  assert.match(home,/src="assets\/sturdy-watermelon-front-card\.webp"/);
  assert.match(css,/\.mvn-theme-goal-art::after/,'grounded floor shadows');
