@@ -43,6 +43,14 @@ const $=id=>document.getElementById(id);
 const safe=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const money=n=>"₹"+Number(n).toLocaleString("en-IN");
 let cat="all",q="",cart={},mode="retail";
+const isShowcaseHome=document.body.classList.contains('mvn-showcase-home');
+const isFullShop=document.body.classList.contains('mvn-full-shop');
+const shopRouteParams=isFullShop?new URLSearchParams(location.search):null;
+if(isFullShop){
+ const requestedCat=shopRouteParams.get('cat');
+ if(['all','whey','mass','pre','creatine','vitamins'].includes(requestedCat))cat=requestedCat;
+ q=(shopRouteParams.get('q')||'').slice(0,120);
+}
 let priceRange="all",recent=[],appliedOffer=null,availableOffers=[];
 const offerSurface=document.body.classList.contains("app-store")?"app":"web";
 const cartSignature=()=>JSON.stringify(Object.entries(cart).sort().map(([key,qty])=>[key,qty,getItem(key)?.v.price]));
@@ -384,10 +392,23 @@ async function loadOffers(){
 loadOffers();
 window.addEventListener("focus",()=>void loadOffers());
 $("bag").onclick=openBag;if($("floatingCart"))$("floatingCart").onclick=openBag;$("close").onclick=closeBag;$("shade").onclick=closeBag;
-document.querySelectorAll("[data-cat]").forEach(x=>x.onclick=e=>{e.preventDefault();setCat(x.dataset.cat)});
+document.querySelectorAll("[data-cat]").forEach(x=>x.onclick=e=>{
+ e.preventDefault();
+ if(isShowcaseHome){
+  const category=['all','whey','mass','pre','creatine','vitamins'].includes(x.dataset.cat)?x.dataset.cat:'all';
+  location.assign('shop.html?cat='+encodeURIComponent(category));
+  return;
+ }
+ setCat(x.dataset.cat);
+});
 $("sort").onchange=render;
-$("search").onsubmit=e=>{e.preventDefault();q=$("q").value;cat="all";render();$("shop").scrollIntoView({behavior:"smooth"})};
-$("q").oninput=e=>{q=e.target.value;render()};
+$("search").onsubmit=e=>{
+ e.preventDefault();
+ if(isShowcaseHome){location.assign('shop.html?q='+encodeURIComponent($("q").value.trim()));return;}
+ q=$("q").value;cat="all";render();$("shop").scrollIntoView({behavior:"smooth"});
+};
+if(isFullShop&&q)$("q").value=q;
+$("q").oninput=e=>{if(isShowcaseHome)return;q=e.target.value;render()};
 for(const id of ['customerName','customerAddress','customerCity','customerState'])$(id).addEventListener('input',()=>$(id).setCustomValidity(''));
 $("checkoutFields").addEventListener("input",()=>{retailLeadKey=crypto.randomUUID()});
 $("checkoutFields").onsubmit=e=>{e.preventDefault();retailEnquiry()};
