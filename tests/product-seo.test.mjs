@@ -26,10 +26,22 @@ test('rich product snippet uses real catalog retail offers and visible matching 
  assert.ok(whey.content.includes('₹5,500'));
  assert.ok(whey.content.includes('No published customer reviews yet'));
  const mass=buildProductFragments('/nitro-mass.html',catalogue,[]);
- assert.equal(schema(mass).offers['@type'],'Offer');
- assert.equal(schema(mass).offers.price,'3499.00','Offer must refer to the displayed 5 kg image/pack');
- assert.ok(mass.content.includes('₹2,599'));
- assert.ok(mass.content.includes('₹3,499'));
+ const group=schema(mass);
+ assert.equal(group['@type'],'ProductGroup');
+ assert.equal(group.productGroupID,'nitro-mass');
+ assert.deepEqual(group.variesBy,['https://schema.org/size']);
+ assert.deepEqual(group.hasVariant.map(v=>v.sku),['mass-3kg','mass-5kg']);
+ assert.deepEqual(group.hasVariant.map(v=>v.offers.price),['2599.00','3499.00']);
+ assert.deepEqual(group.hasVariant.map(v=>v.offers.url),[
+  'https://maxvolumenutriton.shop/nitro-mass.html?pack=3kg',
+  'https://maxvolumenutriton.shop/nitro-mass.html?pack=5kg'
+ ]);
+ assert.ok(!group.aggregateRating,'Do not invent Nitro Mass reviews');
+ assert.ok(!group.hasVariant.some(v=>v.offers.availability),'Do not invent Nitro stock');
+ assert.ok(mass.gallery.includes('₹2,599'));
+ assert.ok(mass.gallery.includes('₹3,499'));
+ assert.ok(mass.gallery.includes('mass-3kg-double-rich-chocolate-cutout.webp'));
+ assert.ok(mass.gallery.includes('mass-5kg-double-rich-chocolate-cutout.webp'));
 });
 
 test('only approved genuine reviews are shown and reflected in JSON-LD',()=>{
@@ -60,7 +72,7 @@ test('if no real price and no approved review, do not emit invalid Product schem
 
 test('public product pages host a single server rendered snippet and review interface',()=>{
  const server=readFileSync('server.mjs','utf8');
- assert.ok(server.includes('buildProductFragments(u.pathname,C.catalogue(null),approved)'));
+ assert.ok(server.includes("buildProductFragments(u.pathname,C.catalogue(null),approved,{selectedPack:u.searchParams.get('pack')})"));
  assert.ok(server.includes("r.status='approved'"));
  for(const path of Object.keys(PRODUCT_PAGE_IDS)){
   const html=readFileSync('public'+path,'utf8');
@@ -70,6 +82,19 @@ test('public product pages host a single server rendered snippet and review inte
   assert.ok(html.includes('/product-reviews.css?v=20261115-1'),path+' responsive review stylesheet missing');
   assert.ok(!/<script type="application\/ld\+json">\s*\{"@context":"https:\/\/schema.org","@type":"Product"/.test(html),'Do not publish stale static Product offers');
  }
+});
+
+test('Nitro pack URL preselection picks matching photo, price and enquiry without changing canonical',()=>{
+ const pack3=buildProductFragments('/nitro-mass.html',catalogue,[],{selectedPack:'3kg'});
+ const pack5=buildProductFragments('/nitro-mass.html',catalogue,[],{selectedPack:'5kg'});
+ assert.ok(pack3.gallery.includes('nitro-pack-card is-selected&quot;')===false);
+ assert.match(pack3.gallery,/nitro-pack-card is-selected" id="nitro-3kg"/);
+ assert.match(pack5.gallery,/nitro-pack-card is-selected" id="nitro-5kg"/);
+ assert.ok(pack3.gallery.includes('Enquire about 3 kg'));
+ assert.equal(schema(pack3).url,'https://maxvolumenutriton.shop/nitro-mass.html');
+ const page=readFileSync('public/nitro-mass.html','utf8');
+ assert.ok(page.includes('<!-- MVN_NITRO_GALLERY -->'));
+ assert.ok(page.includes('rel="canonical" href="https://maxvolumenutriton.shop/nitro-mass.html"'));
 });
 
 test('static assets gain caching but protected staging and HTML remain uncached',()=>{
