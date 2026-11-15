@@ -70,13 +70,15 @@ test('Google Image sitemap points to approved public product photos only',()=>{
   const staging=readFileSync('staging.mjs','utf8');
   const imagePages=[
     ['/potency-whey.html','/assets/potency-whey-coffee-5lb.webp'],
-    ['/nitro-mass.html','/assets/Screenshot_2026_1103_003852.jpg'],
+    ['/nitro-mass.html','/assets/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout.webp'],
+    ['/nitro-mass.html','/assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp'],
     ['/sturdy-pre-workout.html','/assets/sturdy-watermelon-front.webp'],
     ['/musclevite-multivitamin.html','/assets/musclevite-front.webp']
   ];
   assert.ok(sitemap.includes('xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"'),'missing Google image sitemap namespace');
   for(const [path,image] of imagePages){
-    assert.ok(page(path).includes('src="'+image+'"'),path+' does not display declared product photo');
+    if(path==='/nitro-mass.html')assert.ok(page(path).includes('<!-- MVN_NITRO_GALLERY -->'),'Nitro images must be server-rendered from matching catalogue variants');
+    else assert.ok(page(path).includes('src="'+image+'"'),path+' does not display declared product photo');
     assert.ok(sitemap.includes('<image:loc>'+domain+image+'</image:loc>'),path+' missing search image entry');
     assert.ok(staging.includes("'"+image+"'"),path+' image is still marked noindex by staging');
   }

@@ -409,10 +409,11 @@ if(!['GET','HEAD'].includes(req.method))fail(405,'Method not allowed.');const pa
 if(PRODUCT_PAGE_IDS[u.pathname]){
  const productId=PRODUCT_PAGE_IDS[u.pathname].id;
  const approved=db.prepare("SELECT r.rating,r.title,r.body,r.created,u.name FROM product_reviews r JOIN users u ON u.id=r.user_id WHERE r.product_id=? AND r.status='approved' ORDER BY r.created DESC").all(productId).map(r=>({...r,status:'approved'}));
- const productHtml=buildProductFragments(u.pathname,C.catalogue(null),approved);
+ const productHtml=buildProductFragments(u.pathname,C.catalogue(null),approved,{selectedPack:u.searchParams.get('pack')});
  if(productHtml){
   const html=file.toString('utf8')
     .replace('<!-- MVN_PRODUCT_SEO -->',productHtml.schema)
+    .replace('<!-- MVN_NITRO_GALLERY -->',productHtml.gallery||'')
     .replace('<!-- MVN_PRODUCT_DETAILS -->',productHtml.content);
   file=Buffer.from(html,'utf8');
  }
