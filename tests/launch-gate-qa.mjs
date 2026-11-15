@@ -13,9 +13,18 @@ try{
   const page=await browser.newPage({viewport:{width:390,height:844}});
   await page.addInitScript(()=>{const match=window.matchMedia.bind(window);window.matchMedia=q==='(display-mode: standalone)'?{...match(q),matches:true,addListener(){},removeListener(){},addEventListener(){},removeEventListener(){}}:match(q);});
   await page.clock.install({time:new Date('2026-11-08T05:29:50Z')});await page.goto(base+path);
-  await page.locator('#shop').waitFor();
-  assert.equal(await page.evaluate(()=>document.documentElement.classList.contains('mvn-prelaunch-pending')),false,'shopping interface must not blur before QR promotion ends');
-  assert.equal(await page.locator('#shop').evaluate(el=>el.inert),false,'shopping section remains interactive');
+  await page.locator('#shop, #mvnEditorial').first().waitFor({state:'attached'});
+  const shopVisible=await page.locator('#shop').isVisible();
+  const heroVisible=await page.locator('#mvnEditorial').isVisible();
+  console.log('LAUNCH_GATE_ROUTE',path,page.url(),{shopVisible,heroVisible});
+  assert.equal(await page.evaluate(()=>document.documentElement.classList.contains('mvn-prelaunch-pending')),false,'shopping pages must not blur before QR promotion ends');
+  if(shopVisible){
+   assert.equal(await page.locator('#shop').evaluate(el=>el.inert),false,'visible collection is interactive');
+  }else{
+   assert.equal(path,'/mobile-app.html','Only the paused mobile-app route may lead back to the showcase');
+   assert.equal(heroVisible,true,'paused mobile app safely falls back to accessible showcase');
+   assert.equal(await page.locator('.mvn-hero-action-strip a[href="shop.html"]').count(),1,'fallback showcase links to working All Products page');
+  }
   assert.equal(await page.locator('#mvn-opening-countdown').count(),0,'promotional countdown must not cover storefront');
   await page.close();
  }
