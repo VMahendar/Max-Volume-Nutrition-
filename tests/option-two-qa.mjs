@@ -86,9 +86,9 @@ try {
   assert.ok(await page.locator('.mvn-advance-welcome-visual img').isVisible(),size.name+' intro product photo visible');
   if(size.name==='desktop'){
     assert.ok(campaignGeometry.hero.w/campaignGeometry.hero.h>1.4,'desktop slider hero stays landscape');
-    assert.ok(campaignGeometry.serviceCards[0].w>200,'desktop has four spacious services');
+    assert.ok(campaignGeometry.serviceCards[0].width>200,'desktop has four spacious services');
   }else{
-    assert.ok(campaignGeometry.serviceCards[0].w>110,'mobile service tiles remain readable');
+    assert.ok(campaignGeometry.serviceCards[0].width>110,'mobile service tiles remain readable');
   }
   await page.screenshot({path:folder+'/'+size.name+'-campaign.png',animations:'disabled'});
   await page.locator('.mvn-editorial-category[data-cat="mass"]').click();
