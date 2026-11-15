@@ -70,3 +70,21 @@ test('Blueberry and Cranberry images are never mixed',()=>{
  assert.match(app,/name:"Pro Creatine",cat:"creatine",featuredIndex:0/,'Blueberry is selected first');
  assert.match(app,/label:"Cranberry · 250 g"/,'Cranberry remains an independent pack option');
 });
+
+// Keep the top navigation, existing cart/filter JS hooks, and product grid
+// while making the in-page shopping controls less crowded on phone screens.
+test('shop only uses dark-blue brand panel, compact collection header and hidden duplicate filters',()=>{
+ const theme=readFileSync('public/mvn-shop-cleanup.css','utf8');
+ assert.match(shop,/mvn-shop-hero-logo/,'official logo appears in shop blue header');
+ assert.match(shop,/src="max-volume-logo-wide.png"/,'reuse existing official logo asset');
+ assert.match(shop,/mvn-shop-cleanup\.css\?v=20261115-dark-blue-1/);
+ assert.match(theme,/#07162f/,'shop hero uses dark blue palette');
+ assert.match(theme,/#shop > \.section-title/,'collection title has the shop-only blue treatment');
+ assert.match(theme,/#shop \.cats,/,'remove duplicate category chip row visually');
+ assert.match(theme,/\.productbar \.sort-label/,'hide sort dropdown visually');
+ assert.match(shop,/id="sort"/,'preserve sorting hook for JS');
+ assert.match(shop,/class="cats"/,'preserve category hook for JS');
+ assert.match(shop,/id="grid"/,'preserve product catalogue');
+ assert.match(shop,/class="mvn-theme-main-nav"/,'preserve top navigation');
+ assert.doesNotMatch(home,/mvn-shop-cleanup\.css/,'homepage styling unchanged');
+});
