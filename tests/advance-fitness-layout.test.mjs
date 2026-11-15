@@ -6,7 +6,8 @@ test('supplement store screenshot reference drives the actual homepage structure
  const html=readFileSync('public/index.html','utf8');
  const css=readFileSync('public/mvn-supplement-store-reference.css','utf8');
  assert.match(html,/mvn-advance-layout mvn-supplement-theme/);
- assert.match(html,/mvn-supplement-store-reference\.css\?v=20261115-ref1/);
+ assert.match(html,/mvn-shopping-bundle-20261115\.css\?v=1/,"approved reference CSS now ships inside one bundle");
+ assert.match(readFileSync("public/mvn-shopping-bundle-20261115.css","utf8"),/mvn-supplement-store-reference\.css/);
  assert.match(html,/class="mvn-theme-categories"/);
  assert.match(html,/class="mvn-theme-main-nav"/);
  assert.doesNotMatch(html,/class="mvn-theme-slider-copy"/, "hero pack photo must remain unobstructed");
