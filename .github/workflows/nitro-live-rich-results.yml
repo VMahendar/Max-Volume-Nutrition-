@@ -1,0 +1,69 @@
+name: Verify live Nitro Mass Google ProductGroup
+on:
+  pull_request:
+    branches: [main]
+    paths: ['.github/workflows/nitro-live-rich-results.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Read live MVN pages and images without editing the store
+        run: |
+          node --input-type=module <<'NODE'
+          import assert from 'node:assert/strict';
+          const domain='https://maxvolumenutriton.shop';
+          async function get(path){
+           let response;
+           for(let attempt=0;attempt<3;attempt++){
+            try{response=await fetch(domain+path,{signal:AbortSignal.timeout(20000)});if(response.ok)break;}catch(e){if(attempt===2)throw e;}
+            await new Promise(r=>setTimeout(r,1200));
+           }
+           assert.equal(response.status,200,path+' status');
+           return response;
+          }
+          const page='/nitro-mass.html';
+          const r=await get(page),html=await r.text();
+          assert.ok(html.includes('rel="canonical" href="'+domain+page+'"'),'SEO canonical');
+          assert.ok(html.includes('Nitro Mass Gainer 3 kg &amp; 5 kg'),'SEO title');
+          assert.ok(html.includes('Customer ratings &amp; reviews'),'review section');
+          assert.ok(!html.includes('<!-- MVN_NITRO_GALLERY -->'),'gallery must be rendered, not placeholder');
+          const blocks=[...html.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi)].map(m=>JSON.parse(m[1]));
+          const group=blocks.find(x=>x['@type']==='ProductGroup');
+          assert.ok(group,'server must provide ProductGroup JSON-LD');
+          assert.equal(group.productGroupID,'nitro-mass');
+          assert.deepEqual(group.variesBy,['https://schema.org/size']);
+          assert.deepEqual(group.hasVariant.map(v=>v.sku),['mass-3kg','mass-5kg']);
+          assert.deepEqual(group.hasVariant.map(v=>v.offers.price),['2599.00','3499.00']);
+          assert.ok(group.hasVariant.every(v=>v.image.startsWith(domain+'/assets/')));
+          assert.ok(group.hasVariant.every(v=>v.offers.priceCurrency==='INR'));
+          assert.ok(group.hasVariant.every(v=>!v.offers.availability),'do not assert unverified stock');
+          const catalog=await (await get('/api/retail/catalog')).json();
+          const nitro=catalog.products.find(p=>p.id==='nitro-mass');
+          for(const v of group.hasVariant){
+           const variant=nitro.variants.find(p=>p.id===v.sku);
+           assert.equal(v.offers.price,(variant.pricePaise/100).toFixed(2),'Live price must match schema');
+           const path=new URL(v.image).pathname;
+           const img=await get(path);
+           assert.ok(img.headers.get('content-type')?.includes('image/webp'),path+' correct webp type');
+           const bytes=(await img.arrayBuffer()).byteLength;
+           assert.ok(bytes>20000&&bytes<500000,path+' reasonable original product cutout size');
+           console.log('IMAGE_OK',path,bytes,'bytes');
+          }
+          const selected3=await (await get(page+'?pack=3kg')).text();
+          const selected5=await (await get(page+'?pack=5kg')).text();
+          assert.ok(selected3.includes('nitro-pack-card is-selected" id="nitro-3kg"'));
+          assert.ok(selected5.includes('nitro-pack-card is-selected" id="nitro-5kg"'));
+          const sitemap=await (await get('/sitemap.xml')).text();
+          for(const v of group.hasVariant){
+           assert.ok(sitemap.includes('<image:loc>'+v.image+'</image:loc>'),'Image sitemap missing '+v.image);
+          }
+          console.log('LIVE_NITRO_PASS',{canonical:page,variants:group.hasVariant.map(v=>({sku:v.sku,price:v.offers.price,image:v.image})),querySelection:true,reviewSection:true});
+          NODE
