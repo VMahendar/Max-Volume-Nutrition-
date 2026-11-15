@@ -1,0 +1,61 @@
+name: Mobile Performance Lighthouse Verification
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/mobile-performance-verification.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inspect:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Install Lighthouse
+        run: npm install --no-save --package-lock=false lighthouse@13.5.0
+      - name: Inspect Chrome and live domain
+        run: |
+          command -v google-chrome || command -v chromium
+          curl -sSIL --max-time 25 https://maxvolumenutriton.shop/ | head -25
+      - name: Audit live homepage as mobile
+        run: |
+          mkdir -p reports
+          npx lighthouse https://maxvolumenutriton.shop/ \
+            --chrome-path="$(command -v google-chrome || command -v chromium)" \
+            --chrome-flags="--headless --no-sandbox --disable-dev-shm-usage" \
+            --only-categories=performance,accessibility \
+            --output=json --output-path=reports/mobile-current.json --quiet
+      - name: Print full failing audits
+        if: always()
+        run: |
+          node --input-type=module <<'NODE'
+          import {readFileSync,existsSync} from 'node:fs';
+          const path='reports/mobile-current.json';
+          if(!existsSync(path)){console.log('No Lighthouse JSON produced');process.exit(0);}
+          const r=JSON.parse(readFileSync(path,'utf8'));
+          console.log('LIGHTHOUSE VERSION',r.lighthouseVersion);
+          console.log('FINAL URL',r.finalDisplayedUrl);
+          for(const [id,c] of Object.entries(r.categories)){
+            console.log('\nCATEGORY',id,'SCORE',c.score,'MODE',c.scoreDisplayMode);
+            for(const ref of c.auditRefs){
+              const a=r.audits[ref.id];
+              if(!a)continue;
+              if(id==='agentic-browsing'||(a.score!==null&&a.score<1&&ref.weight>0)||a.id.includes('largest-contentful-paint')||a.id.includes('cumulative-layout-shift')){
+                const details=a.details?.items?.slice(0,6);
+                console.log('AUDIT',JSON.stringify({id:a.id,title:a.title,score:a.score,mode:a.scoreDisplayMode,numericValue:a.numericValue,displayValue:a.displayValue,description:a.description,items:details}).slice(0,4500));
+              }
+            }
+          }
+          NODE
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mobile-performance-lighthouse
+          path: reports/agentic-mobile.json
+          if-no-files-found: warn
+          retention-days: 2
