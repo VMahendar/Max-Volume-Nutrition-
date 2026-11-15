@@ -33,7 +33,7 @@ test('home presents original supplements once; shopping catalogue opens on a sep
 test('goal photography is grounded and source product packs remain unchanged',()=>{
  assert.equal((home.match(/class="mvn-editorial-category mvn-editorial-category-/g)||[]).length,3);
  assert.match(home,/src="assets\/mvn-homepage-banner-20261115\.webp"/);
- assert.match(home,/src="https:\/\/revakanya\.com\/assets\/imgs\/Pro%20Creatine%20Blueberry\.png"/,'genuine manufacturer Blueberry pack used in homepage');
+ assert.match(home,/src="assets\/mvn-creatine-blueberry-official-250g\.webp"/,'genuine manufacturer Blueberry pack used in homepage');
  assert.match(home,/src="assets\/sturdy-watermelon-front-card\.webp"/);
  assert.match(css,/\.mvn-theme-goal-art::after/,'grounded floor shadows');
  assert.match(css,/\.mvn-editorial-promo > img/,'right promo pack is resized safely');
@@ -63,8 +63,8 @@ test('homepage has no large multi-column footer; essential links live on separat
 });
 test('Blueberry and Cranberry images are never mixed',()=>{
  const product=readFileSync('public/pro-creatine.html','utf8');
- const original='https://revakanya.com/assets/imgs/Pro%20Creatine%20Blueberry.png';
- assert.ok((home.match(/Pro%20Creatine%20Blueberry\.png/g)||[]).length===2,'the home promo and goal show the same Blueberry pack');
+ const original='assets/mvn-creatine-blueberry-official-250g.webp';
+ assert.ok((home.match(/mvn-creatine-blueberry-official-250g\.webp/g)||[]).length===2,'the home promo and goal show the same Blueberry pack');
  assert.ok(product.includes(original),'product details use the same official Blueberry pack');
  assert.ok(app.includes(original),'Blueberry retail option uses that pack');
  assert.match(app,/name:"Pro Creatine",cat:"creatine",featuredIndex:0/,'Blueberry is selected first');

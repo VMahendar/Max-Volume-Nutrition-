@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 test('screenshot reference maintains a consistent scrolling storefront without duplicated Whey panels',()=>{
  const html=readFileSync('public/index.html','utf8'),css=readFileSync('public/mvn-supplement-store-reference.css','utf8');
- assert.match(html,/mvn-supplement-store-reference\.css\?v=20261115-ref1/);
+ assert.match(html,/mvn-shopping-bundle-20261115\.css\?v=1/);
  assert.match(html,/SHOP BY <em>GOAL<\/em>/);
  assert.equal((html.match(/class="mvn-theme-goal-art"/g)||[]).length,3);
  assert.doesNotMatch(html,/class="mvn-advance-welcome"/,'no redundant large product/promo panel');
@@ -19,5 +19,5 @@ test('five product families, filters, cart and WhatsApp remain discoverable',()=
  for(const v of ['id="grid"','id="sort"','id="priceRange"','id="collectionTitle"','id="activeFilters"','id="bag"','id="drawer"','id="checkoutFields"','id="send"'])assert.ok(html.includes(v),'retail hook '+v);
  for(const src of ['mvn-hero-whey-cutout-card.webp','sturdy-watermelon-front-card.webp','musclevite-front.webp'])assert.ok(html.includes(src),'real product imagery '+src);
  assert.match(html,/assets\/mvn-homepage-banner-20261115\.webp/);
- assert.match(html,/Pro%20Creatine%20Blueberry\.png/,'original Blueberry pack replaces Cranberry illustration on homepage');
+ assert.match(html,/mvn-creatine-blueberry-official-250g\.webp/,'original Blueberry pack served as optimized same-origin WebP');
 });

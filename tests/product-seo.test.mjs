@@ -100,7 +100,10 @@ test('Nitro pack URL preselection picks matching photo, price and enquiry withou
 test('static assets gain caching but protected staging and HTML remain uncached',()=>{
  const server=readFileSync('server.mjs','utf8');
  assert.ok(server.includes("if(process.env.STAGING_MODE!=='true')"));
- assert.ok(server.includes('max-age=3600'));
+ assert.ok(server.includes('max-age=604800'),'public static media and versioned CSS get longer cache lifetimes');
+ assert.ok(server.includes('max-age=2592000'),'dated static media and icons get month-long cache');
+ assert.ok(server.includes('Content-Encoding'),'Brotli/Gzip response compression remains enabled');
+ assert.ok(server.includes('Vary'),'correct CDN vary semantics');
  assert.ok(server.includes('must-revalidate'));
  assert.ok(server.includes("res.setHeader('Cache-Control','no-store')"));
 });

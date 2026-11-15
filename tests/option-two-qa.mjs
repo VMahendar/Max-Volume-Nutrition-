@@ -38,10 +38,22 @@ try {
 
   const homeResponse=await page.goto(origin+'/',{waitUntil:'domcontentloaded'});
   assert.equal(homeResponse.status(),200,size.name+' home loads');
+  if(size.name==='desktop'){
+    assert.match(homeResponse.headers()['cache-control']||'',/no-store/,'personalized HTML remains uncached');
+    const stylesheet=await page.request.get(origin+'/mvn-shopping-bundle-20261115.css?v=1',{headers:{'Accept-Encoding':'br'}});
+    assert.equal(stylesheet.status(),200,'bundled CSS served');
+    assert.match(stylesheet.headers()['cache-control']||'',/max-age=604800/,'versioned public CSS cached for one week');
+    assert.match(stylesheet.headers()['content-encoding']||'',/br/,'CSS transfers via Brotli');
+    assert.match(stylesheet.headers()['vary']||'',/Accept-Encoding/,'compression variants cache safely');
+    const media=await page.request.head(origin+'/assets/mvn-homepage-banner-20261115-768.webp');
+    assert.equal(media.status(),200,'responsive hero exists on Render');
+    assert.match(media.headers()['cache-control']||'',/max-age=2592000/,'dated original image has long-lived cache');
+  }
   assert.ok(await page.locator('#mvnEditorial').isVisible(),size.name+' complete group banner visible');
   const group=page.locator('.mvn-owner-banner-img');
   assert.equal(await group.getAttribute('src'),'assets/mvn-homepage-banner-20261115.webp');
-  await page.waitForFunction(()=>{const i=document.querySelector('.mvn-owner-banner-img');return i?.complete&&i.naturalWidth===1672&&i.naturalHeight===941;});
+  await page.waitForFunction(()=>{const i=document.querySelector('.mvn-owner-banner-img');return i?.complete&&i.naturalWidth>300&&i.naturalHeight>160&&i.currentSrc.includes('mvn-homepage-banner-20261115');});
+  assert.ok((await group.evaluate(i=>i.currentSrc)).includes('mvn-homepage-banner-20261115'),size.name+' selected authentic responsive banner');
   assert.equal(await page.locator('.mvn-editorial-promo').count(),2,'two feature promotions retained');
   assert.equal(await page.locator('.mvn-editorial-category').count(),3,'three original shop-by-goal product cards');
   assert.equal(await page.locator('#shop').isVisible(),false,size.name+' catalogue hidden on homepage');
@@ -51,7 +63,7 @@ try {
   assert.equal(await page.locator('.mvn-header-more a[href="contact.html"]').count(),1,size.name+' Contact still opens its own page');
   const goalCreatine=page.locator('.mvn-editorial-category-creatine img.goal-main');
   const promoCreatine=page.locator('.mvn-editorial-promo-creatine > img');
-  const genuinePhoto='https://revakanya.com/assets/imgs/Pro%20Creatine%20Blueberry.png';
+  const genuinePhoto='assets/mvn-creatine-blueberry-official-250g.webp';
   assert.equal(await goalCreatine.getAttribute('src'),genuinePhoto,size.name+' correct Blueberry 250 g photo in goal card');
   assert.equal(await promoCreatine.getAttribute('src'),genuinePhoto,size.name+' same correct original photo in promotion');
   await promoCreatine.scrollIntoViewIfNeeded();
@@ -73,12 +85,14 @@ try {
   assert.equal(columns,size.columns,size.name+' responsive shop grid');
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth)<=10,size.name+' no shop overflow');
   await page.screenshot({path:folder+'/'+size.name+'-shop.png',fullPage:true,animations:'disabled'});
-  await page.locator('#priceRange').selectOption('under1000');
+  // The shop's approved compact design hides redundant price/category controls.
+  // Exercise the underlying price filter without asking Playwright to click a hidden select.
+  await page.locator('#priceRange').evaluate(el=>{el.value='under1000';el.dispatchEvent(new Event('change',{bubbles:true}));});
   assert.ok(await page.locator('#grid article.card').count()>=1,size.name+' price filtering');
-  await page.locator('#priceRange').selectOption('all');
-  await page.locator('.cats [data-cat="mass"]').click();
-  assert.equal(await page.locator('#grid article.card').count(),1,size.name+' mass-gainer filter');
-  await page.locator('.cats [data-cat="all"]').click();
+  await page.locator('#priceRange').evaluate(el=>{el.value='all';el.dispatchEvent(new Event('change',{bubbles:true}));});
+  await page.locator('.mvn-theme-main-nav [data-cat="mass"]').click();
+  assert.equal(await page.locator('#grid article.card').count(),1,size.name+' visible main-nav mass-gainer filter');
+  await page.locator('.mvn-theme-main-nav [data-cat="all"]').click();
   await page.locator('#grid .add[data-id="whey"]').click();
   assert.equal(await page.locator('#count').innerText(),'1',size.name+' cart increments');
   assert.equal(await page.locator('#drawer').getAttribute('aria-hidden'),'false',size.name+' cart drawer opens');
