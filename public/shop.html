@@ -285,6 +285,149 @@ body.retail-home.mvn-full-shop .mvn-compact-footer-links a:focus-visible {
 }
 </style>
 <link rel="stylesheet" href="/mvn-shop-cleanup.css?v=20261115-dark-blue-1">
+
+<style id="mvn-compact-dark-blue-shop-v2">
+/* Scoped ONLY to dedicated shop: retain Home nav and all cart/filter app hooks. */
+body.retail-home.mvn-full-shop:not(.app-store) .storehead{
+ background:#091e3a!important;border-bottom:1px solid #2b5078!important;
+ grid-template-columns:minmax(130px,185px) minmax(170px,1fr) max-content!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) .storehead .mvn-theme-categories{
+ display:none!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) .storehead .brand-identity{
+ grid-column:1!important;grid-row:1!important;justify-content:flex-start!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) .storehead .header-search{
+ grid-column:2!important;grid-row:1!important;width:100%!important;min-width:0!important;margin:0!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions{
+ grid-column:3!important;grid-row:1!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>a.account-link,
+body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>button#bag{
+ background:#174474!important;border:1px solid #51749b!important;color:#fff!important;
+ border-radius:6px!important;min-width:105px!important;min-height:44px!important;
+ padding:0 12px!important;gap:7px!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>a.account-link>span,
+body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>button#bag>span{
+ display:inline!important;visibility:visible!important;
+ color:#fff!important;font-size:12px!important;font-weight:800!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions :is(a.account-link,button#bag):is(:hover,:focus-visible){
+ background:#235b93!important;border-color:#8dbbe5!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) .storehead .mvn-header-more summary{
+ background:#123657!important;border-color:#51749b!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) .mvn-shop-page-heading{
+ background:linear-gradient(112deg,#071a32,#0d3057 83%)!important;
+ border-bottom:3px solid #e8632a!important;
+}
+/* Two coherent dark-blue headings instead of repeated white panels. */
+body.retail-home.mvn-full-shop:not(.app-store) main#shop > .section-title{
+ background:#0c2a4d!important;color:#fff!important;
+ padding:21px clamp(16px,2.5vw,28px) 16px!important;
+ border:0!important;border-radius:6px 6px 0 0!important;
+ margin:0!important;box-sizing:border-box!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) main#shop > .section-title .eyebrow{
+ color:#b9d3ee!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) main#shop > .section-title h2{
+ color:#fff!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) main#shop > .section-title p{
+ color:#d4e3ef!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) main#shop > .productbar{
+ background:#0c2a4d!important;background-image:none!important;color:#fff!important;
+ margin:0 0 20px!important;min-height:54px!important;
+ padding:6px clamp(16px,2.5vw,28px) 18px!important;
+ border:0!important;border-top:1px solid #305477!important;
+ border-radius:0 0 6px 6px!important;box-sizing:border-box!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) main#shop .productbar h3{
+ color:#fff!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) main#shop .productbar .eyebrow,
+body.retail-home.mvn-full-shop:not(.app-store) main#shop .productbar #resultText{
+ color:#b9d3ee!important;
+}
+/* Hide duplicate category chips, goal/price sidebar, and sort UI.
+   Keep their underlying HTML controls so existing app.js cannot break. */
+body.retail-home.mvn-full-shop:not(.app-store) main#shop .cats,
+body.retail-home.mvn-full-shop:not(.app-store) main#shop .productbar .sort-label,
+body.retail-home.mvn-full-shop:not(.app-store) main#shop .collection-filters{
+ display:none!important;
+}
+body.retail-home.mvn-full-shop:not(.app-store) main#shop .collection-results{
+ width:100%!important;max-width:none!important;min-width:0!important;
+ margin:0!important;
+}
+@media(max-width:900px){
+ body.retail-home.mvn-full-shop:not(.app-store) .storehead{
+  grid-template-columns:minmax(0,1fr) max-content!important;
+  grid-template-rows:58px 44px!important;
+ }
+ body.retail-home.mvn-full-shop:not(.app-store) .storehead .brand-identity{
+  grid-column:1!important;grid-row:1!important;
+ }
+ body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions{
+  grid-column:2!important;grid-row:1!important;
+ }
+ body.retail-home.mvn-full-shop:not(.app-store) .storehead .header-search{
+  grid-column:1/-1!important;grid-row:2!important;
+  margin:0!important;width:100%!important;
+ }
+}
+@media(max-width:560px){
+ body.retail-home.mvn-full-shop:not(.app-store) .storehead .brand-identity{
+  max-width:145px!important;
+ }
+ body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>a.account-link,
+ body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>button#bag{
+  width:auto!important;min-width:86px!important;padding:0 7px!important;
+  height:40px!important;min-height:40px!important;
+ }
+ body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>a.account-link>span,
+ body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>button#bag>span{
+  display:inline!important;font-size:10px!important;
+ }
+ body.retail-home.mvn-full-shop:not(.app-store) main#shop > .section-title{
+  padding:18px 16px 13px!important;
+ }
+ body.retail-home.mvn-full-shop:not(.app-store) main#shop > .productbar{
+  padding:9px 16px 15px!important;min-height:48px!important;
+ }
+}
+@media(max-width:420px){
+ body.retail-home.mvn-full-shop:not(.app-store) .storehead{
+  grid-template-columns:minmax(0,1fr) max-content!important;
+  grid-template-rows:52px 44px 42px!important;
+  row-gap:5px!important;padding:7px 10px 10px!important;
+ }
+ body.retail-home.mvn-full-shop:not(.app-store) .storehead .brand-identity{
+  grid-column:1!important;grid-row:1!important;max-width:185px!important;
+ }
+ body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions{
+  grid-column:1/-1!important;grid-row:2!important;
+  justify-content:flex-start!important;width:100%!important;min-width:0!important;
+  gap:7px!important;
+ }
+ body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>a.account-link,
+ body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>button#bag{
+  flex:1 1 0!important;min-width:0!important;
+ }
+ body.retail-home.mvn-full-shop:not(.app-store) .storehead .head-actions>.mvn-header-more{
+  flex:0 0 40px!important;
+ }
+ body.retail-home.mvn-full-shop:not(.app-store) .storehead .header-search{
+  grid-column:1/-1!important;grid-row:3!important;width:100%!important;margin:0!important;
+ }
+}
+</style>
 </head>
 <body class="retail-home mvn-fitness-refresh mvn-advance-layout mvn-supplement-theme mvn-full-shop">
 <!-- Keep original MVN artwork; remove only its dark rectangle at display time. -->
@@ -322,12 +465,12 @@ body.retail-home.mvn-full-shop .mvn-compact-footer-links a:focus-visible {
   </div>
   <div class="head-actions">
     <a class="mvn-header-email" href="mailto:maxvolumenutrition@gmail.com" aria-label="Email Max Volume Nutrition at maxvolumenutrition@gmail.com"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.7"/><path d="m4 7 8 6 8-6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>maxvolumenutrition@gmail.com</a>
-    <a class="account-link" href="account.html" aria-label="My account">
+    <a class="account-link" href="account.html" aria-label="My Account">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.8"/><path d="M5 20c.2-4.2 2.7-6.3 7-6.3s6.8 2.1 7 6.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-      <span>My account</span>
+      <span>My Account</span>
     </a>
     <a class="wa" href="support.html">Help &amp; support</a>
-    <button id="bag" type="button" aria-label="Open shopping cart"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 9V6a3 3 0 0 1 6 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>My bag</span> <em id="count" aria-live="polite">0</em></button>
+    <button id="bag" type="button" aria-label="View shopping cart"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 8h14l-1 12H6L5 8Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 9V6a3 3 0 0 1 6 0v3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg><span>View cart</span> <em id="count" aria-live="polite">0</em></button>
     <details class="mvn-header-more">
       <summary aria-label="More options and contact details" title="More options"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg></summary>
       <nav class="mvn-more-panel" aria-label="More website pages">

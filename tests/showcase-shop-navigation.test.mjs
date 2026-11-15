@@ -88,3 +88,19 @@ test('shop only uses dark-blue brand panel, compact collection header and hidden
  assert.match(shop,/class="mvn-theme-main-nav"/,'preserve top navigation');
  assert.doesNotMatch(home,/mvn-shop-cleanup\.css/,'homepage styling unchanged');
 });
+
+test('shop dark-blue header exposes account/cart, hides redundant controls, and keeps Home navigation intact',()=>{
+ const home=readFileSync('public/index.html','utf8');
+ const shop=readFileSync('public/shop.html','utf8');
+ const style=shop.match(/<style id="mvn-compact-dark-blue-shop-v2">([\s\S]*?)<\/style>/)?.[1]||'';
+ assert.ok(style,'shop-specific dark-blue styles exist');
+ assert.match(shop,/class="mvn-theme-home-link" href="\/"/);
+ assert.match(shop,/class="mvn-theme-main-nav"/);
+ assert.match(shop,/href="account.html" aria-label="My Account"/);
+ assert.match(shop,/id="bag" type="button" aria-label="View shopping cart"/);
+ assert.match(shop,/<span>View cart<\/span>/);
+ for(const key of ['#0c2a4d','.cats','.sort-label','.collection-filters','.head-actions'])assert.ok(style.includes(key),'style covers '+key);
+ for(const id of ['id="sort"','id="grid"','id="priceRange"','id="checkoutFields"','id="bag"'])assert.ok(shop.includes(id),'commerce hook retained '+id);
+ assert.ok(!home.includes('mvn-compact-dark-blue-shop-v2'),'Home styling is unchanged');
+ assert.equal(readFileSync('shop.html','utf8'),shop,'served and root shop stay identical');
+});
