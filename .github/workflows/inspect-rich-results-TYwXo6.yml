@@ -22,7 +22,7 @@ jobs:
               const plain=html.replace(/<script[\s\S]*?<\/script>/gi,' ').replace(/<style[\s\S]*?<\/style>/gi,' ').replace(/<[^>]+>/g,' ').replace(/&quot;/g,'"').replace(/&amp;/g,'&').replace(/&#x27;/g,"'").replace(/\s+/g,' ');
               const pos=plain.indexOf('Detected items');
               const found=[...plain.matchAll(/.{0,80}(?:non-critical issues?|critical issues?|invalid items?|valid items?|Missing field|Error XHR|Other error|Googlebot blocked|Crawled successfully|Page fetch).{0,180}/gi)].slice(0,30).map(x=>x[0]);
-              console.log('REPORT',type||'MAIN',JSON.stringify({status:response.status,url:response.url,bytes:html.length,detected:pos<0?'':plain.slice(pos,pos+3000),messages:found}).slice(0,10000));
+              console.log('REPORT',type||'MAIN',JSON.stringify({status:response.status,url:response.url,bytes:html.length,detected:pos<0?'':plain.slice(pos,pos+3000),messages:found,snippets:{start:plain.slice(0,1300),testArea:plain.slice(Math.max(0,plain.indexOf('Test results')-600),plain.indexOf('Test results')+2600),urlMatches:[...new Set([...html.matchAll(/https?:\/\/(?:maxvolumenutriton\.shop|example\.com)[^"'<>\\ ]*/gi)].map(m=>m[0]))].slice(0,25)},counts:{MVN:html.split('maxvolumenutriton.shop').length-1,anvil:html.split('Executive Anvil').length-1,example:html.split('example.com').length-1}}).slice(0,14000));
             }catch(e){console.log('REPORT_ERROR',type,String(e));}
           }
           NODE
