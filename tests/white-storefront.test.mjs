@@ -48,7 +48,7 @@ test('homepage excludes demonstrably incorrect product photos and retains verifi
  assert.match(app,/3 kg · Double Rich Chocolate",price:2599,img:"assets\/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout\.webp"/,'3 kg must use its own verified jar photo');
  assert.match(app,/5 kg · Bucket",price:3499,img:"assets\/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout\.webp/,'5 kg must use its own bucket cutout');
  assert.match(app,/Chocolate · 5 lbs.*?img:null/,'Chocolate must not use Coffee photo');
- assert.match(app,/Blueberry · 250 g.*?img:"https:\/\/revakanya\.com\/assets\/imgs\/Pro%20Creatine%20Blueberry\.png"/,'Blueberry uses manufacturer original white-and-blue pack');
+ assert.match(app,/Blueberry · 250 g.*?img:"assets\/mvn-creatine-blueberry-official-250g\.webp"/,'Blueberry uses manufacturer original white-and-blue pack');
 });
 
 test('public retail offers use verified MRP and keep confidential wholesale pricing private',()=>{
