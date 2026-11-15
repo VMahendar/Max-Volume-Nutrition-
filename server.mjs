@@ -421,7 +421,7 @@ if(storePublicUrl!==previousStoreOrigin&&['/','/index.html','/robots.txt','/site
 if(process.env.STAGING_MODE==='true'&&u.pathname==='/admin.html'){
  const banner='PRIVATE STAGING · TEST DATA ONLY · PAYMENTS AND SHIPPING DISABLED';
  file=Buffer.from(file.toString('utf8').replace(/<body(?:\s[^>]*)?>/i,openTag=>`${openTag}<div class="staging-banner owner-preview-status" role="status" title="${banner}" aria-label="${banner}">Preview</div>`));
-}}catch(e){if(e instanceof Problem)throw e;fail(404,'Page not found.');}const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.webmanifest':'application/manifest+json','.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.svg':'image/svg+xml','.xml':'application/xml; charset=utf-8','.txt':'text/plain; charset=utf-8'};// Keep personalized pages, reviews and API responses uncached. Cache only public
+}}catch(e){if(e instanceof Problem)throw e;fail(404,'Page not found.');}const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.webmanifest':'application/manifest+json','.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.avif':'image/avif','.svg':'image/svg+xml','.xml':'application/xml; charset=utf-8','.txt':'text/plain; charset=utf-8'};// Keep personalized pages, reviews and API responses uncached. Cache only public
 // versioned/static media on the real storefront, never password-protected staging.
 if(process.env.STAGING_MODE!=='true'){
  const extension=extname(path);
