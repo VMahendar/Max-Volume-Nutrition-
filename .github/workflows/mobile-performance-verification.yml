@@ -45,8 +45,8 @@ jobs:
             for(const ref of c.auditRefs){
               const a=r.audits[ref.id];
               if(!a)continue;
-              if(id==='agentic-browsing'||(a.score!==null&&a.score<1&&ref.weight>0)||a.id.includes('largest-contentful-paint')||a.id.includes('cumulative-layout-shift')){
-                const details=a.details?.items?.slice(0,6);
+              if(['long-tasks','bootup-time','mainthread-work-breakdown','lcp-breakdown-insight','image-delivery-insight','render-blocking-insight','largest-contentful-paint','total-blocking-time'].includes(a.id)||(a.score!==null&&a.score<1&&ref.weight>0)){
+                const details=a.details?.items?.slice(0,12);
                 console.log('AUDIT',JSON.stringify({id:a.id,title:a.title,score:a.score,mode:a.scoreDisplayMode,numericValue:a.numericValue,displayValue:a.displayValue,description:a.description,items:details}).slice(0,4500));
               }
             }
@@ -56,6 +56,6 @@ jobs:
         if: always()
         with:
           name: mobile-performance-lighthouse
-          path: reports/agentic-mobile.json
+          path: reports/mobile-current.json
           if-no-files-found: warn
           retention-days: 2
