@@ -73,7 +73,4 @@ body.mvn-preview-design.mvn-showcase-home > .mvn-theme-main-nav { display:none!i
 .mvn-preview-nav { display:flex; justify-content:center; flex-wrap:wrap; gap:.45rem clamp(.7rem,4vw,2.75rem); background:#151617; border-top:1px solid #343434; padding:.48rem 4%; }
 .mvn-preview-nav a { display:inline-flex; align-items:center; min-height:2.25rem; color:white; font-weight:700; font-size:.86rem; text-decoration:none; }
 .mvn-preview-nav a:hover { color:#ff825f; }
-.mvn-preview-home-footer { display:flex; justify-content:space-between; flex-wrap:wrap; gap:1rem; padding:1.35rem 4%; }
-.mvn-preview-home-footer nav { display:flex; flex-wrap:wrap; gap:1rem; }
-.mvn-preview-home-footer nav a { color:white; }
 @media (max-width: 760px) { .mvn-preview-nav { justify-content:flex-start; } }
