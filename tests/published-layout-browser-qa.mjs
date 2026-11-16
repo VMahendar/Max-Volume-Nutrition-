@@ -44,6 +44,20 @@ try{
    });
   });
   console.log('LIVE_HEADER_FOOTER_GEOMETRY',viewport.width,JSON.stringify(extra));
+  const get=selector=>extra.find(item=>item.selector===selector);
+  const head=get('.storehead'),logo=get('.storehead .original-brand-logo'),actions=get('.storehead .head-actions'),brand=get('.storehead .brand-identity');
+  const globCopy=get('.mvn-globtech-launch > div'),globe=get('.mvn-globtech-launch');
+  const foot=get('.mvn-home-contact'),footInner=get('.mvn-home-contact-inner'),footNav=get('.mvn-home-contact nav');
+  assert.ok(head.h>60&&head.h<145,'header must be compact');
+  assert.ok(brand.w>100&&brand.x>=-4&&brand.x+brand.w<measurements.viewport*.6,'brand should fit left');
+  assert.ok(logo.h>30&&logo.h<=head.h+2,'logo must not overflow header height');
+  assert.ok(actions.w>70&&actions.x>measurements.viewport*.45&&actions.x+actions.w<=measurements.viewport+6,'header controls aligned right');
+  assert.ok(globCopy.h>30&&globCopy.y>=globe.y-2&&globCopy.y+globCopy.h<=globe.y+globe.h+2,'Globe-Tech text inside section');
+  assert.ok(foot.h>110&&footInner.w>measurements.viewport*.65&&footInner.h>60,'footer no longer hidden or blank');
+  assert.ok(footNav.h>40,'footer shop links visible');
+  const footerLinks=await page.locator('.mvn-home-contact a:visible').count();
+  assert.ok(footerLinks>=10,'Footer should show functional support and shop links');
+
   const vw=measurements.viewport,values=measurements.values,cards=measurements.cards;
   for(const name of ['hero','goal','best','globe']){
    assert.ok(values[name]&&values[name].width>vw*.94,name+' must fill viewport with live edits at '+vw);
