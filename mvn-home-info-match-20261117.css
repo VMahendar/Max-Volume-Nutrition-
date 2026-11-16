@@ -147,3 +147,63 @@ body.retail-home.mvn-showcase-home .collection-results .card .info>.add{
     margin:12px!important;width:calc(100% - 24px)!important;
   }
 }
+
+
+/* 17 Nov correction: remove duplicated legacy introduction and harden one colour system. */
+body.retail-home.mvn-showcase-home > section.hero,
+body.retail-home.mvn-showcase-home > section.benefits {display:none!important}
+html body.retail-home.mvn-showcase-home header.storehead,
+html body.retail-home.mvn-showcase-home header.storehead *:not(.mvn-more-panel):not(input):not(button) {
+  border-color:transparent;
+}
+html body.retail-home.mvn-showcase-home header.storehead {
+  background:#171b1f!important;color:#f7f7f5!important;
+  border-bottom:3px solid #f15b09!important;
+  box-shadow:none!important;
+}
+html body.retail-home.mvn-showcase-home header.storehead .brand,
+html body.retail-home.mvn-showcase-home header.storehead .head-actions,
+html body.retail-home.mvn-showcase-home header.storehead .head-actions a,
+html body.retail-home.mvn-showcase-home header.storehead .head-actions button,
+html body.retail-home.mvn-showcase-home header.storehead .head-actions summary{
+  color:#fff!important;background:transparent!important;box-shadow:none!important;
+}
+html body.retail-home.mvn-showcase-home header.storehead .mvn-header-more .mvn-more-panel{
+  background:#fff!important;color:#15191d!important;border:1px solid #e0e4e6!important;
+  border-radius:6px!important;box-shadow:0 12px 32px #0002!important;
+}
+html body.retail-home.mvn-showcase-home header.storehead .mvn-header-more .mvn-more-panel a {
+  color:#15191d!important;background:#fff!important;
+}
+html body.retail-home.mvn-showcase-home header.storehead .mvn-header-search-popover{
+  background:#fff!important;color:#15191d!important;
+}
+html body.retail-home.mvn-showcase-home header.storehead .mvn-header-search-popover input{
+  color:#15191d!important;background:#fff!important;
+}
+html body.retail-home.mvn-showcase-home #shop{
+  max-width:1440px!important;margin:0 auto!important;
+  padding:clamp(24px,3.5vw,50px) clamp(14px,3vw,40px)!important;
+  background:#fff!important;color:#15191d!important;
+}
+html body.retail-home.mvn-showcase-home #shop .section-title{
+  margin-top:0!important;
+}
+html body.retail-home.mvn-showcase-home .mvn-globtech-launch{
+  background:#182026!important;color:#fff!important;
+}
+html body.retail-home.mvn-showcase-home .mvn-home-contact{
+  background:#171b1f!important;color:#fff!important;
+  border-top:3px solid #f15b09!important;
+}
+@media(max-width:760px){
+  html body.retail-home.mvn-showcase-home header.storehead{
+    display:flex!important;flex-direction:row!important;align-items:center!important;
+  }
+  html body.retail-home.mvn-showcase-home header.storehead .head-actions{
+    display:flex!important;flex-wrap:nowrap!important;position:static!important;
+  }
+  html body.retail-home.mvn-showcase-home #shop{
+    padding:24px 12px!important;width:100%!important;min-width:0!important;
+  }
+}
