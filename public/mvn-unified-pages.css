@@ -1,0 +1,84 @@
+/* Shared MVN storefront appearance for footer destinations.
+   Page content, native forms and existing application JavaScript remain unchanged. */
+body.mvn-unified-page{
+  --mvn-paper:#faf9f7;--mvn-ink:#171819;--mvn-accent:#c8371b;--mvn-border:#dedcd8;
+  margin:0!important;padding:0!important;min-height:100dvh!important;
+  display:flex!important;flex-direction:column!important;
+  background:var(--mvn-paper)!important;color:var(--mvn-ink)!important;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif!important;
+  font-size:16px!important;line-height:1.55!important;
+}
+body.mvn-unified-page *,body.mvn-unified-page *::before,body.mvn-unified-page *::after{box-sizing:border-box}
+body.mvn-unified-page a{overflow-wrap:anywhere}
+body.mvn-unified-page .mvn-unified-header{
+  width:100%!important;min-height:92px!important;margin:0!important;
+  padding:12px max(16px,calc((100% - 1240px)/2))!important;
+  display:flex!important;align-items:center!important;justify-content:space-between!important;
+  gap:14px!important;background:#151617!important;border:0!important;border-bottom:1px solid #3e3e3e!important;
+  color:#fff!important;box-shadow:none!important;
+}
+body.mvn-unified-page .mvn-unified-header .brand{min-width:0!important;display:flex!important;align-items:center!important;flex:0 1 310px!important;background:none!important}
+body.mvn-unified-page .mvn-unified-header .original-brand-logo{display:block!important;object-fit:contain!important;object-position:left center!important;width:min(100%,280px)!important;height:72px!important;max-width:100%!important}
+body.mvn-unified-page .mvn-unified-links{display:flex;align-items:center;justify-content:flex-end;flex-wrap:wrap;gap:10px 16px;margin-left:auto}
+body.mvn-unified-page .mvn-unified-links a{
+  display:inline-flex!important;align-items:center!important;justify-content:center!important;
+  min-height:44px!important;min-width:44px!important;color:#fff!important;
+  font-size:14px!important;font-weight:750!important;text-decoration:none!important;
+  text-transform:uppercase;letter-spacing:.025em;
+}
+body.mvn-unified-page .mvn-unified-links a:hover{color:#ff987f!important}
+body.mvn-unified-page .mvn-unified-links a.mvn-unified-shop-link{
+  border:1px solid #666!important;padding:8px 12px!important;border-radius:7px!important;
+}
+body.mvn-unified-page .mvn-unified-content{width:min(100% - 32px,1160px)!important;max-width:1160px!important;margin:0 auto!important;padding:38px 0 64px!important;flex:1 0 auto!important}
+body.mvn-unified-page .mvn-unified-content h1,
+body.mvn-unified-page .business-hero h1{
+  font-family:Impact,"Arial Narrow",system-ui,sans-serif!important;
+  font-weight:850!important;font-size:clamp(39px,6vw,74px)!important;line-height:1.02!important;
+  text-transform:uppercase!important;letter-spacing:-.025em!important;
+}
+body.mvn-unified-page .mvn-unified-content h2{font-size:clamp(23px,3vw,32px)!important;line-height:1.2!important}
+body.mvn-unified-page .policy.section{
+  background:#fff!important;color:#171819!important;border:1px solid #dedcd8!important;
+  border-top:4px solid #c8371b!important;border-radius:0!important;
+  padding:clamp(22px,5vw,60px)!important;
+}
+body.mvn-unified-page .policy.section h1{margin:10px 0 20px!important}
+body.mvn-unified-page .policy.section h2{margin:26px 0 8px!important;color:#171819!important}
+body.mvn-unified-page .policy.section p{max-width:75ch;color:#48494c}
+body.mvn-unified-page .policy.section .draft{
+  padding:12px 16px!important;border-left:3px solid #c8371b!important;
+  background:#fff1ec!important;color:#5a2f24!important;font-size:14px!important;
+}
+body.mvn-unified-page .mvn-unified-footer{
+  margin-top:auto!important;width:100%!important;padding:24px max(16px,calc((100% - 1240px)/2))!important;
+  display:flex!important;justify-content:space-between!important;align-items:center!important;flex-wrap:wrap!important;gap:12px 24px!important;
+  background:#151617!important;color:#f4f4f4!important;border-top:3px solid #c8371b!important;
+}
+body.mvn-unified-page .mvn-unified-footer p{margin:0!important;color:#dadada!important;font-size:14px!important}
+body.mvn-unified-page .mvn-unified-footer a{color:#fff!important;text-decoration:underline}
+body.mvn-unified-page .mvn-unified-footer nav{display:flex!important;flex-wrap:wrap!important;gap:12px 18px!important}
+body.mvn-unified-page .mvn-unified-footer nav a{font-size:14px!important;min-height:32px!important;display:inline-flex;align-items:center}
+body.mvn-unified-page .mvn-unified-footer .original-brand-logo{width:190px!important;height:55px!important;object-fit:contain!important}
+body.mvn-unified-page .mvn-unified-content :is(input:not([type=checkbox]),select,textarea){
+  max-width:100%!important;min-height:44px!important;color:#171819!important;
+  border:1px solid #a3a3a3!important;border-radius:5px!important;background:#fff!important;
+}
+body.mvn-unified-page .mvn-unified-content :is(button,.primary){min-height:44px!important}
+body.mvn-unified-page .business-hero{background:#1c1d20!important;color:#fff!important;border-radius:0!important}
+body.mvn-unified-page .business-hero h1{color:#fff!important}
+body.mvn-unified-page .business-main{display:block!important}
+body.mvn-unified-page .mvn-unified-content :is(.panel,.business-steps,.business-form-wrap,.business-faq){max-width:100%!important}
+body.mvn-unified-page .mvn-unified-content .business-form{min-width:0}
+body.mvn-unified-page :is(a,button,summary,input,select,textarea):focus-visible{outline:3px solid #ff9477!important;outline-offset:3px!important}
+@media(max-width:720px){
+ body.mvn-unified-page .mvn-unified-header{min-height:78px!important;padding:9px 14px!important;gap:8px!important}
+ body.mvn-unified-page .mvn-unified-header .brand{flex-basis:185px!important}
+ body.mvn-unified-page .mvn-unified-header .original-brand-logo{height:59px!important}
+ body.mvn-unified-page .mvn-unified-links{gap:2px 8px}
+ body.mvn-unified-page .mvn-unified-links a{font-size:12px!important;min-height:40px!important}
+ body.mvn-unified-page .mvn-unified-links a.mvn-unified-shop-link{padding:6px 8px!important}
+ body.mvn-unified-page .mvn-unified-links a.mvn-unified-desktop{display:none!important}
+ body.mvn-unified-page .mvn-unified-content{width:calc(100% - 24px)!important;padding:20px 0 36px!important}
+ body.mvn-unified-page .mvn-unified-footer{padding:22px 16px!important}
+}
