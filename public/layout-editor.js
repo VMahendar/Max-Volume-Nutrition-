@@ -153,8 +153,13 @@ function renderControls(){
   imageTools(selection);
   if(categoryFields[selection]){
    const [headline,caption]=categoryFields[selection];
-   field(headline,'Card headline / title','text',{max:85});
-   field(caption,'Card caption / label','text',{max:85});
+   if(['massPromo','creatinePromo'].includes(selection)){
+    field(headline,'Promotion top label','text',{max:65});
+    field(caption,'Promotion headline','text',{max:85});
+   }else{
+    field(headline,'Card headline / title','text',{max:85});
+    field(caption,'Card caption / label','text',{max:65});
+   }
   }
   if(['whey','pre','creatine'].includes(selection)){
    field('goalPhotosVisible','Show category photos on homepage','checkbox');
