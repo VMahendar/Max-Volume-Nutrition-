@@ -1,4 +1,5 @@
 import './deploy/prepare-product-media.mjs';
+import {validateHomepageDesign,homepageOrder} from './homepage-design.mjs';
 import {startLocalBackupScheduler} from './deploy/local-backups.mjs';
 import {startDriveBackupScheduler} from './deploy/drive-backup.mjs';
 import http from 'node:http';
@@ -13,7 +14,7 @@ import {stagingGate} from './staging.mjs';
 import {PRODUCT_PAGE_IDS,buildProductFragments} from './product-seo.mjs';
 const allowStaging=stagingGate();
 import {isIP} from 'node:net';
-import {readFileSync,realpathSync,existsSync,statSync} from 'node:fs';
+import {readFileSync,realpathSync,existsSync,statSync,readdirSync} from 'node:fs';
 import {brotliCompressSync,gzipSync,constants as zlibConstants} from 'node:zlib';
 import {resolve,extname,sep,posix} from 'node:path';
 import {randomUUID,randomBytes,timingSafeEqual} from 'node:crypto';
@@ -35,6 +36,7 @@ initializeUpdates(C);
 initializeOwnerDesk(C);
 initializeOwnerWork(C);
 initializeLeadInbox(C);
+db.exec('CREATE TABLE IF NOT EXISTS homepage_images (path TEXT PRIMARY KEY, type TEXT NOT NULL, content BLOB NOT NULL)');
 const origin=process.env.PUBLIC_ORIGIN||'http://localhost:3000',production=process.env.NODE_ENV==='production';
 const previousStoreOrigin='https://max-volume-nutrition-preview.onrender.com';
 const officialStoreOrigin='https://maxvolumenutriton.shop';
@@ -138,6 +140,18 @@ if(launchRemaining>0){
     res.setHeader('Retry-After',String(Math.ceil(launchRemaining/1000)));
     return json(res,503,{error:'The store opens at 11:00 AM IST.'});
   }
+}
+if(/^\/assets\/homepage\/[a-f0-9]{64}\.(?:png|jpg|webp)$/.test(u.pathname)&&['GET','HEAD'].includes(req.method)){
+ const image=db.prepare('SELECT type,content FROM homepage_images WHERE path=?').get(u.pathname.slice(1));
+ if(!image)fail(404,'Image not found.');
+ res.writeHead(200,{'Content-Type':image.type,'Cache-Control':'public, max-age=31536000, immutable'});
+ return res.end(req.method==='HEAD'?undefined:image.content);
+}
+if(['/', '/index.html'].includes(u.pathname)&&u.searchParams.get('homepage_editor')==='1'){
+ admin(C.session(req));
+ res.setHeader('X-Frame-Options','SAMEORIGIN');
+ res.setHeader('Content-Security-Policy',String(res.getHeader('Content-Security-Policy')).replace("frame-ancestors 'none'","frame-ancestors 'self'"));
+ res.setHeader('X-Robots-Tag','noindex,nofollow');
 }
 if(/^\/assets\/updates\/[a-z0-9-]+\.jpg$/.test(u.pathname)&&['GET','HEAD'].includes(req.method)){
  const image=db.prepare('SELECT content FROM store_update_images WHERE path=?').get(u.pathname.slice(1));if(!image)fail(404,'Image not found.');res.writeHead(200,{'Content-Type':'image/jpeg'});return res.end(req.method==='HEAD'?undefined:image.content);
@@ -296,6 +310,47 @@ if(path==='/api/enquiries'&&req.method==='POST'){
  return json(res,201,lead);
 }
 if(path.startsWith('/api/admin/')){admin(user);
+if(path==='/api/admin/homepage-design'){
+ if(req.method==='GET')return json(res,200,{draft:C.setting('homepageDraftV2'),published:C.setting('homepagePublishedV2'),empty:{version:2,fields:{},order:homepageOrder}});
+ if(req.method!=='POST')fail(405,'Method not allowed.');
+ const input=JSON.parse(await body(req,30000));
+ if(!['save','publish'].includes(input.action))fail(400,'Choose save or publish.');
+ let design;
+ try{design=validateHomepageDesign(input.design,value=>{
+  if(/^assets\/homepage\/[a-f0-9]{64}\.(?:png|jpg|webp)$/.test(value))return !!db.prepare('SELECT path FROM homepage_images WHERE path=?').get(value);
+  if(!/^[a-zA-Z0-9_.\/-]+\.(png|jpg|jpeg|webp)$/.test(value)||value.includes('..'))return false;
+  const target=resolve(root,value);return target.startsWith(root+sep)&&existsSync(target)&&realpathSync(target).startsWith(root+sep);
+ });}catch(error){fail(400,error.message);}
+ const now=new Date().toISOString();
+ const published=C.setting('homepagePublishedV2');
+ if(input.action==='publish'&&(input.baseRevision||null)!==(published?.revision||null))fail(409,'The homepage was published from another window. Reload before publishing.');
+ design={...design,revision:randomUUID(),updatedAt:now};
+ C.tx(()=>{C.set('homepageDraftV2',design);if(input.action==='publish')C.set('homepagePublishedV2',design);C.audit(user.id,'homepage.'+input.action,'homepage',{revision:design.revision});});
+ return json(res,200,{ok:true,design});
+}
+if(path==='/api/admin/homepage-images'){
+ if(req.method==='GET'){
+  const assets=readdirSync(resolve(root,'assets'),{recursive:true}).filter(name=>/\.(png|jpe?g|webp)$/i.test(name)).map(name=>'assets/'+name);
+  const logos=readdirSync(root).filter(name=>/logo.*\.(png|jpe?g|webp)$/i.test(name));
+  return json(res,200,{images:[...db.prepare('SELECT path FROM homepage_images ORDER BY rowid DESC').all().map(row=>row.path),...logos,...assets]});
+ }
+ if(req.method!=='POST')fail(405,'Method not allowed.');
+ if(!rate('homepage-image:'+user.id,15))fail(429,'Too many uploads. Try again shortly.');
+ const input=JSON.parse(await body(req,6000000));
+ if(typeof input.content!=='string'||!/^[A-Za-z0-9+/]+={0,2}$/.test(input.content))fail(400,'Invalid image data.');
+ const bytes=Buffer.from(input.content,'base64');
+ if(bytes.length<16||bytes.length>4*1024*1024)fail(400,'Upload an image smaller than 4 MB.');
+ const png=bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]));
+ const jpg=bytes[0]===255&&bytes[1]===216&&bytes[2]===255;
+ const webp=bytes.toString('ascii',0,4)==='RIFF'&&bytes.toString('ascii',8,12)==='WEBP';
+ if(!png&&!jpg&&!webp)fail(400,'Choose a PNG, JPG or WebP image.');
+ const extension=png?'png':jpg?'jpg':'webp',type=png?'image/png':jpg?'image/jpeg':'image/webp';
+ const path='assets/homepage/'+hash(bytes)+'.'+extension;
+ db.prepare('INSERT OR IGNORE INTO homepage_images VALUES(?,?,?)').run(path,type,bytes);
+ C.audit(user.id,'homepage.image.upload',path);
+ return json(res,201,{path});
+}
+
 if(path==='/api/admin/layout-draft'){
  if(req.method==='GET')return json(res,200,{draft:C.setting('ownerLayoutDraftV1')});
  if(req.method==='POST'){
@@ -441,14 +496,19 @@ if(path==='/api/admin/tracking'){const row=db.prepare('SELECT * FROM shipments W
 fail(404,'Endpoint not found.');}
 fail(404,'Endpoint not found.');}
 if(u.pathname==='/layout-editor.html'){
- const account=C.session(req);
- if(!account||account.role!=='admin'){
-  res.writeHead(302,{'Location':'/account.html','Cache-Control':'no-store','X-Robots-Tag':'noindex,nofollow'});
-  return res.end();
- }
+ // The editor shell has its own owner sign-in; private APIs still require admin access.
  res.setHeader('X-Robots-Tag','noindex,nofollow,noarchive');
+ res.setHeader('Content-Security-Policy',String(res.getHeader('Content-Security-Policy')).replace("frame-src https://*.razorpay.com","frame-src 'self' https://*.razorpay.com"));
 }
 if(!['GET','HEAD'].includes(req.method))fail(405,'Method not allowed.');const path=resolve(root,'.'+decodeURIComponent(u.pathname==='/'?'/index.html':u.pathname));if(!path.startsWith(root+sep))fail(403,'Forbidden');let file;try{if(!realpathSync(path).startsWith(root+sep))fail(403,'Forbidden');file=readFileSync(path);
+if(['/', '/index.html'].includes(u.pathname)){
+ const design=C.setting('homepagePublishedV2');
+ const serialized=JSON.stringify(design).replace(/</g,'\\u003c');
+ const editing=u.searchParams.get('homepage_editor')==='1';
+ let html=file.toString('utf8').replace('</body>',`<script type="application/json" id="mvnHomepageDesign">${serialized}</script><script src="/homepage-design.js?v=20261116-editor-1" defer></script></body>`);
+ if(editing)html=html.replace('<body ','<body data-homepage-editor="true" ');
+ file=Buffer.from(html);
+}
 if(PRODUCT_PAGE_IDS[u.pathname]){
  const productId=PRODUCT_PAGE_IDS[u.pathname].id;
  const approved=db.prepare("SELECT r.rating,r.title,r.body,r.created,u.name FROM product_reviews r JOIN users u ON u.id=r.user_id WHERE r.product_id=? AND r.status='approved' ORDER BY r.created DESC").all(productId).map(r=>({...r,status:'approved'}));
