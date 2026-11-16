@@ -28,6 +28,9 @@ jobs:
       - name: Install Chromium browser
         id: chromium
         run: npx playwright install --with-deps chromium
+      - name: Verify editable homepage photo sizing, upload, draft and publish
+        if: ${{ !cancelled() && steps.chromium.outcome == 'success' }}
+        run: node tests/homepage-editor-browser-qa.mjs
       - name: Check Option 2 product-first reference on desktop and Android
         if: ${{ !cancelled() && steps.chromium.outcome == 'success' }}
         run: node tests/option-two-qa.mjs
