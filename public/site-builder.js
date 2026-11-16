@@ -3,7 +3,7 @@
 const $=id=>document.getElementById(id);
 const frame=$('preview'),status=message=>{$('status').textContent=message;};
 const pages=new Set(['/','/shop.html','/about.html','/contact.html','/dealer.html','/brands.html','/potency-whey.html','/nitro-mass.html','/pro-creatine.html','/sturdy-pre-workout.html','/offers.html','/support.html','/wholesale-account.html']);
-let documentState={version:1,pages:{}},published={version:1,pages:{}},baseRevision=null,page='/',selected=null,ready=false,busy=false,dirty=false,clipboard=null,history=[],future=[],view='desktop';
+let documentState={version:1,pages:{}},published={version:1,pages:{}},baseRevision=null,page='/',selected=null,ready=false,busy=false,dirty=false,clipboard=null,history=[],future=[],view='desktop',mode='move';
 const clone=data=>JSON.parse(JSON.stringify(data));
 const newId=()=> 'v'+crypto.randomUUID().replaceAll('-','');
 async function api(path,body){
@@ -25,7 +25,7 @@ function change(fn){
  history.push(clone(documentState));if(history.length>60)history.shift();future=[];
  fn();dirty=true;controls();send();status('Unsaved visual changes. Save a private draft or publish when ready.');
 }
-function send(){if(ready)frame.contentWindow?.postMessage({type:'mvn-visual-design',document:documentState},location.origin);}
+function send(){if(ready){frame.contentWindow?.postMessage({type:'mvn-visual-design',document:documentState},location.origin);frame.contentWindow?.postMessage({type:'mvn-visual-mode',mode},location.origin);}}
 function add(action,extras={},target=selected?.target){
  if(!target){status('Select a page element first.');return;}
  const device=$('device').value;
@@ -56,6 +56,8 @@ function chooseSelection(info){
  const v=existing?.values||{};
  for(const id of ['x','y','fontSize','opacity'])$(id).value=v[id]??(id==='opacity'?100:0);
  $('color').value=v.color||'#ffffff';$('backgroundColor').value=v.backgroundColor||'#202020';
+ $('replaceSelected').hidden=info.tag!=='img';
+ $('fullBleed').textContent=v.fullBleed?'⛶ Remove full-width override':'⛶ Extend to full width';
  controls();
 }
 function addNew(element,src){
@@ -71,11 +73,33 @@ for(const button of document.querySelectorAll('[data-view]'))button.onclick=()=>
  frame.style.width=view==='mobile'?'390px':'100%';frame.style.height=view==='mobile'?'790px':'100%';
  frame.contentWindow?.location.reload();
 };
-$('fit').onclick=()=>{$('stage').scrollTo(0,0);frame.style.width=view==='mobile'?'390px':'100%';};
+function chooseMode(next){
+ mode=next==='scroll'?'scroll':'move';
+ $('moveMode').classList.toggle('selected',mode==='move');
+ $('scrollMode').classList.toggle('selected',mode==='scroll');
+ if(ready)frame.contentWindow?.postMessage({type:'mvn-visual-mode',mode},location.origin);
+ status(mode==='move'?'MOVE MODE · Drag any photo/text. Four orange corners resize it.':'SCROLL MODE · Swipe to browse the page. Select Move / Resize to edit.');
+}
+$('moveMode').onclick=()=>chooseMode('move');
+$('scrollMode').onclick=()=>chooseMode('scroll');
+$('fit').onclick=()=>{
+ const on=$('workspace').classList.toggle('canvas-wide');
+ $('fit').textContent=on?'Show side panels':'Full width';
+ status(on?'Full-width canvas. Click Show side panels to access editing properties.':'Editing panels restored.');
+ requestAnimationFrame(()=>frame.style.width=view==='mobile'?'390px':'100%');
+};
 $('addText').onclick=()=>addNew('text');
 $('addButton').onclick=()=>addNew('button');
 $('addBox').onclick=()=>addNew('box');
 $('addImage').onclick=()=>$('fileUpload').click();
+$('replaceSelected').onclick=()=>$('fileUpload').click();
+$('fullBleed').onclick=()=>{
+ if(!selected)return;
+ const op=(documentState.pages[page]||[]).slice().reverse().find(item=>item.target===selected.target&&item.values);
+ const next=!(op?.values?.fullBleed);
+ updateValues({fullBleed:next},'style');
+ $('fullBleed').textContent=next?'⛶ Remove full-width override':'⛶ Extend to full width';
+};
 $('copy').onclick=()=>{clipboard=selected?{page,target:selected.target,cut:false}:null;controls();status(clipboard?'Element copied. Choose Paste to duplicate it.':'Select an element to copy.');};
 $('cut').onclick=()=>{clipboard=selected?{page,target:selected.target,cut:true}:null;controls();status(clipboard?'Element marked for cutting. Paste to move it.':'Select an element first.');};
 $('paste').onclick=()=>{
@@ -136,7 +160,7 @@ $('publish').onclick=()=>{
 addEventListener('message',event=>{
  if(event.origin!==location.origin||event.source!==frame.contentWindow||!event.data)return;
  const data=event.data;
- if(data.type==='mvn-visual-ready'){ready=true;controls();send();status('Canvas ready. Click an element, drag the upper orange handle to move or bottom corner to resize.');}
+ if(data.type==='mvn-visual-ready'){ready=true;controls();send();status('Canvas ready. Drag an element directly to move, or pull any orange corner to resize. On mobile, tap Scroll Page to browse.');}
  if(data.type==='mvn-visual-select')chooseSelection(data);
  if(data.type==='mvn-visual-operation'){
   if(!pages.has(page)||!data.target)return;
