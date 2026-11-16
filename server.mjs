@@ -326,7 +326,7 @@ if(path==='/api/admin/visual-builder'){
  });
  if(req.method!=='POST')fail(405,'Method not allowed.');
  if(!rate('visual-builder:'+user.id,24))fail(429,'Too many visual edits. Please try again shortly.');
- const payload=JSON.parse(await body(req,150000));
+ const payload=JSON.parse(await body(req,3000000));
  if(!['save','publish'].includes(payload?.action))fail(400,'Invalid visual builder action.');
  const activePage=canonicalBuilderPage(payload.page);
  if(!activePage)fail(400,'This page cannot be published from the builder.');
@@ -567,7 +567,7 @@ if(builderPage){
   const serialized=JSON.stringify(config||{version:1,pages:{}}).replace(/</g,'\\u003c');
   let html=file.toString('utf8');
   if(builderPreview)html=html.replace(/<html\b/i,'<html data-mvn-visual-builder="edit"');
-  html=html.replace('</body>','<script type="application/json" id="mvnVisualBuilderConfig">'+serialized+'</script><script src="/site-builder-runtime.js?v=20261117-canvas" defer></script></body>');
+  html=html.replace('</body>','<script type="application/json" id="mvnVisualBuilderConfig">'+serialized+'</script><script src="/site-builder-runtime.js?v=20261117-unlocked" defer></script></body>');
   file=Buffer.from(html,'utf8');
  }
 }

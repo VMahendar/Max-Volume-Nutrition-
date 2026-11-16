@@ -2,6 +2,7 @@
 (()=>{
 const $=id=>document.getElementById(id);
 const frame=$('preview'),status=message=>{$('status').textContent=message;};
+const BOUNDS={x:[-1000000,1000000],y:[-1000000,1000000],width:[1,1000000],height:[1,1000000],fontSize:[1,100000],opacity:[0,100]};
 const pages=new Set(['/','/shop.html','/about.html','/contact.html','/dealer.html','/brands.html','/potency-whey.html','/nitro-mass.html','/pro-creatine.html','/sturdy-pre-workout.html','/offers.html','/support.html','/wholesale-account.html']);
 let documentState={version:1,pages:{}},published={version:1,pages:{}},baseRevision=null,page='/',selected=null,ready=false,busy=false,dirty=false,clipboard=null,history=[],future=[],view='desktop',mode='move';
 const clone=data=>JSON.parse(JSON.stringify(data));
@@ -44,6 +45,7 @@ function choosePage(path){
  page=path;ready=false;selected=null;controls();$('page').value=path;
  $('selectionName').textContent='Click any element on the page';$('propertyControls').hidden=true;$('emptyProperties').hidden=false;
  $('pageName').textContent=$('page').selectedOptions[0]?.textContent||path;
+ frame.style.height='800px';
  frame.src=path+(path.includes('?')?'&':'?')+'visual_builder=1';
  status('Opening editable '+path+'. Drag orange handles to move or resize.');
 }
@@ -58,6 +60,7 @@ function chooseSelection(info){
  $('color').value=v.color||'#ffffff';$('backgroundColor').value=v.backgroundColor||'#202020';
  $('replaceSelected').hidden=info.tag!=='img';
  $('fullBleed').textContent=v.fullBleed?'⛶ Remove full-width override':'⛶ Extend to full width';
+ $('unlockLayout').textContent=v.unlockLayout?'🔓 Restore original container constraints':'🔓 Unlock size, spacing & overflow';
  controls();
 }
 function addNew(element,src){
@@ -70,7 +73,8 @@ for(const button of document.querySelectorAll('[data-view]'))button.onclick=()=>
  view=button.dataset.view;
  for(const b of document.querySelectorAll('[data-view]'))b.classList.toggle('selected',b===button);
  frame.classList.toggle('mobile',view==='mobile');
- frame.style.width=view==='mobile'?'390px':'100%';frame.style.height=view==='mobile'?'790px':'100%';
+ frame.style.width=view==='mobile'?'390px':'100%';
+ frame.style.minHeight='0';
  frame.contentWindow?.location.reload();
 };
 function chooseMode(next){
@@ -93,6 +97,13 @@ $('addButton').onclick=()=>addNew('button');
 $('addBox').onclick=()=>addNew('box');
 $('addImage').onclick=()=>$('fileUpload').click();
 $('replaceSelected').onclick=()=>$('fileUpload').click();
+$('unlockLayout').onclick=()=>{
+ if(!selected)return;
+ const op=(documentState.pages[page]||[]).slice().reverse().find(item=>item.target===selected.target&&item.values);
+ const next=!(op?.values?.unlockLayout);
+ updateValues({unlockLayout:next},'style');
+ $('unlockLayout').textContent=next?'🔓 Restore original container constraints':'🔓 Unlock size, spacing & overflow';
+};
 $('fullBleed').onclick=()=>{
  if(!selected)return;
  const op=(documentState.pages[page]||[]).slice().reverse().find(item=>item.target===selected.target&&item.values);
@@ -113,12 +124,13 @@ $('restore').onclick=()=>{
  if(!selected)return;
  change(()=>{documentState.pages[page]=operations().filter(op=>op.target!==selected.target);});
 };
-$('setText').onclick=()=>{if(selected)add('text',{text:$('text').value.slice(0,1200)});};
+$('setText').onclick=()=>{if(selected)add('text',{text:$('text').value.slice(0,50000)});};
 $('applyStyle').onclick=()=>{
  if(!selected)return;const values={};
  for(const id of ['width','height','x','y','fontSize','opacity']){
   const field=$(id);if(field.value==='')continue;let n=Number(field.value);
-  const minimum=Number(field.min||-1800),maximum=Number(field.max||2200);
+  if(!Number.isFinite(n)){status('Enter a valid number.');return;}
+  const [minimum,maximum]=BOUNDS[id];
   values[id]=Math.max(minimum,Math.min(maximum,Math.round(n)));
  }
  for(const id of ['color','backgroundColor'])if($(id).value)values[id]=$(id).value;
@@ -160,7 +172,13 @@ $('publish').onclick=()=>{
 addEventListener('message',event=>{
  if(event.origin!==location.origin||event.source!==frame.contentWindow||!event.data)return;
  const data=event.data;
- if(data.type==='mvn-visual-ready'){ready=true;controls();send();status('Canvas ready. Drag an element directly to move, or pull any orange corner to resize. On mobile, tap Scroll Page to browse.');}
+ if(data.type==='mvn-visual-ready'){ready=true;controls();send();status('Canvas ready. Drag an element directly to move, or pull any orange corner to resize. No fixed element limits.');}
+ if(data.type==='mvn-visual-document-height'){
+  if(data.page===page&&Number.isFinite(data.height)){
+   // Keep the iframe as tall as the actual page; the viewport no longer clips design work.
+   frame.style.height=Math.max(600,Math.ceil(data.height)+32)+'px';
+  }
+ }
  if(data.type==='mvn-visual-select')chooseSelection(data);
  if(data.type==='mvn-visual-operation'){
   if(!pages.has(page)||!data.target)return;

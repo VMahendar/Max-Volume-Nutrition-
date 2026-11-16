@@ -8,9 +8,9 @@ export function canonicalBuilderPage(path){
  if(path==='/index.html')return '/';
  return visualBuilderPages.includes(path)?path:null;
 }
-const numeric={x:[-1800,1800],y:[-1800,1800],width:[20,2200],height:[20,1600],fontSize:[8,150],rotate:[-180,180],opacity:[0,100],zIndex:[0,100],padding:[0,180],radius:[0,150]};
+const numeric={x:[-1000000,1000000],y:[-1000000,1000000],width:[1,1000000],height:[1,1000000],fontSize:[1,100000],rotate:[-360000,360000],opacity:[0,100],zIndex:[-100000,100000],padding:[0,100000],radius:[0,100000]};
 const color=/^#[a-fA-F0-9]{6}$/;
-const selector=/^(?:body|main|header|footer|nav|section|article|div|figure|a|span|p|h[1-6]|img|picture|button|strong|small|ul|li)(?:\s*>\s*(?:main|header|footer|nav|section|article|div|figure|a|span|p|h[1-6]|img|picture|button|strong|small|ul|li)(?::nth-of-type\([1-9][0-9]{0,3}\))?){0,18}$/;
+const selector=/^(?:body|main|header|footer|nav|section|article|div|figure|a|span|p|h[1-6]|img|picture|button|strong|small|ul|li)(?:\s*>\s*(?:main|header|footer|nav|section|article|div|figure|a|span|p|h[1-6]|img|picture|button|strong|small|ul|li)(?::nth-of-type\([1-9][0-9]{0,3}\))?){0,90}$/;
 export function validateVisualBuilder(input, imageAllowed=()=>false){
  if(!input||typeof input!=='object'||Array.isArray(input))throw Error('Invalid visual builder document.');
  if(input.version!==1||!input.pages||typeof input.pages!=='object'||Array.isArray(input.pages))throw Error('Invalid visual builder version or pages.');
@@ -19,14 +19,14 @@ export function validateVisualBuilder(input, imageAllowed=()=>false){
  const pages={};
  for(const path of keys){
   const operations=input.pages[path];
-  if(!Array.isArray(operations)||operations.length>180)throw Error('Too many edits on '+path+'.');
+  if(!Array.isArray(operations)||operations.length>5000)throw Error('Too many edits on '+path+'.');
   const ids=new Set();
   pages[path]=operations.map(op=>{
    if(!op||typeof op!=='object'||Array.isArray(op)||typeof op.id!=='string'||!/^v[0-9a-z-]{8,50}$/.test(op.id)||ids.has(op.id))throw Error('Invalid or repeated visual edit ID.');
    ids.add(op.id);
    if(!['move','resize','text','image','hide','duplicate','insert','style'].includes(op.action))throw Error('Unknown visual action.');
    if(!['all','desktop','mobile'].includes(op.device))throw Error('Invalid visual editing device.');
-   if(typeof op.target!=='string'||op.target.length>450||!(selector.test(op.target)||/^@v[0-9a-z-]{8,50}$/.test(op.target)))throw Error('Unsafe visual target.');
+   if(typeof op.target!=='string'||op.target.length>2400||!(selector.test(op.target)||/^@v[0-9a-z-]{8,50}$/.test(op.target)))throw Error('Unsafe visual target.');
    const clean={id:op.id,action:op.action,device:op.device,target:op.target};
    if(op.action==='move'||op.action==='resize'||op.action==='style'){
     if(!op.values||typeof op.values!=='object'||Array.isArray(op.values))throw Error('Invalid visual dimensions.');
@@ -37,13 +37,14 @@ export function validateVisualBuilder(input, imageAllowed=()=>false){
      else if(key==='objectFit'){if(!['contain','cover','fill'].includes(value))throw Error('Invalid image fitting.');values[key]=value;}
      else if(key==='textAlign'){if(!['left','center','right'].includes(value))throw Error('Invalid text alignment.');values[key]=value;}
      else if(key==='fullBleed'){if(typeof value!=='boolean')throw Error('Invalid full-width setting.');values[key]=value;}
+     else if(key==='unlockLayout'){if(typeof value!=='boolean')throw Error('Invalid layout unlock setting.');values[key]=value;}
      else throw Error('Unapproved visual style.');
     }
     if(!Object.keys(values).length)throw Error('Visual edit has no values.');
     clean.values=values;
    }
    if(op.action==='text'||op.action==='insert'){
-    if(typeof op.text!=='string'||op.text.length>1200)throw Error('Invalid text length.');
+    if(typeof op.text!=='string'||op.text.length>50000)throw Error('Invalid text length.');
     clean.text=op.text;
    }
    if(op.action==='image'||op.action==='insert'){

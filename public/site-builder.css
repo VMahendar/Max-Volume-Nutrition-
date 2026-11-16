@@ -20,3 +20,23 @@
  .workspace.canvas-wide .stage{padding:0}
  .workspace.canvas-wide #preview{width:100%}
 }
+
+/* Unrestricted owner design canvas: allow a full document, not a fixed-height box. */
+html,body{min-height:100%;height:auto;overflow-y:auto}
+.workspace{height:auto;min-height:calc(100dvh - 65px);align-items:start}
+.sidebar,.inspector{position:sticky;top:0;max-height:100dvh;overflow-y:auto}
+.center{height:auto;min-height:100dvh;overflow:visible}
+.stage{display:block;flex:none;overflow:visible;min-height:75vh;padding:0;background:#202831}
+#preview{height:800px;min-height:0;max-height:none;display:block;overflow:visible;box-shadow:none}
+#preview.mobile{height:800px;min-height:0;max-height:none}
+.workspace.canvas-wide{align-items:stretch}
+.workspace.canvas-wide .stage{height:auto;min-height:100dvh}
+.workspace.canvas-wide .center{height:auto;min-height:100dvh}
+.inspector input[type=number]{max-width:100%;min-width:0}
+@media(max-width:750px){
+ .workspace{height:auto;min-height:100dvh}
+ .center,.workspace.canvas-wide .center{height:auto;min-height:85dvh;overflow:visible}
+ .stage,.workspace.canvas-wide .stage{height:auto;min-height:75dvh;overflow-x:auto;overflow-y:visible}
+ .sidebar,.inspector{position:static;max-height:none;overflow:visible}
+ #preview,#preview.mobile{height:800px;min-height:0;max-height:none}
+}

@@ -7,7 +7,10 @@ const prohibited='form,input,select,textarea,[contenteditable],#cart,#checkout,#
 const nodes='section,article,figure,img,h1,h2,h3,h4,h5,h6,p,a,button,strong,small,div';
 const baseline=new WeakMap(),touched=new Set(),sources=new WeakMap();
 let layer,outline,active=null,selected='',gesture=null,mode='move';
-const isProtected=e=>!e||(!!e.closest(prohibited)&&!e.closest('[data-mvn-builder-created]'))||(e!==document.body&&!e.closest('[data-mvn-builder-created]')&&!!e.querySelector?.('form,input,select,textarea,#cart,#checkout,#payment,#account,[data-price],.price,.product-price,.checkout,.cart-item,[data-cart]'));
+// Editable containers may include other elements. Restrict actual account/checkout controls,
+// not their surrounding layout: previously this silently locked most of the storefront.
+const isProtected=e=>!e||(!!e.closest(prohibited)&&!e.closest('[data-mvn-builder-created]'));
+const containsCommerce=e=>!!e.querySelector?.('form,input,select,textarea,#cart,#checkout,#payment,#account,[data-price],.price,.product-price,.checkout,.cart-item,[data-cart]');
 function pathFor(el){
  const generated=el.closest('[data-mvn-builder-created]');
  if(generated)return '@'+generated.dataset.mvnBuilderCreated;
@@ -50,6 +53,7 @@ function apply(input){
  for(const op of doc.pages?.[path]||[]){
   if(op.device!=='all'&&op.device!==viewport)continue;
   const e=getTarget(op.target);if(!e||isProtected(e))continue;
+  if(op.action==='duplicate'&&containsCommerce(e))continue;
   if(op.action==='duplicate'||op.action==='insert'){
    const copy=op.action==='duplicate'?e.cloneNode(true):document.createElement(op.element==='image'?'img':op.element==='button'?'a':op.element==='box'?'div':'p');
    copy.querySelectorAll?.('form,input,select,textarea,script,iframe,video,audio,canvas,[id]').forEach(x=>x.remove());
@@ -60,12 +64,12 @@ function apply(input){
     if(op.element==='button')copy.href=op.href;
    }
    const r=e.getBoundingClientRect();
-   copy.style.cssText='position:absolute;pointer-events:auto;box-sizing:border-box;max-width:none;left:'+(r.left+scrollX+20)+'px;top:'+(r.top+scrollY+20)+'px;width:'+Math.max(120,Math.min(540,r.width))+'px;min-height:40px;z-index:100001;';
+   copy.style.cssText='position:absolute;pointer-events:auto;box-sizing:border-box;max-width:none;max-height:none;overflow:visible;left:'+(r.left+scrollX+20)+'px;top:'+(r.top+scrollY+20)+'px;width:'+Math.max(1,r.width)+'px;min-height:1px;z-index:100001;';
    layer.append(copy);continue;
   }
   remember(e);
-  if(op.action==='hide'){style(e,'display','none');continue;}
-  if(op.action==='text'){if(e.tagName!=='IMG'){e.textContent=op.text;e.dataset.mvnBuilderText='1';}continue;}
+  if(op.action==='hide'){if(!containsCommerce(e))style(e,'display','none');continue;}
+  if(op.action==='text'){if(e.tagName!=='IMG'&&!containsCommerce(e)){e.textContent=op.text;e.dataset.mvnBuilderText='1';}continue;}
   if(op.action==='image'){if(e.tagName==='IMG'){const picture=e.closest('picture');if(picture){const prior=[...picture.querySelectorAll('source')].map(source=>[source,source.getAttribute('srcset')]);sources.set(e,prior);for(const [source] of prior)source.removeAttribute('srcset');}e.removeAttribute('srcset');e.removeAttribute('sizes');e.src='/'+op.src;e.dataset.mvnBuilderImage='1';}continue;}
   const v=op.values||{};
   if('x'in v||'y'in v||'rotate'in v)style(e,'transform','translate('+(v.x||0)+'px,'+(v.y||0)+'px) rotate('+(v.rotate||0)+'deg)');
@@ -75,6 +79,20 @@ function apply(input){
   if('opacity'in v)style(e,'opacity',String(v.opacity/100));
   if('zIndex'in v)style(e,'z-index',String(v.zIndex));
   for(const k of ['color','backgroundColor','objectFit','textAlign'])if(v[k])style(e,k.replace(/[A-Z]/g,c=>'-'+c.toLowerCase()),v[k]);
+  if(v.unlockLayout===true){
+   // Editing unlock: clear max dimensions, clipping, overflow and aspect-ratio imposed
+   // by the original template. No changes are saved to the live store until Publish.
+   for(let ancestor=e,steps=0;ancestor&&ancestor!==document.documentElement&&steps<24;ancestor=ancestor.parentElement,steps++){
+    remember(ancestor);
+    style(ancestor,'max-height','none');
+    style(ancestor,'max-width','none');
+    style(ancestor,'overflow','visible');
+    style(ancestor,'overflow-x','visible');
+    style(ancestor,'overflow-y','visible');
+    style(ancestor,'clip-path','none');
+    if(ancestor===e){style(ancestor,'min-height','0');style(ancestor,'aspect-ratio','auto');}
+   }
+  }
   if(v.fullBleed===true){
    // For the hero picture remove the constraints on its ancestor section,
    // not merely the image pixels; otherwise white margins remain.
@@ -91,7 +109,7 @@ function apply(input){
    if(e!==hero){style(e,'max-width','none');style(e,'width','100%');}
   }
  }
- if(editing)requestAnimationFrame(positionOutline);
+ if(editing)requestAnimationFrame(()=>{positionOutline();reportDocumentHeight();});
 }
 if(!editing){apply(doc);return;}
 const css=document.createElement('style');
@@ -108,7 +126,7 @@ function send(type,fields){parent.postMessage({type,...fields},location.origin);
 function select(e){
  if(!e||isProtected(e))return;const target=pathFor(e);if(!target)return;
  active=e;selected=target;positionOutline();const r=e.getBoundingClientRect();
- send('mvn-visual-select',{target,tag:e.tagName.toLowerCase(),text:e.tagName==='IMG'?'':e.textContent.slice(0,1200),src:e.tagName==='IMG'?e.getAttribute('src'):'',width:Math.round(r.width),height:Math.round(r.height)});
+ send('mvn-visual-select',{target,tag:e.tagName.toLowerCase(),text:e.tagName==='IMG'?'':e.textContent.slice(0,50000),src:e.tagName==='IMG'?e.getAttribute('src'):'',width:Math.round(r.width),height:Math.round(r.height)});
 }
 // True canvas interaction: grab the object itself (mouse or touch), not only the small handles.
 let directGesture=null;
@@ -136,7 +154,7 @@ document.addEventListener('pointermove',ev=>{
 function endDirect(ev){
  if(!directGesture||ev.pointerId!==directGesture.id)return;
  const g=directGesture;directGesture=null;
- if(g.moved){ev.preventDefault();send('mvn-visual-operation',{target:g.target,action:'move',values:{x:Math.max(-1800,Math.min(1800,Math.round(g.x+ev.clientX-g.sx))),y:Math.max(-1800,Math.min(1800,Math.round(g.y+ev.clientY-g.sy)))}});}
+ if(g.moved){ev.preventDefault();send('mvn-visual-operation',{target:g.target,action:'move',values:{x:Math.max(-1000000,Math.min(1000000,Math.round(g.x+ev.clientX-g.sx))),y:Math.max(-1000000,Math.min(1000000,Math.round(g.y+ev.clientY-g.sy)))}});}
 }
 document.addEventListener('pointerup',endDirect,true);
 document.addEventListener('pointercancel',endDirect,true);
@@ -156,18 +174,28 @@ outline.addEventListener('pointermove',ev=>{
  if(!gesture||ev.pointerId!==gesture.pointerId||!active)return;
  const dx=ev.clientX-gesture.sx,dy=ev.clientY-gesture.sy;
  const xDir=gesture.kind.includes('w')?-1:1,yDir=gesture.kind.includes('n')?-1:1;
- style(active,'width',Math.max(20,gesture.width+dx*xDir)+'px');
- style(active,'height',Math.max(20,gesture.height+dy*yDir)+'px');
+ style(active,'width',Math.max(1,gesture.width+dx*xDir)+'px');
+ style(active,'height',Math.max(1,gesture.height+dy*yDir)+'px');
  positionOutline();
 });
 outline.addEventListener('pointerup',ev=>{
  if(!gesture||ev.pointerId!==gesture.pointerId||!active)return;
  const dx=ev.clientX-gesture.sx,dy=ev.clientY-gesture.sy;
  const xDir=gesture.kind.includes('w')?-1:1,yDir=gesture.kind.includes('n')?-1:1;
- const values={width:Math.max(20,Math.min(2200,Math.round(gesture.width+dx*xDir))),height:Math.max(20,Math.min(1600,Math.round(gesture.height+dy*yDir)))};
+ const values={width:Math.max(1,Math.min(1000000,Math.round(gesture.width+dx*xDir))),height:Math.max(1,Math.min(1000000,Math.round(gesture.height+dy*yDir)))};
  send('mvn-visual-operation',{target:selected,action:'resize',values});gesture=null;
 });
+// Expand the editor iframe when a tall page needs more space; don't tie it to a
+// fixed phone/desktop preview height.
+function reportDocumentHeight(){
+ if(!editing)return;
+ const full=Math.max(document.body?.scrollHeight||0,document.documentElement?.scrollHeight||0);
+ if(full>innerHeight+24)send('mvn-visual-document-height',{page:path,height:full});
+}
 addEventListener('scroll',()=>requestAnimationFrame(positionOutline),{passive:true});
+addEventListener('load',reportDocumentHeight);
+const heightObserver=new ResizeObserver(()=>requestAnimationFrame(reportDocumentHeight));
+heightObserver.observe(document.body);
 addEventListener('resize',()=>requestAnimationFrame(positionOutline),{passive:true});
 addEventListener('message',ev=>{
  if(ev.origin!==location.origin||ev.source!==parent||!ev.data)return;

@@ -80,6 +80,20 @@ try{
   return hero?.style.getPropertyValue('width')==='100vw';
  },null,{timeout:15000});
  assert.match(await iframe.locator('#mvnEditorial').getAttribute('style'),/width: 100vw/);
+ // Unlock clipping/size restrictions on selected banner and test dimensions above old maximums.
+ await page.locator('#unlockLayout').click();
+ await page.waitForFunction(()=>document.querySelector('#preview')?.contentDocument?.querySelector('.mvn-owner-banner-img')?.style.getPropertyValue('max-height')==='none',null,{timeout:15000});
+ await page.locator('#height').fill('2600');
+ await page.locator('#x').fill('12000');
+ await page.locator('#applyStyle').click();
+ await page.waitForFunction(()=>{
+  const image=document.querySelector('#preview')?.contentDocument?.querySelector('.mvn-owner-banner-img');
+  return image?.style.getPropertyValue('height')==='2600px';
+ },null,{timeout:15000});
+ assert.equal(await page.locator('#height').inputValue(),'2600','height has no former 1600px cap');
+ assert.equal(await page.locator('#x').inputValue(),'12000','position has no former 1800px cap');
+ // The document may scroll beyond the initial frame; its height must update rather than clip.
+ await page.waitForFunction(()=>Number.parseInt(document.querySelector('#preview')?.style.height||'0',10)>1600,null,{timeout:15000});
  // Mobile browsing uses scroll mode; move mode remains available for touch edits.
  await page.locator('#scrollMode').click();
  await page.waitForFunction(()=>document.querySelector('#preview')?.contentDocument?.documentElement.classList.contains('mvn-builder-move-mode')===false,null,{timeout:15000});
