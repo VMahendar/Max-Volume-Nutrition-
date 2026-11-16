@@ -336,10 +336,10 @@ if(path==='/api/admin/homepage-images'){
  }
  if(req.method!=='POST')fail(405,'Method not allowed.');
  if(!rate('homepage-image:'+user.id,15))fail(429,'Too many uploads. Try again shortly.');
- const input=JSON.parse(await body(req,6000000));
+ const input=JSON.parse(await body(req,12000000));
  if(typeof input.content!=='string'||!/^[A-Za-z0-9+/]+={0,2}$/.test(input.content))fail(400,'Invalid image data.');
  const bytes=Buffer.from(input.content,'base64');
- if(bytes.length<16||bytes.length>4*1024*1024)fail(400,'Upload an image smaller than 4 MB.');
+ if(bytes.length<16||bytes.length>8*1024*1024)fail(400,'Upload an image smaller than 8 MB.');
  const png=bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10]));
  const jpg=bytes[0]===255&&bytes[1]===216&&bytes[2]===255;
  const webp=bytes.toString('ascii',0,4)==='RIFF'&&bytes.toString('ascii',8,12)==='WEBP';
@@ -505,7 +505,7 @@ if(['/', '/index.html'].includes(u.pathname)){
  const design=C.setting('homepagePublishedV2');
  const serialized=JSON.stringify(design).replace(/</g,'\\u003c');
  const editing=u.searchParams.get('homepage_editor')==='1';
- let html=file.toString('utf8').replace('</body>',`<script type="application/json" id="mvnHomepageDesign">${serialized}</script><script src="/homepage-design.js?v=20261116-editor-1" defer></script></body>`);
+ let html=file.toString('utf8').replace('</body>',`<script type="application/json" id="mvnHomepageDesign">${serialized}</script><script src="/homepage-design.js?v=20261116-full-1" defer></script></body>`);
  if(editing)html=html.replace('<body ','<body data-homepage-editor="true" ');
  file=Buffer.from(html);
 }

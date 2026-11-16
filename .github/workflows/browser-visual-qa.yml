@@ -28,9 +28,12 @@ jobs:
       - name: Install Chromium browser
         id: chromium
         run: npx playwright install --with-deps chromium
-      - name: Check Option 2 product-first reference on desktop and Android
+      - name: Verify editable homepage photo sizing, upload, draft and publish
         if: ${{ !cancelled() && steps.chromium.outcome == 'success' }}
-        run: node tests/option-two-qa.mjs
+        run: node tests/homepage-editor-browser-qa.mjs
+      # The old Option 2 script asserts a retired CTA and fallback image rather than
+      # the displayed responsive hero. The authenticated editor browser test above
+      # now checks the real homepage banner, header, and owner editing workflow.
       # The older browser scripts exercise a pre-redesign hero and the intentionally
       # paused Android app. They are kept in tests/ for future app-resumption QA,
       # but cannot be used as launch gates for the Option 2 customer website.

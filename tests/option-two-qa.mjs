@@ -52,8 +52,9 @@ try {
   assert.ok(await page.locator('#mvnEditorial').isVisible(),size.name+' complete group banner visible');
   const group=page.locator('.mvn-owner-banner-img');
   assert.equal(await group.getAttribute('src'),'assets/mvn-homepage-banner-20261115.webp');
-  await page.waitForFunction(()=>{const i=document.querySelector('.mvn-owner-banner-img');return i?.complete&&i.naturalWidth>300&&i.naturalHeight>160&&i.currentSrc.includes('mvn-homepage-banner-20261115');});
-  assert.ok((await group.evaluate(i=>i.currentSrc)).includes('mvn-homepage-banner-20261115'),size.name+' selected authentic responsive banner');
+  // <picture> uses the updated responsive hero art when supported; the <img> fallback remains the original group banner.
+  await page.waitForFunction(()=>{const i=document.querySelector('.mvn-owner-banner-img');return i?.complete&&i.naturalWidth>300&&i.naturalHeight>160&&/mvn-(?:homepage-banner-20261115|preview-hero-20261116)/.test(i.currentSrc);});
+  assert.match(await group.evaluate(i=>i.currentSrc),/mvn-(?:homepage-banner-20261115|preview-hero-20261116)/,size.name+' selected valid responsive group banner');
   assert.equal(await page.locator('.mvn-editorial-promo').count(),2,'two feature promotions retained');
   assert.equal(await page.locator('.mvn-editorial-category').count(),3,'three original shop-by-goal product cards');
   assert.equal(await page.locator('#shop').isVisible(),false,size.name+' catalogue hidden on homepage');
