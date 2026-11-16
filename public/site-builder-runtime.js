@@ -126,7 +126,7 @@ function send(type,fields){parent.postMessage({type,...fields},location.origin);
 function select(e){
  if(!e||isProtected(e))return;const target=pathFor(e);if(!target)return;
  active=e;selected=target;positionOutline();const r=e.getBoundingClientRect();
- send('mvn-visual-select',{target,tag:e.tagName.toLowerCase(),text:e.tagName==='IMG'?'':e.textContent.slice(0,1200),src:e.tagName==='IMG'?e.getAttribute('src'):'',width:Math.round(r.width),height:Math.round(r.height)});
+ send('mvn-visual-select',{target,tag:e.tagName.toLowerCase(),text:e.tagName==='IMG'?'':e.textContent.slice(0,50000),src:e.tagName==='IMG'?e.getAttribute('src'):'',width:Math.round(r.width),height:Math.round(r.height)});
 }
 // True canvas interaction: grab the object itself (mouse or touch), not only the small handles.
 let directGesture=null;
