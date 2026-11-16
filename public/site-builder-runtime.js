@@ -91,7 +91,7 @@ function apply(input){
    if(e!==hero){style(e,'max-width','none');style(e,'width','100%');}
   }
  }
- if(editing)requestAnimationFrame(positionOutline);
+ if(editing){requestAnimationFrame(positionOutline);requestAnimationFrame(()=>send('mvn-visual-resize',{}));}
 }
 if(!editing){apply(doc);return;}
 const css=document.createElement('style');
@@ -136,7 +136,7 @@ document.addEventListener('pointermove',ev=>{
 function endDirect(ev){
  if(!directGesture||ev.pointerId!==directGesture.id)return;
  const g=directGesture;directGesture=null;
- if(g.moved){ev.preventDefault();send('mvn-visual-operation',{target:g.target,action:'move',values:{x:Math.max(-1800,Math.min(1800,Math.round(g.x+ev.clientX-g.sx))),y:Math.max(-1800,Math.min(1800,Math.round(g.y+ev.clientY-g.sy)))}});}
+ if(g.moved){ev.preventDefault();send('mvn-visual-operation',{target:g.target,action:'move',values:{x:Math.max(-100000,Math.min(100000,Math.round(g.x+ev.clientX-g.sx))),y:Math.max(-100000,Math.min(100000,Math.round(g.y+ev.clientY-g.sy)))}});}
 }
 document.addEventListener('pointerup',endDirect,true);
 document.addEventListener('pointercancel',endDirect,true);
@@ -156,15 +156,15 @@ outline.addEventListener('pointermove',ev=>{
  if(!gesture||ev.pointerId!==gesture.pointerId||!active)return;
  const dx=ev.clientX-gesture.sx,dy=ev.clientY-gesture.sy;
  const xDir=gesture.kind.includes('w')?-1:1,yDir=gesture.kind.includes('n')?-1:1;
- style(active,'width',Math.max(20,gesture.width+dx*xDir)+'px');
- style(active,'height',Math.max(20,gesture.height+dy*yDir)+'px');
+ style(active,'width',Math.max(1,gesture.width+dx*xDir)+'px');
+ style(active,'height',Math.max(1,gesture.height+dy*yDir)+'px');
  positionOutline();
 });
 outline.addEventListener('pointerup',ev=>{
  if(!gesture||ev.pointerId!==gesture.pointerId||!active)return;
  const dx=ev.clientX-gesture.sx,dy=ev.clientY-gesture.sy;
  const xDir=gesture.kind.includes('w')?-1:1,yDir=gesture.kind.includes('n')?-1:1;
- const values={width:Math.max(20,Math.min(2200,Math.round(gesture.width+dx*xDir))),height:Math.max(20,Math.min(1600,Math.round(gesture.height+dy*yDir)))};
+ const values={width:Math.max(1,Math.min(100000,Math.round(gesture.width+dx*xDir))),height:Math.max(1,Math.min(100000,Math.round(gesture.height+dy*yDir)))};
  send('mvn-visual-operation',{target:selected,action:'resize',values});gesture=null;
 });
 addEventListener('scroll',()=>requestAnimationFrame(positionOutline),{passive:true});
@@ -179,4 +179,5 @@ addEventListener('message',ev=>{
  }
 });
 apply(doc);send('mvn-visual-ready',{page:path});
+new ResizeObserver(()=>send('mvn-visual-resize',{})).observe(document.body);
 })();
