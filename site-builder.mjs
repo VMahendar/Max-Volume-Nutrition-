@@ -2,7 +2,7 @@
 export const visualBuilderPages = Object.freeze([
  '/', '/shop.html', '/about.html', '/contact.html', '/dealer.html',
  '/brands.html', '/potency-whey.html', '/nitro-mass.html', '/pro-creatine.html',
- '/sturdy-pre-workout.html', '/offers.html', '/support.html'
+ '/sturdy-pre-workout.html', '/offers.html', '/support.html', '/wholesale-account.html'
 ]);
 export function canonicalBuilderPage(path){
  if(path==='/index.html')return '/';
