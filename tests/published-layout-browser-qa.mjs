@@ -34,6 +34,16 @@ try{
    return {viewport:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,values,cards};
   });
   console.log('LIVE_SAVED_DESIGN_REGRESSION',viewport.width,JSON.stringify(measurements));
+  const extra=await page.evaluate(()=>{
+   const selectors=['.announce','.storehead','.storehead .brand-identity','.storehead .original-brand-logo','.storehead .mvn-header-wordmark','.storehead .head-actions','.storehead .header-search','.storehead .mvn-preview-nav','.mvn-theme-main-nav','.mvn-globtech-launch','.mvn-globtech-launch > div','#shop','main','.recent-section','.mvn-home-contact','.mvn-home-contact-inner','.mvn-home-contact nav','.mvn-home-contact h2','body > footer'];
+   return selectors.map(selector=>{
+    const el=document.querySelector(selector);
+    if(!el)return {selector,missing:true};
+    const b=el.getBoundingClientRect(),s=getComputedStyle(el);
+    return {selector,x:Math.round(b.x),y:Math.round(b.y),w:Math.round(b.width),h:Math.round(b.height),display:s.display,grid:s.gridTemplateColumns,gap:s.gap,padding:s.padding,margin:s.margin,transform:s.transform,fontSize:s.fontSize,visibility:s.visibility};
+   });
+  });
+  console.log('LIVE_HEADER_FOOTER_GEOMETRY',viewport.width,JSON.stringify(extra));
   const vw=measurements.viewport,values=measurements.values,cards=measurements.cards;
   for(const name of ['hero','goal','best','globe']){
    assert.ok(values[name]&&values[name].width>vw*.94,name+' must fill viewport with live edits at '+vw);
