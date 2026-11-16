@@ -59,7 +59,7 @@ function imageTools(id){
  field(id+'Zoom','Increase / reduce photo size','range',{min:50,max:250,unit:'%'});
  field(id+'X','Move photo left / right','range',{min:-100,max:100,unit:'%'});
  field(id+'Y','Move photo up / down','range',{min:-100,max:100,unit:'%'});
- field(id+'Fit','Photo fit','select',{choices:[['contain','Show full image'],['cover','Fill / crop image']]});
+ if(id!=='banner')field(id+'Fit','Photo fit','select',{choices:[['contain','Show full image'],['cover','Fill / crop image']]});
 }
 const categoryFields={
  whey:['categoryWheyHeadline','categoryWheyCaption'],
