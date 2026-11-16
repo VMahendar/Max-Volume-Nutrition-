@@ -7,7 +7,7 @@ const prohibited='form,input,select,textarea,[contenteditable],#cart,#checkout,#
 const nodes='section,article,figure,img,h1,h2,h3,h4,h5,h6,p,a,button,strong,small,div';
 const baseline=new WeakMap(),touched=new Set();
 let layer,outline,active=null,selected='',gesture=null;
-const isProtected=e=>!e||(!!e.closest(prohibited)&&!e.closest('[data-mvn-builder-created]'));
+const isProtected=e=>!e||(!!e.closest(prohibited)&&!e.closest('[data-mvn-builder-created]'))||(e!==document.body&&!e.closest('[data-mvn-builder-created]')&&!!e.querySelector?.('form,input,select,textarea,#cart,#checkout,#payment,#account,[data-price],.price,.product-price,.checkout,.cart-item,[data-cart]'));
 function pathFor(el){
  const generated=el.closest('[data-mvn-builder-created]');
  if(generated)return '@'+generated.dataset.mvnBuilderCreated;
