@@ -501,6 +501,66 @@ body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.
   }
 }
 </style>
+<style data-mvn-home-spacing>
+
+html:has(> body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store)) { background:#151617; }
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) { padding-bottom:0!important; min-height:0!important; }
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead {
+  height:auto!important;
+  min-height:96px!important;
+  grid-template-columns:minmax(185px,1fr) auto minmax(240px,1fr)!important;
+  grid-template-rows:auto!important;
+  padding:8px clamp(12px,3vw,44px)!important;
+  background:#151617!important;
+}
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .brand-identity {
+  width:100%!important; max-width:225px!important; min-width:0!important;
+  height:78px!important; padding:0!important; justify-self:start;
+}
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .brand-identity .original-brand-logo {
+  width:100%!important; height:100%!important; object-fit:contain!important; object-position:left center!important;
+}
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .mvn-preview-nav { gap:clamp(4px,1vw,16px); }
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .mvn-preview-nav a {
+  min-height:44px; padding-inline:8px; font-size:clamp(14px,1.45vw,19px); white-space:nowrap;
+}
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .head-actions :is(.account-link,#bag,.mvn-header-more summary) {
+  min-height:46px!important; min-width:44px!important; font-size:15px!important;
+}
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .mvn-theme-shop-goals { padding-block:clamp(18px,3vw,36px)!important; }
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .mvn-preview-best { margin-block:clamp(16px,2.5vw,32px); }
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .mvn-globtech-launch { margin-block:clamp(16px,2.5vw,32px); }
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .mvn-home-contact {
+  display:block; margin:0; padding:clamp(20px,3vw,40px) clamp(14px,4vw,42px);
+  background:#151617; color:#f7f5f4; border-top:3px solid #c8371b;
+}
+.mvn-home-contact .mvn-home-contact-inner {
+  display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2fr); align-items:center;
+  max-width:79rem; margin-inline:auto; gap:12px 24px;
+}
+.mvn-home-contact h2 { margin:0; color:inherit; font-size:clamp(19px,2.1vw,29px); }
+.mvn-home-contact p { margin:4px 0 0; color:#d9d5d0; font-size:14px; }
+.mvn-home-contact nav { display:flex; flex-wrap:wrap; justify-content:flex-end; gap:4px 16px; }
+.mvn-home-contact nav a { display:inline-flex; align-items:center; min-height:44px; color:#fff; font-size:15px; text-decoration:underline; text-underline-offset:4px; }
+.mvn-home-contact nav a:hover { color:#ff825f; }
+@media(max-width:940px) {
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead {
+    grid-template-columns:minmax(0,1fr) auto!important; grid-template-rows:auto auto!important;
+    gap:2px 8px!important; padding:5px 12px!important;
+  }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .brand-identity { height:64px!important; }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .head-actions { grid-area:1 / 2!important; }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .mvn-preview-nav {
+    grid-area:2 / 1 / 3 / 3!important; justify-content:center; flex-wrap:nowrap; width:100%;
+    border-top:1px solid #3b3c3d; gap:clamp(4px,3vw,24px);
+  }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .mvn-preview-nav a { font-size:clamp(13px,3.8vw,17px); }
+}
+@media(max-width:600px) {
+  .mvn-home-contact .mvn-home-contact-inner { grid-template-columns:1fr; }
+  .mvn-home-contact nav { justify-content:flex-start; }
+}
+</style>
 </head>
 <body class="mvn-preview-design retail-home mvn-fitness-refresh mvn-advance-layout mvn-supplement-theme mvn-showcase-home">
 <!-- Keep original MVN artwork; remove only its dark rectangle at display time. -->
@@ -719,7 +779,22 @@ body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.
 </main>
 <section class="recent-section" id="recentSection" hidden aria-labelledby="recentTitle"><div class="recent-heading"><div><span class="eyebrow dark">PICK UP WHERE YOU LEFT OFF</span><h2 id="recentTitle">Recently viewed</h2></div><button type="button" id="clearRecent">Clear history</button></div><p class="recent-note">Saved only in this browser.</p><div id="recentProducts" class="recent-products"></div></section>
 <div id="offerCards" hidden aria-hidden="true"></div>
-<!-- Home ends after the showcase; detailed navigation/policies remain on /shop.html and dedicated pages. -->
+<footer class="mvn-home-contact" aria-label="Store information">
+  <div class="mvn-home-contact-inner">
+    <div>
+      <h2>Max Volume Nutrition</h2>
+      <p>Kelambakkam, Chennai</p>
+    </div>
+    <nav aria-label="Store links">
+      <a href="/shop.html">Shop all</a>
+      <a href="/dealer.html">Wholesale</a>
+      <a href="/contact.html">Contact</a>
+      <a href="https://wa.me/917708830513">WhatsApp</a>
+      <a href="/shipping.html">Shipping</a>
+      <a href="/returns.html">Returns</a>
+    </nav>
+  </div>
+</footer>
 
 <dialog id="productDialog" class="product-dialog" aria-label="Product information"><button type="button" id="detailClose" class="detail-close" aria-label="Close product details">×</button><div id="productDetail"></div></dialog>
 <div id="shade" hidden></div><aside id="drawer" role="dialog" aria-modal="true" tabindex="-1" aria-hidden="true" aria-label="Shopping bag"><div class="dhead"><div><small>MAX VOLUME NUTRITION</small><h2>YOUR CART</h2></div><button id="close" aria-label="Close bag">×</button></div><div id="items"></div><div class="drawerfoot"><div class="cart-offer"><label for="offerCode">Have an offer code?</label><div><input id="offerCode" maxlength="30" autocomplete="off" placeholder="Enter code"><button id="applyOffer" type="button">Apply</button><button id="removeOffer" type="button" hidden>Remove</button></div><p id="offerMessage" role="status"></p></div><div id="cart-totals"></div><p id="priceMessage" role="status" aria-live="polite"></p><form id="checkoutFields"><h3 class="checkout-heading">CHECKOUT DETAILS</h3><label>Full name<input id="customerName" required maxlength="100" autocomplete="name" placeholder="Enter your name"></label><label>Mobile number<input id="customerPhone" required type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" autocomplete="tel-national" title="Enter a 10-digit mobile number" placeholder="10-digit mobile number"></label><fieldset class="whatsapp-delivery"><legend>Delivery details</legend><label>Street address / door number<textarea id="customerAddress" required maxlength="350" rows="2" autocomplete="street-address" placeholder="Door number, street and area"></textarea></label><label>City<input id="customerCity" required maxlength="80" autocomplete="address-level2" placeholder="City / town"></label><div class="delivery-columns"><label>State<input id="customerState" required maxlength="80" autocomplete="address-level1" placeholder="State"></label><label>PIN code<input id="customerPincode" required pattern="[1-9][0-9]{5}" inputmode="numeric" maxlength="6" autocomplete="postal-code" placeholder="6-digit PIN"></label></div></fieldset><label>Payment preference<select id="paymentPreference"><option value="Confirm payment on WhatsApp">Confirm payment on WhatsApp</option><option value="Request UPI payment instructions">Request UPI payment instructions</option><option value="Request bank transfer instructions">Request bank transfer instructions</option><option value="Ask whether cash on delivery is available">Ask about cash on delivery</option></select></label><p class="checkout-message"><strong>Payment and delivery arranged on WhatsApp.</strong> Send your cart, delivery address and payment preference to our team. Delivery charges, serviceability and payment instructions are confirmed before you pay.</p><small>Sending the message requests confirmation. Our team will confirm stock, delivery and payment arrangements before your order is accepted. No online payment is taken.</small><label class="lead-capture-consent" style="font-size:12px;line-height:1.5;display:flex;gap:9px;align-items:flex-start"><input type="checkbox" id="leadConsent" required style="margin-top:3px"> I understand Max Volume Nutrition will save my order enquiry and contact details to respond. This does not subscribe me to marketing messages.</label><button class="primary send" id="send" type="submit">CONFIRM VIA WHATSAPP ↗</button></form></div></aside>
