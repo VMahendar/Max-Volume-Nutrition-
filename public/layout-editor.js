@@ -3,15 +3,19 @@
 const $=id=>document.getElementById(id);
 const labels={header:'Header & logo',hero:'Main banner',categories:'Shop by goal',bestsellers:'Best sellers',brands:'Upcoming brands',footer:'Footer',logo:'Logo image',banner:'Banner image',whey:'Whey category image',pre:'Pre-workout category image',creatine:'Creatine category image',massPromo:'Mass gainer promotion',creatinePromo:'Creatine promotion',bestWhey:'Best seller: Whey',bestMass:'Best seller: Mass',bestCreatine:'Best seller: Creatine',bestPre:'Best seller: Pre-workout'};
 const imageIds=['logo','banner','whey','pre','creatine','massPromo','creatinePromo','bestWhey','bestMass','bestCreatine','bestPre'];
+const activePhoto=()=>imageIds.includes(selection)?selection:selection==='header'?'logo':'banner';
+function quickUpload(){if(!ready||busy)return;const target=activePhoto();if(selection!==target)choose(target,false);$('upload').click();}
+$('uploadPhotoQuick').onclick=quickUpload;
+$('uploadPhotoInspector').onclick=quickUpload;
 let state,empty,published=null,baseRevision=null,baseline={},selection='header',images=[],history=[],ready=false,frameReady=false,dirty=false,busy=false;
 async function api(path,body){const response=await fetch(path,{credentials:'same-origin',cache:'no-store',...(body?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{})});let data;try{data=await response.json();}catch{throw Error('The server did not return a valid response.');}if(!response.ok){const error=Error(data.error||'Request failed ('+response.status+')');error.status=response.status;throw error;}return data;}
 const clone=value=>JSON.parse(JSON.stringify(value));
 const status=message=>{$('status').textContent=message;};
-function controlsEnabled(){for(const id of ['save','publish'])$(id).disabled=!ready||!frameReady||busy;$('undo').disabled=!history.length||busy;}
+function controlsEnabled(){for(const id of ['save','publish'])$(id).disabled=!ready||!frameReady||busy;for(const id of ['uploadPhotoQuick','uploadPhotoInspector'])$(id).disabled=!ready||busy;$('undo').disabled=!history.length||busy;}
 function send(){if(!frameReady)return;$('preview').contentWindow.postMessage({type:'mvn-design',design:state,selection},location.origin);}
 function snapshot(){history.push(clone(state));if(history.length>40)history.shift();}
 function change(key,value){if(state.fields[key]===value)return;snapshot();state.fields[key]=value;dirty=true;status('Unsaved changes · Preview only');controlsEnabled();send();if(key.endsWith('Image'))renderSections();}
-function choose(id,scroll=true){selection=id;$('selectionLabel').textContent=labels[id];$('inspectorTitle').textContent=labels[id];renderSections();renderControls();if(scroll&&frameReady)$('preview').contentWindow.postMessage({type:'mvn-select',id},location.origin);}
+function choose(id,scroll=true){selection=id;$('selectionLabel').textContent=labels[id];$('inspectorTitle').textContent=labels[id];$('uploadTargetHelp').textContent='Upload a replacement for '+labels[activePhoto()]+'. PNG, JPG or WebP (up to 8 MB).';renderSections();renderControls();if(scroll&&frameReady)$('preview').contentWindow.postMessage({type:'mvn-select',id},location.origin);}
 function reorder(source,target){
  const a=state.order.indexOf(source),b=state.order.indexOf(target);
  if(a<0||b<0||a===b)return;
