@@ -15,10 +15,18 @@ test('full site builder validates multiple pages and rejects unsafe operations',
  assert.equal(canonicalBuilderPage('/checkout.html'),null);
  const valid={version:1,pages:{'/':[{id,action:'move',target:anchor,device:'desktop',values:{x:45,y:-15}}],'/about.html':[{id:'v123456789abce',action:'insert',target:'body',device:'all',element:'text',position:'inside',text:'New editorial block'}]}};
  assert.deepEqual(validateVisualBuilder(valid),valid);
+ const unlocked={version:1,pages:{'/':[
+  {id:'vlarge00001',action:'style',device:'all',target:anchor,values:{x:250000,y:-250000,width:50000,height:25000,fontSize:2000,unlockLayout:true,fullBleed:true}},
+  {id:'vlarge00002',action:'insert',device:'all',target:'body',element:'text',position:'inside',text:'Long copy '.repeat(4000)}
+ ]}};
+ assert.deepEqual(validateVisualBuilder(unlocked),unlocked,'large design dimensions and long copy must be editable');
+ const largeEdits={version:1,pages:{'/':Array.from({length:250},(_,i)=>({id:'vlargeedit'+String(i).padStart(5,'0'),action:'move',target:anchor,device:'all',values:{x:i*30,y:i*20}}))}};
+ assert.equal(validateVisualBuilder(largeEdits).pages['/'].length,250,'more than the old 180 edit cap');
+
  for(const bad of [
-  {action:'text',text:'<script>hello</script>'.repeat(90)},
+  {action:'text',text:'X'.repeat(50001)},
   {action:'style',values:{position:'fixed'}},
-  {action:'move',values:{x:100000}},
+  {action:'move',values:{x:1000001}},
   {action:'insert',element:'iframe',position:'inside',text:'unsafe'},
   {action:'image',src:'https://other.site/image.jpg'},
   {action:'insert',element:'button',text:'Buy',href:'javascript:alert(1)',position:'after'},
@@ -37,6 +45,8 @@ test('full site builder validates multiple pages and rejects unsafe operations',
  assert.match(ui,/id="fileUpload"/);
  assert.match(ui,/id="paste"/);
  assert.match(ui,/id="cut"/,'cut is available alongside copy and paste');
+ assert.match(ui,/id="unlockLayout"/,'owner can unlock overflow and other layout restrictions');
+ assert.doesNotMatch(ui,/max="2200"|max="1600"|max="1800"/,'no fixed design inspector dimension ceilings');
  assert.match(ui,/wholesale-account\.html/,'wholesale page appears in site editor');
  assert.equal(canonicalBuilderPage('/wholesale-account.html'),'/wholesale-account.html');
 });
