@@ -100,6 +100,6 @@
   });
   fetch('/api/homepage-config', {cache:'no-store'})
     .then(r => r.ok ? r.json() : Promise.reject(Error('Homepage config unavailable')))
-    .then(data => { if (!previewReceived) apply(data.published || defaults); })
-    .catch(() => { if (!previewReceived) apply(defaults); });
+    .then(data => { if (!previewReceived && data.published) apply(data.published); })
+    .catch(() => { /* Leave the original storefront unchanged when no published config is available. */ });
 })();
