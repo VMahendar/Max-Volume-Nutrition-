@@ -561,6 +561,94 @@ body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.
   .mvn-home-contact nav { justify-content:flex-start; }
 }
 </style>
+
+<style data-mvn-mobile-legibility-fix="20261116">
+/* Keep the approved storefront while making phone and tablet viewing readable.
+   Overrides intentionally use the same specificity as the existing home layout. */
+html:has(body.mvn-showcase-home), body.mvn-showcase-home { margin:0; width:100%; }
+body.mvn-preview-design.mvn-showcase-home { overflow-x:clip; }
+body.mvn-preview-design.mvn-showcase-home .mvn-home-contact { box-sizing:border-box; width:100%; }
+@media (max-width:1100px) {
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead {
+    grid-template-columns:minmax(0,1fr) auto!important;
+    grid-template-rows:auto auto!important;
+    min-height:0!important;
+    padding:12px clamp(14px,3vw,28px)!important;
+    gap:6px 14px!important;
+  }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .brand-identity {
+    height:clamp(68px,8.5vw,94px)!important;
+    max-width:clamp(230px,32vw,330px)!important;
+    grid-area:1 / 1!important;
+  }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .head-actions { grid-area:1 / 2!important; }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .mvn-preview-nav {
+    grid-area:2 / 1 / 3 / 3!important;
+    justify-content:space-around!important; flex-wrap:wrap!important;
+    gap:6px 16px!important; width:100%!important;
+    padding:8px 0 2px!important; border-top:1px solid #393939!important;
+  }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .mvn-preview-nav a {
+    font-size:clamp(16px,1.8vw,20px)!important;
+    min-height:44px!important; padding:4px!important;
+  }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-editorial-feature.mvn-owner-banner-feature {
+    min-height:clamp(480px,57vw,640px)!important;
+  }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-launch-hero-copy {
+    width:min(92%,920px)!important; padding-block:34px!important;
+  }
+  body.mvn-preview-design.mvn-showcase-home .mvn-preview-best { width:min(94%,1000px); }
+  body.mvn-preview-design.mvn-showcase-home .mvn-preview-best-grid { gap:14px!important; }
+  body.mvn-preview-design.mvn-showcase-home .mvn-preview-best-grid a { padding:12px!important; }
+  body.mvn-preview-design.mvn-showcase-home .mvn-preview-best-grid strong { font-size:clamp(22px,2.6vw,32px)!important; }
+  body.mvn-preview-design.mvn-showcase-home .mvn-theme-shop-goals a strong { font-size:clamp(17px,2vw,23px)!important; }
+  body.mvn-preview-design.mvn-showcase-home .mvn-theme-shop-goals a small { font-size:clamp(13px,1.5vw,17px)!important; }
+  body.mvn-preview-design.mvn-showcase-home .mvn-theme-shop-goals .mvn-editorial-category,
+  body.mvn-preview-design.mvn-showcase-home .mvn-preview-goal-extra { min-height:125px!important; }
+  .mvn-home-contact .mvn-home-contact-inner { grid-template-columns:1fr!important; gap:14px!important; }
+  .mvn-home-contact nav { justify-content:flex-start!important; }
+}
+@media (max-width:700px) {
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead {
+    padding:10px 14px!important; gap:4px 8px!important;
+  }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .brand-identity {
+    max-width:min(52vw,245px)!important; height:68px!important;
+  }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .head-actions :is(.account-link,#bag,.mvn-header-more summary) {
+    min-width:42px!important; min-height:44px!important; font-size:13px!important;
+  }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .mvn-preview-nav {
+    flex-wrap:nowrap!important; justify-content:space-between!important; gap:5px!important;
+  }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .storehead .mvn-preview-nav a {
+    font-size:clamp(13px,3.7vw,16px)!important; white-space:normal!important; text-align:center;
+  }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-editorial-feature.mvn-owner-banner-feature {
+    min-height:520px!important; align-items:flex-end!important;
+  }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-owner-banner-img {
+    object-position:67% center!important;
+  }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-launch-hero-copy {
+    padding-block:26px!important;
+  }
+  body.mvn-preview-design.mvn-showcase-home .mvn-preview-best-grid { grid-template-columns:repeat(2,minmax(0,1fr))!important; gap:10px!important; }
+  body.mvn-preview-design.mvn-showcase-home .mvn-preview-best-grid a { padding:10px!important; }
+  body.mvn-preview-design.mvn-showcase-home .mvn-preview-best-grid strong { font-size:clamp(21px,5.5vw,28px)!important; }
+  body.mvn-preview-design.mvn-showcase-home .mvn-theme-shop-goals .mvn-editorial-category-grid { grid-template-columns:repeat(2,minmax(0,1fr))!important; gap:10px!important; }
+  body.mvn-preview-design.mvn-showcase-home .mvn-theme-shop-goals .mvn-editorial-category,
+  body.mvn-preview-design.mvn-showcase-home .mvn-preview-goal-extra { min-height:110px!important; }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .mvn-home-contact {
+    margin:0!important; padding:22px 16px 26px!important;
+  }
+  .mvn-home-contact nav { gap:2px 14px!important; }
+  .mvn-home-contact nav a { font-size:14px!important; }
+}
+/* Remove old footer spacer/margin when homepage is the active experience. */
+body.retail-home.mvn-showcase-home > .mvn-home-contact:last-of-type { margin-bottom:0!important; }
+</style>
 </head>
 <body class="mvn-preview-design retail-home mvn-fitness-refresh mvn-advance-layout mvn-supplement-theme mvn-showcase-home">
 <!-- Keep original MVN artwork; remove only its dark rectangle at display time. -->
