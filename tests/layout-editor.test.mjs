@@ -24,6 +24,6 @@ test('private layout editor is owner-only and does not alter the storefront',()=
  assert.match(page,/Desktop/,'desktop preview');
  assert.match(page,/Mobile/,'mobile preview');
  assert.match(page,/Not published/,'draft-only disclosure');
- assert.match(admin,/href="\/layout-editor\.html"/,'editor linked in owner administration');
+ assert.match(admin,/href="\/homepage-editor\.html"/,'homepage editor linked in owner administration');
  assert.doesNotMatch(shop,/layout-editor\.html/,'public shop has no editor link');
 });
