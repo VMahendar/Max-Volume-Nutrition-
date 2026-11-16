@@ -28,6 +28,9 @@ jobs:
       - name: Install Chromium browser
         id: chromium
         run: npx playwright install --with-deps chromium
+      - name: Verify storefront fills desktop and mobile viewports without blank side panels
+        if: ${{ !cancelled() && steps.chromium.outcome == 'success' }}
+        run: node tests/fullscreen-storefront-browser-qa.mjs
       - name: Verify full-site owner visual builder and page isolation
         if: ${{ !cancelled() && steps.chromium.outcome == 'success' }}
         run: node tests/site-builder-browser-qa.mjs
