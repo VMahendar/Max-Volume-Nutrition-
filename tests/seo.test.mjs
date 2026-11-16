@@ -63,7 +63,7 @@ test('product detail pages expose truthful Product and BreadcrumbList data with 
 
 test('homepage contains verified service areas and consistent branding',()=>{
   const home=page('/');
-  const organization=structuredData(home).find(data=>data.name==='Max Volume Nutrition');
+  const organization=structuredData(home).find(data=>data['@type']==='Store'&&data.name==='Max Volume Nutrition');
   assert.ok(organization,'missing organization/store schema');
   assert.deepEqual(organization.areaServed.map(x=>x.name),['Tamil Nadu','Puducherry']);
   assert.ok(home.includes('href="/icons/app-192.png"'),'branded favicon missing');
