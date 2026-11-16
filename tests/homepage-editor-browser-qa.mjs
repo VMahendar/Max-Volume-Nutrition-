@@ -50,6 +50,7 @@ try{
  // Direct manipulation must work in the real iframe, not only via sliders.
  await page.locator('#field-heroFullWidth').check();
  await page.waitForFunction(()=>document.querySelector('#preview')?.contentDocument?.querySelector('#mvnEditorial')?.style.getPropertyValue('width')==='100vw',null,{timeout:15000});
+ const iframe=page.frameLocator('#preview');
  const imgDrag=iframe.locator('.mvn-owner-banner-img');
  const initial=await imgDrag.boundingBox();
  assert.ok(initial&&initial.width>100,'banner visible for drag');
@@ -69,7 +70,7 @@ try{
   await changeRange('#field-bannerZoom',190);
  await changeRange('#field-bannerX',-16);
  await changeRange('#field-bannerY',10);
- const iframe=page.frameLocator('#preview');
+
  await iframe.locator('.mvn-owner-banner-img').waitFor({state:'visible'});
  await page.waitForFunction(()=>{
   const img=document.querySelector('#preview').contentDocument?.querySelector('.mvn-owner-banner-img');
