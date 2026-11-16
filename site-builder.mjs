@@ -26,7 +26,7 @@ export function validateVisualBuilder(input, imageAllowed=()=>false){
    ids.add(op.id);
    if(!['move','resize','text','image','hide','duplicate','insert','style'].includes(op.action))throw Error('Unknown visual action.');
    if(!['all','desktop','mobile'].includes(op.device))throw Error('Invalid visual editing device.');
-   if(typeof op.target!=='string'||op.target.length>450||!selector.test(op.target))throw Error('Unsafe visual target.');
+   if(typeof op.target!=='string'||op.target.length>450||!(selector.test(op.target)||/^@v[0-9a-z-]{8,50}$/.test(op.target)))throw Error('Unsafe visual target.');
    const clean={id:op.id,action:op.action,device:op.device,target:op.target};
    if(op.action==='move'||op.action==='resize'||op.action==='style'){
     if(!op.values||typeof op.values!=='object'||Array.isArray(op.values))throw Error('Invalid visual dimensions.');
