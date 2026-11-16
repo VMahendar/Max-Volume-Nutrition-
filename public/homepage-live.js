@@ -65,12 +65,17 @@
     }
     const banner = document.querySelector('.mvn-owner-banner-img');
     if (banner && banner.dataset.ownerImage !== c.image) {
-      const source = banner.closest('picture')?.querySelector('source');
-      if (source) source.remove();
-      banner.removeAttribute('srcset');
-      banner.removeAttribute('sizes');
-      banner.src = '/' + c.image;
-      banner.dataset.ownerImage = c.image;
+      // Preserve the existing responsive hero image and URL until the owner chooses a different photo.
+      if (!banner.dataset.ownerImage && c.image === defaults.image) {
+        banner.dataset.ownerImage = c.image;
+      } else {
+        const source = banner.closest('picture')?.querySelector('source');
+        if (source) source.remove();
+        banner.removeAttribute('srcset');
+        banner.removeAttribute('sizes');
+        banner.src = '/' + c.image;
+        banner.dataset.ownerImage = c.image;
+      }
     }
     const categoryTitle = $('mvnEditorialCategoriesTitle');
     if (categoryTitle) categoryTitle.textContent = c.categories;
