@@ -12,10 +12,45 @@ function send(){if(!frameReady)return;$('preview').contentWindow.postMessage({ty
 function snapshot(){history.push(clone(state));if(history.length>40)history.shift();}
 function change(key,value){if(state.fields[key]===value)return;snapshot();state.fields[key]=value;dirty=true;status('Unsaved changes · Preview only');controlsEnabled();send();if(key.endsWith('Image'))renderSections();}
 function choose(id,scroll=true){selection=id;$('selectionLabel').textContent=labels[id];$('inspectorTitle').textContent=labels[id];renderSections();renderControls();if(scroll&&frameReady)$('preview').contentWindow.postMessage({type:'mvn-select',id},location.origin);}
+function reorder(source,target){
+ const a=state.order.indexOf(source),b=state.order.indexOf(target);
+ if(a<0||b<0||a===b)return;
+ snapshot();state.order.splice(a,1);state.order.splice(b,0,source);
+ dirty=true;status('Section moved · Save draft or publish');renderSections();controlsEnabled();send();
+}
+function commitDrag(patch){
+ if(!ready||busy||!patch||typeof patch!=='object')return;
+ const keys=Object.keys(patch);
+ if(!keys.length||keys.some(k=>typeof patch[k]!=='number'||!Number.isFinite(patch[k])))return;
+ if(keys.every(k=>state.fields[k]===patch[k]))return;
+ snapshot();Object.assign(state.fields,patch);
+ dirty=true;status('Element moved / resized · Unsaved');
+ renderControls();controlsEnabled();send();
+}
 function renderSections(){
  const list=$('sectionList');list.replaceChildren();
  for(const id of ['header',...state.order,'footer']){
-  const row=document.createElement('div');row.className='section-row'+(selection===id?' selected':'');
+  const row=document.createElement('div');row.className='section-row'+(selection===id?' selected':'');row.dataset.section=id;
+  if(state.order.includes(id)){
+   const grip=document.createElement('span');grip.className='reorder-grip';grip.textContent='⠿';grip.title='Drag to reorder section';grip.setAttribute('aria-label','Drag '+labels[id]+' to change section order');
+   row.append(grip);
+   row.draggable=true;
+   row.addEventListener('dragstart',event=>{event.dataTransfer.effectAllowed='move';event.dataTransfer.setData('text/plain',id);row.classList.add('is-dragging');});
+   row.addEventListener('dragend',()=>row.classList.remove('is-dragging'));
+   row.addEventListener('dragover',event=>{event.preventDefault();event.dataTransfer.dropEffect='move';row.classList.add('drag-over');});
+   row.addEventListener('dragleave',()=>row.classList.remove('drag-over'));
+   row.addEventListener('drop',event=>{event.preventDefault();row.classList.remove('drag-over');reorder(event.dataTransfer.getData('text/plain'),id);});
+   grip.addEventListener('pointerdown',event=>{
+    if(event.pointerType==='mouse')return;event.preventDefault();grip.setPointerCapture(event.pointerId);
+    row.classList.add('is-dragging');
+    const onEnd=e=>{if(e.pointerId!==event.pointerId)return;row.classList.remove('is-dragging');
+      const target=document.elementFromPoint(e.clientX,e.clientY)?.closest('.section-row');
+      if(target?.dataset.section)reorder(id,target.dataset.section);
+      grip.removeEventListener('pointerup',onEnd);grip.removeEventListener('pointercancel',onEnd);
+    };
+    grip.addEventListener('pointerup',onEnd);grip.addEventListener('pointercancel',onEnd);
+   });
+  }
   const button=document.createElement('button');button.textContent=labels[id];button.onclick=()=>choose(id);row.append(button);
   if(state.order.includes(id))for(const [symbol,offset] of [['↑',-1],['↓',1]]){
    const move=document.createElement('button');move.className='move';move.textContent=symbol;move.setAttribute('aria-label','Move '+labels[id]+(offset<0?' up':' down'));const index=state.order.indexOf(id);move.disabled=index+offset<0||index+offset>=state.order.length;
@@ -87,6 +122,7 @@ function renderControls(){
  }else if(selection==='hero'||selection==='banner'){
   fieldGroup('Main homepage banner');
   mediaFor('banner');
+  field('heroFullWidth','Full-width banner · no white side margins','checkbox');
   field('heroVisible','Show entire banner section','checkbox');
   field('heroTextVisible','Show headline over banner','checkbox');
   field('heroTitle','Main heading','textarea',{max:120});
@@ -97,7 +133,10 @@ function renderControls(){
   field('descriptionSize','Description font size','range',{min:12,max:36});
   field('heroCopyWidth','Banner text container width','range',{min:25,max:100,unit:'%'});
   field('heroAlign','Banner text alignment','select',{choices:[['left','Left'],['center','Center'],['right','Right']]});
+  field('heroTextX','Move headline left / right','range',{min:-100,max:100,unit:'%'});
+  field('heroTextY','Move headline up / down','range',{min:-100,max:100,unit:'%'});
   field('bannerHeight','Banner section height','range',{min:180,max:1100});
+  field('bannerHeightMobile','Mobile banner image height','range',{min:180,max:900});
   field('bannerFit','Banner crop','select',{choices:[['cover','Fill banner'],['contain','Show full banner']]});
   field('bannerPosition','Banner focal point left / right','range',{min:0,max:100,unit:'%'});
   field('bannerPositionY','Banner focal point top / bottom','range',{min:0,max:100,unit:'%'});
@@ -189,19 +228,26 @@ async function persist(action){if(!ready||busy)return;busy=true;controlsEnabled(
 $('save').onclick=()=>persist('save');$('publish').onclick=()=>persist('publish');
 let device='desktop';
 function resizePreview(){
- const frame=$('preview'),host=frame.parentElement,padding=getComputedStyle(host),width=device==='mobile'?390:1440;
+ const frame=$('preview'),host=frame.parentElement,padding=getComputedStyle(host),width=device==='mobile'?390:device==='wide'?1920:Math.max(400,host.clientWidth-parseFloat(padding.paddingLeft)-parseFloat(padding.paddingRight));
  const available=Math.max(200,host.clientWidth-parseFloat(padding.paddingLeft)-parseFloat(padding.paddingRight));
  const height=Math.max(350,host.clientHeight-parseFloat(padding.paddingTop)-parseFloat(padding.paddingBottom));
  const scale=Math.min(1,available/width);
  frame.style.width=width+'px';frame.style.height=height/scale+'px';frame.style.zoom=String(scale);
 }
 new ResizeObserver(resizePreview).observe($('preview').parentElement);
+$('expandPreview').onclick=()=>{
+ const workspace=$('workspace');const on=workspace.classList.toggle('preview-expanded');
+ $('expandPreview').textContent=on?'Show editing panels':'Expand preview';
+ $('expandPreview').setAttribute('aria-pressed',String(on));
+ requestAnimationFrame(resizePreview);
+};
+
 for(const button of document.querySelectorAll('[data-device]'))button.onclick=()=>{for(const other of document.querySelectorAll('[data-device]')){other.classList.toggle('active',other===button);other.setAttribute('aria-pressed',String(other===button));}device=button.dataset.device;$('preview').classList.toggle('mobile',device==='mobile');resizePreview();};
-addEventListener('message',event=>{if(event.origin!==location.origin||event.source!==$('preview').contentWindow)return;if(event.data?.type==='mvn-ready'){baseline=event.data.baseline;frameReady=true;renderSections();renderControls();send();controlsEnabled();}else if(event.data?.type==='mvn-selected'&&labels[event.data.id])choose(event.data.id,false);});
+addEventListener('message',event=>{if(event.origin!==location.origin||event.source!==$('preview').contentWindow)return;if(event.data?.type==='mvn-ready'){baseline=event.data.baseline;frameReady=true;renderSections();renderControls();send();controlsEnabled();}else if(event.data?.type==='mvn-selected'&&labels[event.data.id])choose(event.data.id,false);else if(event.data?.type==='mvn-drag-commit')commitDrag(event.data.patch);});
 function showLogin(message='',switchAccount=false){$('login').hidden=false;$('workspace').hidden=true;$('loginMessage').textContent=message;$('loginForm').hidden=switchAccount;$('switchAccount').hidden=!switchAccount;status('Owner sign-in required');}
 $('switchAccount').onclick=async()=>{try{await api('/api/logout',{});showLogin();}catch(error){$('loginMessage').textContent=error.message;}};
 $('loginForm').onsubmit=async event=>{event.preventDefault();const button=event.submitter;button.disabled=true;$('loginMessage').textContent='Signing in…';try{const result=await api('/api/login',Object.fromEntries(new FormData(event.currentTarget)));$('loginForm').elements.password.value='';if(result.user?.role!=='admin'){showLogin('This account does not have administrator access. Use your owner account.',true);return;}await load();}catch(error){$('loginMessage').textContent=error.message;}finally{button.disabled=false;}};
-async function load(){try{const result=await api('/api/admin/homepage-design');const media=await api('/api/admin/homepage-images');empty=result.empty;published=result.published;baseRevision=published?.revision||null;if(!state)state=clone(result.draft||published||empty);images=media.images;ready=true;frameReady=false;$('login').hidden=true;$('workspace').hidden=false;renderSections();status(result.draft?'Private draft loaded':'Ready · Select a section to edit');$('preview').src='/?homepage_editor=1';controlsEnabled();}catch(error){if(error.status===401||error.status===403){const session=await api('/api/session');showLogin(session.user?'Use your administrator account to edit the homepage.':'',!!session.user);}else{$('failure').hidden=false;$('failure').textContent=error.message;status('Editor could not load');}}}
+async function load(){try{const result=await api('/api/admin/homepage-design');const media=await api('/api/admin/homepage-images');empty=result.empty;published=result.published;baseRevision=published?.revision||null;if(!state)state=clone(result.draft||published||empty);if(!Object.hasOwn(state.fields,'heroFullWidth'))state.fields.heroFullWidth=true;images=media.images;ready=true;frameReady=false;$('login').hidden=true;$('workspace').hidden=false;renderSections();status(result.draft?'Private draft loaded':'Ready · Select a section to edit');$('preview').src='/?homepage_editor=1';controlsEnabled();}catch(error){if(error.status===401||error.status===403){const session=await api('/api/session');showLogin(session.user?'Use your administrator account to edit the homepage.':'',!!session.user);}else{$('failure').hidden=false;$('failure').textContent=error.message;status('Editor could not load');}}}
 addEventListener('beforeunload',event=>{if(dirty){event.preventDefault();event.returnValue='';}});
 void load();
 })();
