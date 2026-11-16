@@ -1,0 +1,96 @@
+/* MVN desktop edge-to-edge storefront repair, 17 Nov 2026.
+   The old theme combined two-column editorial rules and fixed percentage widths,
+   producing a blank right pane and colliding cards. This layer affects visual
+   layout only; catalogue, cart, forms, prices and product media are unchanged. */
+html:has(>body.retail-home.mvn-showcase-home),
+body.retail-home.mvn-showcase-home{
+ width:100%!important;max-width:none!important;min-width:0!important;
+ margin:0!important;padding-inline:0!important;box-sizing:border-box!important;
+ overflow-x:clip!important;
+}
+body.retail-home.mvn-showcase-home > .storehead,
+body.retail-home.mvn-showcase-home > .mvn-theme-main-nav,
+body.retail-home.mvn-showcase-home > #mvnEditorial,
+body.retail-home.mvn-showcase-home > .mvn-theme-shop-goals,
+body.retail-home.mvn-showcase-home > .mvn-preview-best,
+body.retail-home.mvn-showcase-home > .mvn-globtech-launch,
+body.retail-home.mvn-showcase-home > #shop,
+body.retail-home.mvn-showcase-home > .mvn-home-contact{
+ box-sizing:border-box!important;width:100%!important;max-width:none!important;
+ min-width:0!important;margin-left:0!important;margin-right:0!important;
+}
+body.retail-home.mvn-showcase-home #mvnEditorial > .mvn-editorial-layout{
+ width:100%!important;max-width:none!important;
+ min-width:0!important;margin:0!important;padding:0!important;
+ display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:0!important;
+}
+body.retail-home.mvn-showcase-home #mvnEditorial .mvn-owner-banner-feature{
+ width:100%!important;max-width:none!important;min-width:0!important;
+ margin-inline:0!important;border-radius:0!important;
+ box-sizing:border-box!important;
+}
+body.retail-home.mvn-showcase-home #mvnEditorial .mvn-owner-banner-link,
+body.retail-home.mvn-showcase-home #mvnEditorial .mvn-owner-banner-link picture,
+body.retail-home.mvn-showcase-home #mvnEditorial .mvn-owner-banner-img{
+ max-width:none!important;width:100%!important;box-sizing:border-box!important;
+}
+body.retail-home.mvn-showcase-home .mvn-theme-shop-goals{
+ padding-inline:clamp(16px,3vw,56px)!important;
+}
+body.retail-home.mvn-showcase-home .mvn-theme-shop-goals .mvn-editorial-categories-heading{
+ width:100%!important;max-width:none!important;margin:0 auto 16px!important;
+ text-align:center!important;
+}
+body.retail-home.mvn-showcase-home .mvn-theme-shop-goals .mvn-editorial-category-grid{
+ display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ width:100%!important;max-width:none!important;min-width:0!important;
+ margin:0 auto!important;gap:clamp(10px,1.8vw,25px)!important;align-items:stretch!important;
+}
+body.retail-home.mvn-showcase-home .mvn-theme-shop-goals .mvn-editorial-category,
+body.retail-home.mvn-showcase-home .mvn-theme-shop-goals .mvn-preview-goal-extra{
+ position:relative!important;inset:auto!important;box-sizing:border-box!important;
+ width:100%!important;max-width:none!important;min-width:0!important;
+ height:auto!important;min-height:132px!important;
+ margin:0!important;transform:none!important;overflow-wrap:anywhere!important;
+}
+body.retail-home.mvn-showcase-home .mvn-preview-best{
+ padding:clamp(20px,3vw,50px)!important;
+}
+body.retail-home.mvn-showcase-home .mvn-preview-best .mvn-preview-best-grid{
+ display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ width:100%!important;max-width:none!important;gap:clamp(12px,2vw,28px)!important;
+}
+body.retail-home.mvn-showcase-home .mvn-preview-best .mvn-preview-best-grid>a{
+ min-width:0!important;max-width:none!important;width:100%!important;
+ transform:none!important;margin:0!important;
+}
+body.retail-home.mvn-showcase-home .mvn-globtech-launch{
+ padding:clamp(32px,6vw,96px) clamp(18px,5vw,90px)!important;
+ min-height:clamp(330px,33vw,570px)!important;
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ gap:clamp(24px,4vw,70px)!important;
+}
+body.retail-home.mvn-showcase-home .mvn-globtech-launch>div{
+ min-width:0!important;max-width:960px!important;flex:1 1 600px!important;
+}
+@media(max-width:760px){
+ body.retail-home.mvn-showcase-home .mvn-theme-shop-goals .mvn-editorial-category-grid,
+ body.retail-home.mvn-showcase-home .mvn-preview-best .mvn-preview-best-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;
+ }
+ body.retail-home.mvn-showcase-home .mvn-globtech-launch{
+  flex-direction:column!important;align-items:flex-start!important;
+  gap:18px!important;min-height:0!important;
+ }
+ body.retail-home.mvn-showcase-home .mvn-globtech-launch>div{
+  flex:auto!important;max-width:100%!important;
+ }
+ body.retail-home.mvn-showcase-home #mvnEditorial .mvn-owner-banner-feature{
+  min-height:0!important;
+ }
+}
+@media(max-width:380px){
+ body.retail-home.mvn-showcase-home .mvn-theme-shop-goals .mvn-editorial-category-grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ }
+}
