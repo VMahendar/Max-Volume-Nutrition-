@@ -5,11 +5,12 @@
   const image = document.querySelector('main .grid .media img');
   const primaryPhoto = image?.getAttribute('src');
   const photoCaption = document.querySelector('main .grid .media > small');
-  const format = new Intl.NumberFormat('en-IN', {style:'currency',currency:'INR',maximumFractionDigits:2});
+  const format = new Intl.NumberFormat('en-IN', {style:'currency',currency:'INR',minimumFractionDigits:0,maximumFractionDigits:2});
   const money = paise => format.format(paise / 100);
   const orderKey = 'mvn-inline-order-v1';
   let quantity = 1;
   let selected;
+  let productName = root.dataset.productName;
   let variants = [];
 
   function packInfo(variant) {
@@ -45,7 +46,7 @@
       image.hidden = !photo;
       if (photo) {
         image.src = photo;
-        image.alt = `${root.dataset.productName} · ${selected.label}`;
+        image.alt = `${productName} · ${selected.label}`;
       }
       fields.photoNote.hidden = Boolean(photo);
       if (photoCaption) photoCaption.hidden = selected.id !== root.dataset.primaryVariant;
@@ -61,7 +62,7 @@
     }
     fields.whatsapp.href = 'https://wa.me/917708830513?text=' + encodeURIComponent([
       'Hi Max Volume Nutrition, please confirm this pack:',
-      root.dataset.productName, selected.label, `Quantity: ${quantity}`,
+      productName, selected.label, `Quantity: ${quantity}`,
       `Product subtotal: ${money(selected.pricePaise * quantity)}`,
       'Please confirm current stock and delivery charges.',
     ].join('\n'));
@@ -98,6 +99,7 @@
     const product = data.products?.find(p => p.id === root.dataset.mvnProductOrder);
     variants = (product?.variants || []).filter(v => typeof v.id === 'string' && Number.isSafeInteger(v.pricePaise) && v.pricePaise > 0).map(packInfo);
     if (!variants.length) return;
+    if (typeof product.name === 'string' && product.name.trim()) productName = product.name;
     const pack = new URLSearchParams(location.search).get('pack');
     selected = (pack && variants.find(v => v.id === 'mass-' + pack)) || variants.find(v => v.id === root.dataset.primaryVariant) || variants[0];
     const sizes = [...new Map(variants.map(v => [v.size, v])).values()];
