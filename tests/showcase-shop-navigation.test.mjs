@@ -51,8 +51,10 @@ test('category and search router only redirects on homepage, keeps shop and app 
  assert.ok(!home.match(/href="#shop"/),'home category links open the new page');
 });
 
-test('homepage has no large multi-column footer; essential links live on separate pages',()=>{
- assert.doesNotMatch(home,/<footer\s/,'homepage footer is removed, not merely hidden');
+test('homepage and shop provide compact store links',()=>{
+ assert.match(home,/<footer class="mvn-home-contact"/,'homepage has a compact contact footer');
+ const footer=home.match(/<footer class="mvn-home-contact"[\s\S]*?<\/footer>/)?.[0]||'';
+ for(const link of ['/shop.html','/dealer.html','/contact.html','https://wa.me/917708830513']) assert.ok(footer.includes('href="'+link+'"'),'homepage footer link '+link);
  assert.match(shop,/<footer class="mvn-compact-footer"/,'shop has compact policy footer');
  assert.doesNotMatch(shop,/class="site-footer mvn-home-footer"/,'oversized 4-section footer is removed');
  for (const link of ['contact.html','shipping.html','returns.html','privacy.html','terms.html']) assert.ok(shop.includes('href="'+link+'"'),'essential policy or contact link '+link);
