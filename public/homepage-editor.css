@@ -58,3 +58,15 @@
  #workspace.preview-expanded .stage{height:100%;order:1}
  #workspace.preview-expanded .preview-scroll{min-height:0}
 }
+
+/* Persistent, easy-to-find upload action for mobile and desktop. */
+button.upload-quick{display:inline-flex;align-items:center;justify-content:center;min-height:43px;background:#db6543;border:1px solid #ff967a;color:#fff;font-weight:850;padding:10px 16px;white-space:nowrap;box-shadow:0 3px 14px #0003}
+button.upload-quick:hover{background:#c85839}
+button.upload-quick:disabled{opacity:.5}
+.upload-inspector{width:100%;margin:8px 0 4px;font-size:14px}
+.stage-bar>.upload-quick{margin-left:auto}
+#uploadTargetHelp{margin:5px 0 14px}
+@media(max-width:760px){
+ .stage-bar>.upload-quick{order:3;flex:1 0 100%;width:100%;font-size:14px;padding:11px}
+ .inspector>.upload-quick{font-size:14px}
+}
