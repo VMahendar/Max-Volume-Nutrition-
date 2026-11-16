@@ -30,6 +30,13 @@ try{
  const iframe=page.frameLocator('#preview');
  await iframe.locator('#mvnEditorialTitle').waitFor({state:'visible',timeout:15000});
  await iframe.locator('#mvnEditorialTitle').click({force:true});
+ // Directly dragging the selected heading must move the object even without using a handle.
+ const headingBox=await iframe.locator('#mvnEditorialTitle').boundingBox();
+ assert.ok(headingBox&&headingBox.width>20,'editable headline exists');
+ await page.mouse.move(headingBox.x+headingBox.width*.35,headingBox.y+headingBox.height*.5);
+ await page.mouse.down();await page.mouse.move(headingBox.x+headingBox.width*.35+42,headingBox.y+headingBox.height*.5+18,{steps:9});await page.mouse.up();
+ await page.waitForFunction(()=>document.querySelector('#preview')?.contentDocument?.querySelector('#mvnEditorialTitle')?.style.transform?.includes('translate('),null,{timeout:15000});
+
  await page.locator('#propertyControls').waitFor({state:'visible',timeout:15000});
  assert.match(await page.locator('#selectionName').innerText(),/H1|EM/);
  await page.locator('#text').fill('YOUR CUSTOM MVN HERO');
