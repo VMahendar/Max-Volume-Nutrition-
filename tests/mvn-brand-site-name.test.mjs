@@ -1,0 +1,22 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+const domain='https://maxvolumenutriton.shop/';
+test('Google site-name data is canonical, valid, and consistent on homepage mirrors',()=>{
+ const source=readFileSync('index.html','utf8');
+ const published=readFileSync('public/index.html','utf8');
+ assert.equal(source,published,'Homepage source and published mirror must match');
+ const json=[...published.matchAll(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/g)].map(match=>JSON.parse(match[1]));
+ const websites=json.filter(v=>v['@type']==='WebSite');
+ assert.equal(websites.length,1,'Only one WebSite site-name entity should be declared');
+ assert.equal(websites[0]['@context'],'https://schema.org');
+ assert.equal(websites[0].url,domain);
+ assert.equal(websites[0].name,'Max Volume Nutrition');
+ assert.deepEqual(websites[0].alternateName,['MVN','MaxVolumeNutrition']);
+ const store=json.find(v=>v['@type']==='Store');
+ assert.equal(store.name,websites[0].name);
+ assert.equal(store.url,websites[0].url);
+ assert.match(published,/<meta property="og:site_name" content="Max Volume Nutrition">/);
+ assert.match(published,/<link rel="canonical" href="https:\/\/maxvolumenutriton\.shop\/">/);
+ assert.match(published,/<meta name="robots" content="index, follow/);
+});
