@@ -6,7 +6,7 @@ const read=path=>readFileSync(new URL('../'+path,import.meta.url),'utf8');
 test('account UI uses a coherent premium customer interface and preserves auth API forms',()=>{
  const html=read('public/account.html'),css=read('public/account-premium.css'),js=read('public/account.js');
  assert.ok(html.includes('account-premium.css'));
- assert.ok(html.includes('max-volume-logo-wide.png'));
+ assert.ok(html.includes('class="original-brand-logo" src="mvn-app-header-logo.webp"'),'account header must use approved transparent logo');
  assert.ok(html.includes('mvnGoldKey'));
  assert.ok(!html.includes('href="admin.html"'),'do not show an admin link to ordinary shoppers');
  for(const id of ['anonymous','signedIn','message','login','register','marketing','marketingStop','password','logout','orders','welcome','tier','dealerStatus']){
