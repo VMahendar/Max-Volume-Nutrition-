@@ -147,3 +147,56 @@ body.mvn-unified-page .business-main{flex:1 0 auto!important}
  body.mvn-unified-page .mvn-info-hero{padding:26px 16px 32px!important}
  body.mvn-unified-page .mvn-unified-content h1{font-size:clamp(34px,10vw,54px)!important}
 }
+
+
+/* Subpages: a single route back, not a duplicated commerce toolbar. */
+body.mvn-unified-page .mvn-unified-header{position:relative!important;z-index:30!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:10px clamp(14px,3vw,40px)!important;gap:12px!important;min-height:72px!important}
+body.mvn-unified-page .mvn-unified-header .brand{flex:0 1 280px!important;max-width:280px!important;min-width:0!important}
+body.mvn-unified-page .mvn-unified-header .original-brand-logo{width:100%!important;max-width:280px!important;height:61px!important;object-fit:contain!important;object-position:left center!important}
+body.mvn-unified-page .mvn-back-to-store{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ flex:0 0 auto!important;min-height:42px!important;padding:8px 13px!important;
+ border:1px solid #55575c!important;border-radius:7px!important;background:#242529!important;
+ color:#fff!important;font:750 clamp(12px,2vw,15px)/1.3 system-ui,sans-serif!important;
+ letter-spacing:0!important;text-decoration:none!important;text-transform:none!important;white-space:nowrap!important
+}
+body.mvn-unified-page .mvn-back-to-store:hover{border-color:#c8371b!important;color:#fff!important;background:#343033!important}
+body.mvn-unified-page .mvn-back-to-store:focus-visible{outline:3px solid #ff9278!important;outline-offset:3px!important}
+body.mvn-unified-page > .announce,
+body.mvn-unified-page > .account-utility,
+body.mvn-unified-page > .mvn-info-utility,
+body.mvn-unified-page > .nav:not(.mvn-unified-links){display:none!important}
+/* Wholesale: match the black, warm-white and rust-orange home palette; remove old blue. */
+body.mvn-unified-page:has(#dealerForm) .business-hero{
+ background:radial-gradient(circle at 88% 10%,#4f2724 0%,#282123 38%,#171819 85%)!important;
+ color:#fff!important;min-height:0!important
+}
+body.mvn-unified-page:has(#dealerForm) .business-hero h1 strong{color:#ff8669!important}
+body.mvn-unified-page:has(#dealerForm) .business-hero p{color:#e4dcd9!important}
+body.mvn-unified-page:has(#dealerForm) :is(.eyebrow,.business-note,.business-steps small,.business-points,.business-form-wrap>div>span,.business-faq h2){color:#ad412b!important}
+body.mvn-unified-page:has(#dealerForm) .business-hero :is(.eyebrow,.business-note){color:#ff9a82!important}
+body.mvn-unified-page:has(#dealerForm) :is(.primary,.business-form button[type=submit]){
+ background:#bd391f!important;border-color:#bd391f!important;color:#fff!important;border-radius:5px!important
+}
+body.mvn-unified-page:has(#dealerForm) :is(.business-steps,.business-faq){background:#f4f1ee!important}
+body.mvn-unified-page:has(#dealerForm) :is(.business-steps>div,.business-form,.panel,.business-faq details){border-color:#ded7d1!important;background:#fff!important}
+body.mvn-unified-page:has(#dealerForm) .business-steps h2,
+body.mvn-unified-page:has(#dealerForm) .business-form label{color:#242326!important}
+body.mvn-unified-page:has(#dealerForm) .business-form :is(input,textarea,select){background:#fff!important;border:1px solid #a8a29d!important}
+body.mvn-unified-page:has(#dealerForm) .business-form-wrap p,
+body.mvn-unified-page:has(#dealerForm) .business-steps p{color:#535357!important}
+/* Partner registration belongs to the same color system. */
+body.wholesale-page.mvn-unified-page .wholesale-intro-note{border-left-color:#bd391f!important}
+body.wholesale-page.mvn-unified-page :is(.account-eyebrow,.account-eyebrow span,.wholesale-intro-note>span){color:#ad412b!important}
+body.wholesale-page.mvn-unified-page :is(.primary,button[type=submit]){background:#bd391f!important;color:#fff!important;border-color:#bd391f!important}
+@media(max-width:720px){
+ body.mvn-unified-page .mvn-unified-header{padding:8px 12px!important;min-height:67px!important}
+ body.mvn-unified-page .mvn-unified-header .brand{max-width:min(55vw,210px)!important;flex:1 1 auto!important}
+ body.mvn-unified-page .mvn-unified-header .original-brand-logo{height:52px!important}
+ body.mvn-unified-page .mvn-back-to-store{padding:7px 10px!important;font-size:12px!important;min-height:39px!important}
+ body.mvn-unified-page:has(#dealerForm) .business-hero{padding:36px 18px!important}
+ body.mvn-unified-page:has(#dealerForm) .business-steps{grid-template-columns:1fr!important;padding:22px 14px!important}
+ body.mvn-unified-page:has(#dealerForm) .business-form-wrap{grid-template-columns:1fr!important;gap:20px!important;padding:28px 14px!important}
+ body.mvn-unified-page:has(#dealerForm) .business-form{grid-template-columns:1fr!important;padding:16px!important}
+ body.mvn-unified-page:has(#dealerForm) .business-form .wide{grid-column:1!important}
+}
