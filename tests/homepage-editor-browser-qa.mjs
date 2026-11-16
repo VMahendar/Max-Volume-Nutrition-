@@ -47,7 +47,26 @@ try{
  assert.ok(await page.locator('#media').isVisible(),'visible banner replacement controls');
  assert.equal(await page.locator('#currentPhoto').isVisible(),true);
  const changeRange=async(selector,value)=>page.locator(selector).evaluate((el,v)=>{el.value=String(v);el.dispatchEvent(new Event('input',{bubbles:true}))},value);
- await changeRange('#field-bannerZoom',190);
+ // Direct manipulation must work in the real iframe, not only via sliders.
+ await page.locator('#field-heroFullWidth').check();
+ await page.waitForFunction(()=>document.querySelector('#preview')?.contentDocument?.querySelector('#mvnEditorial')?.style.getPropertyValue('width')==='100vw',null,{timeout:15000});
+ const imgDrag=iframe.locator('.mvn-owner-banner-img');
+ const initial=await imgDrag.boundingBox();
+ assert.ok(initial&&initial.width>100,'banner visible for drag');
+ await page.mouse.move(initial.x+initial.width*.50,initial.y+initial.height*.50);
+ await page.mouse.down();await page.mouse.move(initial.x+initial.width*.54,initial.y+initial.height*.52,{steps:8});await page.mouse.up();
+ await page.waitForFunction(()=>document.querySelector('#field-bannerX')&&Number(document.querySelector('#field-bannerX').value)!==0,null,{timeout:15000});
+ assert.ok(Number(await page.locator('#field-bannerX').inputValue())!==0,'direct drag changes banner X control');
+ const handle=iframe.locator('#mvn-drag-handle');
+ await handle.waitFor({state:'visible',timeout:15000});
+ const corner=await handle.boundingBox();
+ assert.ok(corner,'resize handle is visible');
+ await page.mouse.move(corner.x+10,corner.y+10);await page.mouse.down();
+ await page.mouse.move(corner.x+55,corner.y+30,{steps:7});await page.mouse.up();
+ await page.waitForFunction(()=>Number(document.querySelector('#field-bannerZoom')?.value)!==100,null,{timeout:15000});
+ assert.ok(Number(await page.locator('#field-bannerZoom').inputValue())>100,'orange corner drag resizes banner image');
+ // Regular numeric controls remain available for precise adjustments.
+  await changeRange('#field-bannerZoom',190);
  await changeRange('#field-bannerX',-16);
  await changeRange('#field-bannerY',10);
  const iframe=page.frameLocator('#preview');
@@ -69,6 +88,7 @@ try{
  await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('Published'),null,{timeout:15000});
  const live=store.setting('homepagePublishedV2');
  assert.equal(live.fields.bannerZoom,190);
+ assert.equal(live.fields.heroFullWidth,true,'full width layout is published safely');
  assert.equal(live.fields.bannerX,-16);
  assert.equal(live.fields.bannerImage,newImage.slice(1));
  await page.locator('[data-device=mobile]').click();
