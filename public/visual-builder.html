@@ -8,16 +8,16 @@
 <section id="login" class="login" hidden><h1>Owner sign-in</h1><p>Sign in with your MVN administrator account to edit store pages.</p><form id="loginForm"><label>Email<input name="email" type="email" value="mahendar0605@gmail.com" autocomplete="username" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required></label><button class="primary" type="submit">Open visual builder</button></form><p id="loginError" role="alert"></p></section>
 <div id="workspace" class="workspace" hidden>
 <aside class="sidebar">
- <h2>Pages</h2><select id="page" aria-label="Choose website page"><option value="/">Home</option><option value="/shop.html">Shop</option><option value="/about.html">About Us</option><option value="/contact.html">Contact</option><option value="/dealer.html">Wholesale</option><option value="/brands.html">Brands</option><option value="/potency-whey.html">Potency Whey</option><option value="/nitro-mass.html">Nitro Mass</option><option value="/pro-creatine.html">Creatine</option><option value="/sturdy-pre-workout.html">Pre-workout</option><option value="/offers.html">Offers</option><option value="/support.html">Support</option></select>
+ <h2>Pages</h2><select id="page" aria-label="Choose website page"><option value="/">Home</option><option value="/shop.html">Shop</option><option value="/about.html">About Us</option><option value="/contact.html">Contact</option><option value="/dealer.html">Wholesale</option><option value="/wholesale-account.html">Wholesale Registration</option><option value="/brands.html">Brands</option><option value="/potency-whey.html">Potency Whey</option><option value="/nitro-mass.html">Nitro Mass</option><option value="/pro-creatine.html">Creatine</option><option value="/sturdy-pre-workout.html">Pre-workout</option><option value="/offers.html">Offers</option><option value="/support.html">Support</option></select>
  <h2>Add to page</h2>
  <div class="toolgrid"><button id="addText">＋ Text</button><button id="addButton">＋ Button</button><button id="addBox">＋ Box</button><button id="addImage">＋ Photo</button></div>
  <label class="uploader">Upload photo<input id="fileUpload" type="file" accept="image/png,image/jpeg,image/webp,.png,.jpg,.jpeg,.webp"></label>
  <p class="subtle">Select an existing photo to replace it. Otherwise, the upload adds a new image to the page.</p>
  <h2>Selected element</h2>
  <p id="selectionName" class="selection-label">Click anything in the preview</p>
- <div class="toolgrid"><button id="copy" disabled>Copy</button><button id="paste" disabled>Paste</button><button id="duplicate" disabled>Duplicate</button><button id="delete" disabled>Delete / Hide</button></div>
+ <div class="toolgrid"><button id="copy" disabled>Copy</button><button id="cut" disabled>Cut</button><button id="paste" disabled>Paste</button><button id="duplicate" disabled>Duplicate</button><button id="delete" disabled>Delete / Hide</button></div>
  <button id="restore" class="secondary" disabled>Restore selected element</button>
- <p class="subtle">Drag the orange top handle to move. Drag the bottom corner to resize. Use Ctrl+C, Ctrl+V and Delete for quick editing.</p>
+ <p class="subtle">Drag the orange top handle to move. Drag the bottom corner to resize. Use Ctrl+C, Ctrl+X, Ctrl+V and Delete for quick editing.</p>
 </aside>
 <main class="center"><div class="previewbar"><strong id="pageName">Homepage canvas</strong><div><button data-view="desktop" class="selected">Desktop</button><button data-view="mobile">Mobile</button><button id="fit" class="secondary">Fit to screen</button></div></div><div class="stage" id="stage"><iframe id="preview" title="Editable MVN website page" referrerpolicy="same-origin"></iframe></div><p id="status" role="status">Select a page and start editing. No public change until you publish.</p></main>
 <aside class="inspector">
