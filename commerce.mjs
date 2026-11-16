@@ -150,6 +150,31 @@ tx(()=>{
  set(key,true);
 });
 
+// Move existing Musclevite catalogues to fresh URLs for the updated bottle photos.
+tx(()=>{
+ const row=db.prepare("SELECT data FROM products WHERE id='musclevite'").get();
+ if(!row)return;
+ const product=JSON.parse(row.data);
+ const variant=product.variants.find(v=>v.id==='musclevite-pack');
+ if(!variant)return;
+ const replacements=new Map([
+  ['assets/musclevite-front.webp','assets/musclevite-front-20261116.webp'],
+  ['assets/musclevite-facts.webp','assets/musclevite-facts-20261116.webp']
+ ]);
+ let changed=false;
+ function updateImage(target,field){
+  const replacement=replacements.get(target[field]);
+  if(!replacement)return;
+  target[field]=replacement;
+  changed=true;
+ }
+ for(const entry of [product,variant]){
+  updateImage(entry,'image');
+  for(const photo of entry.images||[])updateImage(photo,'src');
+ }
+ if(changed)db.prepare("UPDATE products SET data=? WHERE id='musclevite'").run(JSON.stringify(product));
+});
+
 // Correct Pro Creatine packs in persistent stores created before the verified 250 g photos were available.
 tx(()=>{const row=db.prepare("SELECT data FROM products WHERE id='pro-creatine'").get();if(!row)return;const p=JSON.parse(row.data);let changed=false;const description='Unicorn Pro Series Pro Creatine in 250 g packs. Choose Blueberry or Cranberry. Read the pack label for ingredients and directions.';if(p.description!==description){p.description=description;changed=true;}if(p.image!==null){p.image=null;changed=true;}for(const v of p.variants){const image=v.id==='creatine-blueberry'?'assets/mvn-creatine-blueberry-official-250g.webp':'assets/pro-creatine.png';const label=v.id==='creatine-blueberry'?'250 g · Blueberry':'250 g · Cranberry';if(v.label!==label){v.label=label;changed=true;}if(v.image!==image){v.image=image;changed=true;}}if(changed)db.prepare("UPDATE products SET data=? WHERE id='pro-creatine'").run(JSON.stringify(p));});
 function reserved(){const amounts=new Map();for(const row of db.prepare("SELECT payload FROM orders WHERE status IN ('preparing','pending','provider_review')").all())for(const l of JSON.parse(row.payload).lines)amounts.set(l.variantId,(amounts.get(l.variantId)||0)+l.quantity);return amounts;}

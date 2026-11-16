@@ -17,7 +17,7 @@ test('screenshot reference maintains a consistent scrolling storefront without d
 test('five product families, filters, cart and WhatsApp remain discoverable',()=>{
  const html=readFileSync('public/index.html','utf8');
  for(const v of ['id="grid"','id="sort"','id="priceRange"','id="collectionTitle"','id="activeFilters"','id="bag"','id="drawer"','id="checkoutFields"','id="send"'])assert.ok(html.includes(v),'retail hook '+v);
- for(const src of ['mvn-hero-whey-cutout-card.webp','sturdy-watermelon-front-card.webp','musclevite-front.webp'])assert.ok(html.includes(src),'real product imagery '+src);
+ for(const src of ['mvn-hero-whey-cutout-card.webp','sturdy-watermelon-front-card.webp','musclevite-front-20261116.webp'])assert.ok(html.includes(src),'real product imagery '+src);
  assert.match(html,/assets\/mvn-homepage-banner-20261115\.webp/);
  assert.match(html,/mvn-creatine-blueberry-official-250g\.webp/,'original Blueberry pack served as optimized same-origin WebP');
 });

@@ -28,7 +28,7 @@ export function stagingGate(env=process.env){
       '/assets/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout.webp',
       '/assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp',
       '/assets/sturdy-watermelon-front.webp',
-      '/assets/musclevite-front.webp'
+      '/assets/musclevite-front-20261116.webp'
     ]);
     const publicIndexing=publicBrowsing&&env.STAGING_PUBLIC_INDEXING==='true'&&
       ['GET','HEAD'].includes(req.method)&&publiclyIndexable.has(new URL(req.url,'http://localhost').pathname);

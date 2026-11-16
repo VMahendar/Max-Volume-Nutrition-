@@ -6,7 +6,7 @@ export const PRODUCT_PAGE_IDS=Object.freeze({
  '/nitro-mass.html':{primaryVariantId:'mass-5kg',id:'nitro-mass',name:'Unicorn Pro Series Nitro Mass Gainer',image:'/assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp'},
  '/pro-creatine.html':{primaryVariantId:'creatine-cranberry',id:'pro-creatine',name:'Unicorn Pro Series Pro Creatine'},
  '/sturdy-pre-workout.html':{id:'sturdy-pre',name:'Unicorn Pro Series Sturdy Pre-Workout',image:'/assets/sturdy-watermelon-front.webp'},
- '/musclevite-multivitamin.html':{id:'musclevite',name:'Unicorn Pro Series Musclevite Multivitamin',image:'/assets/musclevite-front.webp'}
+ '/musclevite-multivitamin.html':{id:'musclevite',name:'Unicorn Pro Series Musclevite Multivitamin',image:'/assets/musclevite-front-20261116.webp'}
 });
 export const NITRO_MASS_PACKS=Object.freeze([
  {id:'mass-3kg',pack:'3kg',size:'3 kg',servings:'30 servings',name:'Unicorn Pro Series Nitro Mass Gainer 3 kg Double Rich Chocolate',image:'/assets/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout.webp'},

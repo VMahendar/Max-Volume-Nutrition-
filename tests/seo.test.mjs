@@ -79,7 +79,7 @@ test('Google Image sitemap points to approved public product photos only',()=>{
     ['/nitro-mass.html','/assets/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout.webp'],
     ['/nitro-mass.html','/assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp'],
     ['/sturdy-pre-workout.html','/assets/sturdy-watermelon-front.webp'],
-    ['/musclevite-multivitamin.html','/assets/musclevite-front.webp']
+    ['/musclevite-multivitamin.html','/assets/musclevite-front-20261116.webp']
   ];
   assert.ok(sitemap.includes('xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"'),'missing Google image sitemap namespace');
   for(const [path,image] of imagePages){
