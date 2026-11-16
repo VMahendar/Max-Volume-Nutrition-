@@ -10,7 +10,7 @@ export function canonicalBuilderPage(path){
 }
 const numeric={x:[-1000000,1000000],y:[-1000000,1000000],width:[1,1000000],height:[1,1000000],fontSize:[1,100000],rotate:[-360000,360000],opacity:[0,100],zIndex:[-100000,100000],padding:[0,100000],radius:[0,100000]};
 const color=/^#[a-fA-F0-9]{6}$/;
-const selector=/^(?:body|main|header|footer|nav|section|article|div|figure|a|span|p|h[1-6]|img|picture|button|strong|small|ul|li)(?:\s*>\s*(?:main|header|footer|nav|section|article|div|figure|a|span|p|h[1-6]|img|picture|button|strong|small|ul|li)(?::nth-of-type\([1-9][0-9]{0,3}\))?){0,18}$/;
+const selector=/^(?:body|main|header|footer|nav|section|article|div|figure|a|span|p|h[1-6]|img|picture|button|strong|small|ul|li)(?:\s*>\s*(?:main|header|footer|nav|section|article|div|figure|a|span|p|h[1-6]|img|picture|button|strong|small|ul|li)(?::nth-of-type\([1-9][0-9]{0,3}\))?){0,90}$/;
 export function validateVisualBuilder(input, imageAllowed=()=>false){
  if(!input||typeof input!=='object'||Array.isArray(input))throw Error('Invalid visual builder document.');
  if(input.version!==1||!input.pages||typeof input.pages!=='object'||Array.isArray(input.pages))throw Error('Invalid visual builder version or pages.');
@@ -26,7 +26,7 @@ export function validateVisualBuilder(input, imageAllowed=()=>false){
    ids.add(op.id);
    if(!['move','resize','text','image','hide','duplicate','insert','style'].includes(op.action))throw Error('Unknown visual action.');
    if(!['all','desktop','mobile'].includes(op.device))throw Error('Invalid visual editing device.');
-   if(typeof op.target!=='string'||op.target.length>450||!(selector.test(op.target)||/^@v[0-9a-z-]{8,50}$/.test(op.target)))throw Error('Unsafe visual target.');
+   if(typeof op.target!=='string'||op.target.length>2400||!(selector.test(op.target)||/^@v[0-9a-z-]{8,50}$/.test(op.target)))throw Error('Unsafe visual target.');
    const clean={id:op.id,action:op.action,device:op.device,target:op.target};
    if(op.action==='move'||op.action==='resize'||op.action==='style'){
     if(!op.values||typeof op.values!=='object'||Array.isArray(op.values))throw Error('Invalid visual dimensions.');
