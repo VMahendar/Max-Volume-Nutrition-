@@ -159,3 +159,44 @@ body.retail-home.mvn-showcase-home .mvn-globtech-launch{
   margin-top:18px!important;
  }
 }
+
+/* Header contains only useful actions; avoid duplicate support button and long
+   email text crowding the logo. All controls remain reachable by accessible labels. */
+body.retail-home.mvn-showcase-home > .storehead .wa{
+ display:none!important;
+}
+body.retail-home.mvn-showcase-home > .storehead .mvn-header-email{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ width:38px!important;min-width:38px!important;max-width:38px!important;
+ height:38px!important;min-height:38px!important;padding:7px!important;
+ font-size:0!important;line-height:0!important;overflow:hidden!important;
+}
+body.retail-home.mvn-showcase-home > .storehead .mvn-header-email svg{
+ width:21px!important;height:21px!important;flex-shrink:0!important;
+}
+@media(max-width:760px){
+ body.retail-home.mvn-showcase-home > .storehead .brand-identity{
+  width:min(180px,calc(100vw - 206px))!important;
+ }
+ body.retail-home.mvn-showcase-home > .storehead .mvn-header-email{
+  display:none!important;
+ }
+ body.retail-home.mvn-showcase-home > .storehead .head-actions{
+  gap:3px!important;
+ }
+ body.retail-home.mvn-showcase-home > .storehead .head-actions>details,
+ body.retail-home.mvn-showcase-home > .storehead .head-actions>.account-link,
+ body.retail-home.mvn-showcase-home > .storehead .head-actions>#bag{
+  flex:0 0 auto!important;min-width:35px!important;max-width:45px!important;
+ }
+ body.retail-home.mvn-showcase-home > .storehead .account-link span,
+ body.retail-home.mvn-showcase-home > .storehead #bag>span{
+  display:none!important;
+ }
+ body.retail-home.mvn-showcase-home > .storehead .head-actions summary,
+ body.retail-home.mvn-showcase-home > .storehead #bag,
+ body.retail-home.mvn-showcase-home > .storehead .account-link{
+  min-height:38px!important;height:38px!important;
+  padding:5px!important;justify-content:center!important;
+ }
+}
