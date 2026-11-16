@@ -76,9 +76,19 @@ function apply(input){
   if('zIndex'in v)style(e,'z-index',String(v.zIndex));
   for(const k of ['color','backgroundColor','objectFit','textAlign'])if(v[k])style(e,k.replace(/[A-Z]/g,c=>'-'+c.toLowerCase()),v[k]);
   if(v.fullBleed===true){
-   style(e,'max-width','none');style(e,'box-sizing','border-box');
-   style(e,'width','100vw');style(e,'margin-left','calc(50% - 50vw)');style(e,'margin-right','0');
-   style(e,'padding-left','0');style(e,'padding-right','0');
+   // For the hero picture remove the constraints on its ancestor section,
+   // not merely the image pixels; otherwise white margins remain.
+   const hero=e.closest('#mvnEditorial');
+   const containers=hero?[hero,hero.querySelector('.mvn-editorial-layout'),hero.querySelector('.mvn-owner-banner-feature'),hero.querySelector('.mvn-owner-banner-link')].filter(Boolean):[e];
+   for(const container of containers){
+    remember(container);style(container,'max-width','none');
+    style(container,'box-sizing','border-box');style(container,'width','100%');
+    style(container,'padding-left','0');style(container,'padding-right','0');
+   }
+   const outer=hero||e;remember(outer);style(outer,'width','100vw');
+   style(outer,'max-width','none');style(outer,'margin-left','calc(50% - 50vw)');
+   style(outer,'margin-right','0');
+   if(e!==hero){style(e,'max-width','none');style(e,'width','100%');}
   }
  }
  if(editing)requestAnimationFrame(positionOutline);
