@@ -18,7 +18,8 @@ test('the storefront displays the exact uploaded MVN logo in Codex and Render',(
   for(const file of htmlFiles){
     const html=readFileSync(file,'utf8');
     const homepage=file==='index.html'||file==='public/index.html';
-    const approvedHeader=homepage?'mvn-app-header-logo.webp':'max-volume-logo-wide.png';
+    const innerPageWithTransparentHeader=html.includes('class="mvn-unified-header"');
+    const approvedHeader=(homepage||innerPageWithTransparentHeader)?'mvn-app-header-logo.webp':'max-volume-logo-wide.png';
     assert.ok(html.includes('class="original-brand-logo" src="'+approvedHeader+'"'),
       file+' must use the existing owner-approved MVN artwork');
 
