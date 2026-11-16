@@ -2,7 +2,7 @@
 (()=>{
 const $=id=>document.getElementById(id);
 const frame=$('preview'),status=message=>{$('status').textContent=message;};
-const pages=new Set(['/','/shop.html','/about.html','/contact.html','/dealer.html','/brands.html','/potency-whey.html','/nitro-mass.html','/pro-creatine.html','/sturdy-pre-workout.html','/offers.html','/support.html']);
+const pages=new Set(['/','/shop.html','/about.html','/contact.html','/dealer.html','/brands.html','/potency-whey.html','/nitro-mass.html','/pro-creatine.html','/sturdy-pre-workout.html','/offers.html','/support.html','/wholesale-account.html']);
 let documentState={version:1,pages:{}},published={version:1,pages:{}},baseRevision=null,page='/',selected=null,ready=false,busy=false,dirty=false,clipboard=null,history=[],future=[],view='desktop';
 const clone=data=>JSON.parse(JSON.stringify(data));
 const newId=()=> 'v'+crypto.randomUUID().replaceAll('-','');
@@ -15,7 +15,7 @@ async function api(path,body){
 function operations(){return documentState.pages[page]||(documentState.pages[page]=[]);}
 function controls(){
  const available=!!selected;
- for(const id of ['copy','duplicate','delete','restore'])$(id).disabled=!available||busy;
+ for(const id of ['copy','cut','duplicate','delete','restore'])$(id).disabled=!available||busy;
  $('paste').disabled=!clipboard||busy;
  for(const id of ['save','publish'])$(id).disabled=!ready||busy;
  $('undo').disabled=!history.length||busy;
@@ -76,10 +76,12 @@ $('addText').onclick=()=>addNew('text');
 $('addButton').onclick=()=>addNew('button');
 $('addBox').onclick=()=>addNew('box');
 $('addImage').onclick=()=>$('fileUpload').click();
-$('copy').onclick=()=>{clipboard=selected?{page,target:selected.target}:null;controls();status(clipboard?'Element copied. Choose Paste to duplicate it.':'Select an element to copy.');};
+$('copy').onclick=()=>{clipboard=selected?{page,target:selected.target,cut:false}:null;controls();status(clipboard?'Element copied. Choose Paste to duplicate it.':'Select an element to copy.');};
+$('cut').onclick=()=>{clipboard=selected?{page,target:selected.target,cut:true}:null;controls();status(clipboard?'Element marked for cutting. Paste to move it.':'Select an element first.');};
 $('paste').onclick=()=>{
  if(!clipboard)return;if(clipboard.page!==page){status('Open the copied element’s page before pasting it.');return;}
- add('duplicate',{},clipboard.target);
+ if(clipboard.cut){const target=clipboard.target;change(()=>{operations().push({id:newId(),action:'duplicate',target,device:$('device').value});operations().push({id:newId(),action:'hide',target,device:$('device').value});});clipboard=null;controls();}
+ else add('duplicate',{},clipboard.target);
 };
 $('duplicate').onclick=()=>{if(selected)add('duplicate');};
 $('delete').onclick=()=>{if(selected)add('hide');};
@@ -146,6 +148,7 @@ addEventListener('message',event=>{
 addEventListener('keydown',e=>{
  if(!ready||['INPUT','TEXTAREA','SELECT'].includes(document.activeElement?.tagName))return;
  if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='c'&&selected){e.preventDefault();$('copy').click();}
+ else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='x'&&selected){e.preventDefault();$('cut').click();}
  else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='v'&&clipboard){e.preventDefault();$('paste').click();}
  else if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='z'){e.preventDefault();(e.shiftKey?$('redo'):$('undo')).click();}
  else if((e.key==='Delete'||e.key==='Backspace')&&selected){e.preventDefault();$('delete').click();}
