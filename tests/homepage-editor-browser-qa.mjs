@@ -26,6 +26,13 @@ try{
  assert.ok(started,'Preview server failed: '+stderr);
  browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  const context=await browser.newContext({viewport:{width:1280,height:850}});
+ // Confirm the current customer homepage still renders a genuine group banner before any owner edits.
+ const originalStore=await context.newPage();
+ await originalStore.goto(origin+'/',{waitUntil:'domcontentloaded'});
+ await originalStore.waitForFunction(()=>{const image=document.querySelector('.mvn-owner-banner-img');return image?.complete&&image.naturalWidth>300;},null,{timeout:15000});
+ assert.equal(await originalStore.locator('.storehead .original-brand-logo').count(),1,'one customer-facing logo');
+ assert.equal(await originalStore.locator('.mvn-owner-banner-img').count(),1,'one actual homepage banner');
+ await originalStore.close();
  const page=await context.newPage(),errors=[];
  page.on('pageerror',error=>errors.push('editor: '+error.message));
  assert.equal((await page.goto(origin+'/layout-editor.html',{waitUntil:'domcontentloaded'})).status(),200);
