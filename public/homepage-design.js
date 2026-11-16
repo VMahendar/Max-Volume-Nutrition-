@@ -142,8 +142,11 @@ const clamp=(n,min,max)=>Math.round(Math.max(min,Math.min(max,n)));
 function startGesture(event){
  if(event.button!==0&&event.pointerType==='mouse')return;
  const resize=event.target===dragHandle;
- const imageId=resize?selected:availableImages.find(id=>node(id)===event.target);
- const textDrag=!imageId&&(event.target.closest?.('.mvn-launch-hero-copy h1')||event.target.closest?.('.mvn-launch-hero-copy > p'));
+ let imageId=resize?selected:availableImages.find(id=>node(id)===event.target);
+ const isHeading=event.target.closest?.('.mvn-launch-hero-copy h1, .mvn-launch-hero-copy > p');
+ // The hero photo sits behind a large text overlay, so allow dragging from empty banner areas too.
+ if(!imageId&&!isHeading&&event.target.closest?.('.mvn-owner-banner-feature')&&!event.target.closest?.('.mvn-launch-hero-actions'))imageId='banner';
+ const textDrag=!imageId&&isHeading;
  if(!imageId&&!textDrag)return;
  const id=textDrag?'heroText':imageId;
  const target=textDrag?document.querySelector('.mvn-launch-hero-copy'):node(id);
