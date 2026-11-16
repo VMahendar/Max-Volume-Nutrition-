@@ -5,7 +5,7 @@ let doc;try{doc=JSON.parse(document.getElementById('mvnVisualBuilderConfig')?.te
 const path=location.pathname==='/index.html'?'/':location.pathname;
 const prohibited='form,input,select,textarea,[contenteditable],#cart,#checkout,#payment,#account,[data-price],.price,.product-price,.checkout,.cart-item,[data-cart],script,style,iframe,video,audio,canvas,svg,dialog,[data-mvn-builder-ui]';
 const nodes='section,article,figure,img,h1,h2,h3,h4,h5,h6,p,a,button,strong,small,div';
-const baseline=new WeakMap(),touched=new Set();
+const baseline=new WeakMap(),touched=new Set(),sources=new WeakMap();
 let layer,outline,active=null,selected='',gesture=null;
 const isProtected=e=>!e||(!!e.closest(prohibited)&&!e.closest('[data-mvn-builder-created]'))||(e!==document.body&&!e.closest('[data-mvn-builder-created]')&&!!e.querySelector?.('form,input,select,textarea,#cart,#checkout,#payment,#account,[data-price],.price,.product-price,.checkout,.cart-item,[data-cart]'));
 function pathFor(el){
@@ -33,6 +33,8 @@ function reset(){
   if(b.style===null)e.removeAttribute('style');else e.setAttribute('style',b.style);
   if(e.dataset.mvnBuilderText){e.textContent=b.text;delete e.dataset.mvnBuilderText;}
   if(e.dataset.mvnBuilderImage){
+   for(const [source,srcset] of sources.get(e)||[]){if(!source.isConnected)continue;if(srcset===null)source.removeAttribute('srcset');else source.setAttribute('srcset',srcset);}
+   sources.delete(e);
    if(b.src===null)e.removeAttribute('src');else e.setAttribute('src',b.src);
    if(b.srcset===null)e.removeAttribute('srcset');else e.setAttribute('srcset',b.srcset);
    delete e.dataset.mvnBuilderImage;
@@ -64,7 +66,7 @@ function apply(input){
   remember(e);
   if(op.action==='hide'){style(e,'display','none');continue;}
   if(op.action==='text'){if(e.tagName!=='IMG'){e.textContent=op.text;e.dataset.mvnBuilderText='1';}continue;}
-  if(op.action==='image'){if(e.tagName==='IMG'){e.removeAttribute('srcset');e.src='/'+op.src;e.dataset.mvnBuilderImage='1';}continue;}
+  if(op.action==='image'){if(e.tagName==='IMG'){const picture=e.closest('picture');if(picture){const prior=[...picture.querySelectorAll('source')].map(source=>[source,source.getAttribute('srcset')]);sources.set(e,prior);for(const [source] of prior)source.removeAttribute('srcset');}e.removeAttribute('srcset');e.removeAttribute('sizes');e.src='/'+op.src;e.dataset.mvnBuilderImage='1';}continue;}
   const v=op.values||{};
   if('x'in v||'y'in v||'rotate'in v)style(e,'transform','translate('+(v.x||0)+'px,'+(v.y||0)+'px) rotate('+(v.rotate||0)+'deg)');
   for(const k of ['width','height','fontSize','padding','radius']){
@@ -92,6 +94,36 @@ function select(e){
  active=e;selected=target;positionOutline();const r=e.getBoundingClientRect();
  send('mvn-visual-select',{target,tag:e.tagName.toLowerCase(),text:e.tagName==='IMG'?'':e.textContent.slice(0,1200),src:e.tagName==='IMG'?e.getAttribute('src'):'',width:Math.round(r.width),height:Math.round(r.height)});
 }
+// True canvas interaction: grab the object itself (mouse or touch), not only the small handles.
+let directGesture=null;
+const beginDirect=ev=>{
+ if(ev.target.closest?.('[data-mvn-builder-ui]'))return;
+ if(ev.button!==0&&ev.pointerType==='mouse')return;
+ if(isProtected(ev.target))return;
+ const el=ev.target.closest(nodes);
+ if(!el||isProtected(el))return;
+ const candidate=pathFor(el);if(!candidate)return;
+ ev.preventDefault();
+ select(el);
+ const r=el.getBoundingClientRect(),m=new DOMMatrix(getComputedStyle(el).transform);
+ directGesture={id:ev.pointerId,sx:ev.clientX,sy:ev.clientY,x:m.m41,y:m.m42,target:candidate,el,moved:false};
+ try{el.setPointerCapture(ev.pointerId)}catch{}
+};
+document.addEventListener('pointerdown',beginDirect,true);
+document.addEventListener('pointermove',ev=>{
+ if(!directGesture||ev.pointerId!==directGesture.id)return;
+ const g=directGesture,dx=ev.clientX-g.sx,dy=ev.clientY-g.sy;
+ if(!g.moved&&Math.abs(dx)+Math.abs(dy)<5)return;
+ g.moved=true;ev.preventDefault();style(g.el,'transform','translate('+(g.x+dx)+'px,'+(g.y+dy)+'px)');
+ positionOutline();
+},true);
+function endDirect(ev){
+ if(!directGesture||ev.pointerId!==directGesture.id)return;
+ const g=directGesture;directGesture=null;
+ if(g.moved){ev.preventDefault();send('mvn-visual-operation',{target:g.target,action:'move',values:{x:Math.max(-1800,Math.min(1800,Math.round(g.x+ev.clientX-g.sx))),y:Math.max(-1800,Math.min(1800,Math.round(g.y+ev.clientY-g.sy)))}});}
+}
+document.addEventListener('pointerup',endDirect,true);
+document.addEventListener('pointercancel',endDirect,true);
 document.addEventListener('click',ev=>{
  if(ev.target.closest('[data-mvn-builder-ui]')&&!ev.target.closest('[data-mvn-builder-created]'))return;
  ev.preventDefault();ev.stopImmediatePropagation();
