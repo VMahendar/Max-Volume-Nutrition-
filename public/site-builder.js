@@ -5,6 +5,17 @@ const frame=$('preview'),status=message=>{$('status').textContent=message;};
 const pages=new Set(['/','/shop.html','/about.html','/contact.html','/dealer.html','/brands.html','/potency-whey.html','/nitro-mass.html','/pro-creatine.html','/sturdy-pre-workout.html','/offers.html','/support.html','/wholesale-account.html']);
 let documentState={version:1,pages:{}},published={version:1,pages:{}},baseRevision=null,page='/',selected=null,ready=false,busy=false,dirty=false,clipboard=null,history=[],future=[],view='desktop',mode='move';
 const clone=data=>JSON.parse(JSON.stringify(data));
+function resizeFrame(){
+ try{
+  const inner=frame.contentDocument;
+  if(!inner)return;
+  // The editing canvas follows the actual webpage height, not a predetermined template.
+  const contentHeight=Math.max(inner.body?.scrollHeight||0,inner.documentElement?.scrollHeight||0,inner.body?.offsetHeight||0,window.innerHeight);
+  frame.style.height=Math.ceil(contentHeight+40)+'px';
+ }catch{}
+}
+frame.addEventListener('load',()=>{resizeFrame();requestAnimationFrame(resizeFrame);});
+
 const newId=()=> 'v'+crypto.randomUUID().replaceAll('-','');
 async function api(path,body){
  const response=await fetch(path,{credentials:'same-origin',cache:'no-store',...(body!==undefined?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}:{})});
@@ -25,7 +36,7 @@ function change(fn){
  history.push(clone(documentState));if(history.length>60)history.shift();future=[];
  fn();dirty=true;controls();send();status('Unsaved visual changes. Save a private draft or publish when ready.');
 }
-function send(){if(ready){frame.contentWindow?.postMessage({type:'mvn-visual-design',document:documentState},location.origin);frame.contentWindow?.postMessage({type:'mvn-visual-mode',mode},location.origin);}}
+function send(){if(ready){frame.contentWindow?.postMessage({type:'mvn-visual-design',document:documentState},location.origin);frame.contentWindow?.postMessage({type:'mvn-visual-mode',mode},location.origin);requestAnimationFrame(resizeFrame);}}
 function add(action,extras={},target=selected?.target){
  if(!target){status('Select a page element first.');return;}
  const device=$('device').value;
@@ -70,7 +81,7 @@ for(const button of document.querySelectorAll('[data-view]'))button.onclick=()=>
  view=button.dataset.view;
  for(const b of document.querySelectorAll('[data-view]'))b.classList.toggle('selected',b===button);
  frame.classList.toggle('mobile',view==='mobile');
- frame.style.width=view==='mobile'?'390px':'100%';frame.style.height=view==='mobile'?'790px':'100%';
+ frame.style.width=view==='mobile'?'390px':'100%';resizeFrame();
  frame.contentWindow?.location.reload();
 };
 function chooseMode(next){
@@ -118,7 +129,9 @@ $('applyStyle').onclick=()=>{
  if(!selected)return;const values={};
  for(const id of ['width','height','x','y','fontSize','opacity']){
   const field=$(id);if(field.value==='')continue;let n=Number(field.value);
-  const minimum=Number(field.min||-1800),maximum=Number(field.max||2200);
+  if(!Number.isFinite(n))continue;
+  const minimum=['width','height','fontSize'].includes(id)?1:id==='opacity'?0:-100000;
+  const maximum=id==='opacity'?100:id==='fontSize'?2000:100000;
   values[id]=Math.max(minimum,Math.min(maximum,Math.round(n)));
  }
  for(const id of ['color','backgroundColor'])if($(id).value)values[id]=$(id).value;
@@ -160,7 +173,8 @@ $('publish').onclick=()=>{
 addEventListener('message',event=>{
  if(event.origin!==location.origin||event.source!==frame.contentWindow||!event.data)return;
  const data=event.data;
- if(data.type==='mvn-visual-ready'){ready=true;controls();send();status('Canvas ready. Drag an element directly to move, or pull any orange corner to resize. On mobile, tap Scroll Page to browse.');}
+ if(data.type==='mvn-visual-ready'){ready=true;controls();send();resizeFrame();status('Canvas ready. Drag an element directly to move, or pull any orange corner to resize. On mobile, tap Scroll Page to browse.');}
+ if(data.type==='mvn-visual-resize')resizeFrame();
  if(data.type==='mvn-visual-select')chooseSelection(data);
  if(data.type==='mvn-visual-operation'){
   if(!pages.has(page)||!data.target)return;
