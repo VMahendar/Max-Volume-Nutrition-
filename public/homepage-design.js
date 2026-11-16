@@ -133,8 +133,8 @@ function placeHandle(){
  if(!target||!target.getClientRects().length||getComputedStyle(target).display==='none'){dragHandle.style.display='none';return;}
  const rect=target.getBoundingClientRect();
  dragHandle.style.display='flex';
- dragHandle.style.left=(rect.right+scrollX-17)+'px';
- dragHandle.style.top=(rect.bottom+scrollY-17)+'px';
+ dragHandle.style.left=(Math.max(8,Math.min(rect.right-72,innerWidth-90))+scrollX)+'px';
+ dragHandle.style.top=(Math.max(8,Math.min(rect.bottom-72,innerHeight-90))+scrollY)+'px';
 }
 addEventListener('scroll',placeHandle,{passive:true});addEventListener('resize',placeHandle,{passive:true});
 document.addEventListener('dragstart',event=>{if(availableImages.some(id=>node(id)===event.target))event.preventDefault()},true);
