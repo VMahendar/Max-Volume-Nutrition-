@@ -82,3 +82,68 @@ body.mvn-unified-page :is(a,button,summary,input,select,textarea):focus-visible{
  body.mvn-unified-page .mvn-unified-content{width:calc(100% - 24px)!important;padding:20px 0 36px!important}
  body.mvn-unified-page .mvn-unified-footer{padding:22px 16px!important}
 }
+
+
+/* Shared phone-first header: identical controls on every informational page. */
+body.mvn-unified-page .mvn-unified-header{position:relative!important;z-index:50!important;flex:0 0 auto!important;background:#151617!important}
+body.mvn-unified-page .mvn-unified-header .brand{height:70px!important;max-width:310px!important;flex:0 1 310px!important;text-decoration:none!important}
+body.mvn-unified-page .mvn-unified-header .original-brand-logo{
+ width:100%!important;max-width:295px!important;height:68px!important;
+ object-fit:contain!important;object-position:left center!important;
+ mix-blend-mode:screen!important;filter:contrast(1.12)!important;
+}
+body.mvn-unified-page .mvn-unified-links{display:flex!important;align-items:center!important;gap:7px!important;flex-wrap:nowrap!important}
+body.mvn-unified-page .mvn-unified-links > a:not(.mvn-unified-shop-link),
+body.mvn-unified-page .mvn-unified-more > summary{
+ display:inline-flex!important;align-items:center!important;justify-content:center!important;
+ width:44px!important;height:44px!important;min-width:44px!important;min-height:44px!important;
+ padding:9px!important;border:1px solid #53545b!important;border-radius:8px!important;
+ background:#222429!important;color:#fff!important;cursor:pointer!important;
+ list-style:none!important;text-decoration:none!important;
+}
+body.mvn-unified-page .mvn-unified-links svg{display:block!important;width:22px!important;height:22px!important;flex:none!important}
+body.mvn-unified-page .mvn-unified-more{position:relative!important;flex:none!important}
+body.mvn-unified-page .mvn-unified-more > summary::-webkit-details-marker{display:none!important}
+body.mvn-unified-page .mvn-unified-more > nav{
+ position:absolute!important;top:calc(100% + 9px)!important;right:0!important;z-index:100!important;
+ display:grid!important;gap:0!important;width:min(260px,85vw)!important;
+ padding:8px!important;background:#191b1f!important;border:1px solid #484c55!important;
+ border-radius:10px!important;box-shadow:0 14px 32px #0008!important;
+}
+body.mvn-unified-page .mvn-unified-more > nav a{
+ display:flex!important;align-items:center!important;justify-content:flex-start!important;
+ width:100%!important;min-height:43px!important;padding:9px 12px!important;
+ color:#fff!important;text-decoration:none!important;text-transform:none!important;
+ font-size:15px!important;border-radius:6px!important;
+}
+body.mvn-unified-page .mvn-unified-more > nav a:hover{background:#30333a!important}
+body.mvn-unified-page .mvn-unified-shop-link{margin:0!important;background:transparent!important}
+body.mvn-unified-page .mvn-unified-content{min-width:0!important}
+body.mvn-unified-page .mvn-unified-content h1{overflow-wrap:break-word!important}
+/* Preserve distinct content panels, but align the shell and remove duplicate bars. */
+body.mvn-unified-page .account-utility,body.mvn-unified-page .mvn-info-utility{display:none!important}
+body.mvn-unified-page .nav:not(.mvn-unified-links),
+body.mvn-unified-page .account-mainnav,
+body.mvn-unified-page .mvn-info-nav{display:none!important}
+body.mvn-unified-page .support-hero{padding-top:clamp(24px,5vw,60px)!important}
+body.mvn-unified-page .support-hero h1{font-size:clamp(36px,7vw,74px)!important;line-height:1.06!important}
+body.mvn-unified-page .support-hero-inner,body.mvn-unified-page .support-main{max-width:1160px!important;width:calc(100% - 32px)!important;margin-inline:auto!important}
+body.mvn-unified-page .mvn-info-hero{padding:clamp(26px,5vw,62px) max(16px,calc((100% - 1160px)/2))!important}
+body.mvn-unified-page .mvn-info-hero h1{font-size:clamp(38px,7vw,78px)!important;line-height:1.05!important}
+body.mvn-unified-page .mvn-info-main{flex:1 0 auto!important}
+body.mvn-unified-page .mvn-info-footer,body.mvn-unified-page .account-footer{margin-top:auto!important}
+body.mvn-unified-page .business-main{flex:1 0 auto!important}
+@media(max-width:720px){
+ body.mvn-unified-page .mvn-unified-header{padding:8px 12px!important;min-height:70px!important;gap:8px!important}
+ body.mvn-unified-page .mvn-unified-header .brand{min-width:0!important;height:56px!important;flex:1 1 auto!important;max-width:calc(100% - 178px)!important}
+ body.mvn-unified-page .mvn-unified-header .original-brand-logo{height:54px!important;max-width:100%!important}
+ body.mvn-unified-page .mvn-unified-links{gap:5px!important}
+ body.mvn-unified-page .mvn-unified-links > a:not(.mvn-unified-shop-link),
+ body.mvn-unified-page .mvn-unified-more > summary{min-width:40px!important;width:40px!important;height:42px!important;min-height:42px!important;padding:8px!important}
+ body.mvn-unified-page .mvn-unified-shop-link{padding:6px 8px!important;min-width:0!important;font-size:12px!important;white-space:nowrap!important}
+ body.mvn-unified-page .support-hero-inner,body.mvn-unified-page .support-main{width:calc(100% - 24px)!important}
+ body.mvn-unified-page .support-hero-contact{max-width:100%!important;overflow-wrap:anywhere!important}
+ body.mvn-unified-page .support-hero-contact a{overflow-wrap:anywhere!important}
+ body.mvn-unified-page .mvn-info-hero{padding:26px 16px 32px!important}
+ body.mvn-unified-page .mvn-unified-content h1{font-size:clamp(34px,10vw,54px)!important}
+}
