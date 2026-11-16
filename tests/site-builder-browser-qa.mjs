@@ -82,9 +82,9 @@ try{
  assert.match(await iframe.locator('#mvnEditorial').getAttribute('style'),/width: 100vw/);
  // Mobile browsing uses scroll mode; move mode remains available for touch edits.
  await page.locator('#scrollMode').click();
- assert.equal(await iframe.locator('html').evaluate(el=>el.classList.contains('mvn-builder-move-mode')),false);
+ await page.waitForFunction(()=>document.querySelector('#preview')?.contentDocument?.documentElement.classList.contains('mvn-builder-move-mode')===false,null,{timeout:15000});
  await page.locator('#moveMode').click();
- assert.equal(await iframe.locator('html').evaluate(el=>el.classList.contains('mvn-builder-move-mode')),true);
+ await page.waitForFunction(()=>document.querySelector('#preview')?.contentDocument?.documentElement.classList.contains('mvn-builder-move-mode')===true,null,{timeout:15000});
  await page.locator('#save').click();
  await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('Private draft saved'),null,{timeout:15000});
  assert.equal(C.setting('visualBuilderPublishedV1'),null,'editing draft cannot change customer store');
