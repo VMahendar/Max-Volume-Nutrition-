@@ -8,7 +8,8 @@ export function canonicalBuilderPage(path){
  if(path==='/index.html')return '/';
  return visualBuilderPages.includes(path)?path:null;
 }
-const numeric={x:[-1800,1800],y:[-1800,1800],width:[20,2200],height:[20,1600],fontSize:[8,150],rotate:[-180,180],opacity:[0,100],zIndex:[0,100],padding:[0,180],radius:[0,150]};
+// Technical bounds protect storage and rendering, not impose a preset design size.
+const numeric={x:[-100000,100000],y:[-100000,100000],width:[1,100000],height:[1,100000],fontSize:[1,2000],rotate:[-3600,3600],opacity:[0,100],zIndex:[-10000,10000],padding:[0,10000],radius:[0,10000]};
 const color=/^#[a-fA-F0-9]{6}$/;
 const selector=/^(?:body|main|header|footer|nav|section|article|div|figure|a|span|p|h[1-6]|img|picture|button|strong|small|ul|li)(?:\s*>\s*(?:main|header|footer|nav|section|article|div|figure|a|span|p|h[1-6]|img|picture|button|strong|small|ul|li)(?::nth-of-type\([1-9][0-9]{0,3}\))?){0,18}$/;
 export function validateVisualBuilder(input, imageAllowed=()=>false){
