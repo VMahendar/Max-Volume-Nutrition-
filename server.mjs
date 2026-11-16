@@ -1,5 +1,6 @@
 import './deploy/prepare-product-media.mjs';
 import {validateHomepageDesign,homepageOrder} from './homepage-design.mjs';
+import {validateVisualBuilder,canonicalBuilderPage} from './site-builder.mjs';
 import {startLocalBackupScheduler} from './deploy/local-backups.mjs';
 import {startDriveBackupScheduler} from './deploy/drive-backup.mjs';
 import http from 'node:http';
@@ -146,6 +147,13 @@ if(/^\/assets\/homepage\/[a-f0-9]{64}\.(?:png|jpg|webp)$/.test(u.pathname)&&['GE
  if(!image)fail(404,'Image not found.');
  res.writeHead(200,{'Content-Type':image.type,'Cache-Control':'public, max-age=31536000, immutable'});
  return res.end(req.method==='HEAD'?undefined:image.content);
+}
+if(u.searchParams.get('visual_builder')==='1'){
+ if(!canonicalBuilderPage(u.pathname))fail(404,'This page is not supported in the visual builder.');
+ admin(C.session(req));
+ res.setHeader('X-Frame-Options','SAMEORIGIN');
+ res.setHeader('Content-Security-Policy',String(res.getHeader('Content-Security-Policy')).replace("frame-ancestors 'none'","frame-ancestors 'self'"));
+ res.setHeader('X-Robots-Tag','noindex,nofollow,noarchive');
 }
 if(['/', '/index.html'].includes(u.pathname)&&u.searchParams.get('homepage_editor')==='1'){
  admin(C.session(req));
@@ -310,6 +318,41 @@ if(path==='/api/enquiries'&&req.method==='POST'){
  return json(res,201,lead);
 }
 if(path.startsWith('/api/admin/')){admin(user);
+if(path==='/api/admin/visual-builder'){
+ if(req.method==='GET')return json(res,200,{
+  draft:C.setting('visualBuilderDraftV1'),
+  published:C.setting('visualBuilderPublishedV1'),
+  revision:C.setting('visualBuilderPublishedRevisionV1')||null
+ });
+ if(req.method!=='POST')fail(405,'Method not allowed.');
+ if(!rate('visual-builder:'+user.id,24))fail(429,'Too many visual edits. Please try again shortly.');
+ const payload=JSON.parse(await body(req,150000));
+ if(!['save','publish'].includes(payload?.action))fail(400,'Invalid visual builder action.');
+ const activePage=canonicalBuilderPage(payload.page);
+ if(!activePage)fail(400,'This page cannot be published from the builder.');
+ let design;
+ try{design=validateVisualBuilder(payload.design,value=>{
+  if(/^assets\/homepage\/[a-f0-9]{64}\.(?:png|jpg|webp)$/.test(value))
+   return !!db.prepare('SELECT path FROM homepage_images WHERE path=?').get(value);
+  if(!/^[a-zA-Z0-9_.\/-]+\.(png|jpg|jpeg|webp)$/.test(value)||value.includes('..'))return false;
+  const target=resolve(root,value);return target.startsWith(root+sep)&&existsSync(target)&&realpathSync(target).startsWith(root+sep);
+ });}catch(error){fail(400,error.message);}
+ const published=C.setting('visualBuilderPublishedV1')||{version:1,pages:{}};
+ const lastRevision=C.setting('visualBuilderPublishedRevisionV1')||null;
+ if(payload.action==='publish'&&(payload.baseRevision||null)!==lastRevision)fail(409,'Visual builder changed in another window. Reload before publishing.');
+ let revision=lastRevision;
+ C.tx(()=>{
+  C.set('visualBuilderDraftV1',design);
+  if(payload.action==='publish'){
+   const next={version:1,pages:{...published.pages,[activePage]:design.pages[activePage]||[]}};
+   revision=randomUUID();
+   C.set('visualBuilderPublishedV1',next);
+   C.set('visualBuilderPublishedRevisionV1',revision);
+  }
+  C.audit(user.id,'visual-builder.'+payload.action,activePage,{count:(design.pages[activePage]||[]).length});
+ });
+ return json(res,200,{ok:true,action:payload.action,page:activePage,design,revision});
+}
 if(path==='/api/admin/homepage-design'){
  if(req.method==='GET')return json(res,200,{draft:C.setting('homepageDraftV2'),published:C.setting('homepagePublishedV2'),empty:{version:2,fields:{},order:homepageOrder}});
  if(req.method!=='POST')fail(405,'Method not allowed.');
@@ -495,6 +538,10 @@ if(path==='/api/admin/shipment'){if(!shippingReady())fail(503,'Shiprocket is dis
 if(path==='/api/admin/tracking'){const row=db.prepare('SELECT * FROM shipments WHERE order_id=?').get(String(b.id));const shipment=row?JSON.parse(row.data):null;if(!shipment?.shipmentId)fail(409,'No provider shipment to track.');const tracking=await ship.track(shipment.shipmentId);C.tx(()=>{const latest=JSON.parse(db.prepare('SELECT data FROM shipments WHERE order_id=?').get(b.id).data);db.prepare('UPDATE shipments SET data=? WHERE order_id=?').run(JSON.stringify({...latest,tracking}),b.id);});return json(res,200,{tracking});}
 fail(404,'Endpoint not found.');}
 fail(404,'Endpoint not found.');}
+if(u.pathname==='/visual-builder.html'){
+ res.setHeader('X-Robots-Tag','noindex,nofollow,noarchive');
+ res.setHeader('Content-Security-Policy',String(res.getHeader('Content-Security-Policy')).replace("frame-src https://*.razorpay.com","frame-src 'self' https://*.razorpay.com"));
+}
 if(u.pathname==='/layout-editor.html'){
  // The editor shell has its own owner sign-in; private APIs still require admin access.
  res.setHeader('X-Robots-Tag','noindex,nofollow,noarchive');
@@ -508,6 +555,21 @@ if(['/', '/index.html'].includes(u.pathname)){
  let html=file.toString('utf8').replace('</body>',`<script type="application/json" id="mvnHomepageDesign">${serialized}</script><script src="/homepage-design.js?v=20261116-full-1" defer></script></body>`);
  if(editing)html=html.replace('<body ','<body data-homepage-editor="true" ');
  file=Buffer.from(html);
+}
+// Safe visual presentation layer: draft in owner iframe, published presentation on public pages.
+const builderPage=canonicalBuilderPage(u.pathname);
+if(builderPage){
+ const builderPreview=u.searchParams.get('visual_builder')==='1';
+ const config=builderPreview
+  ?(C.setting('visualBuilderDraftV1')||C.setting('visualBuilderPublishedV1'))
+  :C.setting('visualBuilderPublishedV1');
+ if(builderPreview||(config?.pages?.[builderPage]?.length)){
+  const serialized=JSON.stringify(config||{version:1,pages:{}}).replace(/</g,'\\u003c');
+  let html=file.toString('utf8');
+  if(builderPreview)html=html.replace(/<html\b/i,'<html data-mvn-visual-builder="edit"');
+  html=html.replace('</body>','<script type="application/json" id="mvnVisualBuilderConfig">'+serialized+'</script><script src="/site-builder-runtime.js?v=1" defer></script></body>');
+  file=Buffer.from(html,'utf8');
+ }
 }
 if(PRODUCT_PAGE_IDS[u.pathname]){
  const productId=PRODUCT_PAGE_IDS[u.pathname].id;
