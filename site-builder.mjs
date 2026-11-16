@@ -8,7 +8,7 @@ export function canonicalBuilderPage(path){
  if(path==='/index.html')return '/';
  return visualBuilderPages.includes(path)?path:null;
 }
-const numeric={x:[-1800,1800],y:[-1800,1800],width:[20,2200],height:[20,1600],fontSize:[8,150],rotate:[-180,180],opacity:[0,100],zIndex:[0,100],padding:[0,180],radius:[0,150]};
+const numeric={x:[-1000000,1000000],y:[-1000000,1000000],width:[1,1000000],height:[1,1000000],fontSize:[1,100000],rotate:[-360000,360000],opacity:[0,100],zIndex:[-100000,100000],padding:[0,100000],radius:[0,100000]};
 const color=/^#[a-fA-F0-9]{6}$/;
 const selector=/^(?:body|main|header|footer|nav|section|article|div|figure|a|span|p|h[1-6]|img|picture|button|strong|small|ul|li)(?:\s*>\s*(?:main|header|footer|nav|section|article|div|figure|a|span|p|h[1-6]|img|picture|button|strong|small|ul|li)(?::nth-of-type\([1-9][0-9]{0,3}\))?){0,18}$/;
 export function validateVisualBuilder(input, imageAllowed=()=>false){
@@ -19,7 +19,7 @@ export function validateVisualBuilder(input, imageAllowed=()=>false){
  const pages={};
  for(const path of keys){
   const operations=input.pages[path];
-  if(!Array.isArray(operations)||operations.length>180)throw Error('Too many edits on '+path+'.');
+  if(!Array.isArray(operations)||operations.length>5000)throw Error('Too many edits on '+path+'.');
   const ids=new Set();
   pages[path]=operations.map(op=>{
    if(!op||typeof op!=='object'||Array.isArray(op)||typeof op.id!=='string'||!/^v[0-9a-z-]{8,50}$/.test(op.id)||ids.has(op.id))throw Error('Invalid or repeated visual edit ID.');
@@ -37,6 +37,7 @@ export function validateVisualBuilder(input, imageAllowed=()=>false){
      else if(key==='objectFit'){if(!['contain','cover','fill'].includes(value))throw Error('Invalid image fitting.');values[key]=value;}
      else if(key==='textAlign'){if(!['left','center','right'].includes(value))throw Error('Invalid text alignment.');values[key]=value;}
      else if(key==='fullBleed'){if(typeof value!=='boolean')throw Error('Invalid full-width setting.');values[key]=value;}
+     else if(key==='unlockLayout'){if(typeof value!=='boolean')throw Error('Invalid layout unlock setting.');values[key]=value;}
      else throw Error('Unapproved visual style.');
     }
     if(!Object.keys(values).length)throw Error('Visual edit has no values.');
