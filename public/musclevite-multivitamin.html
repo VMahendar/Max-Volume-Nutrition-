@@ -59,7 +59,19 @@ footer a{margin:0 12px;text-decoration:none;color:#182c42;font-weight:700}
 <p class="lead">Explore Unicorn Pro Series Musclevite multivitamin and multimineral supplements from Max Volume Nutrition.</p>
 <p>Musclevite is listed as a 60-tablet multivitamin and multimineral product in the current collection. Use the manufacturer's original packaging information when checking its composition.</p>
 <div class="panel"><h2>Pack options in the current catalogue</h2><ul><li>60 tablets</li></ul><p class="fine">Variant, price and stock are confirmed before order acceptance. Online payment and automated shipping remain disabled.</p></div>
-<a class="button mvn-preview-order" href="/shop.html?product=vitamins">Choose pack &amp; add to cart</a><a class="button alt" href="https://wa.me/917708830513?text=Hello%20Max%20Volume%20Nutrition%2C%20please%20confirm%20availability%20for%20Musclevite%20Multivitamin." target="_blank" rel="noopener noreferrer">Enquire on WhatsApp</a>
+<div data-mvn-order-fallback><a class="button mvn-preview-order" href="/shop.html?product=vitamins">Choose pack &amp; add to cart</a><a class="button alt" href="https://wa.me/917708830513?text=Hello%20Max%20Volume%20Nutrition%2C%20please%20confirm%20availability%20for%20Musclevite%20Multivitamin." target="_blank" rel="noopener noreferrer">Enquire on WhatsApp</a></div>
+<div class="mvn-inline-order" data-mvn-product-order="musclevite" data-primary-variant="musclevite-pack" data-product-name="Musclevite Multivitamin" hidden aria-label="Select your exact pack">
+  <div class="mvn-inline-price" aria-live="polite"><strong data-order-field="price"></strong><del data-order-field="mrp" hidden></del><small data-order-field="discount" hidden></small></div>
+  <label>Pack size <select data-order-field="size"></select></label>
+  <label>Flavour <select data-order-field="flavor"></select></label>
+  <div class="mvn-inline-quantity" aria-label="Quantity" role="group">
+    <span>Quantity</span><button type="button" data-order-field="minus" aria-label="Decrease quantity">−</button><output data-order-field="quantity" aria-live="polite">1</output><button type="button" data-order-field="plus" aria-label="Increase quantity">+</button>
+  </div>
+  <button class="mvn-launch-primary" type="button" data-order-field="add">Add to cart <span data-order-field="total"></span></button>
+  <a class="mvn-inline-whatsapp" data-order-field="whatsapp" target="_blank" rel="noopener noreferrer">Order via WhatsApp</a>
+  <p class="fine" data-order-field="photoNote" hidden>Photo for this exact pack is pending.</p>
+  <p class="fine" data-order-field="status" role="status"></p>
+</div>
 </section>
 </div>
 <div class="panel"><h2>Ingredients, packaging and use</h2><p>Read the supplement facts, daily-use guidance, ingredients, warnings and allergen information printed on the bottle.</p><p>Product information may change by variant or batch. The manufacturer's current packaging is the source of truth; review it before purchase.</p></div>
@@ -70,4 +82,5 @@ footer a{margin:0 12px;text-decoration:none;color:#182c42;font-weight:700}
 </main>
 <footer><p>© 2026 MAX VOLUME NUTRITION · Kelambakkam, Chennai, Tamil Nadu</p><a href="/">Store</a><a href="/dealer.html">Wholesale</a><a href="/support.html">Support</a><p class="fine">Confirm stock, packaging and delivery availability before placing an order.</p></footer>
 <script src="/product-reviews.js?v=20261115-1" defer></script>
+<script src="/mvn-inline-product-20261116.js" defer></script>
 </body></html>
