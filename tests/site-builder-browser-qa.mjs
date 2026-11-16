@@ -50,6 +50,18 @@ try{
  await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('Unsaved'),null,{timeout:15000});
  await page.locator('#addButton').click();
  await page.waitForFunction(()=>document.querySelector('#preview')?.contentDocument?.querySelector('[data-mvn-builder-created]'),null,{timeout:15000});
+ // Cut and paste should duplicate a design block and hide its old position, not change commerce data.
+ await iframe.locator('[data-mvn-builder-created]').first().click({force:true});
+ await page.locator('#cut').click();
+ await page.locator('#paste').click();
+ await page.waitForFunction(()=>document.querySelector('#preview')?.contentDocument?.querySelectorAll('[data-mvn-builder-created]').length>=2,null,{timeout:15000});
+ // Upload a replacement to the existing group banner rather than creating a new product.
+ await iframe.locator('.mvn-owner-banner-img').evaluate(el=>el.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true})));
+ await page.waitForFunction(()=>document.querySelector('#selectionName')?.textContent.includes('IMG'),null,{timeout:15000});
+ const imageBytes=readFileSync('public/icons/app-192.png');
+ await page.locator('#fileUpload').setInputFiles({name:'visual-banner.png',mimeType:'image/png',buffer:imageBytes});
+ await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('Photo uploaded'),null,{timeout:15000});
+ await page.waitForFunction(()=>/assets\/homepage\/[a-f0-9]{64}\.png/.test(document.querySelector('#preview')?.contentDocument?.querySelector('.mvn-owner-banner-img')?.getAttribute('src')||''),null,{timeout:15000});
  await page.locator('#save').click();
  await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('Private draft saved'),null,{timeout:15000});
  assert.equal(C.setting('visualBuilderPublishedV1'),null,'editing draft cannot change customer store');
