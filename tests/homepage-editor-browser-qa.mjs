@@ -78,6 +78,10 @@ try{
  },null,{timeout:15000});
  assert.match(await iframe.locator('.mvn-owner-banner-img').evaluate(el=>el.style.transform),/scale\(1\.9\)/,'banner zoom reflects in real preview');
  const png=readFileSync('public/icons/app-192.png');
+ // The one-tap toolbar action should open the same upload control for the selected banner.
+ assert.ok(await page.locator('#uploadPhotoQuick').isVisible(),'prominent Upload Photo action exists');
+ await page.locator('#uploadPhotoQuick').click({noWaitAfter:true});
+ assert.equal(await page.locator('#inspectorTitle').innerText(),'Banner image','quick upload targets the selected banner');
  await page.locator('#upload').setInputFiles({name:'editor-test-banner.png',mimeType:'image/png',buffer:png});
  await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('Image uploaded'),null,{timeout:15000});
  const newImage=await page.locator('#currentPhoto').getAttribute('src');
