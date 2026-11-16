@@ -200,3 +200,28 @@ body.wholesale-page.mvn-unified-page :is(.primary,button[type=submit]){backgroun
  body.mvn-unified-page:has(#dealerForm) .business-form{grid-template-columns:1fr!important;padding:16px!important}
  body.mvn-unified-page:has(#dealerForm) .business-form .wide{grid-column:1!important}
 }
+
+
+/* Final transparent wide-logo correction: no square backdrop or keying artefacts. */
+body.mvn-unified-page .mvn-unified-header{
+ display:flex!important;align-items:center!important;justify-content:space-between!important;
+ gap:12px!important;min-height:82px!important;padding:10px clamp(14px,3vw,36px)!important;background:#151617!important;
+}
+body.mvn-unified-page .mvn-unified-header .brand{
+ flex:1 1 auto!important;width:auto!important;max-width:390px!important;min-width:0!important;
+ height:66px!important;margin:0!important;padding:0!important;display:flex!important;align-items:center!important;
+ background:transparent!important;border:0!important;box-shadow:none!important;overflow:visible!important;
+}
+body.mvn-unified-page .mvn-unified-header .original-brand-logo{
+ display:block!important;width:100%!important;max-width:390px!important;height:66px!important;
+ object-fit:contain!important;object-position:left center!important;
+ background:transparent!important;border:0!important;box-shadow:none!important;
+ filter:none!important;mix-blend-mode:normal!important;opacity:1!important;
+}
+body.mvn-unified-page .mvn-back-to-store{margin-left:auto!important}
+@media(max-width:720px){
+ body.mvn-unified-page .mvn-unified-header{min-height:74px!important;padding:8px 12px!important;gap:10px!important}
+ body.mvn-unified-page .mvn-unified-header .brand{max-width:calc(100% - 138px)!important;height:56px!important}
+ body.mvn-unified-page .mvn-unified-header .original-brand-logo{max-width:100%!important;height:56px!important}
+ body.mvn-unified-page .mvn-back-to-store{font-size:12px!important;min-height:40px!important;padding:8px 10px!important}
+}
