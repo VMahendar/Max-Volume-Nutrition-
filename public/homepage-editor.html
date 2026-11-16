@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<title>Edit homepage | Max Volume Nutrition</title>
+<link rel="icon" type="image/png" href="/max-volume-logo.png">
+<style>
+:root{color-scheme:light;font-family:Inter,system-ui,-apple-system,"Segoe UI",sans-serif;color:#18202b;background:#e9edf2}
+*{box-sizing:border-box}body{margin:0}button,input,textarea,select{font:inherit}
+button{cursor:pointer}button:disabled{opacity:.5;cursor:not-allowed}
+a{color:inherit}
+.top{position:sticky;top:0;z-index:5;background:#10151d;color:#fff;display:flex;align-items:center;gap:16px;justify-content:space-between;padding:12px clamp(12px,2.5vw,32px);box-shadow:0 5px 20px #0002}
+.identity{display:flex;align-items:center;gap:12px;min-width:0}
+.identity img{width:120px;max-height:44px;object-fit:contain}
+.identity strong{display:block;font-size:16px}
+.identity small{color:#bfc8d3;font-size:11px}
+.header-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.action{background:#fff;color:#172434;border:1px solid #fff;padding:10px 15px;border-radius:7px;font-size:12px;font-weight:750}
+.action.outline{background:transparent;color:#fff;border-color:#637183}
+.action.publish{background:#d46641;color:#111;border-color:#d46641}
+.workspace{display:grid;grid-template-columns:minmax(285px,345px) minmax(0,1fr);min-height:calc(100dvh - 73px)}
+.controls{background:#fff;padding:24px 22px;border-right:1px solid #d9dfe6;overflow-y:auto}
+.eyebrow{text-transform:uppercase;letter-spacing:.13em;font-size:10px;color:#697581;font-weight:850}
+h1{font-size:23px;letter-spacing:-.035em;margin:6px 0}
+.subhead{font-size:13px;line-height:1.6;color:#65717d;margin:0 0 20px}
+.section{padding:18px 0;border-top:1px solid #e9edf0}
+.section h2{font-size:14px;margin:0 0 13px}
+label{display:block;font-size:12px;font-weight:700;margin:12px 0 0}
+label small{display:block;font-weight:400;color:#778390;line-height:1.5}
+input[type=text],input[type=email],input[type=password],textarea,select{display:block;width:100%;border:1px solid #cdd5dc;border-radius:7px;padding:10px 11px;margin-top:6px;font-size:13px;color:#202d39;background:#fff}
+textarea{resize:vertical;min-height:80px;line-height:1.5}
+input[type=color]{width:100%;height:37px;padding:2px;border:1px solid #cdd5dc;background:#fff;border-radius:7px;margin:6px 0}
+input[type=range]{width:100%;accent-color:#223b57}
+.field-help{margin:7px 0 0;font-size:11px;color:#65717d}
+.check{display:flex;align-items:center;gap:9px}
+.check input{width:17px;height:17px;accent-color:#243f5e}
+.preview-area{min-width:0;padding:16px 20px 30px;background:#e8edf2}
+.preview-toolbar{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin:0 0 12px}
+.preview-toolbar strong{font-size:13px}.devices{display:flex;gap:4px;padding:3px;border-radius:7px;background:#d7dfe6}
+.devices button{border:0;border-radius:5px;background:transparent;padding:8px 13px;font-size:12px;font-weight:700;color:#495b6c}
+.devices button[aria-pressed=true]{background:#fff;color:#172634;box-shadow:0 1px 5px #1a2c3b19}
+.preview-shell{display:flex;justify-content:center;min-height:65vh}
+iframe{display:block;width:100%;max-width:1450px;min-height:calc(100dvh - 185px);background:#fff;border:1px solid #cad4dd;border-radius:9px;box-shadow:0 8px 28px #182e421c;transition:width .18s}
+iframe.mobile{width:390px;max-width:100%;min-height:800px}
+.preview-note{font-size:12px;color:#62717f;line-height:1.5}
+.status{font-size:12px;line-height:1.45;max-width:100%;color:#355c41;background:#e8f5ed;padding:10px 14px;margin:0;border-bottom:1px solid #cee5d6}
+.status[data-error=true]{color:#8b2932;background:#fff1f2;border-color:#f0d1d4}
+.signin{border:1px solid #cbd7e1;background:#f8fafb;padding:14px;border-radius:9px}
+.signin button{background:#192f4c;color:white;border:0;padding:11px 14px;border-radius:7px;margin-top:10px;font-weight:700}
+.notice{border-left:3px solid #192f4c;padding:9px 12px;background:#f1f5f9;font-size:12px;color:#566675;line-height:1.55}
+@media(max-width:920px){.workspace{grid-template-columns:1fr}.controls{border-right:0;border-bottom:1px solid #dce2e8}.preview-area{padding:15px 10px}.top{position:static;flex-wrap:wrap}.identity img{width:85px}.identity strong{font-size:14px}iframe{min-height:750px}}
+</style>
+</head>
+<body>
+<header class="top">
+<div class="identity"><img src="/max-volume-logo-wide.png" alt="Max Volume Nutrition"><div><strong>Homepage Editor</strong><small>Real website preview · Safe design changes</small></div></div>
+<div class="header-actions">
+<a class="action outline" href="/" target="_blank" rel="noopener">View Store</a>
+<button class="action outline" type="button" id="save">Save Draft</button>
+<button class="action publish" type="button" id="publish">Publish Homepage</button>
+</div>
+</header>
+<p class="status" id="status" role="status">Edit your homepage on the left. Your live store is unchanged until you publish.</p>
+<main class="workspace">
+<aside class="controls">
+<span class="eyebrow">Customize your store</span>
+<h1>Edit homepage</h1>
+<p class="subhead">Change the actual homepage text, banner and visual layout, and see each change in the preview.</p>
+<form id="editor">
+<div class="section">
+<h2>01 · Main banner</h2>
+<label>Headline <small>Use two lines for the highlighted second line</small>
+<textarea name="title" rows="2" maxlength="90"></textarea></label>
+<label>Supporting text<textarea name="description" maxlength="250"></textarea></label>
+<label>Shop button text<input name="button" type="text" maxlength="48"></label>
+<label>Homepage banner photo
+<select name="image">
+<option value="assets/mvn-homepage-banner-20261115.webp">Original group products</option>
+<option value="assets/mvn-preview-hero-20261116.webp">Full-width group banner</option>
+<option value="assets/mvn-hero-whey-cutout-card.webp">Potency Whey product photo</option>
+<option value="assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp">Nitro Mass product photo</option>
+</select></label>
+</div>
+<div class="section">
+<h2>02 · Homepage sections</h2>
+<label>Category heading<input name="categories" type="text" maxlength="80"></label>
+<label>Best sellers heading<input name="bestsellers" type="text" maxlength="80"></label>
+<label class="check"><input name="showCategories" type="checkbox"> Show categories</label>
+<label class="check"><input name="showBestsellers" type="checkbox"> Show best sellers</label>
+</div>
+<div class="section">
+<h2>03 · Colours &amp; spacing</h2>
+<label>Hero background<input name="pageBackground" type="color"></label>
+<label>Button colour<input name="accent" type="color"></label>
+<label>Hero top / bottom spacing <output id="paddingValue">24px</output><input name="heroPadding" type="range" min="0" max="72" step="4"></label>
+</div>
+</form>
+<div class="section">
+<h2>Save your work</h2>
+<p class="notice">You can preview and save a draft in this browser without a login. Publishing requires your private Owner account.</p>
+<div class="signin" id="signin" hidden>
+<strong>Owner sign in</strong>
+<p class="field-help">Sign in to publish your homepage. Do not share your password with anyone.</p>
+<form id="login">
+<label>Owner email<input name="email" type="email" autocomplete="username" required></label>
+<label>Password<input name="password" type="password" autocomplete="current-password" required></label>
+<button type="submit">Sign in as Owner</button>
+</form>
+</div>
+</div>
+</aside>
+<section class="preview-area">
+<div class="preview-toolbar">
+<strong>Live website preview</strong>
+<div class="devices"><button id="desktop" type="button" aria-pressed="true">Desktop</button><button id="mobile" type="button" aria-pressed="false">Mobile</button></div>
+</div>
+<div class="preview-shell"><iframe id="preview" src="/?mvn_editor_preview=1" title="Real Max Volume Nutrition homepage preview"></iframe></div>
+<p class="preview-note">This preview uses the real homepage and its existing product cards. Editing design settings does not modify products, prices or orders.</p>
+</section>
+</main>
+<script src="/homepage-editor.js?v=1" defer></script>
+</body>
+</html>
