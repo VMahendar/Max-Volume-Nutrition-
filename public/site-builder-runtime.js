@@ -6,7 +6,7 @@ const path=location.pathname==='/index.html'?'/':location.pathname;
 const prohibited='form,input,select,textarea,[contenteditable],#cart,#checkout,#payment,#account,[data-price],.price,.product-price,.checkout,.cart-item,[data-cart],script,style,iframe,video,audio,canvas,svg,dialog,[data-mvn-builder-ui]';
 const nodes='section,article,figure,img,h1,h2,h3,h4,h5,h6,p,a,button,strong,small,div';
 const baseline=new WeakMap(),touched=new Set(),sources=new WeakMap();
-let layer,outline,active=null,selected='',gesture=null;
+let layer,outline,active=null,selected='',gesture=null,mode='move';
 const isProtected=e=>!e||(!!e.closest(prohibited)&&!e.closest('[data-mvn-builder-created]'))||(e!==document.body&&!e.closest('[data-mvn-builder-created]')&&!!e.querySelector?.('form,input,select,textarea,#cart,#checkout,#payment,#account,[data-price],.price,.product-price,.checkout,.cart-item,[data-cart]'));
 function pathFor(el){
  const generated=el.closest('[data-mvn-builder-created]');
@@ -75,14 +75,30 @@ function apply(input){
   if('opacity'in v)style(e,'opacity',String(v.opacity/100));
   if('zIndex'in v)style(e,'z-index',String(v.zIndex));
   for(const k of ['color','backgroundColor','objectFit','textAlign'])if(v[k])style(e,k.replace(/[A-Z]/g,c=>'-'+c.toLowerCase()),v[k]);
+  if(v.fullBleed===true){
+   // For the hero picture remove the constraints on its ancestor section,
+   // not merely the image pixels; otherwise white margins remain.
+   const hero=e.closest('#mvnEditorial');
+   const containers=hero?[hero,hero.querySelector('.mvn-editorial-layout'),hero.querySelector('.mvn-owner-banner-feature'),hero.querySelector('.mvn-owner-banner-link')].filter(Boolean):[e];
+   for(const container of containers){
+    remember(container);style(container,'max-width','none');
+    style(container,'box-sizing','border-box');style(container,'width','100%');
+    style(container,'padding-left','0');style(container,'padding-right','0');
+   }
+   const outer=hero||e;remember(outer);style(outer,'width','100vw');
+   style(outer,'max-width','none');style(outer,'margin-left','calc(50% - 50vw)');
+   style(outer,'margin-right','0');
+   if(e!==hero){style(e,'max-width','none');style(e,'width','100%');}
+  }
  }
  if(editing)requestAnimationFrame(positionOutline);
 }
 if(!editing){apply(doc);return;}
 const css=document.createElement('style');
-css.textContent='[data-mvn-builder-ui="selection"]{position:absolute;z-index:2147483600;border:2px solid #ff693f;pointer-events:none;box-shadow:0 0 0 1px #fff8}[data-mvn-builder-ui="selection"] [data-handle]{position:absolute;width:24px;height:24px;border-radius:5px;background:#ff693f;border:2px solid white;pointer-events:auto;touch-action:none;cursor:move}[data-handle="resize"]{right:-12px;bottom:-12px;cursor:nwse-resize}[data-handle="move"]{left:calc(50% - 12px);top:-14px}[data-mvn-builder-ui="selection"] .builder-name{position:absolute;bottom:100%;left:0;background:#ff693f;color:white;padding:3px 8px;font:700 11px system-ui;white-space:nowrap}';
+css.textContent=`[data-mvn-builder-ui="selection"]{position:absolute;z-index:2147483600;border:2px solid #ff693f;pointer-events:none;box-shadow:0 0 0 1px #fff8}[data-mvn-builder-ui="selection"] [data-handle]{position:absolute;width:30px;height:30px;border-radius:7px;background:#ff693f;border:2px solid white;pointer-events:auto;touch-action:none!important;cursor:nwse-resize}[data-handle="nw"]{left:-15px;top:-15px}[data-handle="ne"]{right:-15px;top:-15px}[data-handle="sw"]{left:-15px;bottom:-15px}[data-handle="se"]{right:-15px;bottom:-15px}[data-mvn-builder-ui="selection"] .builder-name{position:absolute;bottom:100%;left:0;background:#ff693f;color:white;padding:5px 9px;font:700 12px system-ui;white-space:nowrap}[data-mvn-builder-ui="selection"] .builder-hint{position:absolute;left:0;top:100%;background:#1f2a38;color:white;padding:4px 8px;font:600 11px system-ui;white-space:nowrap}.mvn-builder-move-mode body img,.mvn-builder-move-mode body h1,.mvn-builder-move-mode body h2,.mvn-builder-move-mode body h3,.mvn-builder-move-mode body p,.mvn-builder-move-mode body a,.mvn-builder-move-mode body section,.mvn-builder-move-mode body figure,.mvn-builder-move-mode body div{touch-action:none!important}.mvn-builder-move-mode [data-mvn-builder-ui] *{touch-action:none!important}`;
 document.head.append(css);
-outline=document.createElement('div');outline.dataset.mvnBuilderUi='selection';outline.innerHTML='<span class="builder-name">Selected</span><span data-handle="move" title="Drag to move"></span><span data-handle="resize" title="Drag to resize"></span>';document.body.append(outline);outline.hidden=true;
+document.head.append(css);
+outline=document.createElement('div');outline.dataset.mvnBuilderUi='selection';outline.innerHTML='<span class="builder-name">DRAG TO MOVE · RESIZE CORNERS</span><span data-handle="nw" title="Resize"></span><span data-handle="ne" title="Resize"></span><span data-handle="sw" title="Resize"></span><span data-handle="se" title="Resize"></span><span class="builder-hint">Drag photo or text directly to move it</span>';document.body.append(outline);outline.hidden=true;document.documentElement.classList.add('mvn-builder-move-mode');
 function positionOutline(){
  if(!active||!active.isConnected){outline.hidden=true;return;}
  const r=active.getBoundingClientRect();if(r.width<2||r.height<2){outline.hidden=true;return;}
@@ -97,7 +113,7 @@ function select(e){
 // True canvas interaction: grab the object itself (mouse or touch), not only the small handles.
 let directGesture=null;
 const beginDirect=ev=>{
- if(ev.target.closest?.('[data-mvn-builder-ui]'))return;
+ if(mode!=='move'||ev.target.closest?.('[data-mvn-builder-ui]'))return;
  if(ev.button!==0&&ev.pointerType==='mouse')return;
  if(isProtected(ev.target))return;
  const el=ev.target.closest(nodes);
@@ -127,7 +143,7 @@ document.addEventListener('pointercancel',endDirect,true);
 document.addEventListener('click',ev=>{
  if(ev.target.closest('[data-mvn-builder-ui]')&&!ev.target.closest('[data-mvn-builder-created]'))return;
  ev.preventDefault();ev.stopImmediatePropagation();
- const e=ev.target.closest(nodes);if(e&&!isProtected(e))select(e);
+ let e=ev.target.closest(nodes);if(e&&!isProtected(e))select(e);
 },true);
 document.addEventListener('submit',ev=>{ev.preventDefault();ev.stopImmediatePropagation();},true);
 outline.addEventListener('pointerdown',ev=>{
@@ -139,15 +155,17 @@ outline.addEventListener('pointerdown',ev=>{
 outline.addEventListener('pointermove',ev=>{
  if(!gesture||ev.pointerId!==gesture.pointerId||!active)return;
  const dx=ev.clientX-gesture.sx,dy=ev.clientY-gesture.sy;
- if(gesture.kind==='move')style(active,'transform','translate('+(gesture.x+dx)+'px,'+(gesture.y+dy)+'px)');
- else{style(active,'width',Math.max(20,gesture.width+dx)+'px');style(active,'height',Math.max(20,gesture.height+dy)+'px');}
+ const xDir=gesture.kind.includes('w')?-1:1,yDir=gesture.kind.includes('n')?-1:1;
+ style(active,'width',Math.max(20,gesture.width+dx*xDir)+'px');
+ style(active,'height',Math.max(20,gesture.height+dy*yDir)+'px');
  positionOutline();
 });
 outline.addEventListener('pointerup',ev=>{
  if(!gesture||ev.pointerId!==gesture.pointerId||!active)return;
  const dx=ev.clientX-gesture.sx,dy=ev.clientY-gesture.sy;
- const values=gesture.kind==='move'?{x:Math.round(gesture.x+dx),y:Math.round(gesture.y+dy)}:{width:Math.max(20,Math.round(gesture.width+dx)),height:Math.max(20,Math.round(gesture.height+dy))};
- send('mvn-visual-operation',{target:selected,action:gesture.kind==='move'?'move':'resize',values});gesture=null;
+ const xDir=gesture.kind.includes('w')?-1:1,yDir=gesture.kind.includes('n')?-1:1;
+ const values={width:Math.max(20,Math.min(2200,Math.round(gesture.width+dx*xDir))),height:Math.max(20,Math.min(1600,Math.round(gesture.height+dy*yDir)))};
+ send('mvn-visual-operation',{target:selected,action:'resize',values});gesture=null;
 });
 addEventListener('scroll',()=>requestAnimationFrame(positionOutline),{passive:true});
 addEventListener('resize',()=>requestAnimationFrame(positionOutline),{passive:true});
@@ -155,6 +173,10 @@ addEventListener('message',ev=>{
  if(ev.origin!==location.origin||ev.source!==parent||!ev.data)return;
  if(ev.data.type==='mvn-visual-design')apply(ev.data.document);
  if(ev.data.type==='mvn-visual-select-target')select(getTarget(ev.data.target));
+ if(ev.data.type==='mvn-visual-mode'){
+  mode=ev.data.mode==='scroll'?'scroll':'move';
+  document.documentElement.classList.toggle('mvn-builder-move-mode',mode==='move');
+ }
 });
 apply(doc);send('mvn-visual-ready',{page:path});
 })();

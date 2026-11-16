@@ -49,12 +49,15 @@ try{
  await page.locator('#height').fill('160');
  await page.locator('#applyStyle').click();
  await page.waitForFunction(()=>document.querySelector('#preview')?.contentDocument?.querySelector('#mvnEditorialTitle')?.style.getPropertyValue('width')==='510px',null,{timeout:15000});
- const handle=iframe.locator('[data-handle="move"]');
+ // All four resize handles must exist and drag the actual selected object.
+ const handle=iframe.locator('[data-handle="se"]');
  await handle.waitFor({state:'visible'});
+ assert.equal(await iframe.locator('[data-handle]').count(),4,'all four corners can resize');
  const box=await handle.boundingBox();
- assert.ok(box,'drag handle visible');
- await page.mouse.move(box.x+8,box.y+8);await page.mouse.down();await page.mouse.move(box.x+38,box.y+20,{steps:5});await page.mouse.up();
- await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('Unsaved'),null,{timeout:15000});
+ assert.ok(box,'resize corner visible');
+ await page.mouse.move(box.x+12,box.y+12);await page.mouse.down();
+ await page.mouse.move(box.x+54,box.y+32,{steps:6});await page.mouse.up();
+ await page.waitForFunction(()=>document.querySelector('#preview')?.contentDocument?.querySelector('#mvnEditorialTitle')?.style.width&&Number.parseInt(document.querySelector('#preview').contentDocument.querySelector('#mvnEditorialTitle').style.width,10)>510,null,{timeout:15000});
  await page.locator('#addButton').click();
  await page.waitForFunction(()=>document.querySelector('#preview')?.contentDocument?.querySelector('[data-mvn-builder-created]'),null,{timeout:15000});
  // Cut and paste should duplicate a design block and hide its old position, not change commerce data.
@@ -69,6 +72,19 @@ try{
  await page.locator('#fileUpload').setInputFiles({name:'visual-banner.png',mimeType:'image/png',buffer:imageBytes});
  await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('Photo uploaded'),null,{timeout:15000});
  await page.waitForFunction(()=>/assets\/homepage\/[a-f0-9]{64}\.png/.test(document.querySelector('#preview')?.contentDocument?.querySelector('.mvn-owner-banner-img')?.getAttribute('src')||''),null,{timeout:15000});
+ // One-click edge-to-edge section control must remove the banner's constrained white margins.
+ assert.equal(await page.locator('#replaceSelected').isVisible(),true,'selected image has a visible Replace Photo button');
+ await page.locator('#fullBleed').click();
+ await page.waitForFunction(()=>{
+  const hero=document.querySelector('#preview')?.contentDocument?.querySelector('#mvnEditorial');
+  return hero?.style.getPropertyValue('width')==='100vw';
+ },null,{timeout:15000});
+ assert.match(await iframe.locator('#mvnEditorial').getAttribute('style'),/width: 100vw/);
+ // Mobile browsing uses scroll mode; move mode remains available for touch edits.
+ await page.locator('#scrollMode').click();
+ await page.waitForFunction(()=>document.querySelector('#preview')?.contentDocument?.documentElement.classList.contains('mvn-builder-move-mode')===false,null,{timeout:15000});
+ await page.locator('#moveMode').click();
+ await page.waitForFunction(()=>document.querySelector('#preview')?.contentDocument?.documentElement.classList.contains('mvn-builder-move-mode')===true,null,{timeout:15000});
  await page.locator('#save').click();
  await page.waitForFunction(()=>document.querySelector('#status')?.textContent.includes('Private draft saved'),null,{timeout:15000});
  assert.equal(C.setting('visualBuilderPublishedV1'),null,'editing draft cannot change customer store');

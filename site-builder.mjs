@@ -36,6 +36,7 @@ export function validateVisualBuilder(input, imageAllowed=()=>false){
      else if(['color','backgroundColor'].includes(key)){if(typeof value!=='string'||!color.test(value))throw Error('Invalid visual colour.');values[key]=value;}
      else if(key==='objectFit'){if(!['contain','cover','fill'].includes(value))throw Error('Invalid image fitting.');values[key]=value;}
      else if(key==='textAlign'){if(!['left','center','right'].includes(value))throw Error('Invalid text alignment.');values[key]=value;}
+     else if(key==='fullBleed'){if(typeof value!=='boolean')throw Error('Invalid full-width setting.');values[key]=value;}
      else throw Error('Unapproved visual style.');
     }
     if(!Object.keys(values).length)throw Error('Visual edit has no values.');
