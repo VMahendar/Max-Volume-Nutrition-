@@ -4,6 +4,7 @@
 // SQLite and editable; this only normalizes the public display.
 (()=>{
  const isPublicHome=()=>document.documentElement.dataset.mvnVisualBuilder!=='edit'
+  &&new URLSearchParams(location.search).get('homepage_editor')!=='1'
   &&document.body?.classList.contains('mvn-showcase-home');
  const set=(el,rule,value)=>el?.style.setProperty(rule,value,'important');
  const rules=(selector,styles)=>{
@@ -39,9 +40,12 @@
    transform:'none',margin:'0',padding:'0','box-sizing':'border-box'
   });
   rules('#mvnEditorial .mvn-owner-banner-link picture',{display:'block',width:'100%',height:'100%',transform:'none'});
+  const editedHomepage=document.getElementById('mvnHomepageDesign');
+  let savedHomepage=null;try{savedHomepage=JSON.parse(editedHomepage?.textContent||'null');}catch{}
+  const authorZoom=savedHomepage?.fields?.bannerZoom;
   rules('#mvnEditorial .mvn-owner-banner-img',{
    display:'block',width:'100%',height:'100%','max-width':'none','max-height':'none',
-   transform:'none','object-fit':'cover','object-position':'center'
+   ...(authorZoom?{}:{transform:'none'}),'object-fit':'cover','object-position':'center'
   });
   // The live database also contained fixed 325px/389px sections and a
   // Globe-Tech element at height 1px translated 593px off its actual row.
