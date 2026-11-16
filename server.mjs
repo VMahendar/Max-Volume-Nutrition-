@@ -144,6 +144,7 @@ if(/^\/assets\/updates\/[a-z0-9-]+\.jpg$/.test(u.pathname)&&['GET','HEAD'].inclu
 }
 if(u.pathname.startsWith('/api/')){
 const forwarded=String(req.headers['x-forwarded-for']||'').split(',').at(-1).trim();const ip=process.env.TRUST_PROXY==='true'&&isIP(forwarded)?forwarded:req.socket.remoteAddress;if(!rate('general:'+ip,240))fail(429,'Please try again in a minute.');if(req.method==='POST'&&!['/api/webhook','/api/marketing/unsubscribe','/api/whatsapp/store-updates'].includes(u.pathname)&&req.headers.origin!==origin)fail(403,'Request origin not allowed.');const user=C.session(req),path=u.pathname;
+if(path==='/api/homepage-config'&&req.method==='GET')return json(res,200,{published:C.setting('ownerHomepagePublishedV1')});
 if(path==='/api/store-updates'&&req.method==='GET')return json(res,200,{updates:activeUpdates(updateConfig(C).posts,u.searchParams.get('surface')||'web')});
 if(path==='/api/whatsapp/store-updates'){
  if(!whatsappUpdateReadiness().ready)fail(503,'WhatsApp update intake is disconnected.');
@@ -296,6 +297,43 @@ if(path==='/api/enquiries'&&req.method==='POST'){
  return json(res,201,lead);
 }
 if(path.startsWith('/api/admin/')){admin(user);
+if(path==='/api/admin/homepage-config'){
+ if(req.method==='GET')return json(res,200,{draft:C.setting('ownerHomepageDraftV1'),published:C.setting('ownerHomepagePublishedV1')});
+ if(req.method!=='POST')fail(405,'Method not allowed.');
+ if(!rate('homepage-config:'+user.id,20))fail(429,'Too many homepage updates. Please try again later.');
+ const payload=JSON.parse(await body(req,6000));
+ if(!['draft','publish'].includes(payload?.mode))fail(400,'Choose draft or publish.');
+ const v=payload.config;
+ if(!v||typeof v!=='object'||Array.isArray(v))fail(400,'Invalid homepage configuration.');
+ const limits={title:90,description:250,button:48,categories:80,bestsellers:80};
+ const configuration={};
+ for(const [field,limit] of Object.entries(limits)){
+  if(typeof v[field]!=='string'||v[field].trim().length<1||v[field].length>limit)fail(400,'Invalid homepage field: '+field);
+  configuration[field]=v[field].trim();
+ }
+ const allowedImages=new Set([
+  'assets/mvn-homepage-banner-20261115.webp',
+  'assets/mvn-preview-hero-20261116.webp',
+  'assets/mvn-hero-whey-cutout-card.webp',
+  'assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp'
+ ]);
+ if(!allowedImages.has(v.image))fail(400,'Choose an approved homepage product photograph.');
+ configuration.image=v.image;
+ for(const field of ['pageBackground','accent']){
+  if(typeof v[field]!=='string'||!/^#[a-fA-F0-9]{6}$/.test(v[field]))fail(400,'Invalid homepage colour.');
+  configuration[field]=v[field];
+ }
+ if(!Number.isInteger(v.heroPadding)||v.heroPadding<0||v.heroPadding>72)fail(400,'Invalid homepage spacing.');
+ configuration.heroPadding=v.heroPadding;
+ for(const field of ['showCategories','showBestsellers']){
+  if(typeof v[field]!=='boolean')fail(400,'Invalid homepage visibility option.');
+  configuration[field]=v[field];
+ }
+ configuration.updatedAt=new Date().toISOString();
+ const key=payload.mode==='publish'?'ownerHomepagePublishedV1':'ownerHomepageDraftV1';
+ C.tx(()=>{C.set(key,configuration);C.audit(user.id,'homepage.'+payload.mode,key);});
+ return json(res,200,{ok:true,mode:payload.mode,config:configuration});
+}
 if(path==='/api/admin/layout-draft'){
  if(req.method==='GET')return json(res,200,{draft:C.setting('ownerLayoutDraftV1')});
  if(req.method==='POST'){
