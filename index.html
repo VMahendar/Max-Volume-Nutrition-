@@ -189,8 +189,282 @@
 </style>
 <link rel="stylesheet" href="/mvn-shopping-bundle-20261115.css?v=1">
 <style data-mvn-seo-product-links>#grid .card .info h3 a{color:inherit;text-decoration:none}#grid .card .info h3 a:hover,#grid .card .info h3 a:focus-visible{text-decoration:underline;text-underline-offset:3px}</style>
-<link rel="stylesheet" href="/mvn-canada-launch-20261116.css">
-<link rel="stylesheet" href="/mvn-preview-design-20261116.css?v=inline-2-layout">
+<style data-mvn-storefront-hero>
+body.retail-home:not(.app-store) #mvnEditorial { max-width: none; padding-inline: 0; }
+body.retail-home:not(.app-store) #mvnEditorial .mvn-editorial-layout { grid-template-columns: minmax(0, 1fr); max-width: none; }
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature {
+  position: relative; isolation: isolate; display: flex; align-items: center; min-height: clamp(28rem, 47vw, 43rem);
+  overflow: hidden; border-radius: 0; padding: 0; background: #141415; color: white;
+}
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-link {
+  position: absolute; inset: 0; z-index: -2; display: block; width: 100%; height: 100%;
+}
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-img {
+  display: block; width: 100%; height: 100%; object-fit: cover; object-position: center;
+}
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature::after {
+  content: ""; display: block; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, #121213 0%, #121213e8 26%, #12121345 53%, transparent 70%);
+}
+body.retail-home:not(.app-store) #mvnEditorial .mvn-editorial-promos {
+  display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .8rem; width: min(94%, 79rem); margin-inline: auto;
+}
+body.retail-home:not(.app-store) #mvnEditorial .mvn-hero-action-strip[hidden] { display: none; }
+.mvn-launch-hero-copy { width: min(92%, 80rem); margin-inline: auto; padding-block: 2.25rem; }
+.mvn-launch-hero-copy h1, .mvn-globtech-launch h2 {
+  text-transform: uppercase; font-family: "Barlow Condensed", Oswald, "Arial Narrow", system-ui, sans-serif; font-weight: 950;
+}
+.mvn-launch-hero-copy h1 { color: #fff; font-size: clamp(3rem, 7.7vw, 7rem); line-height: .9; letter-spacing: -.05em; margin: 0; }
+.mvn-launch-hero-copy h1 em { color: #ff6449; font-style: normal; }
+.mvn-launch-hero-copy p { color: #fff; max-width: 30ch; margin: 1rem 0; line-height: 1.55; }
+.mvn-launch-hero-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.mvn-launch-primary, .mvn-launch-secondary {
+  display: inline-flex; align-items: center; gap: .65rem; min-height: 2.9rem; padding: .55rem .85rem;
+  color: #fff; background: #bd341a; border: 1px solid transparent; text-decoration: none; font-weight: 750; font-size: .88rem;
+}
+.mvn-launch-primary:hover { color: #fff; background: #a82913; }
+.mvn-launch-secondary { background: #161719; border-color: #828282; }
+.mvn-launch-secondary:hover { color: #fff; border-color: #fff; }
+.mvn-globtech-launch {
+  box-sizing: border-box; width: min(94%, 79rem); margin: 1.35rem auto; padding: clamp(1rem, 3vw, 2rem);
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; min-width: 0;
+  border-inline-start: .25rem solid #bd341a; background: #211f20; color: #fff;
+}
+.mvn-globtech-launch > div { min-width: 0; }
+.mvn-globtech-launch h2 { color: #fff; margin: .2rem 0 .5rem; font-size: clamp(1.8rem, 4vw, 3rem); line-height: 1; overflow-wrap: anywhere; }
+.mvn-globtech-launch p { color: #dedbd8; margin: .35rem 0 0; line-height: 1.5; }
+.mvn-globtech-launch .mvn-launch-kicker { color: #ff825f; font-size: .8rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.mvn-globtech-launch a:focus-visible, .mvn-launch-hero-actions a:focus-visible { outline: 2px solid #ff825f; outline-offset: 3px; }
+@media (max-width: 700px) {
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature { display: flex; flex-direction: column; align-items: stretch; min-height: 0; }
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-link { position: relative; order: -1; z-index: auto; height: auto; aspect-ratio: 3 / 2; }
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-img { object-fit: cover; }
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature::after { display: none; }
+  .mvn-launch-hero-copy { padding-block: 1rem 1.55rem; }
+  .mvn-launch-hero-copy h1 { font-size: clamp(2.8rem, 10vw, 4.5rem); }
+}
+
+/* Override the older owner-banner sizing only on the retail homepage. */
+body.retail-home:not(.app-store) #mvnEditorial .mvn-editorial-layout { display: grid !important; grid-template-columns: minmax(0, 1fr) !important; }
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature {
+  height: auto !important; min-height: clamp(28rem, 47vw, 43rem) !important; aspect-ratio: auto !important;
+  border-radius: 0 !important; background: #141415 !important;
+}
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature::after { content: "" !important; display: block !important; }
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-link { position: absolute !important; }
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-link picture { display: block; width: 100%; height: 100%; }
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-img { object-fit: cover !important; }
+body.retail-home:not(.app-store) #mvnEditorial .mvn-editorial-promos {
+  height: auto !important; grid-template-columns: repeat(2,minmax(0,1fr)) !important; grid-template-rows: auto !important;
+}
+body.retail-home:not(.app-store) #mvnEditorial .mvn-editorial-promo { min-height: 11rem !important; }
+@media (max-width: 700px) {
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature { min-height: 0 !important; }
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature::after { display: none !important; }
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-link { position: relative !important; height: auto !important; }
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-link picture { aspect-ratio: 3 / 2; }
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-editorial-promo { min-height: 9rem !important; }
+}
+
+@font-face {
+  font-family: "MVN Barlow Condensed";
+  src: url("/assets/mvn-barlow-condensed-800.woff2") format("woff2");
+  font-style: normal; font-weight: 800; font-display: swap;
+}
+.mvn-launch-hero-copy h1, .mvn-globtech-launch h2 { font-family: "MVN Barlow Condensed", "Arial Narrow", system-ui, sans-serif; font-weight: 800; }
+</style>
+<style data-mvn-storefront-layout>
+@font-face {
+  font-family: "MVN Preview Display";
+  src: url("/assets/mvn-barlow-condensed-800.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+}
+
+.mvn-preview-design { --mvn-preview-ink:#171819; --mvn-preview-paper:#faf9f7; --mvn-preview-accent:#c8371b; --mvn-preview-line:#dedcd8; background:var(--mvn-preview-paper)!important; }
+body.mvn-preview-design .announce { background:#a92d18!important; color:white!important; justify-content:center!important; text-align:center; padding-block:.42rem!important; }
+body.mvn-preview-design .storehead, body.mvn-preview-design.mvn-fitness-product > header { background:#151617!important; color:white!important; border-color:#343434!important; }
+body.mvn-preview-design .storehead .original-brand-logo { object-fit:contain!important; }
+body.mvn-preview-design .storehead #bag { background:transparent!important; color:#fff!important; border:1px solid #666!important; border-radius:0!important; }
+body.mvn-preview-design .storehead #bag em { background:#fff!important; color:#171819!important; }
+body.mvn-preview-design .mvn-theme-main-nav, body.mvn-preview-design .mvn-theme-main-nav a { background:#151617!important; color:#fff!important; border-color:#353535!important; }
+body.mvn-preview-design .mvn-theme-main-nav a:hover, body.mvn-preview-design .mvn-theme-main-nav a:focus-visible { color:#ff825f!important; }
+body.mvn-preview-design .mvn-theme-shop-goals { background:#efeee9!important; padding-block:clamp(1.25rem,4vw,3.5rem)!important; }
+body.mvn-preview-design .mvn-editorial-categories-heading h2, body.mvn-preview-design #shop .section-title :is(h1,h2), .mvn-preview-best h2,
+body.mvn-preview-design.mvn-fitness-product main h1, body.mvn-preview-design #productDetail .mvn-detail-content h2 {
+  font-family:"MVN Preview Display","Arial Narrow",sans-serif!important; font-weight:800!important; text-transform:uppercase; letter-spacing:-.02em!important;
+}
+body.mvn-preview-design .mvn-editorial-categories-heading h2, .mvn-preview-best h2 { color:#171819!important; }
+body.mvn-preview-design .mvn-editorial-category { background:white!important; border-color:var(--mvn-preview-line)!important; border-radius:0!important; box-shadow:none!important; }
+body.mvn-preview-design .mvn-editorial-category strong { color:#171819!important; }
+.mvn-preview-best { width:min(94%,79rem); margin:clamp(1.5rem,5vw,4rem) auto; }
+.mvn-preview-best-head { display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:.6rem; margin-bottom:.85rem; }
+.mvn-preview-best-head h2 { font-size:clamp(2rem,5vw,3.6rem); line-height:1; margin:0; }
+.mvn-preview-best-head a { color:#842b1a; font-weight:750; }
+.mvn-preview-best-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:clamp(.45rem,2vw,1.25rem); }
+.mvn-preview-best-grid a { min-width:0; display:flex; flex-direction:column; gap:.6rem; background:#fff; border:1px solid #dedcd8; text-decoration:none; padding:.75rem; color:#171819; }
+.mvn-preview-best-grid img { display:block; width:100%; aspect-ratio:1; height:auto; object-fit:contain; background:#f1efeb; }
+.mvn-preview-best-grid strong { font:800 clamp(1.28rem,3vw,2rem)/1 "MVN Preview Display","Arial Narrow",sans-serif; text-transform:uppercase; overflow-wrap:anywhere; }
+.mvn-preview-best-grid small { color:#842b1a; font-weight:750; }
+
+body.mvn-preview-design #shop .collection-results .card, body.mvn-preview-design #shop .mvn-purchased-card {
+  border-radius:0!important; border-color:var(--mvn-preview-line)!important; background:#fff!important; box-shadow:none!important;
+}
+body.mvn-preview-design #shop .collection-results .card .photo, body.mvn-preview-design #shop .mvn-purchased-photo { background:#f1efeb!important; border-radius:0!important; }
+body.mvn-preview-design #shop .collection-results .card .info, body.mvn-preview-design #shop .mvn-purchased-details { background:white!important; color:#171819!important; }
+body.mvn-preview-design #shop .collection-results .card h3, body.mvn-preview-design #shop .mvn-purchased-details h3 { font-family:"MVN Preview Display","Arial Narrow",sans-serif!important; text-transform:uppercase; }
+body.mvn-preview-design #shop .collection-results .card .add, body.mvn-preview-design #shop .mvn-purchased-card [data-add],
+body.mvn-preview-design #productDetail #detail-add, body.mvn-preview-design #drawer #send,
+body.mvn-preview-design.mvn-fitness-product .mvn-preview-order {
+  background:var(--mvn-preview-accent)!important; color:white!important; border-color:var(--mvn-preview-accent)!important; border-radius:0!important;
+}
+body.mvn-preview-design #shop .cats button:is(.active,[aria-pressed="true"]), body.mvn-preview-design #productDetail .mvn-pack-choice[aria-pressed="true"] { background:#fff0eb!important; color:#792610!important; border-color:#c8371b!important; }
+body.mvn-preview-design #productDetail :is(.mvn-detail-gallery,.mvn-detail-content), body.mvn-preview-design #drawer {
+  background:#faf9f7!important; color:#171819!important; border-color:#dedcd8!important;
+}
+body.mvn-preview-design #productDetail .mvn-detail-stage { background:#f1efeb!important; border-radius:0!important; }
+body.mvn-preview-design #drawer .dhead, body.mvn-preview-design .mvn-compact-footer, body.mvn-preview-design .mvn-compact-footer a, body.mvn-preview-design.mvn-fitness-product footer, body.mvn-preview-design.mvn-fitness-product footer a {
+  color:#fff!important; background:#151617!important;
+}
+
+body.mvn-preview-design.mvn-fitness-product main { width:min(94%,79rem); max-width:none!important; }
+body.mvn-preview-design.mvn-fitness-product main .grid { gap:clamp(1rem,4vw,3.5rem)!important; }
+body.mvn-preview-design.mvn-fitness-product main h1 { color:#171819!important; font-size:clamp(2.65rem,6vw,5.35rem)!important; line-height:.96!important; overflow-wrap:anywhere; }
+body.mvn-preview-design.mvn-fitness-product main .kicker { color:#a22f1b!important; }
+body.mvn-preview-design.mvn-fitness-product main :is(.media,.panel,.mvn-live-retail) { background:white!important; border:1px solid #dedcd8!important; border-radius:0!important; box-shadow:none!important; min-width:0; }
+body.mvn-preview-design.mvn-fitness-product main .media { background:#f1efeb!important; }
+body.mvn-preview-design.mvn-fitness-product .mvn-preview-order { margin-right:.5rem; }
+body.mvn-preview-design.mvn-fitness-product .button.alt { border-radius:0!important; background:#fff!important; color:#171819!important; border-color:#777!important; }
+body.mvn-preview-design a:focus-visible, body.mvn-preview-design button:focus-visible { outline:2px solid #ed7458; outline-offset:3px; }
+
+@media (max-width:760px) {
+  .mvn-preview-best-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  body.mvn-preview-design.mvn-fitness-product main .grid { grid-template-columns:minmax(0,1fr)!important; }
+  body.mvn-preview-design.mvn-fitness-product main { box-sizing:border-box; }
+  body.mvn-preview-design.mvn-fitness-product .mvn-preview-order { width:100%; box-sizing:border-box; }
+}
+
+body.mvn-preview-design.mvn-showcase-home > .mvn-theme-main-nav { display:none!important; }
+.mvn-preview-nav { display:flex; justify-content:center; flex-wrap:wrap; gap:.45rem clamp(.7rem,4vw,2.75rem); background:#151617; border-top:1px solid #343434; padding:.48rem 4%; }
+.mvn-preview-nav a { display:inline-flex; align-items:center; min-height:2.25rem; color:white; font-weight:700; font-size:.86rem; text-decoration:none; }
+.mvn-preview-nav a:hover { color:#ff825f; }
+@media (max-width: 760px) { .mvn-preview-nav { justify-content:flex-start; } }
+
+/* The live homepage uses the same retail layout as the approved preview. */
+body.mvn-preview-design.mvn-showcase-home #mvnEditorial .mvn-editorial-promos,
+body.mvn-preview-design.mvn-showcase-home #mvnEditorial .mvn-editorial-benefits,
+body.mvn-preview-design.mvn-showcase-home #mvnSpotlight { display:none!important; }
+body.mvn-preview-design.mvn-showcase-home #mvnEditorial { margin-block:0!important; }
+body.mvn-preview-design .mvn-theme-shop-goals .mvn-editorial-category-grid {
+  display:grid!important; grid-template-columns:repeat(4,minmax(0,1fr))!important; gap:.65rem!important;
+}
+body.mvn-preview-design .mvn-theme-shop-goals .mvn-editorial-category,
+body.mvn-preview-design .mvn-preview-goal-extra {
+  position:relative!important; display:flex!important; flex-direction:column!important; justify-content:center!important;
+  min-width:0!important; min-height:5.9rem!important; padding:.8rem!important; background:white!important; color:#171819!important;
+  border:1px solid #dedcd8!important; border-radius:0!important; text-decoration:none!important; overflow-wrap:anywhere;
+}
+body.mvn-preview-design .mvn-theme-shop-goals .mvn-theme-goal-art { display:none!important; }
+body.mvn-preview-design .mvn-theme-shop-goals a strong { position:static!important; font-family:"MVN Preview Display","Arial Narrow",sans-serif!important; font-size:clamp(1rem,2.5vw,1.3rem)!important; color:#171819!important; text-transform:uppercase; }
+body.mvn-preview-design .mvn-theme-shop-goals a small { position:static!important; color:#515356!important; font-size:.78rem!important; }
+body.mvn-preview-design.mvn-fitness-product main .media img[hidden],
+body.mvn-preview-design [data-mvn-order-fallback][hidden], body.mvn-preview-design .mvn-inline-order[hidden],
+body.mvn-preview-design .mvn-inline-order [hidden] { display:none!important; }
+.mvn-inline-order {
+  display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); align-items:center; gap:.85rem;
+  margin:1.15rem 0; padding:clamp(.85rem,3vw,1.4rem); background:white; border:1px solid #dedcd8;
+}
+.mvn-inline-order label { display:grid; min-width:0; gap:.3rem; font-weight:750; }
+.mvn-inline-order select { width:100%; min-width:0; min-height:2.75rem; padding:.35rem; border:1px solid #a7a5a1; background:#fff; color:#171819; font:inherit; font-size:1rem; }
+.mvn-inline-price, .mvn-inline-quantity, .mvn-inline-order > :is(button,a,p) { grid-column:1/-1; }
+.mvn-inline-price { display:flex; flex-wrap:wrap; align-items:center; gap:.55rem; }
+.mvn-inline-price strong { font:800 2.35rem/1 "MVN Preview Display","Arial Narrow",sans-serif; color:#171819; }
+.mvn-inline-price del { color:#585a5c; }
+.mvn-inline-price small { padding:.25rem .45rem; background:#f9ebe5; color:#872612; font-weight:750; }
+.mvn-inline-quantity { display:flex; align-items:center; flex-wrap:wrap; gap:.5rem; }
+.mvn-inline-quantity button { min-width:2.7rem; min-height:2.7rem; font-size:1.2rem; background:#fff; border:1px solid #dedcd8; color:#171819; }
+.mvn-inline-quantity output { min-width:1rem; text-align:center; }
+.mvn-inline-order > button { justify-content:space-between; }
+.mvn-inline-whatsapp { display:flex; min-height:2.8rem; align-items:center; justify-content:center; border:1px solid #666; color:#171819!important; font-weight:750; text-decoration:none!important; }
+.mvn-inline-order p { margin:0; }
+.mvn-inline-order p:empty { display:none; }
+@media (max-width:760px) {
+  body.mvn-preview-design .mvn-theme-shop-goals .mvn-editorial-category-grid { grid-template-columns:repeat(2,minmax(0,1fr))!important; }
+}
+@media (max-width:700px) {
+  body.mvn-preview-design.mvn-showcase-home #mvnEditorial .mvn-owner-banner-feature { min-height:32rem!important; justify-content:flex-end!important; align-items:stretch!important; }
+  body.mvn-preview-design.mvn-showcase-home #mvnEditorial .mvn-owner-banner-link { position:absolute!important; z-index:-2!important; height:100%!important; }
+  body.mvn-preview-design.mvn-showcase-home #mvnEditorial picture { aspect-ratio:auto; }
+  body.mvn-preview-design.mvn-showcase-home #mvnEditorial .mvn-owner-banner-img { object-position:70% center!important; }
+  body.mvn-preview-design.mvn-showcase-home #mvnEditorial .mvn-owner-banner-feature::after {
+    content:""!important; display:block!important; background:linear-gradient(0deg,#141415 0%,#141415de 36%,#14141500 100%)!important;
+  }
+  body.mvn-preview-design.mvn-showcase-home .mvn-launch-hero-copy { padding:2rem 0; }
+}
+
+/* The retail homepage uses the uploaded storefront's single hero and compact header. */
+body.mvn-preview-design.mvn-showcase-home:not(.app-store) > .storehead {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) !important;
+  align-items: center !important;
+  gap: clamp(.5rem, 2vw, 1.5rem) !important;
+  width: 100%;
+  min-height: 4.8rem;
+  padding: .55rem clamp(.75rem, 4vw, 4rem) !important;
+  box-sizing: border-box;
+}
+body.mvn-preview-design.mvn-showcase-home:not(.app-store) > .storehead :is(.mvn-theme-categories, .header-search, .mvn-header-email, .wa, .mvn-header-wordmark),
+body.mvn-preview-design.mvn-showcase-home:not(.app-store) #mvnEditorial :is(.mvn-editorial-promos, .mvn-editorial-benefits) {
+  display: none !important;
+}
+body.mvn-preview-design.mvn-showcase-home:not(.app-store) > .storehead .brand {
+  grid-area: 1 / 1 !important;
+  min-width: 0;
+}
+body.mvn-preview-design.mvn-showcase-home:not(.app-store) > .storehead .original-brand-logo {
+  width: clamp(8rem, 18vw, 15rem) !important;
+  max-width: 100% !important;
+  height: 3rem !important;
+}
+body.mvn-preview-design.mvn-showcase-home:not(.app-store) > .storehead .head-actions {
+  grid-area: 1 / 3 !important;
+  display: flex !important;
+  justify-content: flex-end !important;
+  gap: .4rem !important;
+}
+body.mvn-preview-design.mvn-showcase-home:not(.app-store) > .storehead .mvn-preview-nav {
+  grid-area: 1 / 2;
+  border: 0;
+  padding: 0;
+}
+body.mvn-preview-design.mvn-showcase-home:not(.app-store) #mvnEditorial {
+  margin: 0 !important;
+  padding-block: 0 !important;
+}
+body.mvn-preview-design.mvn-showcase-home:not(.app-store) .mvn-launch-hero-copy h1 {
+  font-size: clamp(4.2rem, 10.3vw, 9rem);
+  letter-spacing: -.025em;
+}
+body.mvn-preview-design.mvn-showcase-home:not(.app-store) .mvn-launch-hero-copy p {
+  max-width: 31rem;
+}
+body.mvn-preview-design.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature {
+  min-height: clamp(30rem, 48vw, 42rem) !important;
+}
+@media (max-width: 760px) {
+  body.mvn-preview-design.mvn-showcase-home:not(.app-store) > .storehead {
+    grid-template-columns: minmax(0, 1fr) auto !important;
+  }
+  body.mvn-preview-design.mvn-showcase-home:not(.app-store) > .storehead .head-actions { grid-area: 1 / 2 !important; }
+  body.mvn-preview-design.mvn-showcase-home:not(.app-store) > .storehead .mvn-preview-nav {
+    grid-area: 2 / 1 / 3 / 3;
+    justify-content: center;
+  }
+  body.mvn-preview-design.mvn-showcase-home:not(.app-store) .mvn-launch-hero-copy h1 { font-size: clamp(3.1rem, 10.5vw, 5.4rem); }
+  body.mvn-preview-design.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature { min-height: 32rem !important; }
+}
+</style>
 </head>
 <body class="mvn-preview-design retail-home mvn-fitness-refresh mvn-advance-layout mvn-supplement-theme mvn-showcase-home">
 <!-- Keep original MVN artwork; remove only its dark rectangle at display time. -->
