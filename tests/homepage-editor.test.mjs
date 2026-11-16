@@ -1,0 +1,33 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+
+test('visual homepage editor previews real site and saves safely', () => {
+ const server=readFileSync('server.mjs','utf8');
+ const homepage=readFileSync('public/index.html','utf8');
+ const editor=readFileSync('public/homepage-editor.html','utf8');
+ const control=readFileSync('public/homepage-editor.js','utf8');
+ const runtime=readFileSync('public/homepage-live.js','utf8');
+ const admin=readFileSync('public/admin.html','utf8');
+ assert.match(editor,/src="\/\?mvn_editor_preview=1"/,'preview targets real homepage');
+ assert.match(editor,/id="publish"/,'explicit owner-controlled publish');
+ assert.match(editor,/id="save"/,'local draft save');
+ assert.match(editor,/id="signin"/,'owner sign-in prompt');
+ assert.match(control,/localStorage\.setItem/,'draft can be saved before owner login');
+ assert.match(control,/session\.user\?\.role==='admin'/,'publishing requires admin login');
+ assert.match(control,/mode:'publish'/,'publish uses protected endpoint');
+ assert.match(server,/if\(path==='\/api\/homepage-config'&&req\.method==='GET'\)/,'public published settings endpoint');
+ assert.match(server,/if\(path==='\/api\/admin\/homepage-config'\)/,'admin content endpoint');
+ assert.match(server,/if\(path\.startsWith\('\/api\/admin\/'\)\)\{admin\(user\);/,'owner authentication wraps publication');
+ assert.match(server,/ownerHomepagePublishedV1/,'database-backed persistent publication');
+ assert.match(server,/frame-ancestors 'self'/,'same-origin preview may frame page');
+ assert.match(server,/X-Frame-Options','SAMEORIGIN'/,'frame protection remains same-origin');
+ assert.match(homepage,/src="\/homepage-live\.js/,'published styles applied on real homepage');
+ assert.match(runtime,/mvnEditorialTitle/,'real hero headline targeted');
+ assert.match(runtime,/mvnEditorialCategoriesTitle/,'real category title targeted');
+ assert.match(runtime,/mvnBestSellers/,'real best sellers targeted');
+ assert.match(runtime,/mvn-owner-banner-img/,'real product photography targeted');
+ assert.match(runtime,/event\.origin !== location\.origin/,'cross origin preview messages blocked');
+ assert.match(admin,/href="\/homepage-editor\.html"/,'owner menu goes to real homepage editor');
+ assert.doesNotMatch(editor,/<input[^>]+name="price"/,'editor does not modify retail prices');
+});
