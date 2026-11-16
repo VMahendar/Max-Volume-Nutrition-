@@ -465,6 +465,41 @@ body.mvn-preview-design.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-own
   body.mvn-preview-design.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature { min-height: 32rem !important; }
 }
 </style>
+<style data-mvn-home-layout>
+
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) > .mvn-theme-main-nav { display:none!important; }
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-editorial-layout { width:100%!important; margin:0!important; }
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-editorial-feature.mvn-owner-banner-feature {
+  position:relative!important; display:flex!important; align-items:center!important; justify-content:center!important;
+  width:100%!important; min-height:clamp(30rem,48vw,42rem)!important; height:auto!important; isolation:isolate;
+}
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-owner-banner-link {
+  position:absolute!important; display:block!important; inset:0!important; width:100%!important; height:100%!important; z-index:-2!important;
+}
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-owner-banner-img {
+  width:100%!important; height:100%!important; object-fit:cover!important;
+}
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-launch-hero-copy {
+  position:relative!important; z-index:1!important; display:block!important; width:min(92%,80rem)!important; margin-inline:auto!important;
+}
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-editorial-feature.mvn-owner-banner-feature::after {
+  position:absolute!important; inset:0!important; z-index:-1!important; content:""!important; display:block!important;
+  background:linear-gradient(90deg,#131313 0%,#131313b0 34%,transparent 80%)!important; pointer-events:none;
+}
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) .mvn-theme-shop-goals .mvn-theme-goal-art {display:none!important;}
+body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) .mvn-theme-shop-goals .mvn-editorial-category-grid {
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+}
+@media (max-width:760px) {
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-editorial-feature.mvn-owner-banner-feature { align-items:flex-end!important; }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) #mvnEditorial .mvn-editorial-feature.mvn-owner-banner-feature::after {
+    background:linear-gradient(0deg,#141415 0%,#141415de 36%,transparent 100%)!important;
+  }
+  body.retail-home.mvn-preview-design.mvn-supplement-theme.mvn-showcase-home:not(.app-store) .mvn-theme-shop-goals .mvn-editorial-category-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+</style>
 </head>
 <body class="mvn-preview-design retail-home mvn-fitness-refresh mvn-advance-layout mvn-supplement-theme mvn-showcase-home">
 <!-- Keep original MVN artwork; remove only its dark rectangle at display time. -->
