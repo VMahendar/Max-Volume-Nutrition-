@@ -93,7 +93,7 @@ function select(e){
  send('mvn-visual-select',{target,tag:e.tagName.toLowerCase(),text:e.tagName==='IMG'?'':e.textContent.slice(0,1200),src:e.tagName==='IMG'?e.getAttribute('src'):'',width:Math.round(r.width),height:Math.round(r.height)});
 }
 document.addEventListener('click',ev=>{
- if(ev.target.closest('[data-mvn-builder-ui]'))return;
+ if(ev.target.closest('[data-mvn-builder-ui]')&&!ev.target.closest('[data-mvn-builder-created]'))return;
  ev.preventDefault();ev.stopImmediatePropagation();
  const e=ev.target.closest(nodes);if(e&&!isProtected(e))select(e);
 },true);
