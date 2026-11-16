@@ -44,7 +44,7 @@ export function validateVisualBuilder(input, imageAllowed=()=>false){
     clean.values=values;
    }
    if(op.action==='text'||op.action==='insert'){
-    if(typeof op.text!=='string'||op.text.length>1200)throw Error('Invalid text length.');
+    if(typeof op.text!=='string'||op.text.length>50000)throw Error('Invalid text length.');
     clean.text=op.text;
    }
    if(op.action==='image'||op.action==='insert'){
