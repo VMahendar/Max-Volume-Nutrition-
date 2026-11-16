@@ -34,6 +34,9 @@ jobs:
       - name: Diagnose actual production rendering and saved layout overrides
         if: ${{ !cancelled() && steps.chromium.outcome == 'success' }}
         run: node tests/live-width-diagnostics.mjs
+      - name: Audit ACTUAL live MVN page widths, persisted visual edits and screenshots
+        if: ${{ !cancelled() && steps.chromium.outcome == 'success' }}
+        run: node tests/live-production-width-audit.mjs
       - name: Verify storefront fills desktop and mobile viewports without blank side panels
         if: ${{ !cancelled() && steps.chromium.outcome == 'success' }}
         run: node tests/fullscreen-storefront-browser-qa.mjs

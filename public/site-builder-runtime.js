@@ -50,8 +50,15 @@ function apply(input){
  doc=input?.version===1?input:{version:1,pages:{}};reset();
  if(!layer){layer=document.createElement('div');layer.dataset.mvnBuilderUi='layer';layer.style.cssText='position:absolute;inset:0;width:100%;height:0;z-index:100000;pointer-events:none';document.body.append(layer);}
  const viewport=matchMedia('(max-width:760px)').matches?'mobile':'desktop';
+ // Public homepage safety: persistent freeform drag/resize operations can move
+ // structural content out of its normal grid, leaving half a page blank and
+ // Globe-Tech on top of product cards. Keep every owner's saved edit intact for
+ // the authenticated canvas, but only apply safe text/photo changes to the
+ // customer-facing homepage until the owner re-publishes a coherent layout.
+ const safeHome=path==='/'&&!editing;
  for(const op of doc.pages?.[path]||[]){
   if(op.device!=='all'&&op.device!==viewport)continue;
+  if(safeHome&&!['text','image'].includes(op.action))continue;
   const e=getTarget(op.target);if(!e||isProtected(e))continue;
   if(op.action==='duplicate'&&containsCommerce(e))continue;
   if(op.action==='duplicate'||op.action==='insert'){

@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import {chromium} from 'playwright';
 import {spawn} from 'node:child_process';
-import {mkdtempSync,rmSync} from 'node:fs';
+import {mkdtempSync,rmSync,mkdirSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {tmpdir} from 'node:os';
 import {setTimeout as delay} from 'node:timers/promises';
@@ -22,6 +22,7 @@ try{
  let ready=false;for(let i=0;i<80;i++){try{if((await fetch(origin+'/healthz')).ok){ready=true;break;}}catch{}await delay(200);}
  assert.ok(ready,'app must boot: '+stderr);
  browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+ mkdirSync('reports/visual-qa',{recursive:true});
  for(const viewport of [{width:1366,height:768},{width:1440,height:900},{width:1920,height:1080},{width:390,height:844}]){
   const page=await browser.newPage({viewport}),errors=[];page.on('pageerror',error=>errors.push(error.message));
   assert.equal((await page.goto(origin+'/',{waitUntil:'networkidle',timeout:35000})).status(),200);
@@ -44,12 +45,25 @@ try{
   assert.ok(values.banner.width>vw*.92,'banner image should span screen '+JSON.stringify(values.banner));
   assert.ok(values.banner.x>=-8&&values.banner.right<=vw+8,'banner offscreen');
   assert.ok(values.globe.height>100,'Globe-Tech section clipped');
+  const integrity=await page.evaluate(()=>{
+   const rect=selector=>{const box=document.querySelector(selector)?.getBoundingClientRect();return box?{x:box.x,y:box.y,width:box.width,height:box.height,bottom:box.bottom}:null;};
+   const headline=rect('#mvnGlobTechTitle'),globe=rect('.mvn-globtech-launch'),best=rect('.mvn-preview-best');
+   const nav=rect('.mvn-preview-nav'),name=rect('#mvnEditorialTitle');
+   return {headline,globe,best,nav,name,scrollWidth:document.documentElement.scrollWidth,viewport:document.documentElement.clientWidth};
+  });
+  console.log('SAVED_VISUAL_CONTENT_INTEGRITY',viewport.width,JSON.stringify(integrity));
+  assert.ok(integrity.headline&&integrity.globe&&integrity.headline.y>=integrity.globe.y&&integrity.headline.y+integrity.headline.height<=integrity.globe.bottom+5,'Globe-Tech heading must remain in Globe-Tech section, not overlap product cards');
+  assert.ok(integrity.globe.y>=integrity.best.bottom-5,'Globe-Tech must follow Best Sellers');
+  assert.ok(integrity.nav&&integrity.nav.width>vw*.80,'desktop navigation must not collapse');
+  assert.ok(integrity.scrollWidth<=vw+12,'mobile page must not extend into blank right-hand space');
+
   for(let i=0;i<cards.length;i++)for(let j=i+1;j<cards.length;j++){
    const a=cards[i],b=cards[j];
    const overlap=Math.min(a.right,b.right)-Math.max(a.left,b.left)>5&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>5;
    assert.ok(!overlap,'goal cards overlap '+i+' '+j);
   }
   assert.deepEqual(errors,[],'browser JavaScript errors');
+  await page.screenshot({path:'reports/visual-qa/published-safe-'+viewport.width+'.png',fullPage:true});
   await page.close();
  }
  console.log('REAL_PRODUCTION_SAVED_EDITS_LAYOUT_PASS');
