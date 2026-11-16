@@ -1,0 +1,149 @@
+/* MVN homepage alignment with About / Contact visual system.
+   Presentation only: product data, account, cart, checkout and order handlers remain intact. */
+body.retail-home.mvn-showcase-home {
+  --mvn-home-paper:#f5f5f3;
+  --mvn-home-ink:#15191d;
+  --mvn-home-accent:#f15b09;
+  background:#fff!important;color:var(--mvn-home-ink);
+  overflow-x:clip;
+}
+body.retail-home.mvn-showcase-home *,body.retail-home.mvn-showcase-home *::before,body.retail-home.mvn-showcase-home *::after{box-sizing:border-box}
+body.retail-home.mvn-showcase-home .announce,
+body.retail-home.mvn-showcase-home .header-descriptor,
+body.retail-home.mvn-showcase-home .mvn-header-email,
+body.retail-home.mvn-showcase-home .head-actions>.wa,
+body.retail-home.mvn-showcase-home .mvn-preview-nav,
+body.retail-home.mvn-showcase-home .mvn-theme-main-nav,
+body.retail-home.mvn-showcase-home nav.nav,
+body.retail-home.mvn-showcase-home .mvn-preview-best,
+body.retail-home.mvn-showcase-home #mvnSpotlight {display:none!important}
+body.retail-home.mvn-showcase-home .storehead{
+  display:flex!important;flex-wrap:nowrap!important;align-items:center!important;
+  justify-content:space-between!important;gap:clamp(8px,2vw,22px)!important;
+  width:100%!important;max-width:none!important;
+  min-height:76px!important;height:auto!important;
+  margin:0!important;padding:10px clamp(14px,3vw,40px)!important;
+  background:#171b1f!important;border-bottom:3px solid var(--mvn-home-accent)!important;
+}
+body.retail-home.mvn-showcase-home .storehead .brand-identity{
+  display:flex!important;align-items:center!important;flex:0 1 310px!important;
+  width:auto!important;min-width:0!important;max-width:310px!important;
+  height:auto!important;min-height:48px!important;padding:0!important;margin:0!important;
+}
+body.retail-home.mvn-showcase-home .storehead .original-brand-logo{
+  display:block!important;width:100%!important;max-width:310px!important;
+  height:54px!important;max-height:54px!important;object-fit:contain!important;
+  object-position:left center!important;transform:none!important;
+}
+body.retail-home.mvn-showcase-home .storehead .mvn-header-wordmark{display:none!important}
+body.retail-home.mvn-showcase-home .storehead .head-actions{
+  display:flex!important;align-items:center!important;justify-content:flex-end!important;
+  flex:0 0 auto!important;gap:clamp(5px,1vw,14px)!important;
+  margin:0!important;min-width:0!important;
+}
+body.retail-home.mvn-showcase-home .storehead .head-actions>*{flex-shrink:0}
+body.retail-home.mvn-showcase-home .storehead .head-actions summary,
+body.retail-home.mvn-showcase-home .storehead #bag{
+  min-height:42px!important;min-width:42px!important;display:flex!important;
+  align-items:center!important;justify-content:center!important;gap:5px!important;
+}
+body.retail-home.mvn-showcase-home .storehead .head-actions .account-link span,
+body.retail-home.mvn-showcase-home .storehead #bag>span{display:none!important}
+body.retail-home.mvn-showcase-home .mvn-editorial,
+body.retail-home.mvn-showcase-home .mvn-editorial-categories,
+body.retail-home.mvn-showcase-home .mvn-globtech-launch{width:100%!important;max-width:none!important}
+body.retail-home.mvn-showcase-home #mvnEditorial{
+  margin:0!important;padding:clamp(14px,2.5vw,30px)!important;
+  background:var(--mvn-home-paper)!important;
+}
+body.retail-home.mvn-showcase-home #mvnEditorial .mvn-editorial-layout{
+  width:100%!important;max-width:1440px!important;margin:0 auto!important;
+  gap:clamp(12px,1.5vw,22px)!important;
+}
+body.retail-home.mvn-showcase-home #mvnEditorial .mvn-editorial-feature{
+  min-width:0!important;border-radius:6px!important;overflow:hidden!important;
+}
+body.retail-home.mvn-showcase-home #mvnEditorial .mvn-editorial-promos{
+  min-width:0!important;gap:clamp(10px,1.4vw,18px)!important;
+}
+body.retail-home.mvn-showcase-home .mvn-editorial-benefits{
+  max-width:1440px!important;margin:12px auto 0!important;
+  gap:10px!important;justify-content:center!important;
+  text-align:center!important;
+}
+body.retail-home.mvn-showcase-home .mvn-editorial-categories{
+  padding:clamp(28px,4vw,56px) clamp(14px,3vw,40px)!important;
+  background:#fff!important;
+}
+body.retail-home.mvn-showcase-home .mvn-editorial-categories-heading,
+body.retail-home.mvn-showcase-home .mvn-editorial-category-grid{
+  max-width:1400px!important;margin-left:auto!important;margin-right:auto!important;
+}
+body.retail-home.mvn-showcase-home .mvn-editorial-categories h2,
+body.retail-home.mvn-showcase-home .collection-results h2{
+  color:#15191d!important;letter-spacing:0!important;
+}
+body.retail-home.mvn-showcase-home .mvn-globtech-launch{
+  max-width:1400px!important;margin:0 auto!important;
+  padding:clamp(24px,4vw,48px)!important;
+  border-radius:6px!important;
+}
+body.retail-home.mvn-showcase-home .mvn-editorial-category,
+body.retail-home.mvn-showcase-home .collection-results .card{
+  border-radius:6px!important;box-shadow:none!important;
+}
+body.retail-home.mvn-showcase-home .collection-results .grid{
+  gap:clamp(12px,2vw,20px)!important;
+}
+body.retail-home.mvn-showcase-home .collection-results .card .photo{
+  background:#f5f5f3!important;
+}
+body.retail-home.mvn-showcase-home .collection-results .card .photo img{
+  object-fit:contain!important;
+}
+body.retail-home.mvn-showcase-home .collection-results .card .info>h3{
+  color:#15191d!important;font-weight:850!important;
+}
+body.retail-home.mvn-showcase-home .collection-results .card .info>.add{
+  background:#182026!important;border-color:#182026!important;
+}
+@media(max-width:760px){
+  body.retail-home.mvn-showcase-home .storehead{
+    min-height:64px!important;padding:8px 12px!important;gap:5px!important;
+  }
+  body.retail-home.mvn-showcase-home .storehead .brand-identity{
+    flex:1 1 auto!important;max-width:calc(100% - 155px)!important;
+  }
+  body.retail-home.mvn-showcase-home .storehead .original-brand-logo{
+    height:42px!important;max-height:42px!important;width:100%!important;
+  }
+  body.retail-home.mvn-showcase-home .storehead .mvn-theme-categories,
+  body.retail-home.mvn-showcase-home .storehead .header-search{display:none!important}
+  body.retail-home.mvn-showcase-home .storehead .head-actions{
+    gap:2px!important;flex:0 0 auto!important;
+  }
+  body.retail-home.mvn-showcase-home .storehead .head-actions summary,
+  body.retail-home.mvn-showcase-home .storehead #bag{
+    min-width:36px!important;min-height:40px!important;padding:5px!important;
+  }
+  body.retail-home.mvn-showcase-home #mvnEditorial{padding:12px!important}
+  body.retail-home.mvn-showcase-home #mvnEditorial .mvn-editorial-layout{
+    display:flex!important;flex-direction:column!important;
+  }
+  body.retail-home.mvn-showcase-home #mvnEditorial .mvn-editorial-feature{
+    width:100%!important;max-width:none!important;
+  }
+  body.retail-home.mvn-showcase-home #mvnEditorial .mvn-editorial-promos{
+    display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;
+    width:100%!important;
+  }
+  body.retail-home.mvn-showcase-home .mvn-editorial-benefits{
+    display:flex!important;flex-wrap:wrap!important;font-size:10px!important;
+  }
+  body.retail-home.mvn-showcase-home .mvn-editorial-categories{
+    padding:28px 12px!important;
+  }
+  body.retail-home.mvn-showcase-home .mvn-globtech-launch{
+    margin:12px!important;width:calc(100% - 24px)!important;
+  }
+}
