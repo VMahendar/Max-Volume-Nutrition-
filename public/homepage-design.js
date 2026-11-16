@@ -96,7 +96,6 @@ function apply(design){
   }
  }
 }
-}
 try{const published=JSON.parse(document.getElementById('mvnHomepageDesign')?.textContent||'null');if(published)apply(published);}catch(error){console.error('Homepage design could not be applied',error);}
 if(!editing)return;
 const outline=document.createElement('style');outline.textContent='[data-homepage-selected]{outline:3px solid #ff6844!important;outline-offset:-3px!important}';document.head.append(outline);
