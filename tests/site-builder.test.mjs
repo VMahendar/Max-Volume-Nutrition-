@@ -36,6 +36,9 @@ test('full site builder validates multiple pages and rejects unsafe operations',
  assert.match(js,/pointerup/);
  assert.match(ui,/id="fileUpload"/);
  assert.match(ui,/id="paste"/);
+ assert.match(ui,/id="cut"/,'cut is available alongside copy and paste');
+ assert.match(ui,/wholesale-account\.html/,'wholesale page appears in site editor');
+ assert.equal(canonicalBuilderPage('/wholesale-account.html'),'/wholesale-account.html');
 });
 
 test('visual builder is admin-only, saves private drafts and publishes only selected page',async()=>{
