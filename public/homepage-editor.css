@@ -32,3 +32,29 @@
  .editor-top{position:sticky;top:0;z-index:12;background:#181c23}
  .editor-top #status{font-size:11px}
 }
+
+/* Drag-and-drop edit mode and full-bleed viewport previews. */
+.reorder-grip{display:flex;align-items:center;justify-content:center;flex:0 0 32px;height:39px;font-size:25px;color:#d0d9e6;cursor:grab;user-select:none;touch-action:none}
+.section-row[draggable=true]{cursor:grab}
+.section-row.is-dragging{opacity:.55;border:1px dashed #ed6545}
+.section-row.drag-over{border:2px dashed #ed6545;background:#45352d}
+.stage-bar{flex-wrap:wrap}
+.stage-bar .devices button{white-space:nowrap}
+#expandPreview{font-size:12px;border-color:#8091a9;background:#253346;color:#fff;white-space:nowrap}
+#workspace.preview-expanded{display:block;height:calc(100dvh - 76px)}
+#workspace.preview-expanded .sections,#workspace.preview-expanded .inspector{display:none!important}
+#workspace.preview-expanded .stage{height:100%;width:100%}
+#workspace.preview-expanded .preview-scroll{padding:0}
+#workspace.preview-expanded #preview{box-shadow:none}
+#workspace.preview-expanded .preview-note{padding:8px}
+@media(max-width:760px){
+ .workspace .inspector{order:2!important}
+ .workspace .sections{order:3!important}
+ .stage-bar{gap:6px;padding:9px 8px}
+ .stage-bar .devices{gap:3px}
+ .stage-bar .devices button{font-size:11px;padding:8px 7px}
+ #expandPreview{padding:8px;font-size:11px}
+ #workspace.preview-expanded{height:calc(100dvh - 104px);min-height:560px}
+ #workspace.preview-expanded .stage{height:100%;order:1}
+ #workspace.preview-expanded .preview-scroll{min-height:0}
+}
