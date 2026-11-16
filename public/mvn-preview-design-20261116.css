@@ -1,0 +1,79 @@
+@font-face {
+  font-family: "MVN Preview Display";
+  src: url("/assets/mvn-barlow-condensed-800.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+}
+
+.mvn-preview-design { --mvn-preview-ink:#171819; --mvn-preview-paper:#faf9f7; --mvn-preview-accent:#c8371b; --mvn-preview-line:#dedcd8; background:var(--mvn-preview-paper)!important; }
+body.mvn-preview-design .announce { background:#a92d18!important; color:white!important; justify-content:center!important; text-align:center; padding-block:.42rem!important; }
+body.mvn-preview-design .storehead, body.mvn-preview-design.mvn-fitness-product > header { background:#151617!important; color:white!important; border-color:#343434!important; }
+body.mvn-preview-design .storehead .original-brand-logo { object-fit:contain!important; }
+body.mvn-preview-design .storehead #bag { background:transparent!important; color:#fff!important; border:1px solid #666!important; border-radius:0!important; }
+body.mvn-preview-design .storehead #bag em { background:#fff!important; color:#171819!important; }
+body.mvn-preview-design .mvn-theme-main-nav, body.mvn-preview-design .mvn-theme-main-nav a { background:#151617!important; color:#fff!important; border-color:#353535!important; }
+body.mvn-preview-design .mvn-theme-main-nav a:hover, body.mvn-preview-design .mvn-theme-main-nav a:focus-visible { color:#ff825f!important; }
+body.mvn-preview-design .mvn-theme-shop-goals { background:#efeee9!important; padding-block:clamp(1.25rem,4vw,3.5rem)!important; }
+body.mvn-preview-design .mvn-editorial-categories-heading h2, body.mvn-preview-design #shop .section-title :is(h1,h2), .mvn-preview-best h2,
+body.mvn-preview-design.mvn-fitness-product main h1, body.mvn-preview-design #productDetail .mvn-detail-content h2 {
+  font-family:"MVN Preview Display","Arial Narrow",sans-serif!important; font-weight:800!important; text-transform:uppercase; letter-spacing:-.02em!important;
+}
+body.mvn-preview-design .mvn-editorial-categories-heading h2, .mvn-preview-best h2 { color:#171819!important; }
+body.mvn-preview-design .mvn-editorial-category { background:white!important; border-color:var(--mvn-preview-line)!important; border-radius:0!important; box-shadow:none!important; }
+body.mvn-preview-design .mvn-editorial-category strong { color:#171819!important; }
+.mvn-preview-best { width:min(94%,79rem); margin:clamp(1.5rem,5vw,4rem) auto; }
+.mvn-preview-best-head { display:flex; justify-content:space-between; align-items:baseline; flex-wrap:wrap; gap:.6rem; margin-bottom:.85rem; }
+.mvn-preview-best-head h2 { font-size:clamp(2rem,5vw,3.6rem); line-height:1; margin:0; }
+.mvn-preview-best-head a { color:#842b1a; font-weight:750; }
+.mvn-preview-best-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:clamp(.45rem,2vw,1.25rem); }
+.mvn-preview-best-grid a { min-width:0; display:flex; flex-direction:column; gap:.6rem; background:#fff; border:1px solid #dedcd8; text-decoration:none; padding:.75rem; color:#171819; }
+.mvn-preview-best-grid img { display:block; width:100%; aspect-ratio:1; height:auto; object-fit:contain; background:#f1efeb; }
+.mvn-preview-best-grid strong { font:800 clamp(1.28rem,3vw,2rem)/1 "MVN Preview Display","Arial Narrow",sans-serif; text-transform:uppercase; overflow-wrap:anywhere; }
+.mvn-preview-best-grid small { color:#842b1a; font-weight:750; }
+
+body.mvn-preview-design #shop .collection-results .card, body.mvn-preview-design #shop .mvn-purchased-card {
+  border-radius:0!important; border-color:var(--mvn-preview-line)!important; background:#fff!important; box-shadow:none!important;
+}
+body.mvn-preview-design #shop .collection-results .card .photo, body.mvn-preview-design #shop .mvn-purchased-photo { background:#f1efeb!important; border-radius:0!important; }
+body.mvn-preview-design #shop .collection-results .card .info, body.mvn-preview-design #shop .mvn-purchased-details { background:white!important; color:#171819!important; }
+body.mvn-preview-design #shop .collection-results .card h3, body.mvn-preview-design #shop .mvn-purchased-details h3 { font-family:"MVN Preview Display","Arial Narrow",sans-serif!important; text-transform:uppercase; }
+body.mvn-preview-design #shop .collection-results .card .add, body.mvn-preview-design #shop .mvn-purchased-card [data-add],
+body.mvn-preview-design #productDetail #detail-add, body.mvn-preview-design #drawer #send,
+body.mvn-preview-design.mvn-fitness-product .mvn-preview-order {
+  background:var(--mvn-preview-accent)!important; color:white!important; border-color:var(--mvn-preview-accent)!important; border-radius:0!important;
+}
+body.mvn-preview-design #shop .cats button:is(.active,[aria-pressed="true"]), body.mvn-preview-design #productDetail .mvn-pack-choice[aria-pressed="true"] { background:#fff0eb!important; color:#792610!important; border-color:#c8371b!important; }
+body.mvn-preview-design #productDetail :is(.mvn-detail-gallery,.mvn-detail-content), body.mvn-preview-design #drawer {
+  background:#faf9f7!important; color:#171819!important; border-color:#dedcd8!important;
+}
+body.mvn-preview-design #productDetail .mvn-detail-stage { background:#f1efeb!important; border-radius:0!important; }
+body.mvn-preview-design #drawer .dhead, body.mvn-preview-design .mvn-compact-footer, body.mvn-preview-design .mvn-compact-footer a, body.mvn-preview-design.mvn-fitness-product footer, body.mvn-preview-design.mvn-fitness-product footer a {
+  color:#fff!important; background:#151617!important;
+}
+
+body.mvn-preview-design.mvn-fitness-product main { width:min(94%,79rem); max-width:none!important; }
+body.mvn-preview-design.mvn-fitness-product main .grid { gap:clamp(1rem,4vw,3.5rem)!important; }
+body.mvn-preview-design.mvn-fitness-product main h1 { color:#171819!important; font-size:clamp(2.65rem,6vw,5.35rem)!important; line-height:.96!important; overflow-wrap:anywhere; }
+body.mvn-preview-design.mvn-fitness-product main .kicker { color:#a22f1b!important; }
+body.mvn-preview-design.mvn-fitness-product main :is(.media,.panel,.mvn-live-retail) { background:white!important; border:1px solid #dedcd8!important; border-radius:0!important; box-shadow:none!important; min-width:0; }
+body.mvn-preview-design.mvn-fitness-product main .media { background:#f1efeb!important; }
+body.mvn-preview-design.mvn-fitness-product .mvn-preview-order { margin-right:.5rem; }
+body.mvn-preview-design.mvn-fitness-product .button.alt { border-radius:0!important; background:#fff!important; color:#171819!important; border-color:#777!important; }
+body.mvn-preview-design a:focus-visible, body.mvn-preview-design button:focus-visible { outline:2px solid #ed7458; outline-offset:3px; }
+
+@media (max-width:760px) {
+  .mvn-preview-best-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  body.mvn-preview-design.mvn-fitness-product main .grid { grid-template-columns:minmax(0,1fr)!important; }
+  body.mvn-preview-design.mvn-fitness-product main { box-sizing:border-box; }
+  body.mvn-preview-design.mvn-fitness-product .mvn-preview-order { width:100%; box-sizing:border-box; }
+}
+
+body.mvn-preview-design.mvn-showcase-home > .mvn-theme-main-nav { display:none!important; }
+.mvn-preview-nav { display:flex; justify-content:center; flex-wrap:wrap; gap:.45rem clamp(.7rem,4vw,2.75rem); background:#151617; border-top:1px solid #343434; padding:.48rem 4%; }
+.mvn-preview-nav a { display:inline-flex; align-items:center; min-height:2.25rem; color:white; font-weight:700; font-size:.86rem; text-decoration:none; }
+.mvn-preview-nav a:hover { color:#ff825f; }
+.mvn-preview-home-footer { display:flex; justify-content:space-between; flex-wrap:wrap; gap:1rem; padding:1.35rem 4%; }
+.mvn-preview-home-footer nav { display:flex; flex-wrap:wrap; gap:1rem; }
+.mvn-preview-home-footer nav a { color:white; }
+@media (max-width: 760px) { .mvn-preview-nav { justify-content:flex-start; } }
