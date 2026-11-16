@@ -1,0 +1,82 @@
+body.retail-home:not(.app-store) #mvnEditorial { max-width: none; padding-inline: 0; }
+body.retail-home:not(.app-store) #mvnEditorial .mvn-editorial-layout { grid-template-columns: minmax(0, 1fr); max-width: none; }
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature {
+  position: relative; isolation: isolate; display: flex; align-items: center; min-height: clamp(28rem, 47vw, 43rem);
+  overflow: hidden; border-radius: 0; padding: 0; background: #141415; color: white;
+}
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-link {
+  position: absolute; inset: 0; z-index: -2; display: block; width: 100%; height: 100%;
+}
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-img {
+  display: block; width: 100%; height: 100%; object-fit: cover; object-position: center;
+}
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature::after {
+  content: ""; display: block; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(90deg, #121213 0%, #121213e8 26%, #12121345 53%, transparent 70%);
+}
+body.retail-home:not(.app-store) #mvnEditorial .mvn-editorial-promos {
+  display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: .8rem; width: min(94%, 79rem); margin-inline: auto;
+}
+body.retail-home:not(.app-store) #mvnEditorial .mvn-hero-action-strip[hidden] { display: none; }
+.mvn-launch-hero-copy { width: min(92%, 80rem); margin-inline: auto; padding-block: 2.25rem; }
+.mvn-launch-hero-copy h1, .mvn-globtech-launch h2 {
+  text-transform: uppercase; font-family: "Barlow Condensed", Oswald, "Arial Narrow", system-ui, sans-serif; font-weight: 950;
+}
+.mvn-launch-hero-copy h1 { color: #fff; font-size: clamp(3rem, 7.7vw, 7rem); line-height: .9; letter-spacing: -.05em; margin: 0; }
+.mvn-launch-hero-copy h1 em { color: #ff6449; font-style: normal; }
+.mvn-launch-hero-copy p { color: #fff; max-width: 30ch; margin: 1rem 0; line-height: 1.55; }
+.mvn-launch-hero-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+.mvn-launch-primary, .mvn-launch-secondary {
+  display: inline-flex; align-items: center; gap: .65rem; min-height: 2.9rem; padding: .55rem .85rem;
+  color: #fff; background: #bd341a; border: 1px solid transparent; text-decoration: none; font-weight: 750; font-size: .88rem;
+}
+.mvn-launch-primary:hover { color: #fff; background: #a82913; }
+.mvn-launch-secondary { background: #161719; border-color: #828282; }
+.mvn-launch-secondary:hover { color: #fff; border-color: #fff; }
+.mvn-globtech-launch {
+  box-sizing: border-box; width: min(94%, 79rem); margin: 1.35rem auto; padding: clamp(1rem, 3vw, 2rem);
+  display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 1rem; min-width: 0;
+  border-inline-start: .25rem solid #bd341a; background: #211f20; color: #fff;
+}
+.mvn-globtech-launch > div { min-width: 0; }
+.mvn-globtech-launch h2 { color: #fff; margin: .2rem 0 .5rem; font-size: clamp(1.8rem, 4vw, 3rem); line-height: 1; overflow-wrap: anywhere; }
+.mvn-globtech-launch p { color: #dedbd8; margin: .35rem 0 0; line-height: 1.5; }
+.mvn-globtech-launch .mvn-launch-kicker { color: #ff825f; font-size: .8rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+.mvn-globtech-launch a:focus-visible, .mvn-launch-hero-actions a:focus-visible { outline: 2px solid #ff825f; outline-offset: 3px; }
+@media (max-width: 700px) {
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature { display: flex; flex-direction: column; align-items: stretch; min-height: 0; }
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-link { position: relative; order: -1; z-index: auto; height: auto; aspect-ratio: 3 / 2; }
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-img { object-fit: cover; }
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature::after { display: none; }
+  .mvn-launch-hero-copy { padding-block: 1rem 1.55rem; }
+  .mvn-launch-hero-copy h1 { font-size: clamp(2.8rem, 10vw, 4.5rem); }
+}
+
+/* Override the older owner-banner sizing only on the retail homepage. */
+body.retail-home:not(.app-store) #mvnEditorial .mvn-editorial-layout { display: grid !important; grid-template-columns: minmax(0, 1fr) !important; }
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature {
+  height: auto !important; min-height: clamp(28rem, 47vw, 43rem) !important; aspect-ratio: auto !important;
+  border-radius: 0 !important; background: #141415 !important;
+}
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature::after { content: "" !important; display: block !important; }
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-link { position: absolute !important; }
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-link picture { display: block; width: 100%; height: 100%; }
+body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-img { object-fit: cover !important; }
+body.retail-home:not(.app-store) #mvnEditorial .mvn-editorial-promos {
+  height: auto !important; grid-template-columns: repeat(2,minmax(0,1fr)) !important; grid-template-rows: auto !important;
+}
+body.retail-home:not(.app-store) #mvnEditorial .mvn-editorial-promo { min-height: 11rem !important; }
+@media (max-width: 700px) {
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature { min-height: 0 !important; }
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-feature::after { display: none !important; }
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-link { position: relative !important; height: auto !important; }
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-owner-banner-link picture { aspect-ratio: 3 / 2; }
+  body.retail-home:not(.app-store) #mvnEditorial .mvn-editorial-promo { min-height: 9rem !important; }
+}
+
+@font-face {
+  font-family: "MVN Barlow Condensed";
+  src: url("/assets/mvn-barlow-condensed-800.woff2") format("woff2");
+  font-style: normal; font-weight: 800; font-display: swap;
+}
+.mvn-launch-hero-copy h1, .mvn-globtech-launch h2 { font-family: "MVN Barlow Condensed", "Arial Narrow", system-ui, sans-serif; font-weight: 800; }
