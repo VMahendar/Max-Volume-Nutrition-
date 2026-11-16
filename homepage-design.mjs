@@ -25,7 +25,7 @@ export function validateHomepageDesign(value,validImage){
  const colors=['headerColor','headerText','pageColor','accentColor','footerColor','footerText','categoryCardColor'];
  const ranges={
   logoWidth:[70,480],headerHeight:[48,180],sectionGap:[0,100],bannerHeight:[180,1100],
-  bannerPosition:[0,100],bannerPositionY:[0,100],bannerZoom:[50,250],
+  bannerPosition:[0,100],bannerPositionY:[0,100],bannerZoom:[50,250],bannerHeightMobile:[180,900],heroTextX:[-100,100],heroTextY:[-100,100],
   titleSize:[24,140],descriptionSize:[12,36],imageScale:[40,220],
   heroCopyWidth:[25,100],categoryCardHeight:[90,480],bestImageHeight:[80,480],
   categoryGap:[0,50]
@@ -35,7 +35,7 @@ export function validateHomepageDesign(value,validImage){
   ranges[id+'X']=[-100,100];
   ranges[id+'Y']=[-100,100];
  }
- const booleans=['heroVisible','categoriesVisible','bestsellersVisible','brandsVisible','heroTextVisible','navVisible','promoVisible','goalPhotosVisible'];
+ const booleans=['heroVisible','categoriesVisible','bestsellersVisible','brandsVisible','heroTextVisible','navVisible','promoVisible','goalPhotosVisible','heroFullWidth'];
  const output={};
  for(const [key,item] of Object.entries(fields)){
   if(Object.hasOwn(text,key)){if(typeof item!=='string'||item.length>text[key])throw Error('Invalid '+key);output[key]=item;}
