@@ -45,6 +45,7 @@ function choosePage(path){
  page=path;ready=false;selected=null;controls();$('page').value=path;
  $('selectionName').textContent='Click any element on the page';$('propertyControls').hidden=true;$('emptyProperties').hidden=false;
  $('pageName').textContent=$('page').selectedOptions[0]?.textContent||path;
+ frame.style.height='800px';
  frame.src=path+(path.includes('?')?'&':'?')+'visual_builder=1';
  status('Opening editable '+path+'. Drag orange handles to move or resize.');
 }
@@ -123,7 +124,7 @@ $('restore').onclick=()=>{
  if(!selected)return;
  change(()=>{documentState.pages[page]=operations().filter(op=>op.target!==selected.target);});
 };
-$('setText').onclick=()=>{if(selected)add('text',{text:$('text').value.slice(0,1200)});};
+$('setText').onclick=()=>{if(selected)add('text',{text:$('text').value.slice(0,50000)});};
 $('applyStyle').onclick=()=>{
  if(!selected)return;const values={};
  for(const id of ['width','height','x','y','fontSize','opacity']){
