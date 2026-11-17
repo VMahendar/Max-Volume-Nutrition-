@@ -41,6 +41,7 @@ try{
  await page.locator('#loginForm input[name=password]').fill(password);
  await page.locator('#loginForm button').click();
  await page.locator('#workspace').waitFor({state:'visible',timeout:15000});
+ await page.locator('#sectionList button').filter({hasText:'Header & logo'}).click();
  await page.locator('#field-headerColor').waitFor({state:'visible',timeout:15000});
  await page.locator('#sectionList button').filter({hasText:'Main banner'}).click();
  await page.locator('#field-bannerZoom').waitFor({state:'visible'});
