@@ -15,7 +15,7 @@ test('supplement store screenshot reference drives the actual homepage structure
  assert.match(html,/class="mvn-editorial-promos"/);
  assert.match(html,/mvn-theme-shop-goals/);
  assert.equal((html.match(/class="mvn-editorial-category mvn-editorial-category-/g)||[]).length,3);
- assert.equal((html.match(/class="mvn-theme-goal-art"/g)||[]).length,3);
+ assert.equal((html.match(/class="mvn-theme-goal-art"/g)||[]).length,4,'four product categories use original pack photography');
  assert.doesNotMatch(html,/class="mvn-advance-welcome"/,'do not insert text-heavy repeat section between goals and catalogue');
  assert.match(html,/assets\/mvn-homepage-banner-20261115\.webp/);
  assert.ok(readFileSync('public/assets/mvn-homepage-banner-20261115.webp').length>100000);
