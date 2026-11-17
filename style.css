@@ -151,3 +151,6 @@ footer{background:#030a19}
 .storehead:has(.original-brand-logo){height:auto;min-height:100px}
 .account-header .original-brand-logo{height:72px}
 @media(max-width:760px){.original-brand-logo{height:60px}.original-footer-logo{height:85px}.storehead:has(.original-brand-logo){min-height:78px}.account-header .original-brand-logo{height:60px}}
+
+/* A closed cart must remain hidden despite the drawer flex layout. */
+#drawer[hidden]{display:none!important}
