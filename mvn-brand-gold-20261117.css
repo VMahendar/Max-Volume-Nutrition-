@@ -159,3 +159,31 @@ html body.mvn-site-theme.mvn-info-page .mvn-info-panel.dark{background:#1C222B!i
 html body.mvn-site-theme.mvn-info-page .mvn-info-panel.dark :is(.mvn-info-eyebrow,small){color:#B08B4C!important}
 html body.mvn-site-theme.mvn-orange-home .mvn-home-collection-entry :is(#mvnCollectionEntryTitle,p,span){color:#080808!important}
 html body.mvn-site-theme.mvn-orange-home #mvnEditorialTitle{color:#FFFFFF!important}
+
+/* Compact overflow navigation: keep header action styles out of its link rows. */
+html body.mvn-site-theme.retail-home:not(.app-store) header.storehead .head-actions .mvn-header-more .mvn-more-panel{
+ box-sizing:border-box!important;position:absolute!important;inset:auto 0 auto auto!important;
+ top:calc(100% + 10px)!important;z-index:500!important;display:flex!important;
+ flex-direction:column!important;align-items:stretch!important;justify-content:flex-start!important;
+ gap:0!important;width:220px!important;min-width:0!important;max-width:calc(100vw - 32px)!important;
+ height:auto!important;min-height:0!important;max-height:calc(100dvh - 160px)!important;
+ padding:6px!important;margin:0!important;overflow:auto!important;
+ background:#1C222B!important;background-image:none!important;color:#FFFFFF!important;
+ border:1px solid #B08B4C!important;border-radius:10px!important;
+ box-shadow:0 14px 32px #0006!important;transform:none!important;text-align:left!important;
+}
+html body.mvn-site-theme.retail-home:not(.app-store) header.storehead .head-actions .mvn-header-more:not([open]) .mvn-more-panel{display:none!important}
+html body.mvn-site-theme.retail-home:not(.app-store) header.storehead .head-actions .mvn-header-more .mvn-more-panel>a{
+ box-sizing:border-box!important;display:flex!important;align-items:center!important;justify-content:space-between!important;
+ flex:0 0 auto!important;gap:16px!important;width:100%!important;min-width:0!important;
+ height:48px!important;min-height:48px!important;max-height:none!important;
+ margin:0!important;padding:0 14px!important;background:transparent!important;background-image:none!important;
+ color:#FFFFFF!important;border:0!important;border-radius:0!important;box-shadow:none!important;
+ font:600 14px/1.4 Arial,Helvetica,sans-serif!important;letter-spacing:0!important;
+ text-transform:none!important;text-align:left!important;text-decoration:none!important;
+ white-space:nowrap!important;transform:none!important;
+}
+html body.mvn-site-theme.retail-home:not(.app-store) header.storehead .head-actions .mvn-header-more .mvn-more-panel>a+a{border-top:1px solid #B08B4C40!important}
+html body.mvn-site-theme.retail-home:not(.app-store) header.storehead .head-actions .mvn-header-more .mvn-more-panel>a::after{content:'›';font:400 21px/1 Arial,sans-serif;color:#B08B4C}
+html body.mvn-site-theme.retail-home:not(.app-store) header.storehead .head-actions .mvn-header-more .mvn-more-panel>a:is(:hover,:focus-visible){background:#080808!important;color:#D3AF37!important;border-radius:5px!important}
+html body.mvn-site-theme.retail-home:not(.app-store) header.storehead .head-actions .mvn-header-more[open]>summary{background:#1C222B!important;border-radius:6px!important;color:#D3AF37!important}
