@@ -5,7 +5,7 @@ const read=p=>readFileSync(new URL('../'+p,import.meta.url),'utf8');
 
 test('retail flagship keeps original logo, integrates masthead and leads with products',()=>{
  const html=read('public/index.html'),css=read('public/flagship.css');
- assert.ok(html.includes('<link rel="stylesheet" href="/mvn-orange-home-20261117.css?v=3">'));
+ assert.ok(html.includes('<link rel="stylesheet" href="/mvn-orange-home-20261117.css?v=4">'));
  assert.ok(read('public/mvn-home-base.bundle.css').includes('/* flagship.css — source of truth */'),'flagship styling retained inside the cacheable homepage bundle');
  assert.match(css,/background:#fff!important/,'white retail shopping canvas');
  assert.match(css,/\.retail-home \.storehead\{\s*background:var\(--mvn-night\)!important/);

@@ -587,12 +587,14 @@ if(storePublicUrl!==previousStoreOrigin&&['/','/index.html','/robots.txt','/site
 if(process.env.STAGING_MODE==='true'&&u.pathname==='/admin.html'){
  const banner='PRIVATE STAGING · TEST DATA ONLY · PAYMENTS AND SHIPPING DISABLED';
  file=Buffer.from(file.toString('utf8').replace(/<body(?:\s[^>]*)?>/i,openTag=>`${openTag}<div class="staging-banner owner-preview-status" role="status" title="${banner}" aria-label="${banner}">Preview</div>`));
-}}catch(e){if(e instanceof Problem)throw e;fail(404,'Page not found.');}const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.webmanifest':'application/manifest+json','.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.avif':'image/avif','.svg':'image/svg+xml','.xml':'application/xml; charset=utf-8','.txt':'text/plain; charset=utf-8'};// Static files only: HTML, authenticated responses, generated review data,
+}}catch(e){if(e instanceof Problem)throw e;fail(404,'Page not found.');}const mime={'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.webmanifest':'application/manifest+json','.json':'application/json','.png':'image/png','.jpg':'image/jpeg','.webp':'image/webp','.avif':'image/avif','.woff2':'font/woff2','.svg':'image/svg+xml','.xml':'application/xml; charset=utf-8','.txt':'text/plain; charset=utf-8'};// Static files only: HTML, authenticated responses, generated review data,
 // API routes and owner previews remain no-store. Product media may be replaced,
 // so only dated media/icons get the longest cache period.
 const extension=extname(path);
 if(process.env.STAGING_MODE!=='true'){
- if(['.css','.js'].includes(extension)){
+ if(extension==='.woff2'){
+  res.setHeader('Cache-Control','public, max-age=604800, must-revalidate');
+ }else if(['.css','.js'].includes(extension)){
   const versioned=u.searchParams.has('v')||/mvn-shopping-bundle-\d+\.css$/.test(u.pathname);
   res.setHeader('Cache-Control',versioned?'public, max-age=604800, must-revalidate':'public, max-age=86400, must-revalidate');
  }else if(/\.(?:png|jpe?g|webp|avif|svg|ico)$/.test(u.pathname)&&

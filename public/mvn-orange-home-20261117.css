@@ -89,3 +89,7 @@ body.mvn-orange-home #drawer .primary,body.mvn-orange-home #drawer #send,body.mv
 body.mvn-orange-home .mvn-quick-categories{display:none!important}
 
 body.mvn-orange-home .announce>span{max-width:100%!important;white-space:nowrap;font-size:9px!important}body.mvn-orange-home #shade{z-index:90}body.mvn-orange-home #drawer{z-index:100}body.mvn-orange-home .mvn-preview-best-grid img{background:#fff!important}
+
+body.mvn-orange-home #recentSection{display:none!important}
+body.mvn-orange-home .floating-cart{position:fixed;right:18px;bottom:18px;z-index:35;align-items:center;gap:12px;border:1px solid #080808;border-radius:0;background:#ff640a;color:#080808;padding:13px 18px;font-size:11px;font-weight:800;box-shadow:0 6px 20px #0002;cursor:pointer}
+body.mvn-orange-home .floating-cart strong{border-radius:50%;background:#080808;color:#fff;padding:2px 7px}
