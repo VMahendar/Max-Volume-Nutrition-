@@ -13,7 +13,7 @@
   if(item.images.some(photo=>photo.src.includes('globtech-'))){
    item={...item,eyebrow:item.eyebrow.replace(/\s*·\s*COMING SOON$/i,'')+' · COMING SOON',description:item.description.replace(/Ask our team for price and availability\./i,'Coming soon. Prices and order availability will be announced at launch.')};
   }
-  const slide=el('article','mvn-campaign-slide');slide.setAttribute('role','group');slide.setAttribute('aria-roledescription','slide');slide.setAttribute('aria-label',`${i+1} of ${config.slides.length}: ${item.name}`);
+  const slide=el('div','mvn-campaign-slide');slide.setAttribute('role','group');slide.setAttribute('aria-roledescription','slide');slide.setAttribute('aria-label',`${i+1} of ${config.slides.length}: ${item.name}`);
   const copy=el('div','mvn-campaign-copy');copy.append(el('span','mvn-campaign-eyebrow',item.eyebrow));
   const title=el('h1','mvn-campaign-title');title.append(document.createTextNode(item.title),el('em','',item.highlight));copy.append(title,el('p','mvn-campaign-description',item.description));
   const cta=el('a','mvn-campaign-cta',item.button+' →');cta.href=item.href;copy.append(cta);

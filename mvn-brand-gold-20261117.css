@@ -187,3 +187,17 @@ html body.mvn-site-theme.retail-home:not(.app-store) header.storehead .head-acti
 html body.mvn-site-theme.retail-home:not(.app-store) header.storehead .head-actions .mvn-header-more .mvn-more-panel>a::after{content:'›';font:400 21px/1 Arial,sans-serif;color:#B08B4C}
 html body.mvn-site-theme.retail-home:not(.app-store) header.storehead .head-actions .mvn-header-more .mvn-more-panel>a:is(:hover,:focus-visible){background:#080808!important;color:#D3AF37!important;border-radius:5px!important}
 html body.mvn-site-theme.retail-home:not(.app-store) header.storehead .head-actions .mvn-header-more[open]>summary{background:#1C222B!important;border-radius:6px!important;color:#D3AF37!important}
+
+/* Readable small captions on the approved light and dark surfaces. */
+html body.mvn-site-theme.mvn-orange-home .mvn-preview-best-grid .mvn-best-brand{color:#5c482c!important}
+html body.mvn-site-theme.mvn-orange-home .mvn-featured-kicker{color:#666666!important}
+html body.mvn-site-theme.mvn-orange-home .mvn-footer-legal{color:#999999!important}
+html body.mvn-site-theme #drawer .row small{color:#52616b!important}
+html body.mvn-site-theme .mvn-header-search-popover #q{color:#1C222B!important;background:#FFFFFF!important}
+html body.mvn-site-theme .mvn-skip-link{position:fixed;top:8px;left:8px;z-index:2147483640;padding:12px 18px;background:#fff;color:#1C222B;transform:translateY(-200%)}
+html body.mvn-site-theme .mvn-skip-link:focus{transform:none}
+html body.mvn-site-theme.retail-home:not(.app-store) #shop .collection-results .card .mrp-value{color:#52616b!important}
+html body.mvn-site-theme.mvn-fitness-product .nitro-pack-choose small{color:#1C222B!important}
+html body.mvn-site-theme .account-panel label small,html body.mvn-site-theme .account-bottom-note p{color:#52616b!important}
+html body.mvn-site-theme.mvn-info-page :is(.mvn-about-certificate,.mvn-about-explore) .mvn-info-eyebrow,
+html body.mvn-site-theme.mvn-info-page .mvn-quick-page :is(small,b){color:#786039!important}
