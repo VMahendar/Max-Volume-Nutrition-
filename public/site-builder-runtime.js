@@ -111,11 +111,6 @@ function apply(input){
  }
  if(editing)requestAnimationFrame(()=>{positionOutline();reportDocumentHeight();});
 }
-// The public homepage has a fixed, owner-approved storefront layout.
-// Historical published drag/resize operations produced overlapping category cards
-// and displaced shopping sections. Preserve them in SQLite and in the editor;
-// do not execute them on the customer-facing homepage.
-if(!editing && path==='/'){return;}
 if(!editing){apply(doc);return;}
 const css=document.createElement('style');
 css.textContent=`[data-mvn-builder-ui="selection"]{position:absolute;z-index:2147483600;border:2px solid #ff693f;pointer-events:none;box-shadow:0 0 0 1px #fff8}[data-mvn-builder-ui="selection"] [data-handle]{position:absolute;width:30px;height:30px;border-radius:7px;background:#ff693f;border:2px solid white;pointer-events:auto;touch-action:none!important;cursor:nwse-resize}[data-handle="nw"]{left:-15px;top:-15px}[data-handle="ne"]{right:-15px;top:-15px}[data-handle="sw"]{left:-15px;bottom:-15px}[data-handle="se"]{right:-15px;bottom:-15px}[data-mvn-builder-ui="selection"] .builder-name{position:absolute;bottom:100%;left:0;background:#ff693f;color:white;padding:5px 9px;font:700 12px system-ui;white-space:nowrap}[data-mvn-builder-ui="selection"] .builder-hint{position:absolute;left:0;top:100%;background:#1f2a38;color:white;padding:4px 8px;font:600 11px system-ui;white-space:nowrap}.mvn-builder-move-mode body img,.mvn-builder-move-mode body h1,.mvn-builder-move-mode body h2,.mvn-builder-move-mode body h3,.mvn-builder-move-mode body p,.mvn-builder-move-mode body a,.mvn-builder-move-mode body section,.mvn-builder-move-mode body figure,.mvn-builder-move-mode body div{touch-action:none!important}.mvn-builder-move-mode [data-mvn-builder-ui] *{touch-action:none!important}`;
