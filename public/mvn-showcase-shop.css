@@ -3,7 +3,6 @@
  * Preserve approved original photos; never recompose the owner-supplied banner.
  * Full interactive store remains served from /shop.html.
  */
-body.retail-home.mvn-showcase-home:not(.app-store) main#shop,
 body.retail-home.mvn-showcase-home:not(.app-store) #mvn-quick-categories,
 body.retail-home.mvn-showcase-home:not(.app-store) #recentSection,
 body.retail-home.mvn-showcase-home:not(.app-store) .mvn-spotlight,
@@ -141,4 +140,116 @@ body.retail-home.mvn-full-shop:not(.app-store) #shop .collection-results .card .
   padding:29px 15px 21px!important;
  }
  body.retail-home.mvn-full-shop:not(.app-store) .mvn-shop-page-heading p{font-size:12px!important}
+}
+
+/* Homepage correction: retain the approved banner and restore real retail
+   catalogue below editorial categories. Unlike the legacy showroom rule,
+   never hide main#shop on the public homepage. */
+body.retail-home.mvn-showcase-home:not(.app-store) main#shop{
+ display:block!important;position:relative!important;width:100%!important;
+ max-width:1440px!important;min-width:0!important;height:auto!important;
+ max-height:none!important;min-height:0!important;overflow:visible!important;
+ visibility:visible!important;opacity:1!important;transform:none!important;
+ margin:0 auto!important;padding:clamp(28px,4vw,52px) clamp(12px,3vw,36px)!important;
+ background:#fff!important;color:#171b1f!important;
+}
+body.retail-home.mvn-showcase-home:not(.app-store) #shop .shopping-layout{
+ display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+ gap:16px!important;width:100%!important;min-width:0!important;
+ height:auto!important;overflow:visible!important;
+}
+body.retail-home.mvn-showcase-home:not(.app-store) #shop .collection-filters{
+ display:none!important;
+}
+body.retail-home.mvn-showcase-home:not(.app-store) #shop .collection-results{
+ display:block!important;min-width:0!important;width:100%!important;
+ height:auto!important;max-height:none!important;visibility:visible!important;
+ opacity:1!important;overflow:visible!important;
+}
+body.retail-home.mvn-showcase-home:not(.app-store) #shop #grid{
+ display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ gap:clamp(10px,1.6vw,22px)!important;width:100%!important;
+ min-width:0!important;height:auto!important;max-height:none!important;
+ visibility:visible!important;opacity:1!important;
+}
+body.retail-home.mvn-showcase-home:not(.app-store) .mvn-theme-shop-goals{
+ min-height:0!important;height:auto!important;max-height:none!important;
+ padding:clamp(26px,4vw,48px) clamp(12px,3vw,36px)!important;
+ background:#f6f6f4!important;
+}
+body.retail-home.mvn-showcase-home:not(.app-store) .mvn-theme-shop-goals .mvn-editorial-category-grid{
+ display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ gap:clamp(10px,1.6vw,20px)!important;width:100%!important;
+ height:auto!important;max-height:none!important;
+}
+body.retail-home.mvn-showcase-home:not(.app-store) .mvn-theme-shop-goals .mvn-editorial-category-grid>a{
+ display:flex!important;flex-direction:column!important;justify-content:flex-end!important;
+ align-items:center!important;min-height:244px!important;height:auto!important;
+ padding:14px 12px!important;margin:0!important;inset:auto!important;
+ position:relative!important;transform:none!important;
+ background:#fff!important;color:#171b1f!important;
+ border:1px solid #dde1e5!important;border-radius:7px!important;
+ opacity:1!important;visibility:visible!important;
+}
+body.retail-home.mvn-showcase-home:not(.app-store) .mvn-theme-shop-goals .mvn-theme-goal-art{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ width:100%!important;height:170px!important;min-height:170px!important;
+ position:relative!important;overflow:hidden!important;
+ margin:0 0 10px!important;clip-path:none!important;opacity:1!important;visibility:visible!important;
+ background:#f2f4f6!important;
+}
+body.retail-home.mvn-showcase-home:not(.app-store) .mvn-theme-shop-goals .mvn-theme-goal-art .goal-main{
+ display:block!important;position:relative!important;inset:auto!important;
+ width:100%!important;max-width:180px!important;
+ height:158px!important;max-height:158px!important;min-height:0!important;
+ object-fit:contain!important;object-position:center!important;
+ margin:0 auto!important;padding:0!important;filter:none!important;
+ transform:none!important;opacity:1!important;visibility:visible!important;
+}
+body.retail-home.mvn-showcase-home:not(.app-store) .mvn-theme-shop-goals .mvn-editorial-category-grid>a strong{
+ display:block!important;font-size:clamp(13px,1.4vw,17px)!important;
+ line-height:1.25!important;font-weight:850!important;color:#171b1f!important;
+ text-shadow:none!important;position:relative!important;inset:auto!important;
+ transform:none!important;opacity:1!important;
+}
+body.retail-home.mvn-showcase-home:not(.app-store) .mvn-theme-shop-goals .mvn-editorial-category-grid>a small{
+ display:block!important;font-size:12px!important;line-height:1.45!important;
+ color:#56616c!important;text-shadow:none!important;
+ position:relative!important;inset:auto!important;transform:none!important;opacity:1!important;
+}
+body.retail-home.mvn-showcase-home:not(.app-store) .mvn-preview-best{
+ display:none!important;
+}
+body.retail-home.mvn-showcase-home:not(.app-store) .storehead{
+ background:#171b1f!important;color:#fff!important;
+ border-bottom:2px solid #e85d35!important;
+}
+body.retail-home.mvn-showcase-home:not(.app-store) .mvn-home-contact{
+ height:auto!important;min-height:0!important;max-height:none!important;
+ margin:0!important;transform:none!important;
+}
+@media(max-width:900px), (pointer:coarse) and (max-width:1100px){
+ body.retail-home.mvn-showcase-home:not(.app-store) .mvn-theme-shop-goals .mvn-editorial-category-grid,
+ body.retail-home.mvn-showcase-home:not(.app-store) #shop #grid{
+   grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:10px!important;
+ }
+ body.retail-home.mvn-showcase-home:not(.app-store) .mvn-theme-shop-goals .mvn-editorial-category-grid>a{
+   min-height:220px!important;padding:11px 8px!important;
+ }
+ body.retail-home.mvn-showcase-home:not(.app-store) .mvn-theme-shop-goals .mvn-theme-goal-art{
+   height:130px!important;min-height:130px!important;
+ }
+ body.retail-home.mvn-showcase-home:not(.app-store) .mvn-theme-shop-goals .mvn-theme-goal-art .goal-main{
+   height:125px!important;max-height:125px!important;max-width:145px!important;
+ }
+ body.retail-home.mvn-showcase-home:not(.app-store) .storehead .head-actions #bag>span,
+ body.retail-home.mvn-showcase-home:not(.app-store) .storehead .account-link>span{
+   display:none!important;
+ }
+}
+
+/* Align the footer and Globe-Tech surfaces with the About/Contact charcoal header. */
+body.retail-home.mvn-showcase-home:not(.app-store) > .mvn-globtech-launch,
+body.retail-home.mvn-showcase-home:not(.app-store) > .mvn-home-contact{
+ background:#171b1f!important;color:#fff!important;
 }

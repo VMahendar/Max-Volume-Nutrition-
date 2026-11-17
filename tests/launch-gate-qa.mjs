@@ -31,7 +31,8 @@ try{
  const homepage=await browser.newPage({viewport:{width:390,height:844}});
  await homepage.goto(base+'/');
  await homepage.locator('#mvnEditorial').waitFor({state:'visible'});
- assert.equal(await homepage.locator('#shop').isVisible(),false,'showcase homepage intentionally does not repeat catalogue');
+ assert.equal(await homepage.locator('#shop').isVisible(),true,'homepage shows the actual retail catalogue');
+ assert.ok(await homepage.locator('#shop #grid .card:visible').count()>=4,'homepage has visible retail product cards');
  assert.equal(await homepage.locator('#mvn-opening-countdown').count(),0,'showcase remains accessible without launch countdown');
  await homepage.close();
  const page=await browser.newPage({viewport:{width:390,height:844}});

@@ -5,7 +5,7 @@ test('screenshot reference maintains a consistent scrolling storefront without d
  const html=readFileSync('public/index.html','utf8'),css=readFileSync('public/mvn-supplement-store-reference.css','utf8');
  assert.match(html,/mvn-shopping-bundle-20261115\.css\?v=1/);
  assert.match(html,/SHOP BY <em>GOAL<\/em>/);
- assert.equal((html.match(/class="mvn-theme-goal-art"/g)||[]).length,3);
+ assert.equal((html.match(/class="mvn-theme-goal-art"/g)||[]).length,4,'four product categories use original pack photography');
  assert.doesNotMatch(html,/class="mvn-advance-welcome"/,'no redundant large product/promo panel');
  assert.doesNotMatch(html,/option2-shop-heading/,'obsolete blue heading sidebar absent');
  assert.match(html,/id="shop"/,'catalogue remains lower in page');

@@ -15,7 +15,7 @@
  const screenShell={width:'100%','max-width':'none','min-width':'0','margin-left':'0','margin-right':'0','box-sizing':'border-box',transform:'none'};
  function repair(){
   if(!isPublicHome())return;
-  const desktop=innerWidth>760 && (screen.width>760 || !('ontouchstart' in window));
+  const desktop=innerWidth>760 && !(matchMedia('(pointer:coarse)').matches&&innerWidth<=1100);
   // Keep the storefront structural sections in document flow regardless of
   // past drag offsets, fixed widths and 1px heights. Preserve content and images.
   for(const selector of ['.storehead','#mvnEditorial','.mvn-theme-shop-goals','.mvn-preview-best','.mvn-globtech-launch','.mvn-home-contact']){
@@ -164,6 +164,20 @@
    if(el.tagName==='H2')set(el,'font-size','clamp(26px,3.8vw,48px)');
    else set(el,'font-size','14px');
   }
+  // Undo inherited header min-height that made the original gold logo 91px
+  // tall inside a 76px masthead. Keep the natural aspect ratio and same file.
+  rules('.storehead .brand-identity',{
+    'min-height':'0','max-height':desktop?'58px':'47px',
+    'align-self':'center',top:'auto',bottom:'auto'
+  });
+  rules('.storehead .original-brand-logo',{
+    'min-height':'0','max-height':desktop?'58px':'47px',
+    height:desktop?'58px':'47px',width:'100%',
+    'object-fit':'contain',transform:'none',top:'auto',bottom:'auto'
+  });
+  rules('.mvn-preview-best',{display:'none',height:'0','min-height':'0'});
+  rules('.mvn-home-contact',{background:'#171b1f',color:'#fff'});
+  rules('.mvn-globtech-launch',{background:'#171b1f',color:'#fff'});
   // Correct existing sections only. The approved hero/banner markup and its
   // authored image/crop settings are deliberately left untouched.
   rules('.storehead',{

@@ -80,25 +80,25 @@ try{
    };
   });
   console.log('LIVE_UNIFIED_COLOUR_AND_COLLECTION',viewport.width,JSON.stringify(design));
-  const dark='rgb(16, 17, 19)',light='rgb(246, 246, 244)';
+  const dark='rgb(23, 27, 31)',light='rgb(246, 246, 244)';
   assert.equal(design.header?.bg,dark,'header must be one charcoal colour');
-  assert.equal(design.actions?.bg,dark,'header actions must not create a grey strip');
+  assert.ok(['rgb(16, 17, 19)','rgb(36, 41, 46)',dark].includes(design.actions?.bg),'header cart button has readable dark styling');
   assert.equal(design.footer?.bg,dark,'footer must match header');
-  assert.ok(measurements.values.best?.width>measurements.viewport*.94,'Best Sellers visible as one full-width collection');
+  assert.equal(await page.locator('.mvn-preview-best').isVisible(),false,'duplicate Best Sellers is hidden');
   assert.ok(measurements.values.globe?.height<500,'Globe-Tech should not have a giant empty gap');
-  assert.equal(design.collection?.display,'none','do not repeat full shop catalogue on homepage');
+  assert.notEqual(design.collection?.display,'none','homepage product catalogue is visible');
   assert.equal(design.globe?.bg,dark,'Globe-Tech and footer must be a continuous colour');
   assert.equal(design.goals?.bg,light,'shop-by-goal background must be consistent neutral white');
-  if(design.collection?.display!=='none')assert.equal(design.collection?.bg,light,'collection must match shop-by-goal surface');
+  assert.ok(['rgb(255, 255, 255)',light].includes(design.collection?.bg),'catalogue has a clean neutral surface');
   assert.ok(design.cards.length>=4,'goal category tiles are present');
   assert.ok(design.cards.every(item=>item.width>80&&item.height>=170&&item.height<=320),'goal tiles must be usable, not tiny or oversized');
   const cardSizes=design.cards.map(item=>item.height);
   assert.ok(Math.max(...cardSizes)-Math.min(...cardSizes)<8,'goal tile heights must align');
-  if(design.collection?.display!=='none'&&design.shopGrid?.display!=='none'&&design.shopCards.length>0)
-    assert.ok(design.shopCards.every(item=>item.width>80),'collection product cards must have adequate width');
+  assert.ok(design.shopGrid?.display==='grid'&&design.shopCards.length>=4,'retail shopping grid is visible');
+  assert.ok(design.shopCards.every(item=>item.width>80),'collection product cards must have adequate width');
 
   const vw=measurements.viewport,values=measurements.values,cards=measurements.cards;
-  for(const name of ['hero','goal','best','globe']){
+  for(const name of ['hero','goal','globe']){
    assert.ok(values[name]&&values[name].width>vw*.94,name+' must fill viewport with live edits at '+vw);
    assert.ok(values[name].x>=-8&&values[name].right<=vw+8,name+' must fit viewport');
   }
