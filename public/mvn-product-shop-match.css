@@ -13,3 +13,24 @@ html body.mvn-site-theme.mvn-fitness-product .mvn-launch-primary{background:#D3A
 html body.mvn-site-theme.mvn-fitness-product .mvn-inline-whatsapp{display:block;color:#1C222B!important;margin-top:14px;text-align:center;font-weight:750}
 html body.mvn-site-theme.mvn-fitness-product .header-inner{max-width:1360px}
 @media(max-width:760px){html body.mvn-site-theme.mvn-fitness-product main .grid{grid-template-columns:minmax(0,1fr)!important}html body.mvn-site-theme.mvn-fitness-product main{padding:20px 16px 40px}html body.mvn-site-theme.mvn-fitness-product main .media{min-height:300px;padding:16px}html body.mvn-site-theme.mvn-fitness-product main .media img{height:300px}html body.mvn-site-theme.mvn-fitness-product .mvn-inline-order{padding:16px}}
+/* Use the existing approved Whey/Shop brand header on every featured page. */
+html body.mvn-site-theme.mvn-fitness-product>.top{display:none}
+html body.mvn-site-theme.mvn-fitness-product>header{padding:0 20px}
+html body.mvn-site-theme.mvn-fitness-product .header-inner{display:flex;align-items:center;justify-content:space-between;gap:22px;padding:0 18px}
+html body.mvn-site-theme.mvn-fitness-product .brand-link{display:flex;align-items:center;justify-content:flex-start;flex:0 1 480px;min-width:0;padding:5px 0;gap:10px;text-decoration:none}
+html body.mvn-site-theme.mvn-fitness-product .logo-emblem{display:block;position:relative;width:82px;height:82px;flex:0 0 82px;overflow:hidden}
+html body.mvn-site-theme.mvn-fitness-product .logo-emblem .logo{position:absolute;width:164px;height:82px;max-width:none;max-height:none;left:0;top:0;object-fit:fill}
+html body.mvn-site-theme.mvn-fitness-product .brand-wordmark{display:flex;flex-direction:column;justify-content:center;white-space:nowrap;font-family:Georgia,serif;line-height:1.05;letter-spacing:.01em}
+html body.mvn-site-theme.mvn-fitness-product .brand-wordmark strong{font-size:clamp(18px,2.3vw,30px);font-weight:700}
+html body.mvn-site-theme.mvn-fitness-product .brand-wordmark span{font-size:clamp(17px,2.1vw,27px)}
+@media(max-width:700px){
+ html body.mvn-site-theme.mvn-fitness-product>header{padding:0}
+ html body.mvn-site-theme.mvn-fitness-product .header-inner{flex-direction:column;align-items:stretch;gap:0;padding:0}
+ html body.mvn-site-theme.mvn-fitness-product .brand-link{flex:none;width:100%;height:90px;padding:4px 16px;gap:10px;box-sizing:border-box}
+ html body.mvn-site-theme.mvn-fitness-product .logo-emblem{width:78px;height:78px;flex:0 0 78px}
+ html body.mvn-site-theme.mvn-fitness-product .logo-emblem .logo{width:156px;height:78px}
+ html body.mvn-site-theme.mvn-fitness-product .brand-wordmark strong{font-size:clamp(19px,5.4vw,28px)}
+ html body.mvn-site-theme.mvn-fitness-product .brand-wordmark span{font-size:clamp(18px,5vw,26px)}
+ html body.mvn-site-theme.mvn-fitness-product>header nav{width:100%;justify-content:space-around;gap:8px;padding:13px 10px;border-top:1px solid #151515}
+ html body.mvn-site-theme.mvn-fitness-product>header nav a{font-size:14px}
+}
