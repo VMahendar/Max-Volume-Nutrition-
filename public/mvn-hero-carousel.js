@@ -9,6 +9,10 @@
  const root=el('div','mvn-campaign-carousel');root.setAttribute('role','region');root.setAttribute('aria-roledescription','carousel');root.setAttribute('aria-label','Featured supplement collections');root.tabIndex=0;
  const viewport=el('div','mvn-campaign-viewport'),slides=[],dots=[];
  config.slides.forEach((item,i)=>{
+  // Preserve saved owner layouts while making the upcoming brand status explicit.
+  if(item.images.some(photo=>photo.src.includes('globtech-'))){
+   item={...item,eyebrow:item.eyebrow.replace(/\s*·\s*COMING SOON$/i,'')+' · COMING SOON',description:item.description.replace(/Ask our team for price and availability\./i,'Coming soon. Prices and order availability will be announced at launch.')};
+  }
   const slide=el('article','mvn-campaign-slide');slide.setAttribute('role','group');slide.setAttribute('aria-roledescription','slide');slide.setAttribute('aria-label',`${i+1} of ${config.slides.length}: ${item.name}`);
   const copy=el('div','mvn-campaign-copy');copy.append(el('span','mvn-campaign-eyebrow',item.eyebrow));
   const title=el('h1','mvn-campaign-title');title.append(document.createTextNode(item.title),el('em','',item.highlight));copy.append(title,el('p','mvn-campaign-description',item.description));
@@ -27,7 +31,11 @@
  const previous=el('button','mvn-campaign-arrow','←');previous.type='button';previous.setAttribute('aria-label','Previous banner');
  const next=el('button','mvn-campaign-arrow','→');next.type='button';next.setAttribute('aria-label','Next banner');
  const pages=el('div','mvn-campaign-dots');pages.setAttribute('role','group');pages.setAttribute('aria-label','Choose banner');
- config.slides.forEach((item,i)=>{const dot=el('button','mvn-campaign-dot');dot.type='button';dot.setAttribute('aria-label',`Show banner ${i+1}: ${item.name}`);dot.addEventListener('click',()=>show(i,true));dots.push(dot);pages.append(dot);});
+ config.slides.forEach((item,i)=>{
+  // Preserve saved owner layouts while making the upcoming brand status explicit.
+  if(item.images.some(photo=>photo.src.includes('globtech-'))){
+   item={...item,eyebrow:item.eyebrow.replace(/\s*·\s*COMING SOON$/i,'')+' · COMING SOON',description:item.description.replace(/Ask our team for price and availability\./i,'Coming soon. Prices and order availability will be announced at launch.')};
+  }const dot=el('button','mvn-campaign-dot');dot.type='button';dot.setAttribute('aria-label',`Show banner ${i+1}: ${item.name}`);dot.addEventListener('click',()=>show(i,true));dots.push(dot);pages.append(dot);});
  const counter=el('span','mvn-campaign-counter'),pause=el('button','mvn-campaign-pause');pause.type='button';
  const status=el('span','mvn-campaign-status');status.setAttribute('aria-live','polite');status.setAttribute('aria-atomic','true');
  controls.append(previous,pages,next,counter,pause,status);root.append(viewport,controls);hero.append(root);hero.dataset.carouselReady='true';hero.removeAttribute('aria-labelledby');

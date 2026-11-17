@@ -32,7 +32,7 @@ try{
   for(const path of ['potency-whey.html','nitro-mass.html','sturdy-pre-workout.html','pro-creatine.html']){
    await page.goto(origin+'/'+path,{waitUntil:'networkidle'});
    await page.locator('[data-mvn-product-order]').waitFor({state:'visible'});
-   await page.waitForFunction(()=>{const img=document.querySelector('main .media img');return img?.complete&&img.naturalWidth>0;});
+   await page.waitForFunction(()=>{const images=[...document.querySelectorAll('main .media img, main .nitro-pack-choose img')];return images.length>0&&images.every(img=>img.complete&&img.naturalWidth>0);});
    assert.ok(await page.locator('[data-order-field="price"]').innerText());
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);assert.ok(overflow<=2,path+' overflow at '+width+': '+overflow);
    await page.screenshot({path:'reports/visual-qa/completion-'+path.replace('.html','')+'-'+width+'.png',fullPage:false});
@@ -48,6 +48,8 @@ try{
   await page.goto(origin+'/shop.html?brand=globtech',{waitUntil:'networkidle'});
   assert.match(await page.locator('#grid').innerText(),/Coming soon/i);
   assert.equal(await page.locator('#grid .card .add:visible').count(),0,'upcoming packs cannot enter cart');
+  await page.locator('#grid .card .photo img').last().scrollIntoViewIfNeeded();
+  await page.waitForFunction(()=>[...document.querySelectorAll('#grid .card .photo img')].every(x=>x.complete&&x.naturalWidth>0));
   const packPhotos=await page.locator('#grid .card .photo img').evaluateAll(images=>images.map(x=>({src:x.getAttribute('src'),ok:x.complete&&x.naturalWidth>0})));
   assert.ok(packPhotos.length>=4&&packPhotos.every(x=>x.ok),'Globe-Tech official photos load');
   assert.deepEqual(errors,[],'browser JS errors');observations.push({width,products:4,cart:'persisted',globtech:'coming soon'});await page.close();

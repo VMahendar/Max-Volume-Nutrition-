@@ -283,3 +283,32 @@ test('retail storefront checkout keeps retail prices for an approved dealer and 
  const overview=await dealer('/api/retail/catalog');assert.equal(overview.body.products[0].variants[0].prices,undefined);
  }finally{await f.close();}
 });
+
+test('all registered accounts and signed-in enquiries are visible only to their owner and administrators',async()=>{
+ const f=await fixture({PAYMENTS_ENABLED:'false'});
+ try{
+  const buyer=f.client(),other=f.client(),owner=f.client(),guest=f.client();
+  assert.equal((await guest('/api/admin/customers')).status,401);
+  await buyer('/api/register',{name:'Directory Buyer',email:'directory-buyer@example.test',password});
+  const buyerId=(await buyer('/api/session')).body.user.id;
+  await other('/api/register',{name:'Other Buyer',email:'directory-other@example.test',password});
+  assert.equal((await buyer('/api/admin/customers')).status,403);
+  await buyer('/api/logout',{});await buyer('/api/login',{email:'directory-buyer@example.test',password});
+  const enquiry={requestKey:randomUUID(),kind:'retail',name:'Directory Buyer',phone:'9876543210',city:'Chennai',state:'Tamil Nadu',address:'QA Street',pincode:'603103',items:[{variantId:'a',quantity:1}],acknowledgeStorage:true,userId:'forged-user-id'};
+  const saved=await buyer('/api/enquiries',enquiry);assert.equal(saved.status,201,JSON.stringify(saved.body));
+  assert.equal((await buyer('/api/enquiries',enquiry)).body.id,saved.body.id);
+  assert.equal((await buyer('/api/me/enquiries')).body.enquiries.length,1);
+  assert.equal((await other('/api/me/enquiries')).body.enquiries.length,0);
+  assert.equal((await guest('/api/me/enquiries')).status,401);
+  await owner('/api/register',{name:'Directory Admin',email:'directory-owner@example.test',password});
+  f.db.prepare("UPDATE users SET role='admin' WHERE email='directory-owner@example.test'").run();
+  const directory=await owner('/api/admin/customers?search=directory-buyer');assert.equal(directory.status,200);assert.equal(directory.body.total,1);
+  const record=directory.body.customers[0];assert.equal(record.id,buyerId);assert.ok(record.lastLogin);assert.equal(record.enquiryCount,1);assert.equal(record.password,undefined);
+  assert.equal((await owner('/api/admin/customer?id='+buyerId)).body.enquiries[0].id,saved.body.id);
+  assert.equal((await buyer('/api/admin/customer?id='+buyerId)).status,403);
+  assert.equal((await guest('/api/admin/store-health')).status,401);
+  const health=await owner('/api/admin/store-health');assert.equal(health.status,200);assert.equal(health.body.alerts.enabled,false);
+  assert.equal(f.db.prepare('SELECT COUNT(*) count FROM order_alerts').get().count,2,'one owner alert per channel despite retry');
+  assert.equal(f.db.prepare('SELECT COUNT(*) count FROM marketing_preferences WHERE consented_at IS NOT NULL').get().count,0);
+ }finally{await f.close();}
+});
