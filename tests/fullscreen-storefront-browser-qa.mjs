@@ -41,6 +41,11 @@ try{
   }
   assert.ok(boxes.goalCards.length>=4,'shop by goal cards should be present');
   assert.ok(await page.locator('#shop #grid .card:visible').count()>=4,'catalogue products must be visible');
+  await page.locator('#shop').scrollIntoViewIfNeeded();
+  await page.locator('#shop #grid img').evaluateAll(imgs=>imgs.forEach(img=>img.loading='eager'));
+  await page.waitForFunction(()=>[...document.querySelectorAll('#shop #grid img')].every(img=>img.complete),null,{timeout:15000});
+  const cardPhotos=await page.locator('#shop #grid img').evaluateAll(imgs=>imgs.map(img=>({src:img.getAttribute('src'),width:img.naturalWidth})));
+  assert.ok(cardPhotos.length>=4&&cardPhotos.every(img=>img.width>0),'catalogue must load genuine product photographs: '+JSON.stringify(cardPhotos));
   const imgs=await page.locator('.mvn-theme-shop-goals .goal-main').evaluateAll(list=>list.map(i=>i.complete&&i.naturalWidth>0&&i.getBoundingClientRect().width>40));
   assert.ok(imgs.length>=3&&imgs.every(Boolean),'goal product photographs must load and be visible');
   const flow=await page.evaluate(()=>({shopBottom:document.querySelector('#shop').getBoundingClientRect().bottom,footerTop:document.querySelector('.mvn-home-contact').getBoundingClientRect().top}));
