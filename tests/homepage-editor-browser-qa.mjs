@@ -58,6 +58,8 @@ try{
  assert.ok(fullWidthMetrics.width>=fullWidthMetrics.viewport*.98&&fullWidthMetrics.x>=-20&&fullWidthMetrics.right<=fullWidthMetrics.viewport+20,'full-width preview fits its viewport');
  const iframe=page.frameLocator('#preview');
  const imgDrag=iframe.locator('.mvn-owner-banner-img');
+ // Hover waits for the editor's smooth section scrolling to settle before sampling drag coordinates.
+ await imgDrag.hover();
  const initial=await imgDrag.boundingBox();
  assert.ok(initial&&initial.width>100,'banner visible for drag');
  await page.mouse.move(initial.x+initial.width*.50,initial.y+initial.height*.50);
@@ -66,6 +68,7 @@ try{
  assert.ok(Number(await page.locator('#field-bannerX').inputValue())!==0,'direct drag changes banner X control');
  const handle=iframe.locator('#mvn-drag-handle');
  await handle.waitFor({state:'visible',timeout:15000});
+ await handle.hover({position:{x:10,y:10}});
  const corner=await handle.boundingBox();
  assert.ok(corner,'resize handle is visible');
  await page.mouse.move(corner.x+10,corner.y+10);await page.mouse.down();
