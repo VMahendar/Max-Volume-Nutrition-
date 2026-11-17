@@ -24,7 +24,7 @@ try{
   page.on('pageerror',e=>failures.push(e.message));
   assert.equal((await page.goto(origin+'/',{waitUntil:'networkidle'})).status(),200);
   const boxes=await page.evaluate(()=>{
-   const selectors={header:'.storehead',hero:'#mvnEditorial',goal:'.mvn-theme-shop-goals',best:'.mvn-preview-best',globe:'.mvn-globtech-launch'};
+   const selectors={header:'.storehead',hero:'#mvnEditorial',goal:'.mvn-theme-shop-goals',globe:'.mvn-globtech-launch',shop:'#shop',footer:'.mvn-home-contact'};
    const width=document.documentElement.clientWidth;
    return {width,sections:Object.fromEntries(Object.entries(selectors).map(([key,selector])=>{
     const node=document.querySelector(selector);const rect=node?.getBoundingClientRect();
@@ -36,10 +36,15 @@ try{
   console.log('MVN_FULLSCREEN_METRICS',viewport.width,JSON.stringify(boxes));
   for(const [name,b] of Object.entries(boxes.sections)){
    assert.ok(b,name+' must exist at '+viewport.width);
-   assert.ok(b.width>=boxes.width*(viewport.width<600?.92:.94),name+' must span screen ('+JSON.stringify(b)+')');
+   assert.ok(b.width>=Math.min(boxes.width*(viewport.width<600?.92:.94),1400),name+' must span screen ('+JSON.stringify(b)+')');
    assert.ok(b.left>=-12&&b.right<=boxes.width+14,name+' must fit screen, not overflow');
   }
   assert.ok(boxes.goalCards.length>=4,'shop by goal cards should be present');
+  assert.ok(await page.locator('#shop #grid .card:visible').count()>=4,'catalogue products must be visible');
+  const imgs=await page.locator('.mvn-theme-shop-goals .goal-main').evaluateAll(list=>list.map(i=>i.complete&&i.naturalWidth>0&&i.getBoundingClientRect().width>40));
+  assert.ok(imgs.length>=3&&imgs.every(Boolean),'goal product photographs must load and be visible');
+  const flow=await page.evaluate(()=>({shopBottom:document.querySelector('#shop').getBoundingClientRect().bottom,footerTop:document.querySelector('.mvn-home-contact').getBoundingClientRect().top}));
+  assert.ok(flow.footerTop>=flow.shopBottom-4,'footer must follow the product grid');
   for(let i=0;i<boxes.goalCards.length;i++)for(let j=i+1;j<boxes.goalCards.length;j++){
    const a=boxes.goalCards[i],b=boxes.goalCards[j];
    const overlap=Math.min(a.right,b.right)-Math.max(a.left,b.left)>6&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>6;
