@@ -76,6 +76,9 @@ try{
   assert.equal(design.header?.bg,dark,'header must be one charcoal colour');
   assert.equal(design.actions?.bg,dark,'header actions must not create a grey strip');
   assert.equal(design.footer?.bg,dark,'footer must match header');
+  assert.ok(values.best?.width>measurements.viewport*.94,'Best Sellers visible as one full-width collection');
+  assert.ok(values.globe?.height<500,'Globe-Tech should not have a giant empty gap');
+  assert.equal(design.collection?.display,'none','do not repeat full shop catalogue on homepage');
   assert.equal(design.globe?.bg,dark,'Globe-Tech and footer must be a continuous colour');
   assert.equal(design.goals?.bg,light,'shop-by-goal background must be consistent neutral white');
   if(design.collection?.display!=='none')assert.equal(design.collection?.bg,light,'collection must match shop-by-goal surface');
