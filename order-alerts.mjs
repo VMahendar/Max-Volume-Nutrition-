@@ -6,7 +6,7 @@ export function initializeOrderAlerts(C){
   UNIQUE(lead_id,channel));`);
 }
 export function orderAlertReadiness(env=process.env){
- const active=env.STAGING_MODE!=='true'&&env.ORDER_ALERTS_ENABLED==='true';
+ const active=env.NODE_ENV==='production'&&env.STAGING_MODE!=='true'&&env.ORDER_ALERTS_ENABLED==='true';
  const requirements={email:['RESEND_API_KEY','ORDER_ALERT_FROM','ORDER_ALERT_EMAIL'],whatsapp:['WHATSAPP_ACCESS_TOKEN','WHATSAPP_PHONE_NUMBER_ID','WHATSAPP_GRAPH_VERSION','ORDER_ALERT_WHATSAPP_TO','ORDER_ALERT_WHATSAPP_TEMPLATE','WHATSAPP_TEMPLATE_LANGUAGE']};
  return {enabled:active,channels:Object.fromEntries(Object.entries(requirements).map(([channel,keys])=>[channel,{ready:active&&keys.every(k=>Boolean(env[k])),missing:keys.filter(k=>!env[k])}]))};
 }

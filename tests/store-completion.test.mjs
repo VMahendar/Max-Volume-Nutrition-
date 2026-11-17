@@ -42,7 +42,7 @@ test('downloaded backup restores and checks store tables without replacing live 
 
 test('owner alerts queue once, respect setup and never resend uncertain outcomes',async()=>{
  const dir=mkdtempSync(join(tmpdir(),'mvn-alert-')),C=openCommerce(dir);initializeOrderAlerts(C);
- const env={ORDER_ALERTS_ENABLED:'true',RESEND_API_KEY:'fixture',ORDER_ALERT_FROM:'store@example.test',ORDER_ALERT_EMAIL:'owner@example.test'};
+ const env={NODE_ENV:'production',ORDER_ALERTS_ENABLED:'true',RESEND_API_KEY:'fixture',ORDER_ALERT_FROM:'store@example.test',ORDER_ALERT_EMAIL:'owner@example.test'};
  try{
   const lead={id:'MVN-LEAD-FIXTURE'};enqueueOrderAlert(C,lead,{});enqueueOrderAlert(C,{...lead,alreadyRecorded:true},{});
   assert.equal(C.db.prepare('SELECT COUNT(*) n FROM order_alerts').get().n,2);

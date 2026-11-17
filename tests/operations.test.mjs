@@ -285,7 +285,7 @@ test('retail storefront checkout keeps retail prices for an approved dealer and 
 });
 
 test('all registered accounts and signed-in enquiries are visible only to their owner and administrators',async()=>{
- const f=await fixture({PAYMENTS_ENABLED:'false'});
+ const f=await fixture({PAYMENTS_ENABLED:'false',ORDER_ALERTS_ENABLED:'false'});
  try{
   const buyer=f.client(),other=f.client(),owner=f.client(),guest=f.client();
   assert.equal((await guest('/api/admin/customers')).status,401);
