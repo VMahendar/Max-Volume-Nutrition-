@@ -176,6 +176,8 @@
     'object-fit':'contain',transform:'none',top:'auto',bottom:'auto'
   });
   rules('.mvn-preview-best',{display:'none',height:'0','min-height':'0'});
+  rules('.mvn-home-contact',{background:'#171b1f',color:'#fff'});
+  rules('.mvn-globtech-launch',{background:'#171b1f',color:'#fff'});
   // Correct existing sections only. The approved hero/banner markup and its
   // authored image/crop settings are deliberately left untouched.
   rules('.storehead',{
