@@ -155,6 +155,7 @@
   });
   rules('.mvn-globtech-launch > div',{
    transform:'none',position:'relative',inset:'auto',
+   flex:'0 1 auto','flex-basis':'auto','min-height':'0',
    width:'auto',height:'auto','max-width':'900px',
    'max-height':'none',margin:'0',padding:'0',opacity:'1','font-size':'14px'
   });
@@ -167,7 +168,12 @@
   // Owner-approved customer homepage layout: normalize persisted visual-builder
   // geometry without altering saved drafts or the visual editor itself.
   // Runs after published overrides; transactional controls remain untouched.
-  rules('.mvn-preview-best',{display:'none',height:'0','min-height':'0',overflow:'hidden'});
+  rules('.mvn-preview-best',{
+    display:'block',height:'auto','min-height':'0','max-height':'none',
+    overflow:'visible',transform:'none',width:'100%',margin:'0',
+    padding:desktop?'34px clamp(20px,4vw,56px) 48px':'24px 14px 34px',
+    background:'#f6f6f4',color:'#17191b'
+  });
   rules('body > section.hero',{display:'none'});
   rules('body > section.benefits',{display:'none'});
   rules('.mvn-theme-main-nav',{display:'none'});
@@ -313,7 +319,7 @@
   // Restore the actual retail shopping grid above the footer. It must never
   // disappear because a previous owner drag/resize saved display or geometry.
   rules('#shop',{
-    display:'block',position:'relative',visibility:'visible',opacity:'1',
+    display:'none',position:'relative',visibility:'hidden',opacity:'0',
     width:'100%','max-width':'1440px',height:'auto','min-height':'0',
     'max-height':'none',overflow:'visible',transform:'none',
     margin:'0 auto',padding:desktop?'42px 36px 56px':'28px 12px 38px',
@@ -421,6 +427,35 @@
       set(lbl,'font-size',lbl.tagName==='STRONG'?(desktop?'clamp(14px,1.3vw,19px)':'13px'):'12px');
     }
   }
+  // Best Sellers is the single product collection on the homepage.
+  // Restore its four clear cards instead of a repeated full catalogue.
+  rules('.mvn-preview-best',{
+    display:'block',width:'100%',height:'auto','max-width':'none',
+    padding:desktop?'34px clamp(20px,4vw,56px) 48px':'24px 14px 34px',
+    background:LIGHT,'background-color':LIGHT,'background-image':'none',
+    margin:'0',transform:'none',overflow:'visible'
+  });
+  rules('.mvn-preview-best .mvn-preview-best-grid',{
+    display:'grid',width:'100%','max-width':'1440px',
+    margin:'0 auto',height:'auto',gap:desktop?'clamp(12px,1.5vw,20px)':'10px',
+    'grid-template-columns':desktop?'repeat(4,minmax(0,1fr))':'repeat(2,minmax(0,1fr))'
+  });
+  for(const product of document.querySelectorAll('.mvn-preview-best-grid > a')){
+    for(const [k,v] of Object.entries({
+      display:'flex','flex-direction':'column','justify-content':'flex-start',
+      width:'100%',height:'auto','min-height':'0','max-width':'none',
+      margin:'0',padding:desktop?'14px':'10px',
+      transform:'none',position:'relative',inset:'auto',
+      border:'1px solid #dedfdf','border-radius':'8px',
+      background:'#fff',color:TEXT,gap:'8px','box-shadow':'none'
+    }))set(product,k,v);
+    const img=product.querySelector('img');
+    if(img)for(const [key,value] of Object.entries({
+      width:'100%',height:desktop?'clamp(150px,18vw,260px)':'clamp(115px,32vw,165px)',
+      'max-width':'100%','max-height':'none','object-fit':'contain',
+      position:'static',transform:'none',margin:'0',padding:'0',background:'#fff'
+    }))set(img,key,value);
+  }
   // A single light collection surface: eliminate arbitrary grey gutters.
   rules('#shop',{
     background:LIGHT,'background-color':LIGHT,'background-image':'none',
@@ -446,6 +481,7 @@
   rules('.mvn-globtech-launch',{
     background:DARK,'background-color':DARK,'background-image':'none',
     color:'#f6f6f6',margin:'0',padding:desktop?'34px clamp(20px,4vw,56px)':'26px 16px',
+    'min-height':'0','max-height':'none','justify-content':'center',
     'border-top':'1px solid #292c2f','border-bottom':'0'
   });
   rules('.mvn-home-contact',{
