@@ -5,12 +5,21 @@
   const image = document.querySelector('main .grid .media img');
   const primaryPhoto = image?.getAttribute('src');
   const photoCaption = document.querySelector('main .grid .media > small');
+  const primaryCaption = photoCaption?.textContent;
+  const productHeading = document.querySelector('main h1');
+  const pendingPhoto = image ? document.createElement('p') : null;
+  if (pendingPhoto) {
+    pendingPhoto.className = 'mvn-pending-pack-photo';
+    pendingPhoto.hidden = true;
+    image.after(pendingPhoto);
+  }
   const format = new Intl.NumberFormat('en-IN', {style:'currency',currency:'INR',minimumFractionDigits:0,maximumFractionDigits:2});
   const money = paise => format.format(paise / 100);
   const orderKey = 'mvn-inline-order-v1';
   let quantity = 1;
   let selected;
   let productName = root.dataset.productName;
+  let productBrand = '';
   let variants = [];
 
   function packInfo(variant) {
@@ -49,7 +58,16 @@
         image.alt = `${productName} · ${selected.label}`;
       }
       fields.photoNote.hidden = Boolean(photo);
-      if (photoCaption) photoCaption.hidden = selected.id !== root.dataset.primaryVariant;
+      image.closest('.media')?.classList.toggle('has-pending-pack-photo', !photo);
+      pendingPhoto.hidden = Boolean(photo);
+      pendingPhoto.textContent = `${productName} · ${selected.label}\nExact pack photo pending.`;
+      if (photoCaption) {
+        photoCaption.hidden = !photo;
+        photoCaption.textContent = selected.id === root.dataset.primaryVariant ? primaryCaption : `${productName} · ${selected.label}`;
+      }
+      if (root.dataset.mvnProductOrder === 'potency-whey' && productHeading) {
+        productHeading.textContent = `${productBrand ? productBrand + ' ' : ''}${productName} – ${selected.label}`;
+      }
     }
     for (const card of document.querySelectorAll('.nitro-pack-card')) {
       const active = card.id === 'nitro-' + selected.id.replace(/^mass-/, '');
@@ -100,6 +118,7 @@
     variants = (product?.variants || []).filter(v => typeof v.id === 'string' && Number.isSafeInteger(v.pricePaise) && v.pricePaise > 0).map(packInfo);
     if (!variants.length) return;
     if (typeof product.name === 'string' && product.name.trim()) productName = product.name;
+    if (typeof product.brand === 'string') productBrand = product.brand;
     const pack = new URLSearchParams(location.search).get('pack');
     selected = (pack && variants.find(v => v.id === 'mass-' + pack)) || variants.find(v => v.id === root.dataset.primaryVariant) || variants[0];
     const sizes = [...new Map(variants.map(v => [v.size, v])).values()];

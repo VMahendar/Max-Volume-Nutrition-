@@ -34,3 +34,8 @@ html body.mvn-site-theme.mvn-fitness-product .brand-wordmark span{font-size:clam
  html body.mvn-site-theme.mvn-fitness-product>header nav{width:100%;justify-content:space-around;gap:8px;padding:13px 10px;border-top:1px solid #151515}
  html body.mvn-site-theme.mvn-fitness-product>header nav a{font-size:14px}
 }
+
+/* Keep unavailable variant photography explicit without a stale flavour caption. */
+html body.mvn-site-theme.mvn-fitness-product main .media :is(img,small,p)[hidden]{display:none!important}
+html body.mvn-site-theme.mvn-fitness-product main .media.has-pending-pack-photo{display:flex;align-items:center;justify-content:center;min-height:240px!important}
+html body.mvn-site-theme.mvn-fitness-product .mvn-pending-pack-photo{margin:0;padding:28px 16px;text-align:center;white-space:pre-line;font:600 15px/1.7 Arial,sans-serif;color:#47515a}
