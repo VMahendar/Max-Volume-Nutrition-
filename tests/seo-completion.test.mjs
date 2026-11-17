@@ -49,6 +49,7 @@ test('offers contain no unverified promotion and sitemap freshness is truthful',
  assert.ok(offers.includes('wholesale enquiries'));
  const sitemap=read('sitemap.xml');
  for(const path of ['shop.html','dealer.html','nitro-mass.html','pro-creatine.html','sturdy-pre-workout.html','musclevite-multivitamin.html','offers.html']){
-  assert.ok(sitemap.includes('<loc>https://maxvolumenutriton.shop/'+path+'</loc><lastmod>2026-11-15</lastmod>'),path);
+  const updated=['shop.html','nitro-mass.html','pro-creatine.html','sturdy-pre-workout.html'].includes(path)?'2026-11-17':'2026-11-15';
+  assert.ok(sitemap.includes('<loc>https://maxvolumenutriton.shop/'+path+'</loc><lastmod>'+updated+'</lastmod>'),path);
  }
 });

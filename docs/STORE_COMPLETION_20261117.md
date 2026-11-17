@@ -27,3 +27,9 @@ Alerts contain only the enquiry reference and owner-dashboard link. They do not 
 - An actual downloaded production file still needs its isolated restore verification using the owner's authenticated Store health screen. Unit tests of recovery mechanics do not establish production disaster recovery.
 - Google Search Console: homepage and Potency Whey submitted/indexed; Nitro Mass and Pro Creatine discovered but not indexed; Sturdy Pre-Workout crawled but not indexed. All three are already in the sitemap. Inspection reads Google's existing state and does not submit an indexing request or guarantee ranking.
 - Payment and automated shipping remain disabled. Existing stock quantities, trade prices, business settings and owner credentials are preserved.
+
+## Acceptance
+
+- Source validation and 174 unit/integration tests pass.
+- Isolated Chromium acceptance passes at 390 px and 1440 px: all four product pages, original pack images and flavour switching, five-slide carousel, responsive Best Sellers, persistent cart, Coming Soon catalogue, customer registration/login and account-linked enquiries, admin access controls/directory, wholesale approval and owner banner editor.
+- The sitemap records 17 November only for pages changed in this release. Search indexing remains Google's external decision.
