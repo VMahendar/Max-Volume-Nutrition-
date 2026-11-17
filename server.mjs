@@ -1,4 +1,5 @@
 import './deploy/prepare-product-media.mjs';
+import {defaultCarousel,validateCarousel} from './homepage-carousel.mjs';
 import {validateHomepageDesign,homepageOrder} from './homepage-design.mjs';
 import {validateVisualBuilder,canonicalBuilderPage} from './site-builder.mjs';
 import {startLocalBackupScheduler} from './deploy/local-backups.mjs';
@@ -155,6 +156,7 @@ if(u.searchParams.get('visual_builder')==='1'){
  res.setHeader('Content-Security-Policy',String(res.getHeader('Content-Security-Policy')).replace("frame-ancestors 'none'","frame-ancestors 'self'"));
  res.setHeader('X-Robots-Tag','noindex,nofollow,noarchive');
 }
+if(['/', '/index.html'].includes(u.pathname)&&u.searchParams.get('carousel_preview')==='1'){admin(C.session(req));res.setHeader('X-Robots-Tag','noindex,nofollow,noarchive');}
 if(['/', '/index.html'].includes(u.pathname)&&u.searchParams.get('homepage_editor')==='1'){
  admin(C.session(req));
  res.setHeader('X-Frame-Options','SAMEORIGIN');
@@ -189,6 +191,7 @@ if(path==='/api/promotion-quote'&&req.method==='POST'){
  if(C.pricingTier(user)!=='retail')fail(403,'These offers are for retail customers. Wholesale and gym quotations have separate prices and trade schemes.');
  const b=JSON.parse(await body(req));try{return json(res,200,campaignQuote({campaigns:C.setting('campaigns'),products:C.catalogue(null),items:b.items,code:b.code,surface:b.surface}));}catch(error){fail(400,error.message);}
 }
+if(path==='/api/homepage-carousel'&&req.method==='GET')return json(res,200,{carousel:C.setting('homepageCarouselPublishedV1')||defaultCarousel});
 if(path==='/api/retail/catalog'&&req.method==='GET')return json(res,200,{products:C.catalogue(null),tier:'retail',paymentReady:!!enabled()});
 if(path==='/api/dealer/catalog'&&req.method==='GET'){requireUser(user);if(C.pricingTier(user)==='retail')fail(403,'Dealer approval is required.');return json(res,200,{products:C.catalogue(user),tier:C.pricingTier(user)});}
 if(path==='/api/session'&&req.method==='GET')return json(res,200,{user:C.safeUser(user)});
@@ -352,6 +355,23 @@ if(path==='/api/admin/visual-builder'){
   C.audit(user.id,'visual-builder.'+payload.action,activePage,{count:(design.pages[activePage]||[]).length});
  });
  return json(res,200,{ok:true,action:payload.action,page:activePage,design,revision});
+}
+if(path==='/api/admin/homepage-carousel'){
+ if(req.method==='GET')return json(res,200,{draft:C.setting('homepageCarouselDraftV1'),published:C.setting('homepageCarouselPublishedV1'),defaults:defaultCarousel});
+ if(req.method!=='POST')fail(405,'Method not allowed.');
+ if(!rate('homepage-carousel:'+user.id,24))fail(429,'Too many banner changes. Try again shortly.');
+ const input=JSON.parse(await body(req,40000));
+ if(!['save','publish'].includes(input.action))fail(400,'Choose save or publish.');
+ let carousel;
+ try{carousel=validateCarousel(input.carousel,value=>{
+  if(/^assets\/homepage\/[a-f0-9]{64}\.(?:png|jpg|webp)$/.test(value))return !!db.prepare('SELECT path FROM homepage_images WHERE path=?').get(value);
+  const target=resolve(root,value);return target.startsWith(root+sep)&&existsSync(target)&&realpathSync(target).startsWith(root+sep);
+ });}catch(error){fail(400,error.message);}
+ const published=C.setting('homepageCarouselPublishedV1');
+ if(input.action==='publish'&&(input.baseRevision||null)!==(published?.revision||null))fail(409,'The banners were published in another window. Reload before publishing.');
+ carousel={...carousel,revision:randomUUID(),updatedAt:new Date().toISOString()};
+ C.tx(()=>{C.set('homepageCarouselDraftV1',carousel);if(input.action==='publish')C.set('homepageCarouselPublishedV1',carousel);C.audit(user.id,'homepage-carousel.'+input.action,'homepage',{revision:carousel.revision,count:carousel.slides.length});});
+ return json(res,200,{ok:true,carousel});
 }
 if(path==='/api/admin/homepage-design'){
  if(req.method==='GET')return json(res,200,{draft:C.setting('homepageDraftV2'),published:C.setting('homepagePublishedV2'),empty:{version:2,fields:{},order:homepageOrder}});
@@ -551,8 +571,10 @@ if(!['GET','HEAD'].includes(req.method))fail(405,'Method not allowed.');const pa
 if(['/', '/index.html'].includes(u.pathname)){
  const design=C.setting('homepagePublishedV2');
  const serialized=JSON.stringify(design).replace(/</g,'\\u003c');
+ const carousel=u.searchParams.get('carousel_preview')==='1'?(C.setting('homepageCarouselDraftV1')||C.setting('homepageCarouselPublishedV1')||defaultCarousel):(C.setting('homepageCarouselPublishedV1')||defaultCarousel);
+ const carouselJSON=JSON.stringify(carousel).replace(/</g,'\\u003c');
  const editing=u.searchParams.get('homepage_editor')==='1';
- let html=file.toString('utf8').replace('</body>',`<script type="application/json" id="mvnHomepageDesign">${serialized}</script><script src="/homepage-design.js?v=20261117-featured-2" defer></script></body>`);
+ let html=file.toString('utf8').replace('</body>',`<script type="application/json" id="mvnCarouselState">${carouselJSON}</script><script type="application/json" id="mvnHomepageDesign">${serialized}</script><script src="/homepage-design.js?v=20261117-featured-2" defer></script></body>`);
  if(editing)html=html.replace('<body ','<body data-homepage-editor="true" ');
  file=Buffer.from(html);
 }

@@ -1,6 +1,7 @@
 const previewBadge=document.querySelector('.owner-preview-status');if(previewBadge)document.querySelector('.admin-topbar nav').prepend(previewBadge);
 const $=id=>document.getElementById(id);
 const screens={
+ 'banner-slides':['Banner slides','Manage your homepage slideshow, product photos and headlines.'],
  'my-work':['My Work','Your store change requests, all in one place.'],
  launch:['Launch checklist','Check what is ready for the real payment and delivery launch.'],
  pickup:['Shiprocket & pickup','Register the seller account, set the real pickup location, and verify courier connection.'],

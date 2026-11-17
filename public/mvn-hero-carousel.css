@@ -1,0 +1,53 @@
+/* MVN campaign typography and original-pack studio display. */
+html body.mvn-site-theme #mvnEditorial[data-carousel-ready=true]>.mvn-editorial-layout,
+html body.mvn-site-theme #mvnEditorial[data-carousel-ready=true]>.mvn-editorial-benefits{display:none!important}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-carousel{background:#080808;color:#FFFFFF;width:100%;max-width:1600px;margin:auto;padding:34px max(4.5vw,20px) 18px;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-viewport{min-width:0;touch-action:pan-y}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-slide{display:grid;grid-template-columns:.9fr 1.1fr;gap:48px;align-items:center;min-height:440px;box-sizing:border-box}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-slide[hidden]{display:none!important}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-copy{min-width:0;padding-block:20px}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-eyebrow{display:block;font-size:10px;line-height:1.5;letter-spacing:.17em;font-weight:700;color:#B08B4C;margin-bottom:20px}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-title{font:800 clamp(52px,6.3vw,96px)/.94 MVNDisplay,'Arial Narrow',Arial,sans-serif;letter-spacing:-.02em;color:#FFFFFF;margin:0 0 22px;text-transform:uppercase;overflow-wrap:break-word}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-title em{display:block;font-style:normal;color:#D3AF37}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-description{font:14px/1.75 Arial,Helvetica,sans-serif;color:#F8F7F5;max-width:44ch;margin:0 0 26px}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-cta{display:inline-flex;align-items:center;justify-content:center;min-height:48px;padding:12px 22px;background:#D3AF37;color:#080808;text-decoration:none;font-size:11px;font-weight:800;letter-spacing:.03em;box-sizing:border-box}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-stage{position:relative;display:flex;flex-direction:column;justify-content:center;min-width:0;width:100%;height:410px;overflow:hidden;background:radial-gradient(ellipse at 50% 40%,#FFFFFF,#F8F7F5 75%);border-radius:2px;text-decoration:none;color:#1C222B}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-stage::after{content:'';position:absolute;left:9%;right:9%;height:13px;bottom:44px;background:#1C222B22;border-radius:50%;filter:blur(9px);pointer-events:none}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-products{display:flex;align-items:flex-end;justify-content:center;width:100%;padding:18px 14px 42px;box-sizing:border-box;position:relative;z-index:1}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-pack{position:relative;overflow:hidden;width:36%;max-width:290px;aspect-ratio:1;flex:0 1 auto;min-width:0;mix-blend-mode:multiply}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-pack:first-child{width:44%;max-width:360px;margin-right:-5%;z-index:2}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-products[data-count="2"] .mvn-campaign-pack{width:49%;max-width:330px}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-products[data-count="1"] .mvn-campaign-pack{width:85%;max-width:360px}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-pack>img{position:static;display:block;width:100%;height:100%;object-fit:contain;max-width:none;max-height:none;padding:0;margin:0;filter:drop-shadow(0 8px 7px #0002);background:transparent}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-pack.mvn-campaign-official>img{position:absolute;width:147%;height:auto;left:-23.6%;top:-41%;max-width:none;max-height:none;object-fit:initial;filter:none}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-photo-note{position:absolute;bottom:17px;left:14px;right:14px;text-align:center;font-size:10px;letter-spacing:.17em;font-weight:700;color:#1C222B;z-index:3}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-controls{display:flex;align-items:center;justify-content:flex-end;gap:14px;min-height:54px;margin-top:12px;border-top:1px solid #B08B4C50;padding-top:8px;box-sizing:border-box}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-controls button{color:#FFFFFF;background:transparent;border:0;cursor:pointer;min-height:40px;font-family:Arial,Helvetica,sans-serif}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-arrow{width:40px;font-size:22px}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-dots{display:flex;align-items:center;gap:6px}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-dot{width:28px;padding:0;position:relative}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-dot::after{content:'';display:block;width:20px;height:3px;margin:auto;background:#B08B4C70}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-dot[aria-current=true]::after{background:#D3AF37}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-counter{font-size:10px;letter-spacing:.1em;color:#B08B4C;min-width:48px}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-pause{font-size:11px;min-width:65px;text-align:right;padding:0}
+html body.mvn-site-theme #mvnEditorial .mvn-campaign-status{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+@media(max-width:760px){
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-carousel{padding:26px 20px 10px}
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-slide{grid-template-columns:1fr;gap:22px;min-height:570px;align-content:start}
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-copy{padding:0}
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-eyebrow{font-size:9px;margin-bottom:14px}
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-title{font-size:clamp(46px,12vw,76px);margin-bottom:16px;min-height:100px}
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-description{font-size:12px;line-height:1.65;min-height:60px;margin-bottom:18px}
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-cta{min-height:44px;font-size:10px;padding:12px 18px}
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-stage{height:250px}
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-products{padding:6px 8px 28px}
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-photo-note{bottom:12px;font-size:8px}
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-stage::after{bottom:30px}
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-controls{justify-content:space-between;gap:2px;margin-top:4px;min-height:48px}
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-arrow{width:28px}
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-dot{width:23px}
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-dots{gap:2px}
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-counter{font-size:9px;min-width:42px}
+ html body.mvn-site-theme #mvnEditorial .mvn-campaign-pause{font-size:10px;min-width:54px}
+}
+@media(prefers-reduced-motion:reduce){html body.mvn-site-theme #mvnEditorial .mvn-campaign-slide{animation:none!important;transition:none!important}}
