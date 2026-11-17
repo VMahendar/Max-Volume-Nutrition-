@@ -248,7 +248,7 @@
   rules('#mvnEditorial .mvn-owner-banner-img',{
     display:'block',height:'auto',width:'100%','max-height':'none',
     'object-fit':'contain','object-position':'center',
-    transform:'none',opacity:'1',visibility:'visible'
+    ...(authorZoom?{}:{transform:'none'}),opacity:'1',visibility:'visible'
   });
   rules('.mvn-editorial-promos',{display:'none'});
   rules('.mvn-editorial-benefits',{display:'none'});
