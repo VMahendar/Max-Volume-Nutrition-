@@ -15,7 +15,7 @@
  const screenShell={width:'100%','max-width':'none','min-width':'0','margin-left':'0','margin-right':'0','box-sizing':'border-box',transform:'none'};
  function repair(){
   if(!isPublicHome())return;
-  const desktop=innerWidth>760;
+  const desktop=innerWidth>760 && (screen.width>760 || !('ontouchstart' in window));
   // Keep the storefront structural sections in document flow regardless of
   // past drag offsets, fixed widths and 1px heights. Preserve content and images.
   for(const selector of ['.storehead','#mvnEditorial','.mvn-theme-shop-goals','.mvn-preview-best','.mvn-globtech-launch','.mvn-home-contact']){
