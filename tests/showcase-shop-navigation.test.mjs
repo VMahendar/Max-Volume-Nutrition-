@@ -6,7 +6,7 @@ const shop=readFileSync('public/shop.html','utf8');
 const css=readFileSync('public/mvn-showcase-shop.css','utf8');
 const app=readFileSync('public/app.js','utf8');
 
-test('home presents original supplements once; shopping catalogue opens on a separate URL',()=>{
+test('home preserves approved banner and catalogue; full shop also has separate URL',()=>{
  assert.match(home,/mvn-showcase-home/);
  assert.match(shop,/mvn-full-shop/);
  assert.match(home,/href="shop\.html"/);
@@ -14,7 +14,7 @@ test('home presents original supplements once; shopping catalogue opens on a sep
  assert.match(home,/href="shop\.html\?cat=pre"/);
  assert.match(home,/href="shop\.html\?cat=creatine"/);
  assert.equal((home.match(/SHOP THE COLLECTION/g)||[]).length,1,'no repeated Shop the Collection button');
- assert.match(css,/mvn-showcase-home[^\n]* main#shop/,'homepage visually hides full catalogue');
+ assert.match(css,/main#shop\\{\\s*display:block!important;/,'homepage shows product catalogue below the banner');
  assert.match(css,/mvn-full-shop[^\n]* #shop/,'separate shop displays catalogue');
  assert.doesNotMatch(shop,/id="mvnEditorial"/,'shop does not repeat full group banner');
  assert.doesNotMatch(shop,/mvn-theme-shop-goals/,'shop does not repeat goal cards');
