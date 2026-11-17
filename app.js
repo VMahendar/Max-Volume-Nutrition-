@@ -338,9 +338,34 @@ $("send").disabled=!n;
 document.querySelectorAll("[data-minus]").forEach(b=>b.onclick=()=>{const k=b.dataset.minus;cart[k]-=1;if(cart[k]<=0)delete cart[k];persist()});
 document.querySelectorAll("[data-plus]").forEach(b=>b.onclick=()=>{const k=b.dataset.plus;cart[k]=Math.min(999,cart[k]+1);persist()});
 }
-let bagOpener=null;
-function openBag(){bagOpener=document.activeElement;for(const el of document.body.children){if(!["drawer","shade"].includes(el.id)&&!['SCRIPT','SVG'].includes(el.tagName)){el.dataset.bagInert=String(el.inert);el.inert=true;}}$("shade").hidden=false;$("drawer").classList.add("open");$("drawer").setAttribute("aria-hidden","false");document.body.classList.add("cart-open");$("close").focus()}
-function closeBag(){$("shade").hidden=true;$("drawer").classList.remove("open");$("drawer").setAttribute("aria-hidden","true");document.body.classList.remove("cart-open");document.querySelectorAll("[data-bag-inert]").forEach(el=>{el.inert=el.dataset.bagInert==="true";delete el.dataset.bagInert});(bagOpener?.isConnected?bagOpener:$("bag")).focus()}
+let bagOpener=null,bagCloseTimer;
+function openBag(){
+ const drawer=$("drawer");
+ if(drawer.classList.contains("open"))return;
+ clearTimeout(bagCloseTimer);
+ bagOpener=document.activeElement;
+ for(const el of document.body.children){
+  if(!["drawer","shade"].includes(el.id)&&!['SCRIPT','SVG'].includes(el.tagName)){
+   el.dataset.bagInert=String(el.inert);el.inert=true;
+  }
+ }
+ drawer.hidden=false;drawer.inert=false;drawer.setAttribute("aria-hidden","false");
+ $("shade").hidden=false;
+ // Establish the off-screen position before starting the entrance transition.
+ drawer.getBoundingClientRect();drawer.classList.add("open");
+ document.body.classList.add("cart-open");$("close").focus();
+}
+function closeBag(){
+ const drawer=$("drawer");
+ if(!drawer.classList.contains("open"))return;
+ drawer.classList.remove("open");$("shade").hidden=true;
+ document.body.classList.remove("cart-open");
+ document.querySelectorAll("[data-bag-inert]").forEach(el=>{el.inert=el.dataset.bagInert==="true";delete el.dataset.bagInert});
+ (bagOpener?.isConnected?bagOpener:$("bag")).focus();
+ // Remove all drawer controls from keyboard navigation immediately; let it slide out.
+ drawer.inert=true;drawer.setAttribute("aria-hidden","true");
+ bagCloseTimer=setTimeout(()=>{drawer.hidden=true;},300);
+}
 let retailLeadKey=crypto.randomUUID();
 async function retailEnquiry(){
 let entries=Object.entries(cart).filter(([k])=>getItem(k));if(!entries.length)return;
@@ -430,7 +455,7 @@ if($("clearRecent"))$("clearRecent").onclick=()=>{recent=[];try{localStorage.rem
 document.addEventListener("keydown",e=>{
  if(!$("drawer").classList.contains("open"))return;
  if(e.key==="Escape"){e.preventDefault();closeBag()}
- if(e.key==="Tab"){const controls=[...$("drawer").querySelectorAll('button:not(:disabled),input,a[href],select')].filter(el=>el.getClientRects().length);const first=controls[0],last=controls.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
+ if(e.key==="Tab"){const controls=[...$("drawer").querySelectorAll('button:not(:disabled),input:not(:disabled),textarea:not(:disabled),a[href],select:not(:disabled),[tabindex]:not([tabindex="-1"])')].filter(el=>el.getClientRects().length);const first=controls[0],last=controls.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
 });
 installCategoryShortcuts();render();drawCart();renderRecent();
 refreshRetailPrices().then(changed=>{if(changed){render();drawCart();renderRecent()}}).catch(error=>{if($("priceMessage"))$("priceMessage").textContent=error.message});
