@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 test('screenshot reference maintains a consistent scrolling storefront without duplicated Whey panels',()=>{
  const html=readFileSync('public/index.html','utf8'),css=readFileSync('public/mvn-supplement-store-reference.css','utf8');
- assert.match(html,/mvn-shopping-bundle-20261115\.css\?v=1/);
+ assert.match(html,/mvn-orange-home-20261117\.css\?v=3/);
  assert.match(html,/id="mvnBestSellers">BEST SELLERS/);
  assert.equal((html.match(/class="mvn-home-collection-entry"/g)||[]).length,1);
  assert.equal((html.match(/class="mvn-preview-best-grid"/g)||[]).length,1);
@@ -20,6 +20,6 @@ test('five product families, filters, cart and WhatsApp remain discoverable',()=
  const html=readFileSync('public/index.html','utf8');
  for(const v of ['id="grid"','id="sort"','id="priceRange"','id="collectionTitle"','id="activeFilters"','id="bag"','id="drawer"','id="checkoutFields"','id="send"'])assert.ok(html.includes(v),'retail hook '+v);
  for(const src of ['mvn-hero-whey-cutout-card.webp','sturdy-watermelon-front-card.webp','musclevite-front-20261116.webp'])assert.ok(html.includes(src),'real product imagery '+src);
- assert.match(html,/assets\/mvn-homepage-banner-20261115\.webp/);
+ assert.match(html,/assets\/mvn-orange-lineup-20261117\.webp/);
  assert.match(html,/mvn-creatine-blueberry-official-250g\.webp/,'original Blueberry pack served as optimized same-origin WebP');
 });

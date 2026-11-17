@@ -1,6 +1,8 @@
 'use strict';
 (()=>{
 const editing=document.documentElement.dataset.mvnVisualBuilder==='edit';
+// Retired template offsets must not shrink or displace the replacement homepage.
+const retiredOperations=new Set((document.body.dataset.mvnRetiredOperations||'').split(','));
 let doc;try{doc=JSON.parse(document.getElementById('mvnVisualBuilderConfig')?.textContent||'{"version":1,"pages":{}}');}catch{doc={version:1,pages:{}}}
 const path=location.pathname==='/index.html'?'/':location.pathname;
 const prohibited='form,input,select,textarea,[contenteditable],#cart,#checkout,#payment,#account,[data-price],.price,.product-price,.checkout,.cart-item,[data-cart],script,style,iframe,video,audio,canvas,svg,dialog,[data-mvn-builder-ui]';
@@ -51,6 +53,7 @@ function apply(input){
  if(!layer){layer=document.createElement('div');layer.dataset.mvnBuilderUi='layer';layer.style.cssText='position:absolute;inset:0;width:100%;height:0;z-index:100000;pointer-events:none';document.body.append(layer);}
  const viewport=matchMedia('(max-width:760px)').matches?'mobile':'desktop';
  for(const op of doc.pages?.[path]||[]){
+  if(retiredOperations.has(op.id))continue;
   if(op.device!=='all'&&op.device!==viewport)continue;
   const e=getTarget(op.target);if(!e||isProtected(e))continue;
   if(op.action==='duplicate'&&containsCommerce(e))continue;

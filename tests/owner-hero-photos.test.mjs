@@ -18,7 +18,7 @@ test('original owner photo sources are valid AVIF and cannot become synthetic su
 });
 
 test('homepage banner preserves the owner-uploaded group photograph',()=>{
-  const banner='assets/mvn-homepage-banner-20261115.webp';
+  const banner='assets/mvn-orange-lineup-20261117.webp';
   const file=readFileSync('public/'+banner);
   assert.ok(file.length>100000,'full-resolution product lineup must be shipped');
   assert.equal(file.toString('ascii',0,4),'RIFF','hero is a valid RIFF image');

@@ -4,6 +4,12 @@
 import {readFileSync,writeFileSync,existsSync,mkdirSync} from 'node:fs';
 import {resolve,dirname} from 'node:path';
 const media=[
+ ['data/image-assets/mvn-orange-lineup-20261117-768.webp.b64','public/assets/mvn-orange-lineup-20261117-768.webp'],
+ ['data/image-assets/mvn-orange-whey-20261117.webp.b64','public/assets/mvn-orange-whey-20261117.webp'],
+ ['data/image-assets/mvn-orange-lineup-20261117.webp.b64','public/assets/mvn-orange-lineup-20261117.webp'],
+ ['data/image-assets/mvn-orange-mass-3kg-20261117.webp.b64','public/assets/mvn-orange-mass-3kg-20261117.webp'],
+ ['data/image-assets/mvn-orange-sturdy-20261117.webp.b64','public/assets/mvn-orange-sturdy-20261117.webp'],
+ ['data/image-assets/mvn-orange-creatine-20261117.webp.b64','public/assets/mvn-orange-creatine-20261117.webp'],
  ['data/image-assets/sturdy-watermelon-front.webp.b64','public/assets/sturdy-watermelon-front.webp'],
  ['data/image-assets/sturdy-watermelon-back.webp.b64','public/assets/sturdy-watermelon-back.webp'],
  ['data/image-assets/mvn-pro-plus-isolate-1kg.avif.b64','public/assets/mvn-pro-plus-isolate-1kg.avif'],

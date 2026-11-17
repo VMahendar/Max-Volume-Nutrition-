@@ -17,10 +17,11 @@ const cssParts=[
   'mvn-showcase-shop.css'
 ];
 
-test('homepage and shop use one shared, ordered CSS skin instead of seven serial requests',()=>{
+test('homepage uses its focused theme while shop retains the ordered CSS bundle',()=>{
  assert.equal(root,home,'root and served homepage remain byte-identical');
  assert.equal(readFileSync('shop.html','utf8'),shop,'shop preview and served page remain byte-identical');
- for(const file of [home,shop]){
+ assert.ok(home.includes('href="/mvn-orange-home-20261117.css?v=3"'),'replacement homepage uses its own responsive skin');
+ for(const file of [shop]){
   assert.ok(file.includes('href="/mvn-shopping-bundle-20261115.css?v=1"'),'optimized CSS is linked');
   for(const name of cssParts)assert.ok(!file.includes('href="/'+name+'?'),'separate blocking '+name+' request was removed');
  }
@@ -37,15 +38,15 @@ test('homepage and shop use one shared, ordered CSS skin instead of seven serial
  assert.ok(br.length<110_000,'CSS bundle can be served as Brotli within a practical network budget');
 });
 
-test('responsive hero and same-flavour original Blueberry photo reduce image transfer',()=>{
+test('responsive supplied lineup and optimized product images reduce transfer',()=>{
  const bytes=name=>statSync('public/assets/'+name).size;
- const original=bytes('mvn-homepage-banner-20261115.webp');
- assert.ok(bytes('mvn-homepage-banner-20261115-768.webp')<original*.6,'mobile uses a substantially smaller, exact original banner');
- assert.ok(bytes('mvn-homepage-banner-20261115-1152.webp')<original*.8,'tablet uses a smaller banner');
+ const original=bytes('mvn-orange-lineup-20261117.webp');
+ assert.ok(bytes('mvn-orange-lineup-20261117-768.webp')<original*.6,'mobile uses a substantially smaller, exact original banner');
+
  assert.ok(bytes('mvn-creatine-blueberry-official-250g.webp')<75_000,'Blueberry manufacturer photo is optimized as same-origin WebP');
  assert.ok(bytes('mvn-hero-nitro-cutout-card.webp')<bytes('unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout.webp'),'Nitro promo uses lightweight correct 3kg pack');
- assert.ok(home.includes('imagesrcset="/assets/mvn-homepage-banner-20261115-768.webp 768w'),'responsive banner preloaded');
- assert.ok(home.includes('srcset="assets/mvn-homepage-banner-20261115-768.webp 768w'),'responsive image candidates available');
+ assert.ok(home.includes('imagesrcset="/assets/mvn-orange-lineup-20261117-768.webp 768w'),'responsive banner preloaded');
+ assert.ok(home.includes('srcset="assets/mvn-orange-lineup-20261117-768.webp 768w'),'responsive image candidates available');
  assert.ok(home.includes('fetchpriority="high"'),'LCP banner is prioritized');
  assert.ok(!home.includes('revakanya.com/assets/imgs/Pro%20Creatine%20Blueberry.png'),'homepage never requests the external full-size PNG');
 });

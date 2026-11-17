@@ -31,10 +31,10 @@ test('home presents original supplements once; shopping catalogue opens on a sep
  assert.equal(readFileSync('mvn-showcase-shop.css','utf8'),css);
 });
 
-test('goal photography is grounded and source product packs remain unchanged',()=>{
+test('homepage uses the supplied product lineup and preserves product links',()=>{
  assert.equal((home.match(/class="mvn-preview-best-grid"/g)||[]).length,1,'four authentic best sellers rather than old goal tiles');
  assert.match(home,/class="mvn-preview-best mvn-home-featured"/);
- assert.match(home,/src="assets\/mvn-homepage-banner-20261115\.webp"/);
+ assert.match(home,/src="assets\/mvn-orange-lineup-20261117\.webp"/);
  assert.match(home,/src="assets\/mvn-creatine-blueberry-official-250g\.webp"/,'genuine manufacturer Blueberry pack used in homepage');
  assert.match(home,/src="assets\/sturdy-watermelon-front-card\.webp"/);
  assert.match(css,/\.mvn-theme-goal-art::after/,'grounded floor shadows');
@@ -68,7 +68,7 @@ test('homepage and shop provide compact store links',()=>{
 test('Blueberry and Cranberry images are never mixed',()=>{
  const product=readFileSync('public/pro-creatine.html','utf8');
  const original='assets/mvn-creatine-blueberry-official-250g.webp';
- assert.ok((home.match(/mvn-creatine-blueberry-official-250g\.webp/g)||[]).length>=2,'the homepage featured image and collection popup use original Blueberry pack');
+ assert.ok((home.match(/mvn-orange-creatine-20261117\.webp/g)||[]).length>=2,'homepage featured image and popup use the newly supplied Blueberry pack');
  assert.ok(product.includes(original),'product details use the same official Blueberry pack');
  assert.ok(app.includes(original),'Blueberry retail option uses that pack');
  assert.match(app,/name:"Pro Creatine",cat:"creatine",featuredIndex:0/,'Blueberry is selected first');

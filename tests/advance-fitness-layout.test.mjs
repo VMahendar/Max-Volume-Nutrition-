@@ -5,8 +5,8 @@ import {readFileSync} from 'node:fs';
 test('supplement store screenshot reference drives the actual homepage structure',()=>{
  const html=readFileSync('public/index.html','utf8');
  const css=readFileSync('public/mvn-supplement-store-reference.css','utf8');
- assert.match(html,/mvn-advance-layout mvn-supplement-theme/);
- assert.match(html,/mvn-shopping-bundle-20261115\.css\?v=1/,"approved reference CSS now ships inside one bundle");
+ assert.match(html,/mvn-showcase-home mvn-orange-home/);
+ assert.match(html,/mvn-orange-home-20261117\.css\?v=3/,"new homepage uses the approved black, orange and white skin");
  assert.match(readFileSync("public/mvn-shopping-bundle-20261115.css","utf8"),/mvn-supplement-store-reference\.css/);
  assert.match(html,/class="mvn-theme-categories"/);
  assert.match(html,/class="mvn-theme-main-nav"/);
@@ -19,8 +19,8 @@ test('supplement store screenshot reference drives the actual homepage structure
  assert.equal((html.match(/class="mvn-preview-best-grid"/g)||[]).length,1,"one featured products grid");
  assert.equal((html.match(/<a href="\/(?:potency-whey|pro-creatine|sturdy-pre-workout|nitro-mass)\.html">/g)||[]).length,4,"four original featured supplement links");
  assert.doesNotMatch(html,/class="mvn-advance-welcome"/,'do not insert text-heavy repeat section between goals and catalogue');
- assert.match(html,/assets\/mvn-homepage-banner-20261115\.webp/);
- assert.ok(readFileSync('public/assets/mvn-homepage-banner-20261115.webp').length>100000);
+ assert.match(html,/assets\/mvn-orange-lineup-20261117\.webp/);
+ assert.ok(readFileSync('public/assets/mvn-orange-lineup-20261117.webp').length>100000);
  assert.ok(html.indexOf('<section id="mvnEditorial"')<html.indexOf('class="mvn-preview-best mvn-home-featured"'),'hero before featured cards');
  assert.ok(html.indexOf('class="mvn-preview-best mvn-home-featured"')<html.indexOf('class="mvn-home-collection-entry"'),'best sellers before collection popup');
  assert.match(css,/mvn-editorial-layout\s*\{/,'split-screen campaign layout');
