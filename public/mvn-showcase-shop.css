@@ -247,3 +247,9 @@ body.retail-home.mvn-showcase-home:not(.app-store) .mvn-home-contact{
    display:none!important;
  }
 }
+
+/* Align the footer and Globe-Tech surfaces with the About/Contact charcoal header. */
+body.retail-home.mvn-showcase-home:not(.app-store) > .mvn-globtech-launch,
+body.retail-home.mvn-showcase-home:not(.app-store) > .mvn-home-contact{
+ background:#171b1f!important;color:#fff!important;
+}
