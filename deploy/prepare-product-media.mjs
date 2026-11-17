@@ -4,6 +4,10 @@
 import {readFileSync,writeFileSync,existsSync,mkdirSync} from 'node:fs';
 import {resolve,dirname} from 'node:path';
 const media=[
+ ...Object.entries(JSON.parse(readFileSync(new URL('../data/homepage-responsive-media.json',import.meta.url),'utf8'))).map(([,photo])=>{
+  const compact=photo.srcset.split(' ')[0];
+  return ['data/image-assets/'+compact.replace('assets/','')+'.b64','public/'+compact];
+ }),
  ['data/image-assets/mvn-wide-logo-420-20261118.webp.b64', 'public/assets/mvn-wide-logo-420-20261118.webp'],
  ['data/image-assets/mvn-header-logo-440-20261118.webp.b64', 'public/assets/mvn-header-logo-440-20261118.webp'],
  ['data/image-assets/mvn-certificate-480-20261118.webp.b64', 'public/assets/mvn-certificate-480-20261118.webp'],

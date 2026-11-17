@@ -5,7 +5,8 @@ import {tmpdir} from 'node:os';
 import {join,resolve} from 'node:path';
 import {spawn} from 'node:child_process';
 import {once} from 'node:events';
-import {defaultCarousel,validateCarousel} from '../homepage-carousel.mjs';
+import {defaultCarousel,validateCarousel,carouselMedia,renderInitialCarousel,optimizeHomeAssets} from '../homepage-carousel.mjs';
+import {readFileSync} from 'node:fs';
 import {openCommerce,hash} from '../commerce.mjs';
 
 test('five starter banners use existing original pack photos and safe store links',()=>{
@@ -14,6 +15,23 @@ test('five starter banners use existing original pack photos and safe store link
  assert.ok(config.slides.some(s=>s.id==='force-one'));
  assert.ok(config.slides.some(s=>s.id==='potency-whey'));
  assert.equal(config.intervalMs,6000);
+});
+
+test('first banner is discoverable without script, with escaped text and responsive originals',()=>{
+ const html=readFileSync('public/index.html','utf8');
+ const config=carouselMedia(defaultCarousel);
+ const result=optimizeHomeAssets(renderInitialCarousel(html,config));
+ assert.match(result,/data-server-rendered="true"/);
+ assert.match(result,/data-carousel-ready="true"/);
+ assert.match(result,/mvn-orange-whey-20261117-compact.webp 360w/);
+ assert.match(result,/width="580" height="580"/);
+ assert.match(result,/mvn-home-critical-20261118.css\?v=1/);
+ assert.ok(!result.includes('<link rel="preload" as="image"'),'unused montage is not preloaded');
+ assert.match(result,/<img class="mvn-owner-banner-img"[^>]*loading="lazy"/);
+ assert.equal(renderInitialCarousel(html,{...config,enabled:false}),html,'disabled carousel retains the owner montage');
+ config.slides[0].title='<script>bad</script>';
+ assert.ok(renderInitialCarousel(html,config).includes('&lt;script&gt;bad&lt;/script&gt;'));
+ assert.ok(!renderInitialCarousel(html,config).includes('<script>bad</script>'));
 });
 
 test('carousel rejects unsafe links, untrusted media, duplicate IDs and invalid bounds',()=>{
@@ -43,6 +61,12 @@ test('admin carousel draft stays private, publish persists, stale publishes fail
  try{
   let ready=false;for(let i=0;i<100;i++){try{const r=await request('/api/session');if(r.ok){ready=true;break;}}catch{}await new Promise(r=>setTimeout(r,50));}
   assert.ok(ready,logs);
+  const home=await (await request('/')).text();
+  assert.match(home,/data-server-rendered="true"/,'HTTP HTML contains real initial banner');
+  const editor=await (await request('/?homepage_editor=1')).text();
+  assert.ok(!editor.includes('data-server-rendered="true"'),'editor retains its original editable montage');
+  const css=await request('/mvn-home-critical-20261118.css?v=1');assert.equal(css.status,200);
+  assert.ok((await css.text()).includes('color:#666666!important'),'bundled styles retain the verified caption contrast');
   assert.equal((await request('/api/admin/homepage-carousel',null,false)).status,401);
   assert.equal((await request('/?carousel_preview=1',null,false)).status,401);
   const draft=structuredClone(defaultCarousel);draft.slides[0].title='DRAFT </script><script>untrusted</script>';

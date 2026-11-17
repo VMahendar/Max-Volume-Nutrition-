@@ -14,7 +14,7 @@ const request=async(path)=>{
 };
 const home=await request('/');
 const markup=await home.text();
-assert.match(markup,/mvn-brand-gold-20261117\.css/, 'Current shared brand stylesheet is live');
+assert.match(markup,/mvn-brand-gold-20261117\.css|mvn-home-critical-20261118\.css/, 'Current shared brand stylesheet or its ordered homepage bundle is live');
 assert.match(markup,/mvn-preview-nav/, 'Current storefront navigation is live');
 assert.doesNotMatch(markup,/coming soon placeholder/i,'live home is not a placeholder');
 const indexing=home.headers.get('x-robots-tag')||'';

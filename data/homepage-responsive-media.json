@@ -1,0 +1,52 @@
+{
+  "assets/mvn-orange-whey-20261117.webp": {
+    "width": 580,
+    "height": 580,
+    "srcset": "assets/mvn-orange-whey-20261117-compact.webp 360w, assets/mvn-orange-whey-20261117.webp 580w"
+  },
+  "assets/mvn-orange-sturdy-20261117.webp": {
+    "width": 580,
+    "height": 568,
+    "srcset": "assets/mvn-orange-sturdy-20261117-compact.webp 360w, assets/mvn-orange-sturdy-20261117.webp 580w"
+  },
+  "assets/mvn-orange-creatine-20261117.webp": {
+    "width": 471,
+    "height": 580,
+    "srcset": "assets/mvn-orange-creatine-20261117-compact.webp 360w, assets/mvn-orange-creatine-20261117.webp 471w"
+  },
+  "assets/mvn-orange-mass-3kg-20261117.webp": {
+    "width": 394,
+    "height": 580,
+    "srcset": "assets/mvn-orange-mass-3kg-20261117-compact.webp 360w, assets/mvn-orange-mass-3kg-20261117.webp 394w"
+  },
+  "assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp": {
+    "width": 760,
+    "height": 950,
+    "srcset": "assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout-compact.webp 360w, assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp 760w"
+  },
+  "assets/globtech-force-1-red-official.webp": {
+    "width": 1100,
+    "height": 1182,
+    "srcset": "assets/globtech-force-1-red-official-compact.webp 640w, assets/globtech-force-1-red-official.webp 1100w"
+  },
+  "assets/globtech-crea-pump-official.webp": {
+    "width": 1100,
+    "height": 1182,
+    "srcset": "assets/globtech-crea-pump-official-compact.webp 640w, assets/globtech-crea-pump-official.webp 1100w"
+  },
+  "assets/globtech-f1-2-official.webp": {
+    "width": 1100,
+    "height": 1182,
+    "srcset": "assets/globtech-f1-2-official-compact.webp 640w, assets/globtech-f1-2-official.webp 1100w"
+  },
+  "assets/globtech-amino-lean-edge-official.webp": {
+    "width": 1100,
+    "height": 1182,
+    "srcset": "assets/globtech-amino-lean-edge-official-compact.webp 640w, assets/globtech-amino-lean-edge-official.webp 1100w"
+  },
+  "assets/globtech-creatine-monohydrate-official.webp": {
+    "width": 1100,
+    "height": 1182,
+    "srcset": "assets/globtech-creatine-monohydrate-official-compact.webp 640w, assets/globtech-creatine-monohydrate-official.webp 1100w"
+  }
+}

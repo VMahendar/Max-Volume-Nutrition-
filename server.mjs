@@ -1,6 +1,6 @@
 import {responseSecurity,nonceTemplateScripts} from './security-headers.mjs';
 import './deploy/prepare-product-media.mjs';
-import {defaultCarousel,validateCarousel} from './homepage-carousel.mjs';
+import {defaultCarousel,validateCarousel,carouselMedia,renderInitialCarousel,optimizeHomeAssets} from './homepage-carousel.mjs';
 import {validateHomepageDesign,homepageOrder} from './homepage-design.mjs';
 import {validateVisualBuilder,canonicalBuilderPage} from './site-builder.mjs';
 import {startLocalBackupScheduler} from './deploy/local-backups.mjs';
@@ -624,10 +624,12 @@ if(['/', '/index.html'].includes(u.pathname)){
  const design=C.setting('homepagePublishedV2');
  const serialized=JSON.stringify(design).replace(/</g,'\\u003c');
  const carousel=u.searchParams.get('carousel_preview')==='1'?(C.setting('homepageCarouselDraftV1')||C.setting('homepageCarouselPublishedV1')||defaultCarousel):(C.setting('homepageCarouselPublishedV1')||defaultCarousel);
- const carouselJSON=JSON.stringify(carousel).replace(/</g,'\\u003c');
+ const mediaCarousel=carouselMedia(carousel);
+ const carouselJSON=JSON.stringify(mediaCarousel).replace(/</g,'\\u003c');
  const editing=u.searchParams.get('homepage_editor')==='1';
  let html=file.toString('utf8').replace('</body>',`<script nonce="${scriptNonce}" type="application/json" id="mvnCarouselState">${carouselJSON}</script><script nonce="${scriptNonce}" type="application/json" id="mvnHomepageDesign">${serialized}</script><script nonce="${scriptNonce}" src="/homepage-design.js?v=20261118-editor-1" defer></script></body>`);
  if(editing)html=html.replace('<body ','<body data-homepage-editor="true" ');
+ if(!editing&&u.searchParams.get('visual_builder')!=='1')html=optimizeHomeAssets(renderInitialCarousel(html,mediaCarousel));
  file=Buffer.from(html);
 }
 // Safe visual presentation layer: draft in owner iframe, published presentation on public pages.
