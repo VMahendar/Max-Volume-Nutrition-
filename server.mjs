@@ -97,6 +97,7 @@ function fulfil(row,payment){return C.tx(()=>{row=db.prepare('SELECT * FROM orde
 function checkoutResponse(row){const p=JSON.parse(row.payload);if(row.status==='paid')fail(409,'This order is already paid. View your order history.');if(!row.provider_id)fail(409,'Payment creation needs reconciliation. Do not create another order.');if(row.status!=='pending')fail(409,'This checkout is no longer payable.');return {id:row.id,token:row.token,key:process.env.RAZORPAY_KEY_ID,providerOrderId:row.provider_id,amount:p.totalPaise,currency:'INR'};}
 const server=http.createServer(async(req,res)=>{res.setHeader('Cache-Control','no-store');res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','strict-origin-when-cross-origin');res.setHeader('X-Frame-Options','DENY');const scriptNonce=responseSecurity(res,{production});
 try{if(!await allowStaging(req,res))return;const u=new URL(req.url,'http://localhost');
+
 if(u.pathname==='/healthz')return json(res,200,{ok:true});
 // Provide a conventional root favicon fallback for browsers and crawlers.
 if(u.pathname==='/favicon.ico'&&['GET','HEAD'].includes(req.method)){
@@ -640,7 +641,7 @@ if(builderPage){
   const serialized=JSON.stringify(config||{version:1,pages:{}}).replace(/</g,'\\u003c');
   let html=file.toString('utf8');
   if(builderPreview)html=html.replace(/<html\b/i,'<html data-mvn-visual-builder="edit"');
-  html=html.replace('</body>','<script nonce="'+scriptNonce+'" type="application/json" id="mvnVisualBuilderConfig">'+serialized+'</script><script nonce="'+scriptNonce+'" src="/site-builder-runtime.js?v=20261117-orange-home" defer></script></body>');
+  html=html.replace('</body>','<script nonce="'+scriptNonce+'" type="application/json" id="mvnVisualBuilderConfig">'+serialized+'</script><script nonce="'+scriptNonce+'" src="/site-builder-runtime.js?v=20261118-safe-html" defer></script></body>');
   file=Buffer.from(html,'utf8');
  }
 }
