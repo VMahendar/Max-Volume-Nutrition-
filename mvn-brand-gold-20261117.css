@@ -139,3 +139,23 @@ html body.mvn-site-theme .mvn-globtech-launch{background:#080808!important;backg
 html body.mvn-site-theme .mvn-globtech-launch :is(h2,p,strong){color:#FFFFFF!important}
 html body.mvn-site-theme .mvn-globtech-launch .mvn-launch-kicker{color:#D3AF37!important}
 html body.mvn-site-theme.mvn-fitness-product main :is(a:not(.button):not(.mvn-preview-order):not(.mvn-inline-whatsapp),.nitro-pack-card a){text-decoration-color:#B08B4C!important}
+/* Give each approved colour a distinct, visible role. */
+html body.mvn-site-theme .announce,
+html body.mvn-site-theme.mvn-orange-home .announce,
+html body.mvn-site-theme.mvn-orange-home .mvn-home-collection-entry{background:#B08B4C!important;color:#080808!important}
+html body.mvn-site-theme.mvn-orange-home .mvn-orange-eyebrow,
+html body.mvn-site-theme :is(.mvn-info-hero,.account-intro,.support-hero,.business-hero,.wholesale-intro) :is(.mvn-info-kicker,.eyebrow,.account-eyebrow,.account-eyebrow span,.business-note),
+html body.mvn-site-theme.mvn-unified-page:has(#dealerForm) .business-hero :is(.eyebrow,.business-note),
+html body.mvn-site-theme.wholesale-page.mvn-unified-page :is(.account-eyebrow,.account-eyebrow span),
+html body.mvn-site-theme .mvn-globtech-launch .mvn-launch-kicker{color:#B08B4C!important}
+html body.mvn-site-theme.mvn-orange-home .mvn-orange-eyebrow::before{background:#B08B4C!important}
+html body.mvn-site-theme :is(.secondary,.button.alt,.mvn-info-link.secondary,.mvn-back-to-store,.show-password),
+html body.mvn-site-theme.mvn-info-page .mvn-info-link.secondary,
+html body.mvn-site-theme.mvn-unified-page .mvn-back-to-store,
+html body.mvn-site-theme.mvn-fitness-product :is(.button.alt,.mvn-inline-whatsapp),
+html body.mvn-site-theme .support-end-actions a:last-child{background:#1C222B!important;background-image:none!important;color:#FFFFFF!important;border-color:#B08B4C!important}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-launch-secondary{background:#1C222B!important;color:#FFFFFF!important;border:1px solid #B08B4C!important;padding:13px 20px!important}
+html body.mvn-site-theme.mvn-info-page .mvn-info-panel.dark{background:#1C222B!important;color:#FFFFFF!important;border-color:#B08B4C!important}
+html body.mvn-site-theme.mvn-info-page .mvn-info-panel.dark :is(.mvn-info-eyebrow,small){color:#B08B4C!important}
+html body.mvn-site-theme.mvn-orange-home .mvn-home-collection-entry :is(#mvnCollectionEntryTitle,p,span){color:#080808!important}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorialTitle{color:#FFFFFF!important}
