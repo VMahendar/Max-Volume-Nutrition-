@@ -53,6 +53,12 @@ function apply(input){
  for(const op of doc.pages?.[path]||[]){
   if(op.device!=='all'&&op.device!==viewport)continue;
   const e=getTarget(op.target);if(!e||isProtected(e))continue;
+  // The owner approved the banner; only suppress historical geometry overrides
+  // on the header, category cards, catalogue, and footer. Saved editor changes
+  // remain intact and are still available in editing mode.
+  if(!editing && path==='/' &&
+     ['move','resize','hide','style'].includes(op.action) &&
+     e.closest('.storehead,.mvn-theme-shop-goals,#shop,.mvn-home-contact'))continue;
   if(op.action==='duplicate'&&containsCommerce(e))continue;
   if(op.action==='duplicate'||op.action==='insert'){
    const copy=op.action==='duplicate'?e.cloneNode(true):document.createElement(op.element==='image'?'img':op.element==='button'?'a':op.element==='box'?'div':'p');
