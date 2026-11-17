@@ -275,6 +275,18 @@
     transform:'none',opacity:'1',visibility:'visible'
   });
 
+  // Homepage is editorial: only the four featured products are visible.
+  // The full retail catalogue is preserved and accessible on /shop.html;
+  // do not repeat that long product grid beneath the home banner.
+  rules('#shop',{display:'none',height:'0','min-height':'0',padding:'0',margin:'0',overflow:'hidden'});
+  rules('.mvn-preview-best',{display:'block',width:'100%',height:'auto','max-width':'none','max-height':'none',
+    'min-height':'0',margin:'0',overflow:'visible',transform:'none',
+    background:'#faf9f7',color:'#171819'});
+  rules('.mvn-preview-best .mvn-preview-best-grid',{display:'grid',width:'100%',height:'auto',
+    'grid-template-columns':desktop?'repeat(4,minmax(0,1fr))':'repeat(2,minmax(0,1fr))',
+    gap:desktop?'clamp(10px,1.5vw,20px)':'10px'});
+  rules('.mvn-home-collection-entry',{display:'flex',width:'100%',height:'auto',
+    transform:'none',margin:'0',background:'#171819',color:'#fff'});
   // Do not modify prices, product records, checkout, accounts or cart state.
  }
  addEventListener('load',repair);
