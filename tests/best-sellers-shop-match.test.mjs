@@ -19,5 +19,5 @@ test('homepage best sellers matches shop cards and original product photography'
  assert.match(css,/grid-template-columns:repeat\(4,minmax\(0,1fr\)\)/);
  assert.match(css,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)/);
  assert.match(css,/object-fit:contain/);
- assert.match(home,/mvn-homepage-banner-20261115\.webp/,'approved hero is unchanged');
+ assert.match(home,/assets\/mvn-orange-lineup-20261117\.webp/,'approved hero image stays unchanged');
 });
