@@ -306,6 +306,33 @@
     gap:desktop?'clamp(10px,1.5vw,20px)':'10px'});
   rules('.mvn-home-collection-entry',{display:'flex',width:'100%',height:'auto',
     transform:'none',margin:'0',background:'#171819',color:'#fff'});
+  // Old published visual edits hid the old Best Sellers cards. Restore the
+  // newly approved four real product cards without changing their images.
+  rules('.mvn-preview-best .mvn-preview-best-grid',{
+    display:'grid',height:'auto','max-height':'none',opacity:'1',visibility:'visible',
+    'grid-template-columns':desktop?'repeat(4,minmax(0,1fr))':'repeat(2,minmax(0,1fr))'
+  });
+  for(const card of document.querySelectorAll('.mvn-preview-best .mvn-preview-best-grid > a')){
+    for(const [key,value] of Object.entries({
+      display:'flex','flex-direction':'column','min-height':'0',
+      width:'100%',height:'auto','max-height':'none',opacity:'1',visibility:'visible',
+      margin:'0',transform:'none',position:'relative',inset:'auto'
+    }))set(card,key,value);
+    const img=card.querySelector('img');
+    if(img)for(const [key,value] of Object.entries({
+      display:'block',height:desktop?'clamp(155px,20vw,270px)':'clamp(120px,34vw,190px)',
+      width:'100%','max-width':'100%','max-height':'none',
+      'object-fit':'contain',transform:'none',visibility:'visible',opacity:'1'
+    }))set(img,key,value);
+  }
+  rules('.storehead',{
+    background:'#101113','background-color':'#101113','background-image':'none',
+    'border-bottom':'1px solid #292c2f'
+  });
+  for(const control of document.querySelectorAll('.storehead .head-actions summary,.storehead .head-actions .account-link,.storehead #bag')){
+    set(control,'background','#101113');set(control,'background-color','#101113');
+    set(control,'border-color','#30343a');
+  }
   // Do not modify prices, product records, checkout, accounts or cart state.
  }
  addEventListener('load',repair);
