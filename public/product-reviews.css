@@ -24,3 +24,20 @@
 .mvn-review-submit input:focus-visible,.mvn-review-submit textarea:focus-visible,.mvn-review-submit select:focus-visible,.mvn-review-submit button:focus-visible{outline:3px solid #4c82bb;outline-offset:2px}
 #mvnReviewStatus{font-weight:600;font-size:14px}
 @media(max-width:700px){.mvn-live-retail,.mvn-reviews{margin:20px 0;padding:18px}.mvn-review-card-top{align-items:flex-start}}
+
+.mvn-google-review{background:#f4f3f0;color:#202020;border:1px solid #d5d3cc;border-radius:12px;padding:24px;margin:24px 0;line-height:1.65}
+.mvn-google-review h2{color:#202020;font-size:24px;margin:0 0 12px}
+.mvn-google-review a,.mvn-review-hub a{color:#27384a;text-underline-offset:4px}
+.mvn-review-link{display:inline-block;background:#202020;color:#fff!important;padding:12px 20px;border-radius:5px;text-decoration:none;font-weight:700}
+.mvn-review-hub{max-width:1080px;margin:auto;padding:24px;line-height:1.75;color:#252525}
+.mvn-review-hub>section{margin:0 0 28px;padding:clamp(20px,4vw,36px);background:#fff;border:1px solid #dedbd4;border-radius:12px;scroll-margin-top:24px}
+.mvn-review-hub h2{font-size:clamp(22px,3vw,28px);line-height:1.25;margin-top:0;color:#202020}
+.mvn-review-products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.mvn-review-products a{padding:18px;border:1px solid #d4d2ca;background:#f7f6f3;border-radius:8px;font-weight:700}
+.mvn-review-share{display:flex;align-items:center;justify-content:space-between;gap:24px}
+.mvn-review-share img{flex-shrink:0;max-width:100%;height:auto}
+.mvn-review-submit .mvn-review-confirm{display:flex;align-items:flex-start;gap:10px;line-height:1.6;font-weight:400}
+.mvn-review-submit .mvn-review-confirm input{width:20px;height:20px;flex-shrink:0;margin-top:3px}
+.mvn-reviews a{color:#27384a}
+.mvn-review-hub a:focus-visible,.mvn-google-review a:focus-visible{outline:3px solid #745c37;outline-offset:4px}
+@media(max-width:600px){.mvn-review-products{grid-template-columns:1fr}.mvn-review-share{flex-direction:column;align-items:flex-start}.mvn-review-hub{padding:16px}}

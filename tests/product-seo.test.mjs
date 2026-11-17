@@ -73,13 +73,13 @@ test('if no real price and no approved review, do not emit invalid Product schem
 test('public product pages host a single server rendered snippet and review interface',()=>{
  const server=readFileSync('server.mjs','utf8');
  assert.ok(server.includes("buildProductFragments(u.pathname,C.catalogue(null),approved,{selectedPack:u.searchParams.get('pack')})"));
- assert.ok(server.includes("r.status='approved'"));
+ assert.ok(readFileSync('customer-reviews.mjs','utf8').includes("r.status='approved'"));
  for(const path of Object.keys(PRODUCT_PAGE_IDS)){
   const html=readFileSync('public'+path,'utf8');
   assert.ok(html.includes('<!-- MVN_PRODUCT_SEO -->'),path+' missing schema hook');
   assert.ok(html.includes('<!-- MVN_PRODUCT_DETAILS -->'),path+' missing visible details hook');
-  assert.ok(html.includes('/product-reviews.js?v=20261115-1'),path+' review JavaScript missing');
-  assert.ok(html.includes('/product-reviews.css?v=20261115-1'),path+' responsive review stylesheet missing');
+  assert.ok(html.includes('/product-reviews.js?v=20261118-1'),path+' review JavaScript missing');
+  assert.ok(html.includes('/product-reviews.css?v=20261118-1'),path+' responsive review stylesheet missing');
   assert.ok(!/<script type="application\/ld\+json">\s*\{"@context":"https:\/\/schema.org","@type":"Product"/.test(html),'Do not publish stale static Product offers');
  }
 });

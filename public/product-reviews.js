@@ -19,14 +19,19 @@
     .then(info=>{
      if(!info?.myReview)return;
      const review=info.myReview;
+     document.getElementById('mvnDeleteReview').hidden=false;
      form.elements.rating.value=String(review.rating);
      form.elements.title.value=review.title||'';
      form.elements.body.value=review.body||'';
      status.textContent=review.status==='pending'?'Your last review is awaiting approval. You can update it here.':
       review.status==='approved'?'Your review is published. Updating it will require approval again.':
-      'Your previous review was not published. You can submit an updated review.';
+      'Your previous review was not published ('+(info.myReview.moderationReason||'content policy')+'). You can submit an updated review.';
     });
   }).catch(()=>{});
+ document.getElementById('mvnDeleteReview').addEventListener('click',async()=>{
+  if(!confirm('Delete your product review?'))return;
+  try{const r=await fetch('/api/reviews',{method:'DELETE',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify({productId})});const data=await r.json();if(!r.ok)throw Error(data.error||'Could not delete review.');location.reload();}catch(error){status.textContent=error.message;}
+ });
  form.addEventListener('submit',async(event)=>{
   event.preventDefault();
   if(!form.reportValidity())return;
@@ -37,7 +42,7 @@
    const response=await fetch('/api/reviews',{
     method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},
     body:JSON.stringify({productId,rating:Number(form.elements.rating.value),
-     title:form.elements.title.value.trim(),body:form.elements.body.value.trim()})
+     title:form.elements.title.value.trim(),body:form.elements.body.value.trim(),experienceConfirmed:form.elements.experienceConfirmed.checked})
    });
    const payload=await response.json();
    if(!response.ok)throw Error(payload.error||'Review could not be submitted.');
