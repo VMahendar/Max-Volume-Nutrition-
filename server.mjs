@@ -9,6 +9,7 @@ import {backupStatus,verifyDownloadedBackup} from './deploy/backup-status.mjs';
 import {listCustomers,customerDetails} from './customer-directory.mjs';
 import {initializeOrderAlerts,enqueueOrderAlert,orderAlertReadiness,startOrderAlertScheduler} from './order-alerts.mjs';
 import {initializeReviews,reviewRows,verifiedPurchase,reviewSettings,saveReviewSettings,recordReviewPurchase,revokeReviewPurchase,reviewAdminData,moderateReview,googleReviewPanel,reviewHub} from './customer-reviews.mjs';
+import {initializeReviewAutomation,reviewAutomationAdmin,saveReviewAutomation,verifyReviewWhatsapp,saveReviewConsent,captureReviewDelivery,enqueueReviewRequests,reviewRequestDetails,stopReviewRequests,receiveReviewWhatsapp,startReviewRequestScheduler} from './review-automation.mjs';
 import http from 'node:http';
 import {validateCampaign,activeCampaigns,campaignQuote} from './promotions.mjs';
 import {validateUpdate,activeUpdates,updateConfig,initializeUpdates,whatsappUpdateReadiness,validUpdateSignature,receiveWhatsappUpdates} from './store-updates.mjs';
@@ -45,6 +46,7 @@ initializeOwnerWork(C);
 initializeLeadInbox(C);
 initializeOrderAlerts(C);
 initializeReviews(C);
+initializeReviewAutomation(C);
 db.exec('CREATE TABLE IF NOT EXISTS homepage_images (path TEXT PRIMARY KEY, type TEXT NOT NULL, content BLOB NOT NULL)');
 const origin=process.env.PUBLIC_ORIGIN||'http://localhost:3000',production=process.env.NODE_ENV==='production';
 const previousStoreOrigin='https://max-volume-nutrition-preview.onrender.com';
@@ -175,7 +177,26 @@ if(/^\/assets\/updates\/[a-z0-9-]+\.jpg$/.test(u.pathname)&&['GET','HEAD'].inclu
  const image=db.prepare('SELECT content FROM store_update_images WHERE path=?').get(u.pathname.slice(1));if(!image)fail(404,'Image not found.');res.writeHead(200,{'Content-Type':'image/jpeg'});return res.end(req.method==='HEAD'?undefined:image.content);
 }
 if(u.pathname.startsWith('/api/')){
-const forwarded=String(req.headers['x-forwarded-for']||'').split(',').at(-1).trim();const ip=process.env.TRUST_PROXY==='true'&&isIP(forwarded)?forwarded:req.socket.remoteAddress;if(!rate('general:'+ip,240))fail(429,'Please try again in a minute.');if(['POST','DELETE'].includes(req.method)&&!['/api/webhook','/api/marketing/unsubscribe','/api/whatsapp/store-updates'].includes(u.pathname)&&req.headers.origin!==origin)fail(403,'Request origin not allowed.');const user=C.session(req),path=u.pathname;
+const forwarded=String(req.headers['x-forwarded-for']||'').split(',').at(-1).trim();const ip=process.env.TRUST_PROXY==='true'&&isIP(forwarded)?forwarded:req.socket.remoteAddress;if(!rate('general:'+ip,240))fail(429,'Please try again in a minute.');if(['POST','DELETE'].includes(req.method)&&!['/api/webhook','/api/marketing/unsubscribe','/api/whatsapp/store-updates','/api/reviews/whatsapp-webhook'].includes(u.pathname)&&req.headers.origin!==origin)fail(403,'Request origin not allowed.');const user=C.session(req),path=u.pathname;
+if(path==='/api/reviews/whatsapp-webhook'){
+ if(req.method==='GET'){
+  if(!process.env.REVIEW_WHATSAPP_VERIFY_TOKEN||u.searchParams.get('hub.mode')!=='subscribe'||u.searchParams.get('hub.verify_token')!==process.env.REVIEW_WHATSAPP_VERIFY_TOKEN||!/^\d{1,100}$/.test(u.searchParams.get('hub.challenge')||''))fail(403,'Invalid webhook verification.');
+  res.writeHead(200,{'Content-Type':'text/plain'});return res.end(u.searchParams.get('hub.challenge'));
+ }
+ if(req.method!=='POST')fail(405,'Method not allowed.');return json(res,200,receiveReviewWhatsapp(C,await body(req),req.headers['x-hub-signature-256']));
+}
+if(path==='/api/review-request'){
+ if(req.method==='GET')return json(res,200,reviewRequestDetails(C,u.searchParams.get('t')).public);
+ if(req.method!=='POST')fail(405,'Method not allowed.');const b=JSON.parse(await body(req,2000));return json(res,200,stopReviewRequests(C,b.token,b.action));
+}
+if(path==='/api/me/review-messages'){
+ requireUser(user);const current=db.prepare('SELECT * FROM review_request_consent WHERE user_id=?').get(user.id);
+ if(req.method==='GET')return json(res,200,{whatsapp:!!current?.whatsapp,sms:!!current?.sms,contactConfirmed:!!current,phone:current?'••••••'+current.phone.slice(-4):''});
+ if(req.method!=='POST')fail(405,'Method not allowed.');
+ const b=JSON.parse(await body(req,2000));if(typeof b.whatsapp!=='boolean'||typeof b.sms!=='boolean')fail(400,'Choose review message channels.');
+ if(!current){if(b.whatsapp||b.sms)fail(409,'Ask our team to confirm your completed purchase and delivery contact first.');return json(res,200,{ok:true});}
+ return json(res,200,saveReviewConsent(C,user.id,{email:user.email,phone:current.phone,whatsapp:b.whatsapp,sms:b.sms,explicitConsent:b.explicitConsent,evidence:'Customer selected review message channels in their signed-in account.'}));
+}
 if(path==='/api/store-updates'&&req.method==='GET')return json(res,200,{updates:activeUpdates(updateConfig(C).posts,u.searchParams.get('surface')||'web')});
 if(path==='/api/whatsapp/store-updates'){
  if(!whatsappUpdateReadiness().ready)fail(503,'WhatsApp update intake is disconnected.');
@@ -555,6 +576,7 @@ if(path==='/api/admin/marketing/mark'&&req.method==='POST'){
  return json(res,200,{ok:true});
 }
 if(path==='/api/admin/promotions'&&req.method==='GET')return json(res,200,{campaigns:C.setting('campaigns')||[]});
+if(path==='/api/admin/review-automation'&&req.method==='GET')return json(res,200,reviewAutomationAdmin(C));
 if(path==='/api/admin/customer-reviews'&&req.method==='GET')return json(res,200,reviewAdminData(C));
 if(path==='/api/admin/overview'&&req.method==='GET')return json(res,200,{products:C.catalogue(user,true),dealers:db.prepare('SELECT d.*,u.email,u.name,dp.phone,dp.city,dp.address,dp.pincode FROM dealers d JOIN users u ON u.id=d.user_id LEFT JOIN dealer_profiles dp ON dp.user_id=d.user_id ORDER BY d.created DESC LIMIT 100').all(),orders:db.prepare('SELECT * FROM orders ORDER BY created DESC LIMIT 100').all().map(C.publicOrder),store:C.setting('store'),tax:C.setting('tax'),shippingReady:!!shippingReady(),paymentReady:!!enabled(),reviews:db.prepare('SELECT r.*,u.name FROM product_reviews r JOIN users u ON u.id=r.user_id ORDER BY r.updated DESC LIMIT 100').all(),audit:db.prepare('SELECT * FROM audit ORDER BY id DESC LIMIT 100').all()});
 if(req.method!=='POST')fail(405,'Method not allowed.');const b=JSON.parse(await body(req));
@@ -564,8 +586,12 @@ if(path==='/api/admin/promotions'){
  if(new Set(campaigns.map(c=>c.id)).size!==campaigns.length||new Set(campaigns.map(c=>c.code)).size!==campaigns.length)fail(400,'Campaign IDs and codes must be unique.');
  C.tx(()=>{C.set('campaigns',campaigns);C.audit(user.id,'campaigns.save','campaigns',{count:campaigns.length});});return json(res,200,{ok:true});
 }
+if(path==='/api/admin/review-automation')return json(res,200,saveReviewAutomation(C,user.id,b));
+if(path==='/api/admin/review-automation/verify')return json(res,200,await verifyReviewWhatsapp(C));
+if(path==='/api/admin/review-automation/preview')return json(res,200,{...enqueueReviewRequests(C),sent:0});
+if(path==='/api/admin/review-consent')return json(res,200,saveReviewConsent(C,user.id,b));
 if(path==='/api/admin/customer-reviews')return json(res,200,saveReviewSettings(C,user.id,b));
-if(path==='/api/admin/review-purchase')return json(res,200,recordReviewPurchase(C,user.id,b));
+if(path==='/api/admin/review-purchase'){const result=recordReviewPurchase(C,user.id,b);captureReviewDelivery(C,'offline',result.purchaseId);return json(res,200,result);}
 if(path==='/api/admin/review-purchase-revoke')return json(res,200,revokeReviewPurchase(C,user.id,b.id));
 if(path==='/api/admin/review')return json(res,200,moderateReview(C,user.id,b));
 if(path==='/api/admin/dealer'){if(!['approved','rejected'].includes(b.status))fail(400,'Invalid approval status.');C.tx(()=>{const d=db.prepare('SELECT * FROM dealers WHERE user_id=?').get(String(b.userId));if(!d)fail(404,'Application not found.');db.prepare('UPDATE dealers SET status=?,reviewed_by=? WHERE user_id=?').run(b.status,user.id,b.userId);C.audit(user.id,'dealer.'+b.status,b.userId);});return json(res,200,{ok:true});}
@@ -573,7 +599,7 @@ if(path==='/api/admin/product'){const id=clean(b.id,80);if(!/^[a-z0-9-]+$/.test(
 if(path==='/api/admin/inventory'){const id=clean(b.variantId,80),quantity=integer(b.onHand),version=integer(b.version),reason=clean(b.reason,300);C.tx(()=>{const v=C.catalogue(user,true).flatMap(p=>p.variants).find(v=>v.id===id);if(!v)fail(404,'Variant not found.');if(quantity<v.reserved)fail(409,'Stock cannot be lower than active reservations.');if(db.prepare('UPDATE inventory SET on_hand=?,version=version+1 WHERE variant_id=? AND version=?').run(quantity,id,version).changes!==1)fail(409,'Inventory changed. Refresh before saving.');C.audit(user.id,'inventory.adjust',id,{quantity,reason});});return json(res,200,{ok:true});}
 if(path==='/api/admin/store'){const s=C.setting('store');s.address=clean(b.address,500);s.supportEmail=email(b.supportEmail);s.shippingPaise=integer(b.shippingPaise);if(!Array.isArray(b.serviceStates)||!b.serviceStates.length||b.serviceStates.some(x=>!stateCode(x)))fail(400,'Use supported delivery states.');s.serviceStates=b.serviceStates;C.tx(()=>{C.set('store',s);C.audit(user.id,'store.update','store');});return json(res,200,{ok:true});}
 if(path==='/api/admin/tax'){const tax={enabled:b.enabled===true,approved:b.approved===true,sellerStateCode:clean(b.sellerStateCode,2),sellerGstin:typeof b.sellerGstin==='string'?b.sellerGstin.toUpperCase():'',legalName:typeof b.legalName==='string'?b.legalName.trim():'',address:typeof b.address==='string'?b.address.trim():'',shippingRateBps:integer(b.shippingRateBps,0,2800),invoicePrefix:clean(b.invoicePrefix,4)};if(!/^[A-Z0-9]{1,4}$/.test(tax.invoicePrefix))fail(400,'Use up to four letters or digits for invoice prefix.');if(tax.enabled&&(!tax.approved||!/^\d{2}[A-Z0-9]{13}$/.test(tax.sellerGstin)||!tax.legalName||!tax.address||tax.sellerGstin.slice(0,2)!==tax.sellerStateCode))fail(400,'Complete and approve GST setup.');C.tx(()=>{C.set('tax',tax);C.audit(user.id,'tax.update','tax');});return json(res,200,{ok:true});}
-if(path==='/api/admin/fulfilment'){const row=db.prepare('SELECT * FROM orders WHERE id=?').get(String(b.id));if(!row)fail(404,'Order not found.');const transitions={unfulfilled:['processing'],processing:['shipped'],shipped:['delivered']};if(row.status!=='paid'||!transitions[row.fulfilment]?.includes(b.status))fail(409,'Invalid fulfilment transition.');const tracking=b.status==='shipped'?clean(b.tracking,200):null;C.tx(()=>{db.prepare('UPDATE orders SET fulfilment=? WHERE id=?').run(b.status,row.id);if(tracking){const old=db.prepare('SELECT * FROM shipments WHERE order_id=?').get(row.id);db.prepare('INSERT INTO shipments VALUES(?,?,?) ON CONFLICT(order_id) DO UPDATE SET data=excluded.data').run(row.id,'shipped',JSON.stringify({...old?JSON.parse(old.data):{},trackingReference:tracking}));}C.audit(user.id,'order.'+b.status,row.id,{tracking});});return json(res,200,{ok:true});}
+if(path==='/api/admin/fulfilment'){const row=db.prepare('SELECT * FROM orders WHERE id=?').get(String(b.id));if(!row)fail(404,'Order not found.');const transitions={unfulfilled:['processing'],processing:['shipped'],shipped:['delivered']};if(row.status!=='paid'||!transitions[row.fulfilment]?.includes(b.status))fail(409,'Invalid fulfilment transition.');const tracking=b.status==='shipped'?clean(b.tracking,200):null;C.tx(()=>{db.prepare('UPDATE orders SET fulfilment=? WHERE id=?').run(b.status,row.id);if(tracking){const old=db.prepare('SELECT * FROM shipments WHERE order_id=?').get(row.id);db.prepare('INSERT INTO shipments VALUES(?,?,?) ON CONFLICT(order_id) DO UPDATE SET data=excluded.data').run(row.id,'shipped',JSON.stringify({...old?JSON.parse(old.data):{},trackingReference:tracking}));}C.audit(user.id,'order.'+b.status,row.id,{tracking});});if(b.status==='delivered')captureReviewDelivery(C,'order',row.id);return json(res,200,{ok:true});}
 if(path==='/api/admin/recover-order'){const row=db.prepare('SELECT * FROM orders WHERE id=?').get(String(b.id));if(!row||row.provider_id||row.status!=='provider_review')fail(409,'Order does not need recovery.');if(!/^order_[A-Za-z0-9]+$/.test(b.providerOrderId||''))fail(400,'Invalid provider order ID.');const remote=await razor('orders/'+b.providerOrderId),p=JSON.parse(row.payload);if(remote.receipt!==row.id||remote.amount!==p.totalPaise||remote.currency!=='INR')fail(409,'Provider order does not match this receipt and amount.');C.tx(()=>{db.prepare("UPDATE orders SET provider_id=?,status='pending' WHERE id=? AND provider_id IS NULL").run(b.providerOrderId,row.id);C.audit(user.id,'order.recover',row.id,{providerOrderId:b.providerOrderId});});return json(res,200,{ok:true});}
 if(path==='/api/admin/reconcile'){const row=db.prepare('SELECT * FROM orders WHERE id=?').get(String(b.id));if(!row?.provider_id)fail(409,'Unknown provider outcome. Reconcile receipt in Razorpay dashboard; stock remains held.');const remote=await razor('orders/'+row.provider_id+'/payments');const payment=remote.items?.find(x=>x.status==='captured');if(payment){const paid=fulfil(row,payment);C.audit(user.id,'order.reconcile',row.id);return json(res,200,paid);}return json(res,200,{status:row.status,message:'No captured payment found. Reservation retained because this provider order may still be paid.'});}
 if(path==='/api/admin/shipping-rates'){if(!shippingReady())fail(503,'Shiprocket is disabled.');const row=db.prepare('SELECT * FROM orders WHERE id=?').get(String(b.id));if(!row)fail(404,'Order not found.');if(!/^[1-9]\d{5}$/.test(b.pickupPostcode||'')||typeof b.weight!=='number'||b.weight<=0||b.weight>1000)fail(400,'Enter a pickup PIN code and packed weight in kg.');const result=await ship.serviceability({pickup_postcode:b.pickupPostcode,delivery_postcode:JSON.parse(row.payload).customer.pincode,cod:'0',weight:String(b.weight)});return json(res,200,{rates:result,courierOptions:courierChoices(result)});}
@@ -618,6 +644,7 @@ if(builderPage){
   file=Buffer.from(html,'utf8');
  }
 }
+if(u.pathname==='/review-request.html'){res.setHeader('Referrer-Policy','no-referrer');res.setHeader('X-Robots-Tag','noindex,nofollow,noarchive');}
 if(u.pathname==='/reviews.html')file=Buffer.from(file.toString('utf8').replace('<!-- MVN_REVIEW_HUB -->',reviewHub(C)));
 if(PRODUCT_PAGE_IDS[u.pathname]){
  const productId=PRODUCT_PAGE_IDS[u.pathname].id;
@@ -700,7 +727,8 @@ function validImage(value){
 }
 startLocalBackupScheduler();
 const stopMarketing=startMarketingScheduler(C);
+const stopReviewRequestsScheduler=startReviewRequestScheduler(C);
 const stopDriveBackup=startDriveBackupScheduler(resolve(process.env.DATA_DIR||'runtime'));
 const stopOrderAlerts=startOrderAlertScheduler(C);
 server.requestTimeout=30000;server.headersTimeout=15000;const portArg=process.argv.indexOf('--port');server.listen(Number(portArg>=0?process.argv[portArg+1]:process.env.PORT)||3000,process.env.HOST||'0.0.0.0',()=>console.log('Store running at '+origin));
-for(const signal of ['SIGTERM','SIGINT'])process.on(signal,()=>{stopMarketing();stopDriveBackup?.();stopOrderAlerts();server.close(()=>{db.close();process.exit(0);});});
+for(const signal of ['SIGTERM','SIGINT'])process.on(signal,()=>{stopMarketing();stopReviewRequestsScheduler();stopDriveBackup?.();stopOrderAlerts();server.close(()=>{db.close();process.exit(0);});});

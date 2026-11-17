@@ -48,7 +48,7 @@ export function recordReviewPurchase(C,actor,b){
    ON CONFLICT(user_id,product_id,receipt) DO UPDATE SET delivered=excluded.delivered,actor=excluded.actor,revoked=NULL`)
    .run(randomUUID(),person.id,productId,receipt,delivered,actor,new Date().toISOString());
   C.audit(actor,'reviews.purchase_verified',person.id,{productId,receipt,delivered});
- });return {ok:true};
+ });return {ok:true,purchaseId:C.db.prepare('SELECT id FROM review_purchases WHERE user_id=? AND product_id=? AND receipt=?').get(person.id,productId,receipt).id};
 }
 export function revokeReviewPurchase(C,actor,id){
  const row=C.db.prepare('SELECT id FROM review_purchases WHERE id=? AND revoked IS NULL').get(clean(id,80));

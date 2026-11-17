@@ -41,3 +41,5 @@
 .mvn-reviews a{color:#27384a}
 .mvn-review-hub a:focus-visible,.mvn-google-review a:focus-visible{outline:3px solid #745c37;outline-offset:4px}
 @media(max-width:600px){.mvn-review-products{grid-template-columns:1fr}.mvn-review-share{flex-direction:column;align-items:flex-start}.mvn-review-hub{padding:16px}}
+
+.mvn-review-hub button{font:700 15px system-ui;padding:13px 18px;border:1px solid #6b6b6b;border-radius:6px;background:#202020;color:#fff;cursor:pointer;max-width:100%;white-space:normal}.mvn-review-hub button:disabled{opacity:.65}.mvn-review-hub button:focus-visible{outline:3px solid #745c37;outline-offset:3px}

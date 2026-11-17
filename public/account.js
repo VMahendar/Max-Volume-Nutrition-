@@ -23,6 +23,7 @@ async function refresh(){
     $('orders').textContent='';
     return;
   }
+  document.dispatchEvent(new Event('mvn:account-ready'));
   $('welcome').textContent='Welcome, '+user.name;
   const tier={retail:'Retail customer',gym:'Approved gym account',wholesale:'Approved wholesale account'};
   $('tier').textContent=tier[user.tier]||'Customer account';

@@ -351,3 +351,34 @@ test('review setup is admin-only; purchase proof stays private and review deleti
   assert.equal((await bob('/api/reviews?productId=product')).body.myReview,null);
  }finally{await f.close();}
 });
+
+test('review automation protects owner controls, records delivery events and provides private customer opt-out links',async()=>{
+ const f=await fixture({REVIEW_AUTOMATION_ENABLED:'false',REVIEW_MESSAGE_SPEND_APPROVED:'false',WHATSAPP_ACCESS_TOKEN:'',WHATSAPP_APP_SECRET:'fixture-review-secret',REVIEW_WHATSAPP_VERIFY_TOKEN:'fixture-verify'});try{
+  const guest=f.client(),alice=f.client(),owner=f.client();
+  assert.equal((await guest('/api/admin/review-automation')).status,401);
+  assert.equal((await guest('/api/me/review-messages')).status,401);
+  await alice('/api/register',{name:'Alice PrivateSurname',email:'review-auto-alice@example.test',password});
+  await owner('/api/register',{name:'Owner',email:'review-auto-owner@example.test',password});
+  f.db.prepare("UPDATE users SET role='admin' WHERE email='review-auto-owner@example.test'").run();
+  assert.equal((await alice('/api/admin/review-automation')).status,403);
+  assert.equal((await owner('/api/admin/review-automation')).body.config.enabled,false);
+  assert.equal((await owner('/api/admin/review-automation',{enabled:true,dailyMax:20,monthlyMax:200})).status,409);
+  assert.equal((await owner('/api/admin/review-automation/verify',{})).status,409);
+  assert.equal((await alice('/api/me/review-messages',{whatsapp:true,sms:true,explicitConsent:true})).status,409);
+  const proof=await owner('/api/admin/review-purchase',{email:'review-auto-alice@example.test',productId:'product',receipt:'PRIVATE-AUTO-RECEIPT',delivered:'2026-01-01',confirmDelivered:true});assert.equal(proof.status,200);
+  assert.equal(f.db.prepare('SELECT COUNT(*) n FROM review_request_events').get().n,1);
+  assert.equal((await owner('/api/admin/review-consent',{email:'review-auto-alice@example.test',phone:'9876543210',whatsapp:true,sms:true,explicitConsent:true,evidence:'Customer agreed in order chat'})).status,200);
+  const preferences=(await alice('/api/me/review-messages')).body;assert.equal(preferences.whatsapp,true);assert.equal(preferences.sms,true);assert.ok(!preferences.phone.includes('9876543210'));
+  assert.equal((await owner('/api/admin/review-automation/preview',{})).body.sent,0);
+  const token=f.db.prepare('SELECT token FROM review_request_events').get().token;
+  const landing=await guest('/api/review-request?t='+token);assert.equal(landing.status,200);
+  for(const secret of ['PRIVATE-AUTO-RECEIPT','PrivateSurname','9876543210','review-auto-alice@example.test'])assert.ok(!JSON.stringify(landing.body).includes(secret));
+  assert.equal(f.db.prepare('SELECT stopped FROM review_request_events').get().stopped,null,'GET does not stop anything');
+  assert.equal((await guest('/api/review-request',{token,action:'stop'},{Origin:'https://evil.example'})).status,403);
+  assert.equal((await guest('/api/review-request',{token,action:'stop'})).status,200);
+  assert.equal((await alice('/api/me/review-messages')).body.sms,false);assert.equal((await alice('/api/me/review-messages')).body.whatsapp,false);
+  assert.equal((await guest('/api/review-request?t=forged')).status,404);
+  assert.equal((await guest('/api/reviews/whatsapp-webhook',{object:'whatsapp_business_account'},{'x-hub-signature-256':'sha256=bad'})).status,403);
+  const challenge=await fetch(f.origin+'/api/reviews/whatsapp-webhook?hub.mode=subscribe&hub.verify_token=fixture-verify&hub.challenge=123');assert.equal(await challenge.text(),'123');
+ }finally{await f.close();}
+});
