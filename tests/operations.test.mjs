@@ -145,7 +145,7 @@ test('wishlists are account-owned and genuine reviews require authenticated subm
   assert.equal((await a('/api/wishlist',{ids:['a','a'],userId:'someone-else'})).status,200);
   assert.deepEqual((await a('/api/wishlist')).body.ids,['a']);assert.deepEqual((await b('/api/wishlist')).body.ids,[]);
   assert.equal((await b('/api/wishlist',{ids:['unknown']})).status,400);
-  const payload={productId:'product',rating:4,title:'My product experience',body:'A real test review with enough detail.'};
+  const payload={experienceConfirmed:true,productId:'product',rating:4,title:'My product experience',body:'A real test review with enough detail.'};
   assert.equal((await guest('/api/reviews?productId=product')).body.count,0);
   assert.equal((await a('/api/reviews',{...payload,rating:6})).status,400);
   assert.equal((await a('/api/reviews',{...payload,body:'Short'})).status,400);
@@ -310,5 +310,44 @@ test('all registered accounts and signed-in enquiries are visible only to their 
   const health=await owner('/api/admin/store-health');assert.equal(health.status,200);assert.equal(health.body.alerts.enabled,false);
   assert.equal(f.db.prepare('SELECT COUNT(*) count FROM order_alerts').get().count,2,'one owner alert per channel despite retry');
   assert.equal(f.db.prepare('SELECT COUNT(*) count FROM marketing_preferences WHERE consented_at IS NOT NULL').get().count,0);
+ }finally{await f.close();}
+});
+
+test('review setup is admin-only; purchase proof stays private and review deletion is account-owned',async()=>{
+ const f=await fixture({ORDER_ALERTS_ENABLED:'false'});try{
+  const guest=f.client(),alice=f.client(),bob=f.client(),owner=f.client();
+  assert.equal((await guest('/api/admin/customer-reviews')).status,401);
+  await alice('/api/register',{name:'Alice PrivateSurname',email:'alice-review@example.com',password});
+  await bob('/api/register',{name:'Bob Customer',email:'bob-review@example.com',password});
+  await owner('/api/register',{name:'Owner',email:'review-owner@example.com',password});
+  f.db.prepare("UPDATE users SET role='admin' WHERE email='review-owner@example.com'").run();
+  assert.equal((await alice('/api/admin/review-purchase',{email:'alice-review@example.com'})).status,403);
+  assert.equal((await owner('/api/admin/customer-reviews',{googleReviewUrl:'https://evil.example/review',confirmBusiness:true})).status,400);
+  assert.equal((await owner('/api/admin/customer-reviews',{googleReviewUrl:'https://g.page/r/fixture/review',confirmBusiness:true})).status,200);
+  const proof={email:'alice-review@example.com',productId:'product',receipt:'PRIVATE-PROOF-441',delivered:'2026-01-01',confirmDelivered:true};
+  assert.equal((await owner('/api/admin/review-purchase',proof)).status,200);
+  const payload={productId:'product',rating:1,title:'My honest feedback',body:'This product did not suit my preferences.'};
+  assert.equal((await alice('/api/reviews',payload)).status,400,'requires actual experience affirmation');
+  assert.equal((await alice('/api/reviews',{...payload,experienceConfirmed:true,verifiedPurchase:true})).status,200);
+  let own=(await alice('/api/reviews?productId=product')).body.myReview;
+  assert.equal(own.verifiedPurchase,true);
+  assert.equal((await owner('/api/admin/review',{id:own.id,status:'rejected',reason:'low_rating'})).status,400);
+  assert.equal((await owner('/api/admin/review',{id:own.id,status:'approved'})).status,200,'1-star feedback can be published');
+  const published=(await guest('/api/reviews?productId=product')).body;
+  assert.equal(published.average,1);assert.equal(published.reviews[0].verifiedPurchase,true);
+  for(const secret of ['PRIVATE-PROOF-441','alice-review@example.com','PrivateSurname','user_id'])assert.ok(!JSON.stringify(published).includes(secret));
+  assert.equal((await bob('/api/reviews',{...payload,experienceConfirmed:true,verifiedPurchase:true})).status,200);
+  assert.equal((await bob('/api/reviews?productId=product')).body.myReview.verifiedPurchase,false,'client cannot forge verified badge');
+  const id=(await owner('/api/admin/customer-reviews')).body.purchases[0].id;
+  assert.equal((await owner('/api/admin/review-purchase-revoke',{id})).status,200);
+  assert.equal((await guest('/api/reviews?productId=product')).body.reviews[0].verifiedPurchase,false);
+  // Bob can delete only his own pending review, not Alice's published review.
+  const response=await fetch(f.origin+'/api/reviews',{method:'DELETE',headers:{Origin:'https://evil.example','Content-Type':'application/json'},body:JSON.stringify({productId:'product'})});
+  assert.equal(response.status,403);
+  const login=await fetch(f.origin+'/api/login',{method:'POST',headers:{Origin:f.origin,'Content-Type':'application/json'},body:JSON.stringify({email:'bob-review@example.com',password})});
+  const cookie=login.headers.get('set-cookie').split(';')[0];
+  assert.equal((await fetch(f.origin+'/api/reviews',{method:'DELETE',headers:{Origin:f.origin,Cookie:cookie,'Content-Type':'application/json'},body:JSON.stringify({productId:'product',userId:'alice'})})).status,200);
+  assert.equal((await guest('/api/reviews?productId=product')).body.count,1);
+  assert.equal((await bob('/api/reviews?productId=product')).body.myReview,null);
  }finally{await f.close();}
 });

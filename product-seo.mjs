@@ -106,7 +106,7 @@ export function buildProductFragments(path,catalogue,approvedReviews=[],{selecte
  const reviewCards=reviewRows.slice(0,20).map(r=>
   '<article class="mvn-review-card"><div class="mvn-review-card-top"><strong>'+escapeHtml(r.title)+'</strong><span aria-label="'+r.rating+' out of 5 stars">'+
    '★'.repeat(r.rating)+'☆'.repeat(5-r.rating)+'</span></div><p>'+escapeHtml(r.body)+'</p><small>By '+
-   escapeHtml(firstName(r.name))+' · '+escapeHtml(String(r.created||'').slice(0,10))+'</small></article>'
+   escapeHtml(firstName(r.name))+(r.verifiedPurchase?' · Verified purchase':' · Purchase not verified')+' · '+escapeHtml(String(r.created||'').slice(0,10))+'</small></article>'
  ).join('');
  const score=reviewRows.length?
   '<p class="mvn-rating-summary"><strong>'+average.toFixed(1)+' / 5</strong> <span aria-label="Average rating">'+
@@ -116,13 +116,14 @@ export function buildProductFragments(path,catalogue,approvedReviews=[],{selecte
  const reviews='<section class="mvn-reviews" id="mvnProductReviews" data-product-id="'+config.id+'" aria-labelledby="mvnReviewsTitle">'+
   '<h2 id="mvnReviewsTitle">Customer ratings &amp; reviews</h2>'+score+
   '<div class="mvn-review-list">'+(reviewCards||'<p class="mvn-review-note">Be the first to share your product experience.</p>')+'</div>'+
-  '<div class="mvn-review-submit"><h3>Share your experience</h3><p class="mvn-review-note">Reviews are submitted by registered users and moderated before publication. Only authentic product experiences should be submitted.</p>'+
-  '<p id="mvnReviewSignIn">To write a review, <a href="/account.html">sign in to your account</a>.</p>'+
+  '<div class="mvn-review-submit"><h3>Share your experience</h3><p class="mvn-review-note">Share your own product experience, positive or negative. Reviews are checked for spam, abuse and personal information before publication. A verified purchase badge requires a completed sale matched to your account. Your first name, rating and review are public; your email and receipt stay private. <a href="/reviews.html#reviewPolicy">Review policy</a>.</p>'+
+  '<p id="mvnReviewSignIn">To write a review, <a href="/account.html?review='+config.id+'">sign in to your account</a>.</p>'+
   '<form id="mvnReviewForm" hidden><label for="mvnReviewRating">Your rating</label><select id="mvnReviewRating" name="rating" required>'+
   '<option value="">Choose a rating</option><option value="5">5 stars</option><option value="4">4 stars</option>'+
   '<option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select>'+
   '<label for="mvnReviewTitle">Review title</label><input id="mvnReviewTitle" name="title" type="text" maxlength="120" required>'+
   '<label for="mvnReviewBody">Your review</label><textarea id="mvnReviewBody" name="body" minlength="20" maxlength="3000" rows="4" required></textarea>'+
-  '<button type="submit">Submit review for approval</button></form><p id="mvnReviewStatus" role="status" aria-live="polite"></p></div></section>';
+  '<label class="mvn-review-confirm"><input type="checkbox" name="experienceConfirmed" required> I used this product and this is my honest experience. I understand my review will be public.</label>'+
+  '<button type="submit">Submit review for approval</button><button type="button" id="mvnDeleteReview" hidden>Delete my review</button></form><p id="mvnReviewStatus" role="status" aria-live="polite"></p></div></section>';
  return {schema,gallery,content:pricing+reviews,productId:config.id,offer,reviewCount:reviewRows.length};
 }

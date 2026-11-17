@@ -1,6 +1,6 @@
 # Lighthouse corrections — 18 November 2026
 
-Prepared for review against main commit 9ebf2253b8dd6187a049251f53e5a3f344277864. Not deployed.
+Prepared for review against main commit 6879613e08cb284904b68df536b4d943fca8a758 (including the concurrent customer-reviews update). Not deployed.
 
 - Keep original product photography; correct the homepage creatine image's intrinsic dimensions to 530 × 644.
 - Add a visible homepage main landmark and keyboard skip link. Keep the retired catalogue hidden and preserve owner section ordering.
@@ -14,7 +14,7 @@ Prepared for review against main commit 9ebf2253b8dd6187a049251f53e5a3f344277864
 ## Verification
 
 - npm run check passed.
-- npm test: 175 tests passed, zero failures. Includes an HTTP regression test checking unique nonces, template and generated script authorization, no-store HTML, production HSTS and COOP.
+- npm test: 179 tests passed, zero failures. Includes an HTTP regression test checking unique nonces, template and generated script authorization, no-store HTML, production HSTS and COOP.
 - axe-core 4.14.1: no automatically detected WCAG A/AA or best-practice violations on Home, Shop, Potency Whey, Nitro Mass, Pre-Workout, Creatine, My Account, Wholesale, About and Contact in desktop and 390-pixel iframe viewports. Some image/overlay contrast checks remain manual; this is not a claim of complete accessibility compliance or a new Lighthouse score.
 - Browser checked cart open/close, background inertness, forward/backward focus wrap, Escape and trigger restoration, plus the native collection dialog.
 - Security script checks ran with the stronger CSP active. Real provider payments remain disabled and were not exercised.

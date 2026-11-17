@@ -14,6 +14,9 @@ function clearNotice(){
 
 async function refresh(){
   const {user}=await api('/api/session');
+  const reviewPages={'potency-whey':'potency-whey.html','nitro-mass':'nitro-mass.html','pro-creatine':'pro-creatine.html','sturdy-pre':'sturdy-pre-workout.html','musclevite':'musclevite-multivitamin.html'};
+  const reviewPage=reviewPages[new URLSearchParams(location.search).get('review')];
+  if(user&&reviewPage){location.assign('/'+reviewPage+'#mvnProductReviews');return;}
   $('anonymous').hidden=Boolean(user);
   $('signedIn').hidden=!user;
   if(!user){

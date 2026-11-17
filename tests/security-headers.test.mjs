@@ -19,7 +19,7 @@ test('served HTML has fresh CSP nonces, intact dynamic scripts and compatible se
    child.once('exit',()=>{clearTimeout(timer);no(Error('Server exited'));});
   });
   const nonces=new Set();
-  for(const path of ['/','/','/shop.html','/potency-whey.html','/nitro-mass.html','/account.html','/admin.html','/layout-editor.html']){
+  for(const path of ['/','/','/shop.html','/potency-whey.html','/nitro-mass.html','/account.html','/reviews.html','/admin.html','/layout-editor.html']){
    const response=await fetch(`http://localhost:${port}${path}`);
    assert.equal(response.status,200,path);
    assert.equal(response.headers.get('cache-control'),'no-store');

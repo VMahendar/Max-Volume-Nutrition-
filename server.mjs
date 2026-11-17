@@ -8,6 +8,7 @@ import {startDriveBackupScheduler} from './deploy/drive-backup.mjs';
 import {backupStatus,verifyDownloadedBackup} from './deploy/backup-status.mjs';
 import {listCustomers,customerDetails} from './customer-directory.mjs';
 import {initializeOrderAlerts,enqueueOrderAlert,orderAlertReadiness,startOrderAlertScheduler} from './order-alerts.mjs';
+import {initializeReviews,reviewRows,verifiedPurchase,reviewSettings,saveReviewSettings,recordReviewPurchase,revokeReviewPurchase,reviewAdminData,moderateReview,googleReviewPanel,reviewHub} from './customer-reviews.mjs';
 import http from 'node:http';
 import {validateCampaign,activeCampaigns,campaignQuote} from './promotions.mjs';
 import {validateUpdate,activeUpdates,updateConfig,initializeUpdates,whatsappUpdateReadiness,validUpdateSignature,receiveWhatsappUpdates} from './store-updates.mjs';
@@ -43,6 +44,7 @@ initializeOwnerDesk(C);
 initializeOwnerWork(C);
 initializeLeadInbox(C);
 initializeOrderAlerts(C);
+initializeReviews(C);
 db.exec('CREATE TABLE IF NOT EXISTS homepage_images (path TEXT PRIMARY KEY, type TEXT NOT NULL, content BLOB NOT NULL)');
 const origin=process.env.PUBLIC_ORIGIN||'http://localhost:3000',production=process.env.NODE_ENV==='production';
 const previousStoreOrigin='https://max-volume-nutrition-preview.onrender.com';
@@ -173,7 +175,7 @@ if(/^\/assets\/updates\/[a-z0-9-]+\.jpg$/.test(u.pathname)&&['GET','HEAD'].inclu
  const image=db.prepare('SELECT content FROM store_update_images WHERE path=?').get(u.pathname.slice(1));if(!image)fail(404,'Image not found.');res.writeHead(200,{'Content-Type':'image/jpeg'});return res.end(req.method==='HEAD'?undefined:image.content);
 }
 if(u.pathname.startsWith('/api/')){
-const forwarded=String(req.headers['x-forwarded-for']||'').split(',').at(-1).trim();const ip=process.env.TRUST_PROXY==='true'&&isIP(forwarded)?forwarded:req.socket.remoteAddress;if(!rate('general:'+ip,240))fail(429,'Please try again in a minute.');if(req.method==='POST'&&!['/api/webhook','/api/marketing/unsubscribe','/api/whatsapp/store-updates'].includes(u.pathname)&&req.headers.origin!==origin)fail(403,'Request origin not allowed.');const user=C.session(req),path=u.pathname;
+const forwarded=String(req.headers['x-forwarded-for']||'').split(',').at(-1).trim();const ip=process.env.TRUST_PROXY==='true'&&isIP(forwarded)?forwarded:req.socket.remoteAddress;if(!rate('general:'+ip,240))fail(429,'Please try again in a minute.');if(['POST','DELETE'].includes(req.method)&&!['/api/webhook','/api/marketing/unsubscribe','/api/whatsapp/store-updates'].includes(u.pathname)&&req.headers.origin!==origin)fail(403,'Request origin not allowed.');const user=C.session(req),path=u.pathname;
 if(path==='/api/store-updates'&&req.method==='GET')return json(res,200,{updates:activeUpdates(updateConfig(C).posts,u.searchParams.get('surface')||'web')});
 if(path==='/api/whatsapp/store-updates'){
  if(!whatsappUpdateReadiness().ready)fail(503,'WhatsApp update intake is disconnected.');
@@ -214,14 +216,16 @@ if(path==='/api/wishlist'){
 if(path==='/api/reviews'){
  if(req.method==='GET'){
   const productId=u.searchParams.get('productId');if(!db.prepare('SELECT id FROM products WHERE id=?').get(String(productId)))fail(404,'Product not found.');
-  const rows=db.prepare("SELECT r.id,r.rating,r.title,r.body,r.created,u.name FROM product_reviews r JOIN users u ON u.id=r.user_id WHERE r.product_id=? AND r.status='approved' ORDER BY r.created DESC LIMIT 100").all(productId);
-  const reviews=rows.map(r=>({id:r.id,rating:r.rating,title:r.title,body:r.body,created:r.created,author:r.name.trim().split(/\s+/)[0]||'Customer'}));
+  const rows=reviewRows(C,productId);
+  const reviews=rows.slice(0,100).map(r=>({id:r.id,rating:r.rating,title:r.title,body:r.body,created:r.created,verifiedPurchase:r.verifiedPurchase,author:r.name.trim().split(/\s+/)[0]||'Customer'}));
   const summary=db.prepare("SELECT COUNT(*) count,AVG(rating) average FROM product_reviews WHERE product_id=? AND status='approved'").get(productId);
   const own=user?db.prepare('SELECT id,rating,title,body,status,updated FROM product_reviews WHERE product_id=? AND user_id=?').get(productId,user.id):null;
-  return json(res,200,{reviews,count:summary.count,average:summary.average||0,myReview:own||null});
+  return json(res,200,{reviews,count:summary.count,average:summary.average||0,myReview:own?{...own,verifiedPurchase:verifiedPurchase(C,user.id,productId),moderationReason:db.prepare('SELECT reason FROM review_moderation WHERE review_id=?').get(own.id)?.reason||null}:null});
  }
+ if(req.method==='DELETE'){requireUser(user);const b=JSON.parse(await body(req));C.tx(()=>{db.prepare('DELETE FROM product_reviews WHERE product_id=? AND user_id=?').run(String(b.productId),user.id);C.audit(user.id,'review.delete',String(b.productId));});return json(res,200,{ok:true});}
  if(req.method!=='POST')fail(405,'Method not allowed.');requireUser(user);if(!rate('review:'+user.id,8))fail(429,'Please wait before updating your review.');
  const b=JSON.parse(await body(req)),productId=clean(b.productId,80),rating=integer(b.rating,1,5),title=clean(b.title,120),text=clean(b.body,3000);
+ if(b.experienceConfirmed!==true)fail(400,'Confirm this review is based on your own product experience.');
  if(text.length<20)fail(400,'Please write at least 20 characters.');if(!db.prepare('SELECT id FROM products WHERE id=?').get(productId))fail(404,'Product not found.');
  const now=new Date().toISOString();C.tx(()=>{db.prepare("INSERT INTO product_reviews VALUES(?,?,?,?,?,?,'pending',?,?) ON CONFLICT(product_id,user_id) DO UPDATE SET rating=excluded.rating,title=excluded.title,body=excluded.body,status='pending',updated=excluded.updated").run(randomUUID(),productId,user.id,rating,title,text,now,now);C.audit(user.id,'review.submit',productId);});
  return json(res,200,{ok:true,status:'pending',message:'Your review is awaiting approval.'});
@@ -551,6 +555,7 @@ if(path==='/api/admin/marketing/mark'&&req.method==='POST'){
  return json(res,200,{ok:true});
 }
 if(path==='/api/admin/promotions'&&req.method==='GET')return json(res,200,{campaigns:C.setting('campaigns')||[]});
+if(path==='/api/admin/customer-reviews'&&req.method==='GET')return json(res,200,reviewAdminData(C));
 if(path==='/api/admin/overview'&&req.method==='GET')return json(res,200,{products:C.catalogue(user,true),dealers:db.prepare('SELECT d.*,u.email,u.name,dp.phone,dp.city,dp.address,dp.pincode FROM dealers d JOIN users u ON u.id=d.user_id LEFT JOIN dealer_profiles dp ON dp.user_id=d.user_id ORDER BY d.created DESC LIMIT 100').all(),orders:db.prepare('SELECT * FROM orders ORDER BY created DESC LIMIT 100').all().map(C.publicOrder),store:C.setting('store'),tax:C.setting('tax'),shippingReady:!!shippingReady(),paymentReady:!!enabled(),reviews:db.prepare('SELECT r.*,u.name FROM product_reviews r JOIN users u ON u.id=r.user_id ORDER BY r.updated DESC LIMIT 100').all(),audit:db.prepare('SELECT * FROM audit ORDER BY id DESC LIMIT 100').all()});
 if(req.method!=='POST')fail(405,'Method not allowed.');const b=JSON.parse(await body(req));
 if(path==='/api/admin/promotions'){
@@ -559,11 +564,10 @@ if(path==='/api/admin/promotions'){
  if(new Set(campaigns.map(c=>c.id)).size!==campaigns.length||new Set(campaigns.map(c=>c.code)).size!==campaigns.length)fail(400,'Campaign IDs and codes must be unique.');
  C.tx(()=>{C.set('campaigns',campaigns);C.audit(user.id,'campaigns.save','campaigns',{count:campaigns.length});});return json(res,200,{ok:true});
 }
-if(path==='/api/admin/review'){
- if(!['approved','rejected'].includes(b.status))fail(400,'Choose an approved review status.');
- const row=db.prepare('SELECT id FROM product_reviews WHERE id=?').get(String(b.id));if(!row)fail(404,'Review not found.');
- C.tx(()=>{db.prepare('UPDATE product_reviews SET status=?,updated=? WHERE id=?').run(b.status,new Date().toISOString(),row.id);C.audit(user.id,'review.'+b.status,row.id);});return json(res,200,{ok:true});
-}
+if(path==='/api/admin/customer-reviews')return json(res,200,saveReviewSettings(C,user.id,b));
+if(path==='/api/admin/review-purchase')return json(res,200,recordReviewPurchase(C,user.id,b));
+if(path==='/api/admin/review-purchase-revoke')return json(res,200,revokeReviewPurchase(C,user.id,b.id));
+if(path==='/api/admin/review')return json(res,200,moderateReview(C,user.id,b));
 if(path==='/api/admin/dealer'){if(!['approved','rejected'].includes(b.status))fail(400,'Invalid approval status.');C.tx(()=>{const d=db.prepare('SELECT * FROM dealers WHERE user_id=?').get(String(b.userId));if(!d)fail(404,'Application not found.');db.prepare('UPDATE dealers SET status=?,reviewed_by=? WHERE user_id=?').run(b.status,user.id,b.userId);C.audit(user.id,'dealer.'+b.status,b.userId);});return json(res,200,{ok:true});}
 if(path==='/api/admin/product'){const id=clean(b.id,80);if(!/^[a-z0-9-]+$/.test(id))fail(400,'Invalid product ID.');const existing=db.prepare('SELECT data FROM products WHERE id=?').get(id);const old=existing?JSON.parse(existing.data):null;const p={id,name:clean(b.name,100),brand:b.brand?clean(b.brand,100):old?.brand||(['potency-whey','nitro-mass','pro-creatine','sturdy-pre','musclevite'].includes(id)?'Unicorn Pro Series':'Brand to confirm'),category:clean(b.category,80),subtitle:clean(b.subtitle,200),description:clean(b.description,4000),image:validImage(b.image),hsn:b.hsn?clean(b.hsn,8):null,gstRateBps:b.gstRateBps===null||b.gstRateBps===undefined?null:integer(b.gstRateBps,0,2800)};if(Object.hasOwn(b,'images'))p.images=validImages(b.images);else if(Object.hasOwn(old||{},'images'))p.images=old.images;if(p.hsn&&!/^\d{4,8}$/.test(p.hsn))fail(400,'Invalid HSN.');if(!Array.isArray(b.variants)||!b.variants.length||b.variants.length>30)fail(400,'Add between 1 and 30 variants.');const ids=new Set();p.variants=b.variants.map(v=>{const vid=clean(v.id,80);if(!/^[a-z0-9-]+$/.test(vid)||ids.has(vid))fail(400,'Invalid or duplicate variant ID.');ids.add(vid);const other=db.prepare('SELECT data FROM products WHERE id!=?').all(id).some(r=>JSON.parse(r.data).variants.some(v=>v.id===vid));if(other)fail(409,'Variant belongs to another product.');const prices={};for(const tier of ['gym','wholesale'])if(v.prices?.[tier]!==undefined&&v.prices[tier]!==null)prices[tier]=integer(v.prices[tier],1);const result={id:vid,label:clean(v.label,200),pricePaise:v.pricePaise===null?null:integer(v.pricePaise,1),prices};const previous=old?.variants.find(x=>x.id===vid);if(Object.hasOwn(v,'mrpPaise')||Object.hasOwn(previous||{},'mrpPaise')){const mrp=Object.hasOwn(v,'mrpPaise')?v.mrpPaise:previous.mrpPaise;result.mrpPaise=mrp===null?null:integer(mrp,1);if(result.mrpPaise!==null&&result.mrpPaise<Math.max(result.pricePaise||0,...Object.values(prices)))fail(400,'MRP cannot be lower than a selling price.');}if(Object.hasOwn(v,'image'))result.image=validImage(v.image);if(Object.hasOwn(v,'images'))result.images=validImages(v.images);else if(Object.hasOwn(previous||{},'images'))result.images=previous.images;return result;});if(old&&old.variants.some(v=>!ids.has(v.id)))fail(400,'Existing variants cannot be deleted; set stock to zero instead.');C.tx(()=>{db.prepare('INSERT INTO products VALUES(?,?) ON CONFLICT(id) DO UPDATE SET data=excluded.data').run(id,JSON.stringify(p));for(const v of p.variants)db.prepare('INSERT OR IGNORE INTO inventory(variant_id,on_hand) VALUES(?,NULL)').run(v.id);C.audit(user.id,'product.save',id);});return json(res,200,{ok:true});}
 if(path==='/api/admin/inventory'){const id=clean(b.variantId,80),quantity=integer(b.onHand),version=integer(b.version),reason=clean(b.reason,300);C.tx(()=>{const v=C.catalogue(user,true).flatMap(p=>p.variants).find(v=>v.id===id);if(!v)fail(404,'Variant not found.');if(quantity<v.reserved)fail(409,'Stock cannot be lower than active reservations.');if(db.prepare('UPDATE inventory SET on_hand=?,version=version+1 WHERE variant_id=? AND version=?').run(quantity,id,version).changes!==1)fail(409,'Inventory changed. Refresh before saving.');C.audit(user.id,'inventory.adjust',id,{quantity,reason});});return json(res,200,{ok:true});}
@@ -614,15 +618,16 @@ if(builderPage){
   file=Buffer.from(html,'utf8');
  }
 }
+if(u.pathname==='/reviews.html')file=Buffer.from(file.toString('utf8').replace('<!-- MVN_REVIEW_HUB -->',reviewHub(C)));
 if(PRODUCT_PAGE_IDS[u.pathname]){
  const productId=PRODUCT_PAGE_IDS[u.pathname].id;
- const approved=db.prepare("SELECT r.rating,r.title,r.body,r.created,u.name FROM product_reviews r JOIN users u ON u.id=r.user_id WHERE r.product_id=? AND r.status='approved' ORDER BY r.created DESC").all(productId).map(r=>({...r,status:'approved'}));
+ const approved=reviewRows(C,productId);
  const productHtml=buildProductFragments(u.pathname,C.catalogue(null),approved,{selectedPack:u.searchParams.get('pack')});
  if(productHtml){
   const html=file.toString('utf8')
     .replace('<!-- MVN_PRODUCT_SEO -->',nonceTemplateScripts(productHtml.schema,scriptNonce))
     .replace('<!-- MVN_NITRO_GALLERY -->',productHtml.gallery||'')
-    .replace('<!-- MVN_PRODUCT_DETAILS -->',productHtml.content);
+    .replace('<!-- MVN_PRODUCT_DETAILS -->',productHtml.content+googleReviewPanel(C));
   file=Buffer.from(html,'utf8');
  }
 }
