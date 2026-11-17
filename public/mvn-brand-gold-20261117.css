@@ -1,0 +1,141 @@
+/* Shared MVN brand palette. Presentation only; catalogue and form behaviour stay in their page modules. */
+@font-face{font-family:MVNDisplay;src:url('/assets/mvn-barlow-condensed-800.woff2') format('woff2');font-weight:800;font-display:swap}
+:root{--mvn-black:#080808;--mvn-gold:#D3AF37;--mvn-muted-gold:#B08B4C;--mvn-white:#FFFFFF;--mvn-charcoal:#1C222B;--mvn-off-white:#F8F7F5;--mvn-line:#dedbd3}
+html:has(body.mvn-site-theme){background:#080808!important}
+html body.mvn-site-theme{
+ --mvn-paper:#F8F7F5;--mvn-ink:#1C222B;--mvn-accent:#D3AF37;--mvn-border:#dedbd3;
+ --mvni-ink:#1C222B;--mvni-orange:#D3AF37;--mvni-paper:#F8F7F5;
+ --mvn-preview-ink:#1C222B;--mvn-preview-paper:#F8F7F5;--mvn-preview-accent:#D3AF37;--mvn-preview-line:#dedbd3;
+ --navy:#080808;--royal:#D3AF37;--silver:#F8F7F5;
+ margin:0;background:#080808!important;background-image:none!important;color:#FFFFFF;
+}
+html body.mvn-site-theme :is(a,button,input,select,textarea,summary):focus-visible{outline:3px solid #B08B4C!important;outline-offset:3px!important}
+html body.mvn-site-theme :is(input[type=checkbox],input[type=radio]){accent-color:#B08B4C}
+/* One dark shell on Home, Shop, product, account and information pages. */
+html body.mvn-site-theme :is(.storehead,.mvn-unified-header,.mvn-info-header,.native-app-header),
+html body.mvn-site-theme.mvn-fitness-product>header,
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) header.storehead{
+ background:#080808!important;background-image:none!important;color:#FFFFFF!important;border-color:#B08B4C!important;box-shadow:none!important;
+}
+html body.mvn-site-theme :is(.mvn-info-logo,.brand-identity,.brand-link){background:transparent!important;background-image:none!important}
+html body.mvn-site-theme :is(.original-brand-logo,.mvn-info-logo img){object-fit:contain!important;filter:none!important;mix-blend-mode:normal!important}
+html body.mvn-site-theme :is(.mvn-back-to-store,.mvn-unified-shop-link){background:#080808!important;color:#FFFFFF!important;border-color:#B08B4C!important}
+html body.mvn-site-theme :is(.mvn-back-to-store,.mvn-unified-shop-link):hover{background:#1C222B!important;color:#D3AF37!important}
+html body.mvn-site-theme :is(.mvn-info-nav,.mvn-theme-main-nav,.account-mainnav,.app-bottom-nav){background:#080808!important;color:#FFFFFF!important;border-color:#B08B4C!important}
+html body.mvn-site-theme :is(.mvn-info-nav,.mvn-theme-main-nav,.account-mainnav,.app-bottom-nav) a{color:#FFFFFF!important;background:transparent!important}
+html body.mvn-site-theme :is(.mvn-info-nav,.mvn-theme-main-nav,.account-mainnav,.app-bottom-nav) a:hover{color:#D3AF37!important}
+html body.mvn-site-theme .announce{background:#D3AF37!important;color:#080808!important}
+html body.mvn-site-theme .announce a{color:#080808!important}
+html body.mvn-site-theme .mvn-theme-main-nav a[aria-current=page]{color:#D3AF37!important}
+html body.mvn-site-theme .brand-wordmark{color:#D3AF37!important}
+html body.mvn-site-theme :is(.storehead,.native-app-header) .head-actions :is(a,button,summary){background:#080808!important;color:#FFFFFF!important;border-color:#B08B4C!important}
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions :is(a,button,summary),
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) header.storehead .mvn-shop-search-disclosure>summary{background:#080808!important;color:#FFFFFF!important;border-color:#B08B4C!important}
+html body.mvn-site-theme :is(#bag em,.native-cart-count,.app-cart-count){background:#D3AF37!important;color:#080808!important}
+html body.mvn-site-theme :is(.mvn-shop-search-panel,.mvn-header-search-popover,.mvn-more-panel,.mvn-theme-category-menu){background:#1C222B!important;color:#FFFFFF!important;border-color:#B08B4C!important}
+/* Dark page titles are shared with the home hero. */
+html body.mvn-site-theme :is(.mvn-info-hero,.account-intro,.support-hero,.business-hero,.account-launch-card,.wholesale-intro){background:#080808!important;background-image:none!important;color:#FFFFFF!important;border-color:#B08B4C!important}
+html body.mvn-site-theme :is(.mvn-info-hero,.account-intro,.support-hero,.business-hero,.wholesale-intro) h1{font-family:MVNDisplay,'Arial Narrow',Arial,sans-serif!important;font-weight:800!important;color:#FFFFFF!important}
+html body.mvn-site-theme :is(.mvn-info-hero,.account-intro,.support-hero,.business-hero,.wholesale-intro) h1 :is(em,strong,span){color:#D3AF37!important;font-style:normal!important}
+html body.mvn-site-theme :is(.mvn-info-hero,.account-intro,.support-hero,.business-hero,.account-launch-card,.wholesale-intro) p{color:#F8F7F5!important}
+html body.mvn-site-theme :is(.mvn-info-hero,.account-intro,.support-hero,.business-hero,.wholesale-intro) :is(.mvn-info-kicker,.eyebrow,.account-eyebrow,.account-eyebrow span,.business-note){color:#D3AF37!important}
+html body.mvn-site-theme .account-launch-card a{color:#D3AF37!important;border-color:#B08B4C!important}
+html body.mvn-site-theme .account-support{background:#1C222B!important;color:#FFFFFF!important;border-color:#B08B4C!important}
+html body.mvn-site-theme .account-support :is(p,a,.support-symbol){color:#FFFFFF!important}
+html body.mvn-site-theme.mvn-unified-page:has(#dealerForm) .business-hero{background:#080808!important;background-image:none!important}
+html body.mvn-site-theme.mvn-unified-page:has(#dealerForm) .business-hero h1 strong{color:#D3AF37!important}
+html body.mvn-site-theme.mvn-unified-page:has(#dealerForm) .business-hero :is(.eyebrow,.business-note){color:#D3AF37!important}
+/* Light reading and shopping surfaces; product photos retain their original pixels. */
+html body.mvn-site-theme :is(.mvn-info-main,.policy.section,.account-main,.support-main,.business-main,.mvn-qr-page-main){background:#F8F7F5!important;color:#1C222B!important}
+html body.mvn-site-theme :is(.mvn-info-panel,.account-panel,.business-form,.business-steps,.business-faq,.support-card,.support-faq,.support-end,.mvn-info-offers article,.mvn-info-document){background:#FFFFFF!important;background-image:none!important;color:#1C222B!important;border-color:#dedbd3!important}
+html body.mvn-site-theme :is(.mvn-info-panel,.account-panel,.policy.section,.business-steps,.business-faq,.support-card,.support-faq,.support-end) :is(h2,h3,label){color:#1C222B!important}
+html body.mvn-site-theme :is(.mvn-info-panel,.account-panel,.policy.section,.business-steps,.business-faq,.support-card,.support-faq,.support-end) :is(p,li){color:#1C222B!important}
+html body.mvn-site-theme :is(.mvn-info-panel,.account-panel,.business-steps,.business-faq,.support-main,.policy) a:not(.primary):not(.button):not(.mvn-info-link){color:#1C222B!important;text-decoration-color:#B08B4C!important}
+html body.mvn-site-theme .mvn-info-panel :is(small,.mvn-info-eyebrow),
+html body.mvn-site-theme :is(.panel-step,.business-steps small,.business-points,.business-faq h2){color:#1C222B!important}
+html body.mvn-site-theme .mvn-info-panel.dark{background:#1C222B!important;color:#FFFFFF!important;border-color:#B08B4C!important}
+html body.mvn-site-theme .mvn-info-panel.dark :is(h2,h3,p,li,small,.mvn-info-eyebrow){color:#FFFFFF!important}
+html body.mvn-site-theme .mvn-info-panel.dark .mvn-info-link.secondary{background:transparent!important;color:#FFFFFF!important;border-color:#B08B4C!important}
+html body.mvn-site-theme :is(.mvn-info-notice,.draft,.wholesale-intro-note,.business-steps>div){background:#F8F7F5!important;color:#1C222B!important;border-color:#B08B4C!important}
+html body.mvn-site-theme :is(.policy.section,.mvn-info-steps>div,.mvn-info-document){border-top-color:#B08B4C!important}
+html body.mvn-site-theme.mvn-unified-page:has(#dealerForm) :is(.business-points,.business-form-wrap>div>span,.business-faq h2,.business-steps small){color:#1C222B!important}
+html body.mvn-site-theme.mvn-unified-page:has(#dealerForm) .business-form-wrap{background:#F8F7F5!important;color:#1C222B!important}
+html body.mvn-site-theme.mvn-unified-page:has(#dealerForm) .business-form-wrap>div :is(h2,p){color:#1C222B!important}
+html body.mvn-site-theme.wholesale-page.mvn-unified-page :is(.account-eyebrow,.account-eyebrow span,.wholesale-intro-note>span){color:#D3AF37!important}
+/* All primary actions use dark text on metallic gold. */
+html body.mvn-site-theme :is(.primary,.add,.account-submit,.button:not(.alt),.mvn-info-link:not(.secondary),.mvn-launch-primary,.mvn-preview-order,.mvn-collection-dialog-all,.app-product-add,.mvn-purchased-add,.mvn-inline-whatsapp,#applyOffer,#send,button[type=submit]){
+ background:#D3AF37!important;background-image:none!important;color:#080808!important;border-color:#D3AF37!important;box-shadow:none!important;
+}
+html body.mvn-site-theme.mvn-info-page .mvn-info-link:not(.secondary),
+html body.mvn-site-theme.mvn-fitness-product :is(.mvn-preview-order,.mvn-launch-primary,.button:not(.alt),.mvn-inline-whatsapp),
+html body.mvn-site-theme.mvn-unified-page:has(#dealerForm) :is(.primary,.business-form button[type=submit]),
+html body.mvn-site-theme.wholesale-page.mvn-unified-page :is(.primary,button[type=submit]){background:#D3AF37!important;background-image:none!important;color:#080808!important;border-color:#D3AF37!important}
+html body.mvn-site-theme :is(.secondary,.button.alt,.mvn-info-link.secondary){background:#FFFFFF!important;color:#1C222B!important;border-color:#B08B4C!important}
+html body.mvn-site-theme :is(.primary,.add,.account-submit,.mvn-launch-primary,.mvn-info-link:not(.secondary)):hover{background:#B08B4C!important;color:#080808!important}
+html body.mvn-site-theme button:disabled{opacity:.55;cursor:not-allowed}
+html body.mvn-site-theme :is(input:not([type=checkbox]):not([type=radio]),select,textarea){background:#FFFFFF!important;color:#1C222B!important;border-color:#b7b2a8!important}
+html body.mvn-site-theme :is(.price,.selling-price,.mvn-inline-price,.mvn-inline-price strong){color:#1C222B!important}
+/* Shop specificity matches its legacy layout rules so no blue/rust layer wins. */
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) main#shop{background:#F8F7F5!important;color:#1C222B!important}
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) #shop>.section-title{background:#080808!important;color:#FFFFFF!important;border-top-color:#D3AF37!important}
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) #shop>.section-title :is(h1,h1 strong){font-family:MVNDisplay,'Arial Narrow',Arial,sans-serif!important;color:#FFFFFF!important}
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) #shop>.section-title .eyebrow{color:#D3AF37!important}
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) #shop>.productbar{background:#FFFFFF!important;color:#1C222B!important;border-color:#dedbd3!important}
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) #shop>.productbar .eyebrow{color:#1C222B!important}
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) #shop>.cats button{background:#FFFFFF!important;color:#1C222B!important;border-color:#B08B4C!important}
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) #shop>.cats button:is(.active,[aria-pressed=true]){background:#D3AF37!important;color:#080808!important;border-color:#D3AF37!important}
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) #shop .collection-results .card{background:#FFFFFF!important;color:#1C222B!important;border-color:#dedbd3!important}
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) #shop .collection-results .card :is(.photo,.info){background:#FFFFFF!important;color:#1C222B!important}
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) #shop .collection-results .card .info>small:first-child{background:#F8F7F5!important;color:#1C222B!important}
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) #shop .collection-results .card :is(h3,h3 a,.selling-price,.price-main strong,.details-link){color:#1C222B!important}
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) #shop .collection-results .card .add{background:#D3AF37!important;color:#080808!important;border-color:#D3AF37!important}
+/* Product details and exact variant controls. */
+html body.mvn-site-theme.mvn-fitness-product main{background:#F8F7F5!important;color:#1C222B!important}
+html body.mvn-site-theme.mvn-fitness-product main :is(h1,h2,h3,.lead,.fine,.breadcrumb,.breadcrumb a){color:#1C222B!important}
+html body.mvn-site-theme.mvn-fitness-product :is(.panel,.media,.mvn-inline-order,.nitro-pack-card,.mvn-product-review,.product-review){background:#FFFFFF!important;color:#1C222B!important;border-color:#dedbd3!important}
+html body.mvn-site-theme.mvn-fitness-product .kicker{color:#1C222B!important}
+html body.mvn-site-theme.mvn-fitness-product :is(.nitro-pack-card.is-selected,.mvn-pack-choice[aria-pressed=true]){border-color:#B08B4C!important;background:#F8F7F5!important;color:#1C222B!important}
+html body.mvn-site-theme.mvn-fitness-product :is(.nitro-pack-choose,.nitro-pack-select){background:#D3AF37!important;color:#080808!important;border-color:#D3AF37!important}
+html body.mvn-site-theme #productDetail :is(.mvn-detail-stage,.mvn-detail-content,.mvn-detail-info,.mvn-pack-choice){background:#FFFFFF!important;color:#1C222B!important;border-color:#dedbd3!important}
+html body.mvn-site-theme #productDetail .mvn-pack-choice[aria-pressed=true]{border-color:#B08B4C!important;background:#F8F7F5!important;color:#1C222B!important}
+/* Cart and collection overlays use the same light surface. */
+html body.mvn-site-theme :is(#drawer,.product-dialog,.mvn-collection-dialog){background:#FFFFFF!important;color:#1C222B!important;border-color:#B08B4C!important}
+html body.mvn-site-theme #drawer .dhead{background:#FFFFFF!important;color:#1C222B!important;border-color:#B08B4C!important}
+html body.mvn-site-theme #drawer :is(.dhead small,.checkout-heading,.grand,.row b,.row strong){color:#1C222B!important}
+html body.mvn-site-theme #drawer :is(#send,.primary,#applyOffer){background:#D3AF37!important;color:#080808!important;border-color:#D3AF37!important}
+html body.mvn-site-theme .floating-cart{background:#D3AF37!important;color:#080808!important;border-color:#B08B4C!important}
+html body.mvn-site-theme .floating-cart strong{background:#080808!important;color:#FFFFFF!important}
+/* App surfaces stay usable with the same palette. */
+html body.mvn-site-theme.app-store :is(#shop,.app-catalogue-header,.mvn-purchased-packs,.app-product-stage){background:#F8F7F5!important;color:#1C222B!important}
+html body.mvn-site-theme.app-store :is(.mvn-purchased-pack,.mvn-purchased-photo,.mvn-purchased-details,.app-product-card){background:#FFFFFF!important;color:#1C222B!important;border-color:#dedbd3!important}
+html body.mvn-site-theme.app-store .app-bottom-nav .active{color:#D3AF37!important}
+/* Footer backgrounds remain uniform across every customer destination. */
+html body.mvn-site-theme :is(.mvn-home-contact,.mvn-unified-footer,.mvn-info-footer,.mvn-compact-footer,.account-footer,.mvn-qr-page-footer),
+html body.mvn-site-theme.mvn-fitness-product>footer,
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) .mvn-compact-footer{
+ background:#080808!important;background-image:none!important;color:#FFFFFF!important;border-color:#B08B4C!important;
+}
+html body.mvn-site-theme :is(.mvn-unified-footer,.mvn-info-footer,.mvn-compact-footer,.account-footer,.mvn-qr-page-footer) :is(a,p,small,span),
+html body.mvn-site-theme.mvn-fitness-product>footer :is(a,p){color:#FFFFFF!important}
+html body.mvn-site-theme :is(.mvn-unified-footer,.mvn-info-footer,.mvn-compact-footer,.account-footer) a:hover{color:#D3AF37!important}
+html body.mvn-site-theme .mvn-preview-best{background:#F8F7F5!important}
+html body.mvn-site-theme[data-mvn-page=unsubscribe] main{background:#F8F7F5!important;color:#1C222B!important;padding:30px;border-top:4px solid #B08B4C}
+@media print{html:has(body.mvn-site-theme),html body.mvn-site-theme{background:#FFFFFF!important;color:#1C222B!important}}
+/* Contrast refinements for compact shop controls and support destinations. */
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions #bag{background:#080808!important;color:#FFFFFF!important;border-color:#B08B4C!important}
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions #bag #count{background:#D3AF37!important;color:#080808!important}
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) #shop>.productbar :is(h3,span,label,#resultText,.eyebrow){color:#1C222B!important}
+html body.mvn-site-theme .account-support strong{color:#FFFFFF!important}
+html body.mvn-site-theme :is(.account-intro,.support-hero,.mvn-info-hero,.business-hero) h1{letter-spacing:-.01em!important}
+html body.mvn-site-theme #dealerAccess .eyebrow{color:#1C222B!important}
+html body.mvn-site-theme :is(.support-topic,.support-certificate){background:#FFFFFF!important;color:#1C222B!important;border-color:#dedbd3!important}
+html body.mvn-site-theme :is(.support-topic,.support-certificate,.support-section-heading,.support-end) :is(h2,h3,p,span,strong,small,a){color:#1C222B!important}
+html body.mvn-site-theme .support-topic:hover{border-color:#B08B4C!important}
+html body.mvn-site-theme .support-hero-contact{background:#1C222B!important;color:#FFFFFF!important;border-color:#B08B4C!important}
+html body.mvn-site-theme .support-hero-contact :is(a,p,span,strong){color:#FFFFFF!important}
+html body.mvn-site-theme .support-cta{background:#D3AF37!important;color:#080808!important;border-color:#D3AF37!important}
+html body.mvn-site-theme .support-end-actions a{background:#D3AF37!important;color:#080808!important;border-color:#D3AF37!important}
+html body.mvn-site-theme .mvn-globtech-launch{background:#080808!important;background-image:none!important;color:#FFFFFF!important;border-color:#B08B4C!important}
+html body.mvn-site-theme .mvn-globtech-launch :is(h2,p,strong){color:#FFFFFF!important}
+html body.mvn-site-theme .mvn-globtech-launch .mvn-launch-kicker{color:#D3AF37!important}
+html body.mvn-site-theme.mvn-fitness-product main :is(a:not(.button):not(.mvn-preview-order):not(.mvn-inline-whatsapp),.nitro-pack-card a){text-decoration-color:#B08B4C!important}

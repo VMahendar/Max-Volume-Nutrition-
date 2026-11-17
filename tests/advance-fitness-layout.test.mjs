@@ -6,7 +6,7 @@ test('supplement store screenshot reference drives the actual homepage structure
  const html=readFileSync('public/index.html','utf8');
  const css=readFileSync('public/mvn-supplement-store-reference.css','utf8');
  assert.match(html,/mvn-showcase-home mvn-orange-home/);
- assert.match(html,/mvn-orange-home-20261117\.css\?v=5/,"new homepage uses the approved black, orange and white skin");
+ assert.match(html,/mvn-orange-home-20261117\.css\?v=6/,"new homepage uses the approved black, orange and white skin");
  assert.match(readFileSync("public/mvn-shopping-bundle-20261115.css","utf8"),/mvn-supplement-store-reference\.css/);
  assert.match(html,/class="mvn-theme-categories"/);
  assert.match(html,/class="mvn-theme-main-nav"/);

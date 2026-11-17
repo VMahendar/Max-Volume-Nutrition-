@@ -8,11 +8,11 @@
  };
  function normalize(){
   if(!isShop())return;
-  set('header.storehead',{'background-color':'#151617','background-image':'none','border-bottom':'1px solid #3e3e3e'});
-  set('#shop',{'background-color':'#faf9f7','background-image':'none',width:'100%','max-width':'none',margin:'0'});
+  set('header.storehead',{'background-color':'#080808','background-image':'none','border-bottom':'1px solid #3e3e3e'});
+  set('#shop',{'background-color':'#F8F7F5','background-image':'none',width:'100%','max-width':'none',margin:'0'});
   set('#shop>.section-title',{
-   display:'flex','background-color':'#1c1d20',background:'#1c1d20',
-   'background-image':'none',color:'#fff','border-top':'4px solid #c8371b',
+   display:'flex','background-color':'#080808',background:'#080808',
+   'background-image':'none',color:'#fff','border-top':'4px solid #D3AF37',
    'border-radius':'0',width:'100%','max-width':'1440px',
    'margin-left':'auto','margin-right':'auto'
   });
@@ -21,11 +21,11 @@
   set('#shop>.section-title>p',{'color':'#d5d5d5'});
   set('#shop>.productbar',{
    'background-color':'#fff','background-image':'none',
-   color:'#171819','max-width':'1440px',
+   color:'#1C222B','max-width':'1440px',
    'margin-left':'auto','margin-right':'auto'
   });
   set('#shop>.cats',{'max-width':'1440px','margin-left':'auto','margin-right':'auto'});
-  set('.mvn-compact-footer',{'background-color':'#151617','background-image':'none'});
+  set('.mvn-compact-footer',{'background-color':'#080808','background-image':'none'});
  }
  document.addEventListener('DOMContentLoaded',normalize,{once:true});
  window.addEventListener('load',normalize,{once:true});
