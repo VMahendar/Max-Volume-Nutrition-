@@ -38,7 +38,10 @@ try{
    await page.screenshot({path:'reports/visual-qa/completion-'+path.replace('.html','')+'-'+width+'.png',fullPage:false});
   }
   await page.locator('[data-order-field="flavor"]').selectOption({label:'Cranberry'});
-  await page.waitForFunction(()=>{const x=document.querySelector('main .media img');return x.complete&&x.naturalWidth>0&&/cranberry/i.test(x.src);});
+  await page.waitForFunction(()=>{const x=document.querySelector('main .media img');return x.complete&&x.naturalWidth>0&&/cranberry/i.test(x.alt);});
+  const currentCatalog=await (await page.request.get(origin+'/api/retail/catalog')).json();
+  const cranberry=currentCatalog.products.find(p=>p.id==='pro-creatine').variants.find(v=>v.id==='creatine-cranberry');
+  assert.equal(await page.locator('main .media img').getAttribute('src'),cranberry.image,'selected flavour uses its own catalogue photo');
   await page.locator('[data-order-field="plus"]').click();
   await page.locator('[data-order-field="add"]').click();
   await page.waitForURL('**/shop.html?open=cart');
