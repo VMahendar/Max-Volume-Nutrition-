@@ -34,7 +34,7 @@ function apply(design){
  if(!design||design.version!==2)return;
  current=design;const f=design.fields||{};
  for(const {el,style:initial,hidden} of originals){if(initial===null)el.removeAttribute('style');else el.setAttribute('style',initial);el.hidden=hidden;}
- for(const [id,markup] of Object.entries(originalText)){const el=document.querySelector(texts[id]);if(el&&markup!==undefined)el.innerHTML=markup;}
+ for(const [id,markup] of Object.entries(originalText)){const el=document.querySelector(texts[id]);if(el&&markup!==undefined)el.innerHTML=window.mvnSafeHTML(markup);}
  for(const [id,original] of Object.entries(originalImages)){const img=node(id);img.src=original.src;if(original.srcset)img.setAttribute('srcset',original.srcset);else img.removeAttribute('srcset');for(const [source,srcset] of original.sources)if(srcset)source.setAttribute('srcset',srcset);}
  // Move the existing sections, retaining their event listeners and links.
  let previous=orderAnchor;

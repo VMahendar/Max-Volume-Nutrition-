@@ -157,9 +157,9 @@ function installCategoryShortcuts(){
  const shop=$('shop');if(!shop)return;
  const nav=document.createElement('nav');nav.className='mvn-quick-categories';nav.id='mvn-quick-categories';
  nav.setAttribute('aria-label','Browse by supplement category');
- nav.innerHTML='<div class="mvn-quick-caption"><strong>SHOP BY CATEGORY</strong><span>Find your supplements fast</span></div><div class="mvn-quick-track">'+[
+ nav.innerHTML=window.mvnSafeHTML('<div class="mvn-quick-caption"><strong>SHOP BY CATEGORY</strong><span>Find your supplements fast</span></div><div class="mvn-quick-track">'+[
  ['all','All'],['whey','Whey'],['mass','Mass Gainers'],['creatine','Creatine'],['pre','Pre-workout'],['vitamins','Vitamins'],['amino','Amino']
- ].map(([id,label])=>'<button type="button" data-cat="'+id+'">'+label+'</button>').join('')+'</div>';
+ ].map(([id,label])=>'<button type="button" data-cat="'+id+'">'+label+'</button>').join('')+'</div>');
  shop.before(nav);
  nav.querySelectorAll('[data-cat]').forEach(button=>button.onclick=()=>setCat(button.dataset.cat));
 }
@@ -172,7 +172,7 @@ function renderPurchasedPacks(){
  if(!section){
   section=document.createElement('section');section.id='mvn-purchased-packs';
   section.className='mvn-purchased-section';
-  section.innerHTML='<div class="mvn-purchased-heading"><div><span class="mvn-label">MAX VOLUME NUTRITION · SUPPLEMENT COLLECTION</span><h2>SHOP YOUR EXACT PACK.</h2><p>Browse individual packs with matching photos. Stock is confirmed before fulfilment.</p></div><a href="tel:+917708830513" aria-label="Call Max Volume Nutrition">CALL OUR TEAM ↗</a></div><div id="mvn-purchased-grid" class="mvn-purchased-grid"></div>';
+  section.innerHTML=window.mvnSafeHTML('<div class="mvn-purchased-heading"><div><span class="mvn-label">MAX VOLUME NUTRITION · SUPPLEMENT COLLECTION</span><h2>SHOP YOUR EXACT PACK.</h2><p>Browse individual packs with matching photos. Stock is confirmed before fulfilment.</p></div><a href="tel:+917708830513" aria-label="Call Max Volume Nutrition">CALL OUR TEAM ↗</a></div><div id="mvn-purchased-grid" class="mvn-purchased-grid"></div>');
   const title=$('shop').querySelector('.section-title');
   if(title)title.after(section);else $('shop').prepend(section);
  }
@@ -203,7 +203,7 @@ function renderPurchasedPacks(){
     return '<section class="mvn-product-group" data-group="'+safe(group)+'" aria-label="'+safe(title)+'"><header class="mvn-product-group-heading"><span>MAX VOLUME NUTRITION</span><h2>'+safe(title)+'</h2><p>'+safe(note)+'</p></header><div class="mvn-product-group-grid">'+grouped.map(item=>item.markup).join('')+'</div></section>';
    }).join('')
   : cards.map(item=>item.markup).join('');
- section.querySelector('#mvn-purchased-grid').innerHTML=html||'<p class="mvn-empty-packs">No purchased variants match this filter.</p>';
+ section.querySelector('#mvn-purchased-grid').innerHTML=window.mvnSafeHTML(html||'<p class="mvn-empty-packs">No purchased variants match this filter.</p>');
  document.body.classList.toggle('app-catalog-ready',all.length>0);
  section.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{const pack=purchasedPack(b.dataset.add);if(!pack||pack.v.price===null)return;const key=pack.p.id+'|'+pack.i;cart[key]=Math.min(999,(cart[key]||0)+1);persist();openBag()});
  section.querySelectorAll('[data-details]').forEach(b=>b.onclick=()=>{const pack=purchasedPack(b.dataset.details);if(pack)showDetail(pack.p.id,pack.i)});
@@ -216,7 +216,7 @@ function renderPurchasedPromos(){
  let host=section.querySelector('.mvn-purchased-promo');
  if(!availableOffers.length){if(host)host.remove();return;}
  if(!host){host=document.createElement('div');host.className='mvn-purchased-promo';heading.after(host)}
- host.innerHTML=availableOffers.filter(c=>Date.parse(c.endsAt)>Date.now()&&Date.parse(c.startsAt)<=Date.now()).map(c=>'<div class="mvn-promo-item"><span>'+safe(c.occasion||'RETAIL OFFER')+'</span><strong>'+safe(c.code)+'</strong><small>'+safe(c.description)+' · One code per cart · Apply at checkout</small><button type="button" data-promo-code="'+safe(c.code)+'">USE OFFER ↗</button></div>').join('');
+ host.innerHTML=window.mvnSafeHTML(availableOffers.filter(c=>Date.parse(c.endsAt)>Date.now()&&Date.parse(c.startsAt)<=Date.now()).map(c=>'<div class="mvn-promo-item"><span>'+safe(c.occasion||'RETAIL OFFER')+'</span><strong>'+safe(c.code)+'</strong><small>'+safe(c.description)+' · One code per cart · Apply at checkout</small><button type="button" data-promo-code="'+safe(c.code)+'">USE OFFER ↗</button></div>').join(''));
  host.querySelectorAll('[data-promo-code]').forEach(b=>b.onclick=()=>{openBag();appliedOffer=null;$('offerCode').value=b.dataset.promoCode;drawCart();$('offerMessage').textContent='Apply the offer code to check your cart discount.';$('offerCode').focus()});
 }
 
@@ -234,7 +234,7 @@ function renderAppProduct(){
  stage.hidden=!selected||cat!=="all"||!!q.trim()||priceRange!=="all";
  if(stage.hidden)return;
  const {p,v,i,key}=selected;
- stage.innerHTML=`
+ stage.innerHTML=window.mvnSafeHTML(`
   <div class="app-product-art" data-family="${safe(p.cat)}">
    <span class="app-product-edition">UNICORN PRO SERIES</span>
    <span class="app-product-type" aria-hidden="true">${safe(p.cat==="mass"?"MASS":p.cat==="creatine"?"CREATINE":"WHEY")}</span>
@@ -252,7 +252,7 @@ function renderAppProduct(){
     <button class="app-product-add" type="button">Add to cart <span>${money(v.price)}</span></button>
     <button class="app-product-details" type="button">View product details</button>
    </div>
-  </div>`;
+  </div>`);
  stage.querySelector(".app-product-art img").addEventListener("error",e=>hideFailedPackPhoto(e.currentTarget));
  stage.querySelectorAll("[data-feature-pack]").forEach(button=>button.onclick=()=>{
   appFeatureSelection=button.dataset.featurePack;
@@ -287,16 +287,16 @@ function renderSpotlight(){
  img.onerror=()=>hideFailedPackPhoto(img);
  $('mvnSpotlightTitle').textContent=p.name;
  $('mvnSpotlightDescription').textContent=p.desc||'Choose your correct pack and order through WhatsApp.';
- $('mvnSpotlightPrice').innerHTML=priceMarkup(v);
+ $('mvnSpotlightPrice').innerHTML=window.mvnSafeHTML(priceMarkup(v));
  $('mvnSpotlightQty').textContent=spotlightQty;
  $('mvnSpotlightAdd').textContent='ADD TO CART · '+money(v.price*spotlightQty);
- $('mvnSpotlightTabs').innerHTML=items.map(product=>{
+ $('mvnSpotlightTabs').innerHTML=window.mvnSafeHTML(items.map(product=>{
   const i=displayVariant(product),photo=coverImage(product,i);
   return '<button type="button" data-mvn-product="'+safe(product.id)+'" aria-pressed="'+String(product.id===p.id)+'">'+
     (photo?'<img src="'+safe(photo)+'" alt="" loading="lazy">':'')+'<span>'+safe(product.name)+'</span></button>';
- }).join('');
+ }).join(''));
  $('mvnSpotlightTabs').querySelectorAll('[data-mvn-product]').forEach(button=>button.onclick=()=>{spotlightProduct=button.dataset.mvnProduct;spotlightVariant=null;spotlightQty=1;renderSpotlight()});
- $('mvnSpotlightVariants').innerHTML=options.map(({v,i})=>'<button type="button" data-mvn-variant="'+i+'" aria-pressed="'+String(i===item.i)+'"><span>'+safe(v.label)+'</span><b>'+money(v.price)+'</b></button>').join('');
+ $('mvnSpotlightVariants').innerHTML=window.mvnSafeHTML(options.map(({v,i})=>'<button type="button" data-mvn-variant="'+i+'" aria-pressed="'+String(i===item.i)+'"><span>'+safe(v.label)+'</span><b>'+money(v.price)+'</b></button>').join(''));
  $('mvnSpotlightVariants').querySelectorAll('[data-mvn-variant]').forEach(button=>button.onclick=()=>{spotlightVariant=Number(button.dataset.mvnVariant);spotlightQty=1;renderSpotlight()});
  $('mvnSpotlightMinus').onclick=()=>{spotlightQty=Math.max(1,spotlightQty-1);renderSpotlight()};
  $('mvnSpotlightPlus').onclick=()=>{spotlightQty=Math.min(99,spotlightQty+1);renderSpotlight()};
@@ -314,7 +314,7 @@ if($("sort").value==="default")items.sort((a,b)=>Number(Boolean(coverImage(b,b.f
 if($("sort").value==="name")items.sort((a,b)=>a.name.localeCompare(b.name));
 if($("sort").value==="low")items.sort((a,b)=>(a.variants[displayVariant(a)].price??Infinity)-(b.variants[displayVariant(b)].price??Infinity));
 if($("sort").value==="high")items.sort((a,b)=>(b.variants[displayVariant(b)].price??-Infinity)-(a.variants[displayVariant(a)].price??-Infinity));
-$("grid").innerHTML=items.length?items.map(card).join(""):'<div class="no-products"><h3>No matching products</h3><p>Try clearing your search and filters.</p><button type="button" id="emptyReset">View all products</button></div>';
+$("grid").innerHTML=window.mvnSafeHTML(items.length?items.map(card).join(""):'<div class="no-products"><h3>No matching products</h3><p>Try clearing your search and filters.</p><button type="button" id="emptyReset">View all products</button></div>');
 if($("emptyReset"))$("emptyReset").onclick=resetFilters;
 if($("collectionTitle"))$("collectionTitle").textContent=brandFilter==="globtech"&&cat==="all"?"GLOBE-TECH NUTRITION":categoryNames[cat];
  document.querySelectorAll("[data-brand]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.brand===brandFilter)));
@@ -322,7 +322,7 @@ document.querySelectorAll("[data-cat]").forEach(button=>{const active=button.dat
 const filters=$("activeFilters");if(filters){filters.replaceChildren();for(const [label,clear] of [[q?"Search: "+q:"",()=>{q="";$("q").value="";}],[priceRange!=="all"?priceLabels[priceRange]:"",()=>{priceRange="all";$("priceRange").value="all";}]]){if(!label)continue;const button=document.createElement("button");button.type="button";button.textContent=label+" ×";button.setAttribute("aria-label","Clear "+label);button.onclick=()=>{clear();render()};filters.append(button)}filters.hidden=!filters.childElementCount;}
  document.querySelectorAll(".photo img").forEach(img=>img.addEventListener("error",()=>hideFailedPackPhoto(img)));
 $("resultText").textContent=items.length+" product range"+(items.length===1?"":"s")+" · choose pack and flavour";
-document.querySelectorAll(".variant").forEach(s=>s.addEventListener("change",()=>{const p=P.find(x=>x.id===s.id.slice(2));$("price-"+p.id).innerHTML=priceMarkup(p.variants[Number(s.value)]);swapPhoto(s.closest(".card").querySelector(".photo"),coverImage(p,s.value),p.name);const v=p.variants[Number(s.value)],card=s.closest(".card");card.querySelector(".add").hidden=v.price===null;const quote=card.querySelector(".quote-action");quote.hidden=v.price!==null;quote.href=enquiryURL(p,v)}));
+document.querySelectorAll(".variant").forEach(s=>s.addEventListener("change",()=>{const p=P.find(x=>x.id===s.id.slice(2));$("price-"+p.id).innerHTML=window.mvnSafeHTML(priceMarkup(p.variants[Number(s.value)]));swapPhoto(s.closest(".card").querySelector(".photo"),coverImage(p,s.value),p.name);const v=p.variants[Number(s.value)],card=s.closest(".card");card.querySelector(".add").hidden=v.price===null;const quote=card.querySelector(".quote-action");quote.hidden=v.price!==null;quote.href=enquiryURL(p,v)}));
 document.querySelectorAll(".details-link").forEach(b=>b.addEventListener("click",()=>showDetail(b.dataset.detail)));
 document.querySelectorAll(".add").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.id+"|"+$("v-"+b.dataset.id).value;if(!getItem(k))return;cart[k]=Math.min(999,(cart[k]||0)+1);persist();openBag()}));
 }
@@ -332,8 +332,8 @@ function drawCart(){
 const {n,subtotal,discount,total}=totals();$("count").textContent=n;if($("floatingCount"))$("floatingCount").textContent=n;if($("floatingCart"))$("floatingCart").hidden=!n;
 let html=n?"":'<p class="empty-cart">Your cart is empty. Choose your supplements to get started.</p>';
 for(const [k,qty] of Object.entries(cart)){const item=getItem(k);if(!item)continue;html+='<div class="row"><b>'+safe(item.p.name)+'</b><small>'+safe(item.v.label)+' · '+money(item.v.price)+'</small><div class="qty"><button data-minus="'+k+'" aria-label="Decrease quantity">−</button><span>'+qty+'</span><button data-plus="'+k+'" aria-label="Increase quantity">+</button><strong>'+money(item.v.price*qty)+'</strong></div></div>'}
-$("items").innerHTML=html;
-$("cart-totals").innerHTML=n?'<div><span>Subtotal</span><b>'+money(subtotal)+'</b></div>'+(discount?'<div><span>Offer savings</span><b>−'+money(discount)+'</b></div><div><span>Products total</span><b>'+money(total)+'</b></div>':''):"";
+$("items").innerHTML=window.mvnSafeHTML(html);
+$("cart-totals").innerHTML=window.mvnSafeHTML(n?'<div><span>Subtotal</span><b>'+money(subtotal)+'</b></div>'+(discount?'<div><span>Offer savings</span><b>−'+money(discount)+'</b></div><div><span>Products total</span><b>'+money(total)+'</b></div>':''):"");
 $("send").disabled=!n;
 document.querySelectorAll("[data-minus]").forEach(b=>b.onclick=()=>{const k=b.dataset.minus;cart[k]-=1;if(cart[k]<=0)delete cart[k];persist()});
 document.querySelectorAll("[data-plus]").forEach(b=>b.onclick=()=>{const k=b.dataset.plus;cart[k]=Math.min(999,cart[k]+1);persist()});
@@ -374,7 +374,7 @@ const address=$("customerAddress").value.trim(),city=$("customerCity").value.tri
 for(const id of ['customerName','customerAddress','customerCity','customerState'])$(id).setCustomValidity($(id).value.trim()?'':'Please complete this field.');
 if(!$("checkoutFields").reportValidity()||!name||!/^[0-9]{10}$/.test(phone)||!address||!city||!state||!/^[1-9][0-9]{5}$/.test(pincode))return;
 const message=$("priceMessage");const previous=totals().total;$("send").disabled=true;message.textContent="Checking current prices…";
-try{await refreshRetailPrices();if($("offerCode").value.trim())await quoteOffer();drawCart();renderRecent();document.querySelectorAll('.variant').forEach(select=>{const p=P.find(item=>item.id===select.id.slice(2));$("price-"+p.id).innerHTML=priceMarkup(p.variants[Number(select.value)])});}catch(error){message.textContent=error.message;$("send").disabled=false;return;}
+try{await refreshRetailPrices();if($("offerCode").value.trim())await quoteOffer();drawCart();renderRecent();document.querySelectorAll('.variant').forEach(select=>{const p=P.find(item=>item.id===select.id.slice(2));$("price-"+p.id).innerHTML=window.mvnSafeHTML(priceMarkup(p.variants[Number(select.value)]))});}catch(error){message.textContent=error.message;$("send").disabled=false;return;}
 if(totals().total!==previous){message.textContent="Prices have been updated. Please review your cart total and confirm again.";$("send").disabled=false;return;}
 message.textContent="";
 entries=Object.entries(cart).filter(([k])=>getItem(k));if(!entries.length)return;
@@ -412,13 +412,13 @@ $("removeOffer").onclick=()=>{appliedOffer=null;$("offerCode").value='';$("offer
 let offerExpiryTimer;
 const defaultOfferMarkup=$("offerCards").innerHTML;
 async function loadOffers(){
- try{const response=await fetch('/api/promotions?surface='+offerSurface,{cache:'no-store'});if(!response.ok)return;const {campaigns}=await response.json();availableOffers=campaigns||[];clearTimeout(offerExpiryTimer);if(availableOffers.length){const next=Math.min(...availableOffers.map(c=>Date.parse(c.endsAt)));offerExpiryTimer=setTimeout(()=>void loadOffers(),Math.max(1000,Math.min(86400000,next-Date.now()+500)));}document.querySelectorAll('.variant').forEach(select=>{const p=P.find(item=>item.id===select.id.slice(2));$("price-"+p.id).innerHTML=priceMarkup(p.variants[Number(select.value)])});
+ try{const response=await fetch('/api/promotions?surface='+offerSurface,{cache:'no-store'});if(!response.ok)return;const {campaigns}=await response.json();availableOffers=campaigns||[];clearTimeout(offerExpiryTimer);if(availableOffers.length){const next=Math.min(...availableOffers.map(c=>Date.parse(c.endsAt)));offerExpiryTimer=setTimeout(()=>void loadOffers(),Math.max(1000,Math.min(86400000,next-Date.now()+500)));}document.querySelectorAll('.variant').forEach(select=>{const p=P.find(item=>item.id===select.id.slice(2));$("price-"+p.id).innerHTML=window.mvnSafeHTML(priceMarkup(p.variants[Number(select.value)]))});
  renderPurchasedPacks();renderPurchasedPromos();renderAppProduct();
  const shortcut=$("appOfferShortcut");
  if(shortcut){
   shortcut.querySelector("span").textContent=availableOffers.map(c=>c.title).join(" · ")||"See current offers and festival updates";
  }
-  if(!availableOffers.length){$("offerCards").innerHTML=defaultOfferMarkup;return;}
+  if(!availableOffers.length){$("offerCards").innerHTML=window.mvnSafeHTML(defaultOfferMarkup);return;}
  $("offerCards").replaceChildren(...availableOffers.map(c=>{const card=document.createElement('article');card.className='offer-card';
  for(const [tag,text] of [['span',c.occasion||'MVN SPECIAL'],['h3',c.title],['p',c.description],['small','Retail customers only · Ends '+new Date(Date.parse(c.endsAt)-1).toLocaleString('en-IN',{timeZone:'Asia/Kolkata',dateStyle:'medium',timeStyle:'short'})+' IST']]){const el=document.createElement(tag);el.textContent=text;card.append(el)}
  const terms=document.createElement('details'),summary=document.createElement('summary'),copy=document.createElement('p');summary.textContent='Offer terms';copy.textContent=c.terms;terms.append(summary,copy);card.append(terms);
@@ -477,7 +477,7 @@ function showWebsiteProductDetail(p,options,initialIndex,dlg,root){
   '<button type="button" class="mvn-photo-choice" data-mvn-photo="'+i+'" aria-label="View '+safe(photo.label||'pack photo')+'"><img src="'+safe(photo.src)+'" alt="" loading="lazy"></button>'
  ).join('');
  root.innerHTML=
-  '<div class="mvn-detail-assurance" aria-label="Ordering information"><span>Clear retail prices</span><span>Choose the exact pack</span><span>WhatsApp order confirmation</span></div>'+
+  window.mvnSafeHTML('<div class="mvn-detail-assurance" aria-label="Ordering information"><span>Clear retail prices</span><span>Choose the exact pack</span><span>WhatsApp order confirmation</span></div>'+
   '<div class="mvn-detail-layout">'+
    '<section class="mvn-detail-gallery" aria-label="Product photographs">'+
     '<div class="mvn-detail-stage detail-photo"></div>'+
@@ -499,7 +499,7 @@ function showWebsiteProductDetail(p,options,initialIndex,dlg,root){
     '<details class="mvn-detail-accordion"><summary>About this product</summary><p>'+safe(p.desc)+'</p></details>'+
     '<details class="mvn-detail-accordion"><summary>Pack labels and availability</summary><p>Our team confirms the selected flavour, size and current stock before accepting your order. Request the current product label if needed.</p></details>'+
    '</section>'+
-  '</div>';
+  '</div>');
  const stage=root.querySelector('.mvn-detail-stage');
  const packButtons=[...root.querySelectorAll('[data-mvn-pack]')];
  const photoHost=root.querySelector('.mvn-detail-thumbnails');
@@ -507,14 +507,14 @@ function showWebsiteProductDetail(p,options,initialIndex,dlg,root){
   const variant=p.variants[current],photos=productPhotos(current);
   photoIndex=Math.min(photoIndex,Math.max(0,photos.length-1));
   swapPhoto(stage,photos[photoIndex]?.src||coverImage(p,current),p.name+' — '+variant.label);
-  root.querySelector('#detail-price').innerHTML=priceMarkup(variant);
+  root.querySelector('#detail-price').innerHTML=window.mvnSafeHTML(priceMarkup(variant));
   root.querySelector('#mvn-detail-quantity').textContent=quantity;
   root.querySelector('#detail-add').textContent='ADD TO CART · '+money(variant.price*quantity);
   packButtons.forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.mvnPack)===current)));
   photoHost.hidden=photos.length<2;
-  photoHost.innerHTML=photos.map((photo,i)=>
+  photoHost.innerHTML=window.mvnSafeHTML(photos.map((photo,i)=>
    '<button type="button" class="mvn-photo-choice" data-mvn-photo="'+i+'" aria-current="'+(i===photoIndex)+'" aria-label="View '+safe(photo.label||'product image')+'"><img src="'+safe(photo.src)+'" alt="" loading="lazy"></button>'
-  ).join('');
+  ).join(''));
   photoHost.querySelectorAll('[data-mvn-photo]').forEach(button=>button.onclick=()=>{photoIndex=Number(button.dataset.mvnPhoto);update()});
  };
  packButtons.forEach(button=>button.addEventListener('click',()=>{current=Number(button.dataset.mvnPack);photoIndex=0;update()}));
@@ -542,9 +542,9 @@ function showDetail(id,chosenIndex){
  if(p.variants[initialIndex].price===null)return showQuoteProductDetail(p,options,initialIndex,dlg,root);
  if(!document.body.classList.contains('app-store'))return showWebsiteProductDetail(p,options,initialIndex,dlg,root);
  const cover=coverImage(p,initialIndex);const photo=cover?'<img src="'+safe(cover)+'" alt="'+safe(p.name)+'" loading="lazy"><div class="placeholder" hidden>Verified product image pending</div>':'<div class="placeholder"><b>'+safe(p.name)+'</b>Verified product image pending</div>';
- root.innerHTML='<div class="detail-layout"><div class="detail-photo">'+photo+'</div><div class="detail-copy"><span class="eyebrow dark">'+safe(p.brand||'Unicorn Pro Series')+'</span><h2>'+safe(p.name)+'</h2><p>'+safe(p.desc)+'</p><p class="detail-note">Product pack and flavour availability are confirmed before fulfilment. Front/back pack-label and ingredient photos will be added after verification; please request the current label when ordering.</p><label for="detail-variant">FLAVOUR / PACK SIZE</label><select id="detail-variant">'+options.map(({v,i})=>'<option value="'+i+'"'+(i===initialIndex?' selected':'')+'>'+safe(v.label)+'</option>').join("")+'</select><div class="price detail-price" id="detail-price">'+priceMarkup(p.variants[initialIndex])+'</div><button class="primary" id="detail-add">ADD TO CART +</button></div></div>';
+ root.innerHTML=window.mvnSafeHTML('<div class="detail-layout"><div class="detail-photo">'+photo+'</div><div class="detail-copy"><span class="eyebrow dark">'+safe(p.brand||'Unicorn Pro Series')+'</span><h2>'+safe(p.name)+'</h2><p>'+safe(p.desc)+'</p><p class="detail-note">Product pack and flavour availability are confirmed before fulfilment. Front/back pack-label and ingredient photos will be added after verification; please request the current label when ordering.</p><label for="detail-variant">FLAVOUR / PACK SIZE</label><select id="detail-variant">'+options.map(({v,i})=>'<option value="'+i+'"'+(i===initialIndex?' selected':'')+'>'+safe(v.label)+'</option>').join("")+'</select><div class="price detail-price" id="detail-price">'+priceMarkup(p.variants[initialIndex])+'</div><button class="primary" id="detail-add">ADD TO CART +</button></div></div>');
  swapPhoto(root.querySelector(".detail-photo"),coverImage(p,initialIndex),p.name);
- const sel=$("detail-variant");sel.onchange=()=>{$("detail-price").innerHTML=priceMarkup(p.variants[Number(sel.value)]);swapPhoto(root.querySelector(".detail-photo"),coverImage(p,sel.value),p.name)};
+ const sel=$("detail-variant");sel.onchange=()=>{$("detail-price").innerHTML=window.mvnSafeHTML(priceMarkup(p.variants[Number(sel.value)]));swapPhoto(root.querySelector(".detail-photo"),coverImage(p,sel.value),p.name)};
  $("detail-add").onclick=()=>{const k=p.id+"|"+sel.value;cart[k]=Math.min(999,(cart[k]||0)+1);persist();dlg.close();openBag()};
  if(typeof dlg.showModal==="function")dlg.showModal();else dlg.setAttribute("open","");
 }
@@ -553,7 +553,7 @@ $("detailClose").onclick=()=>$("productDialog").close();
 document.querySelectorAll(".hero-visual img,.detail-photo img").forEach(img=>img.addEventListener("error",()=>{img.hidden=true}));
 
 function showQuoteProductDetail(p,options,initialIndex,dlg,root){
- root.innerHTML='<div class="gt-quote-detail"><div class="gt-pack"><img alt="'+safe(p.brand+' '+p.name)+'"></div><section><span class="gt-kicker">'+safe(p.brand)+'</span><h2>'+safe(p.name)+'</h2><p>'+safe(p.desc)+'</p><label for="gt-quote-variant">CHOOSE YOUR PACK</label><select id="gt-quote-variant">'+options.map(({v,i})=>'<option value="'+i+'"'+(i===initialIndex?' selected':'')+'>'+safe(v.label)+'</option>').join('')+'</select><div class="price">'+priceMarkup(p.variants[initialIndex])+'</div><a class="quote-action" target="_blank" rel="noopener noreferrer">ASK ABOUT LAUNCH ↗</a><p class="fine">Globe-Tech is coming soon. Prices and order availability will be announced at launch.</p></section></div>';
+ root.innerHTML=window.mvnSafeHTML('<div class="gt-quote-detail"><div class="gt-pack"><img alt="'+safe(p.brand+' '+p.name)+'"></div><section><span class="gt-kicker">'+safe(p.brand)+'</span><h2>'+safe(p.name)+'</h2><p>'+safe(p.desc)+'</p><label for="gt-quote-variant">CHOOSE YOUR PACK</label><select id="gt-quote-variant">'+options.map(({v,i})=>'<option value="'+i+'"'+(i===initialIndex?' selected':'')+'>'+safe(v.label)+'</option>').join('')+'</select><div class="price">'+priceMarkup(p.variants[initialIndex])+'</div><a class="quote-action" target="_blank" rel="noopener noreferrer">ASK ABOUT LAUNCH ↗</a><p class="fine">Globe-Tech is coming soon. Prices and order availability will be announced at launch.</p></section></div>');
  const select=root.querySelector('select'),image=root.querySelector('img'),link=root.querySelector('a');
  const update=()=>{const v=p.variants[Number(select.value)];image.src=v.img||p.img;image.alt=p.brand+' '+p.name+' — '+v.label;link.href=enquiryURL(p,v);};
  select.onchange=update;update();if(typeof dlg.showModal==='function')dlg.showModal();else dlg.setAttribute('open','');

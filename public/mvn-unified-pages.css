@@ -225,3 +225,6 @@ body.mvn-unified-page .mvn-back-to-store{margin-left:auto!important}
  body.mvn-unified-page .mvn-unified-header .original-brand-logo{max-width:100%!important;height:56px!important}
  body.mvn-unified-page .mvn-back-to-store{font-size:12px!important;min-height:40px!important;padding:8px 10px!important}
 }
+
+/* Finger-friendly wholesale footer links retain the existing layout. */
+body.mvn-unified-page .mvn-unified-footer>div>a{display:flex!important;align-items:center!important;min-height:44px!important;padding-block:10px!important;margin-block:2px!important}
