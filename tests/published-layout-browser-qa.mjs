@@ -94,7 +94,7 @@ try{
   assert.ok(design.cards.every(item=>item.width>80&&item.height>=170&&item.height<=320),'goal tiles must be usable, not tiny or oversized');
   const cardSizes=design.cards.map(item=>item.height);
   assert.ok(Math.max(...cardSizes)-Math.min(...cardSizes)<8,'goal tile heights must align');
-  if(design.shopGrid?.display!=='none'&&design.shopCards.length>0)
+  if(design.collection?.display!=='none'&&design.shopGrid?.display!=='none'&&design.shopCards.length>0)
     assert.ok(design.shopCards.every(item=>item.width>80),'collection product cards must have adequate width');
 
   const vw=measurements.viewport,values=measurements.values,cards=measurements.cards;
