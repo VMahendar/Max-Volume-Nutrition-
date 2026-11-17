@@ -164,6 +164,18 @@
    if(el.tagName==='H2')set(el,'font-size','clamp(26px,3.8vw,48px)');
    else set(el,'font-size','14px');
   }
+  // Undo inherited header min-height that made the original gold logo 91px
+  // tall inside a 76px masthead. Keep the natural aspect ratio and same file.
+  rules('.storehead .brand-identity',{
+    'min-height':'0','max-height':desktop?'58px':'47px',
+    'align-self':'center',top:'auto',bottom:'auto'
+  });
+  rules('.storehead .original-brand-logo',{
+    'min-height':'0','max-height':desktop?'58px':'47px',
+    height:desktop?'58px':'47px',width:'100%',
+    'object-fit':'contain',transform:'none',top:'auto',bottom:'auto'
+  });
+  rules('.mvn-preview-best',{display:'none',height:'0','min-height':'0'});
   // Correct existing sections only. The approved hero/banner markup and its
   // authored image/crop settings are deliberately left untouched.
   rules('.storehead',{
