@@ -52,7 +52,10 @@ try{
  // Direct manipulation must work in the real iframe, not only via sliders.
  await page.locator('#field-heroFullWidth').uncheck();
  await page.locator('#field-heroFullWidth').check();
- await page.waitForFunction(()=>{const frame=document.querySelector('#preview'),hero=frame?.contentDocument?.querySelector('#mvnEditorial');if(!hero)return false;const r=hero.getBoundingClientRect();return r.width>=frame.contentWindow.innerWidth*.98&&r.left>=-20&&r.right<=frame.contentWindow.innerWidth+20;},null,{timeout:15000});
+ await page.waitForFunction(()=>document.querySelector('#preview').contentDocument?.querySelector('#mvnEditorial')?.style.width==='100vw',null,{timeout:15000});
+ const fullWidthMetrics=await page.locator('#preview').evaluate(frame=>{const e=frame.contentDocument.querySelector('#mvnEditorial'),r=e.getBoundingClientRect();return {viewport:frame.contentWindow.innerWidth,client:frame.contentDocument.documentElement.clientWidth,scroll:frame.contentWindow.scrollX,x:r.x,width:r.width,right:r.right,style:e.getAttribute('style'),body:frame.contentDocument.body.getBoundingClientRect().toJSON()};});
+ console.log('EDITOR_FULL_WIDTH_METRICS',JSON.stringify(fullWidthMetrics));
+ assert.ok(fullWidthMetrics.width>=fullWidthMetrics.viewport*.98&&fullWidthMetrics.x>=-20&&fullWidthMetrics.right<=fullWidthMetrics.viewport+20,'full-width preview fits its viewport');
  const iframe=page.frameLocator('#preview');
  const imgDrag=iframe.locator('.mvn-owner-banner-img');
  const initial=await imgDrag.boundingBox();

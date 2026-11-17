@@ -49,7 +49,7 @@ try{
   assert.ok(measures.globe.height>100&&measures.globe.height<1000,'brand banner has no giant blank area');
   assert.ok(measures.catalogHidden,'homepage must not repeat the full shop catalogue');
   assert.equal(measures.cards.length,4);assert.ok(measures.cards.every(c=>c.height>=170&&c.height<600));
-  assert.ok(Math.max(...measures.cards.map(c=>c.height))-Math.min(...measures.cards.map(c=>c.height))<8,'card heights align');
+  for(const card of measures.cards){const row=measures.cards.filter(c=>Math.abs(c.top-card.top)<4);assert.ok(Math.max(...row.map(c=>c.height))-Math.min(...row.map(c=>c.height))<8,'card heights align within each responsive row');}
   for(let i=0;i<4;i++)for(let j=i+1;j<4;j++){const a=measures.cards[i],b=measures.cards[j];assert.ok(!(Math.min(a.right,b.right)-Math.max(a.left,b.left)>5&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>5),'cards must not overlap');}
   assert.equal(await page.locator('.mvn-campaign-slide').count(),5);
   assert.match(await page.locator('.gt-kicker').first().innerText(),/COMING SOON/i);
