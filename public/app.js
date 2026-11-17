@@ -125,7 +125,7 @@ function priceMarkup(v){
  const hasMrp=Number.isSafeInteger(v.mrp)&&v.mrp>v.price;
  const percent=hasMrp?Math.round((v.mrp-v.price)*100/v.mrp):0;
  return '<div class="price-main"><b class="selling-price">'+money(v.price)+'</b>'+
- (hasMrp?'<del class="mrp-value" aria-label="MRP '+money(v.mrp)+'">MRP '+money(v.mrp)+'</del>':'')+
+ (hasMrp?'<del class="mrp-value">MRP '+money(v.mrp)+'</del>':'')+
  '</div>'+(hasMrp?'<span class="discount-value">'+percent+'% OFF · SAVE '+money(v.mrp-v.price)+'</span>':'')+
  '<small class="selling-caption">Regular retail price</small>'+retailOfferMarkup(v);
 }
@@ -455,7 +455,7 @@ if($("clearRecent"))$("clearRecent").onclick=()=>{recent=[];try{localStorage.rem
 document.addEventListener("keydown",e=>{
  if(!$("drawer").classList.contains("open"))return;
  if(e.key==="Escape"){e.preventDefault();closeBag()}
- if(e.key==="Tab"){const controls=[...$("drawer").querySelectorAll('button:not(:disabled),input:not(:disabled),textarea:not(:disabled),a[href],select:not(:disabled),[tabindex]:not([tabindex="-1"])')].filter(el=>el.getClientRects().length);const first=controls[0],last=controls.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
+ if(e.key==="Tab"){const controls=[...$("drawer").querySelectorAll('button:not(:disabled),input:not(:disabled),textarea:not(:disabled),a[href],select:not(:disabled),[tabindex]:not([tabindex="-1"])')].filter(el=>el.getClientRects().length&&!el.closest('[hidden],[inert]'));const first=controls[0],last=controls.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
 });
 installCategoryShortcuts();render();drawCart();renderRecent();
 refreshRetailPrices().then(changed=>{if(changed){render();drawCart();renderRecent()}}).catch(error=>{if($("priceMessage"))$("priceMessage").textContent=error.message});

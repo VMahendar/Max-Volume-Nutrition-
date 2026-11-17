@@ -1,3 +1,4 @@
+import {responseSecurity,nonceTemplateScripts} from './security-headers.mjs';
 import './deploy/prepare-product-media.mjs';
 import {defaultCarousel,validateCarousel} from './homepage-carousel.mjs';
 import {validateHomepageDesign,homepageOrder} from './homepage-design.mjs';
@@ -92,8 +93,9 @@ const accessible=(row,user,token)=>row&&(user?.role==='admin'||row.user_id&&row.
 function invoice(row,p){if(!p.tax?.enabled)return;const local=Object.fromEntries(new Intl.DateTimeFormat('en-CA',{timeZone:'Asia/Kolkata',year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(new Date()).filter(p=>p.type!=='literal').map(p=>[p.type,p.value]));const year=Number(local.year),start=Number(local.month)>=4?year:year-1;const fy=String(start).slice(-2)+String(start+1).slice(-2);const key='invoice-'+fy;db.prepare('INSERT INTO counters VALUES(?,1) ON CONFLICT(key) DO UPDATE SET value=value+1').run(key);const n=db.prepare('SELECT value FROM counters WHERE key=?').get(key).value;const number=`${p.tax.prefix}/${fy}/${String(n).padStart(6,'0')}`;if(number.length>16)fail(400,'Invoice number exceeds configured limit.');db.prepare('INSERT INTO invoices VALUES(?,?,?)').run(row.id,number,JSON.stringify({number,date:new Date().toISOString(),orderId:row.id,...p}));}
 function fulfil(row,payment){return C.tx(()=>{row=db.prepare('SELECT * FROM orders WHERE id=?').get(row.id);const p=JSON.parse(row.payload);if(payment.order_id!==row.provider_id||payment.amount!==p.totalPaise||payment.currency!=='INR'||payment.status!=='captured'||!/^pay_[A-Za-z0-9]+$/.test(payment.id||''))fail(400,'Payment is not captured and verified. Contact support.');if(row.status==='paid'){if(row.payment_id!==payment.id)fail(409,'Payment reference conflict.');return C.publicOrder(row);}if(!['preparing','pending','provider_review'].includes(row.status))fail(409,'Payment requires administrator reconciliation.');for(const line of p.lines){const result=db.prepare('UPDATE inventory SET on_hand=on_hand-?,version=version+1 WHERE variant_id=? AND on_hand>=?').run(line.quantity,line.variantId,line.quantity);if(result.changes!==1)fail(409,'Inventory reconciliation required.');}db.prepare("UPDATE orders SET status='paid',payment_id=? WHERE id=?").run(payment.id,row.id);invoice(row,p);C.audit('provider','payment.captured',row.id);return C.publicOrder(db.prepare('SELECT * FROM orders WHERE id=?').get(row.id));});}
 function checkoutResponse(row){const p=JSON.parse(row.payload);if(row.status==='paid')fail(409,'This order is already paid. View your order history.');if(!row.provider_id)fail(409,'Payment creation needs reconciliation. Do not create another order.');if(row.status!=='pending')fail(409,'This checkout is no longer payable.');return {id:row.id,token:row.token,key:process.env.RAZORPAY_KEY_ID,providerOrderId:row.provider_id,amount:p.totalPaise,currency:'INR'};}
-const server=http.createServer(async(req,res)=>{res.setHeader('Cache-Control','no-store');res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','strict-origin-when-cross-origin');res.setHeader('X-Frame-Options','DENY');res.setHeader('Content-Security-Policy',"default-src 'self'; script-src 'self' https://checkout.razorpay.com; style-src 'self' 'unsafe-inline'; img-src 'self' https://revakanya.com https://unicornproseries.com https://www.unicornproseries.com data: https://static.wixstatic.com; connect-src 'self' https://*.razorpay.com; frame-src https://*.razorpay.com; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'");if(production)res.setHeader('Strict-Transport-Security','max-age=31536000; includeSubDomains');
-try{if(!await allowStaging(req,res))return;const u=new URL(req.url,'http://localhost');if(u.pathname==='/healthz')return json(res,200,{ok:true});
+const server=http.createServer(async(req,res)=>{res.setHeader('Cache-Control','no-store');res.setHeader('X-Content-Type-Options','nosniff');res.setHeader('Referrer-Policy','strict-origin-when-cross-origin');res.setHeader('X-Frame-Options','DENY');const scriptNonce=responseSecurity(res,{production});
+try{if(!await allowStaging(req,res))return;const u=new URL(req.url,'http://localhost');
+if(u.pathname==='/healthz')return json(res,200,{ok:true});
 // Provide a conventional root favicon fallback for browsers and crawlers.
 if(u.pathname==='/favicon.ico'&&['GET','HEAD'].includes(req.method)){
  res.writeHead(302,{'Location':'/icons/app-192.png'});
@@ -124,10 +126,10 @@ if(u.pathname==='/owner-preview'&&['GET','HEAD'].includes(req.method)){
     .replace(/<script src="\/launch-countdown\.js" defer><\/script>/g,'')
     .replace(/<link rel="stylesheet" href="\/launch-countdown\.css">/g,'');
   const previewStyles='<base href="/"><meta name="robots" content="noindex,nofollow"><style>html.mvn-prelaunch-pending body{overflow:auto!important}body>.mvn-opening-countdown{display:none!important}.mvn-owner-preview-nav{position:sticky;top:0;z-index:2147483630;display:flex;gap:8px;flex-wrap:wrap;align-items:center;justify-content:center;padding:12px;background:#141414;color:#fff;font:600 13px system-ui;box-shadow:0 2px 12px #0005}.mvn-owner-preview-nav a{color:#fff;text-decoration:none;border:1px solid #777;padding:7px 11px;border-radius:5px}.mvn-owner-preview-nav a[aria-current]{background:#fff;color:#111}.app-store .app-install-gate{display:none!important}body.app-store .native-app-header,body.app-store .native-app-search,body.app-store .app-welcome,body.app-store main,body.app-store .app-bottom-nav{display:revert}</style>';
-  html=html.replace('</head>',previewStyles+'</head>');
+  html=nonceTemplateScripts(html.replace('</head>',previewStyles+'</head>'),scriptNonce);
   const nav=`<nav class="mvn-owner-preview-nav" aria-label="Private owner review"><span>OWNER REVIEW · NOT PUBLIC</span><a href="/owner-preview?view=desktop${reviewSuffix}">Desktop site</a><a href="/owner-preview?view=mobile${reviewSuffix}">Mobile site</a><a href="/owner-preview?view=app${reviewSuffix}">Mobile app</a><a href="/admin.html">Admin</a></nav>`;
   html=html.replace(/<body([^>]*)>/i,(tag)=>tag.slice(0,-1)+' data-mvn-owner-preview="true">'+nav);
-  html=html.replace('</body>','<script src="/owner-preview.js" defer></script></body>');
+  html=html.replace('</body>',`<script nonce="${scriptNonce}" src="/owner-preview.js" defer></script></body>`);
   res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','Cache-Control':'private, no-store','X-Robots-Tag':'noindex, nofollow'});
   return res.end(req.method==='HEAD'?undefined:html);
 }
@@ -142,7 +144,7 @@ if(launchRemaining>0){
       .replace('<script type="module" src="/scan-codes.js"></script>','')
       .replace(/<body[\s\S]*<\/body>/,`<body class="mvn-qr-page" data-store-launch-ms="${launchRemaining}"><noscript>Max Volume Nutrition opens at 11:00 AM IST. Refresh this page at opening time.</noscript></body>`);
     res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','X-Robots-Tag':'noindex, follow'});
-    return res.end(req.method==='HEAD'?undefined:countdown);
+    return res.end(req.method==='HEAD'?undefined:nonceTemplateScripts(countdown,scriptNonce));
   }
   if(req.method==='POST'&&['/api/checkout','/api/enquiries'].includes(launchPath)){
     res.setHeader('Retry-After',String(Math.ceil(launchRemaining/1000)));
@@ -590,13 +592,14 @@ if(u.pathname==='/layout-editor.html'){
  res.setHeader('Content-Security-Policy',String(res.getHeader('Content-Security-Policy')).replace("frame-src https://*.razorpay.com","frame-src 'self' https://*.razorpay.com"));
 }
 if(!['GET','HEAD'].includes(req.method))fail(405,'Method not allowed.');const path=resolve(root,'.'+decodeURIComponent(u.pathname==='/'?'/index.html':u.pathname));if(!path.startsWith(root+sep))fail(403,'Forbidden');let file;try{if(!realpathSync(path).startsWith(root+sep))fail(403,'Forbidden');file=readFileSync(path);
+if(extname(path)==='.html')file=Buffer.from(nonceTemplateScripts(file.toString('utf8'),scriptNonce));
 if(['/', '/index.html'].includes(u.pathname)){
  const design=C.setting('homepagePublishedV2');
  const serialized=JSON.stringify(design).replace(/</g,'\\u003c');
  const carousel=u.searchParams.get('carousel_preview')==='1'?(C.setting('homepageCarouselDraftV1')||C.setting('homepageCarouselPublishedV1')||defaultCarousel):(C.setting('homepageCarouselPublishedV1')||defaultCarousel);
  const carouselJSON=JSON.stringify(carousel).replace(/</g,'\\u003c');
  const editing=u.searchParams.get('homepage_editor')==='1';
- let html=file.toString('utf8').replace('</body>',`<script type="application/json" id="mvnCarouselState">${carouselJSON}</script><script type="application/json" id="mvnHomepageDesign">${serialized}</script><script src="/homepage-design.js?v=20261117-featured-2" defer></script></body>`);
+ let html=file.toString('utf8').replace('</body>',`<script nonce="${scriptNonce}" type="application/json" id="mvnCarouselState">${carouselJSON}</script><script nonce="${scriptNonce}" type="application/json" id="mvnHomepageDesign">${serialized}</script><script nonce="${scriptNonce}" src="/homepage-design.js?v=20261117-featured-2" defer></script></body>`);
  if(editing)html=html.replace('<body ','<body data-homepage-editor="true" ');
  file=Buffer.from(html);
 }
@@ -611,7 +614,7 @@ if(builderPage){
   const serialized=JSON.stringify(config||{version:1,pages:{}}).replace(/</g,'\\u003c');
   let html=file.toString('utf8');
   if(builderPreview)html=html.replace(/<html\b/i,'<html data-mvn-visual-builder="edit"');
-  html=html.replace('</body>','<script type="application/json" id="mvnVisualBuilderConfig">'+serialized+'</script><script src="/site-builder-runtime.js?v=20261117-orange-home" defer></script></body>');
+  html=html.replace('</body>','<script nonce="'+scriptNonce+'" type="application/json" id="mvnVisualBuilderConfig">'+serialized+'</script><script nonce="'+scriptNonce+'" src="/site-builder-runtime.js?v=20261117-orange-home" defer></script></body>');
   file=Buffer.from(html,'utf8');
  }
 }
@@ -622,7 +625,7 @@ if(PRODUCT_PAGE_IDS[u.pathname]){
  const productHtml=buildProductFragments(u.pathname,C.catalogue(null),approved,{selectedPack:u.searchParams.get('pack')});
  if(productHtml){
   const html=file.toString('utf8')
-    .replace('<!-- MVN_PRODUCT_SEO -->',productHtml.schema)
+    .replace('<!-- MVN_PRODUCT_SEO -->',nonceTemplateScripts(productHtml.schema,scriptNonce))
     .replace('<!-- MVN_NITRO_GALLERY -->',productHtml.gallery||'')
     .replace('<!-- MVN_PRODUCT_DETAILS -->',productHtml.content+googleReviewPanel(C));
   file=Buffer.from(html,'utf8');
