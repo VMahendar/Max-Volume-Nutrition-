@@ -84,7 +84,7 @@ try{
   assert.equal(design.header?.bg,dark,'header must be one charcoal colour');
   assert.ok(['rgb(16, 17, 19)','rgb(36, 41, 46)',dark].includes(design.actions?.bg),'header cart button has readable dark styling');
   assert.equal(design.footer?.bg,dark,'footer must match header');
-  assert.equal(get('.mvn-preview-best')?.display,'none','duplicate Best Sellers is hidden');
+  assert.equal(await page.locator('.mvn-preview-best').isVisible(),false,'duplicate Best Sellers is hidden');
   assert.ok(measurements.values.globe?.height<500,'Globe-Tech should not have a giant empty gap');
   assert.notEqual(design.collection?.display,'none','homepage product catalogue is visible');
   assert.equal(design.globe?.bg,dark,'Globe-Tech and footer must be a continuous colour');
