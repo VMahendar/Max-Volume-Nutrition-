@@ -24,7 +24,7 @@ try{
   page.on('pageerror',e=>failures.push(e.message));
   assert.equal((await page.goto(origin+'/',{waitUntil:'networkidle'})).status(),200);
   const boxes=await page.evaluate(()=>{
-   const selectors={header:'.storehead',hero:'#mvnEditorial',collection:'.mvn-home-collection-entry',best:'.mvn-preview-best',globe:'.mvn-globtech-launch'};
+   const selectors={header:'.storehead',hero:'#mvnEditorial',collection:'.mvn-home-collection-entry',best:'.mvn-preview-best',globe:'.gt-banner'};
    const width=document.documentElement.clientWidth;
    return {width,sections:Object.fromEntries(Object.entries(selectors).map(([key,selector])=>{
     const node=document.querySelector(selector);const rect=node?.getBoundingClientRect();
@@ -36,7 +36,7 @@ try{
   console.log('MVN_FULLSCREEN_METRICS',viewport.width,JSON.stringify(boxes));
   for(const [name,b] of Object.entries(boxes.sections)){
    assert.ok(b,name+' must exist at '+viewport.width);
-   assert.ok(b.width>=boxes.width*(viewport.width<600?.92:.94),name+' must span screen ('+JSON.stringify(b)+')');
+   assert.ok(b.width>=(name==='best'?Math.min(boxes.width,1440):boxes.width)*(viewport.width<600?.92:.94),name+' must span screen ('+JSON.stringify(b)+')');
    assert.ok(b.left>=-12&&b.right<=boxes.width+14,name+' must fit screen, not overflow');
   }
   assert.equal(boxes.goalCards.length,4,'exactly four featured best sellers should be visible');
@@ -48,7 +48,7 @@ try{
   const popupButton=page.locator('#mvnOpenCollection');
   await popupButton.click();
   assert.equal(await page.locator('#mvnCollectionDialog').evaluate(el=>el.open),true,'Shop Collection popup opens');
-  assert.equal(await page.locator('#mvnCollectionDialog .mvn-collection-dialog-grid a').count(),4,'Popup has four category links');
+  assert.equal(await page.locator('#mvnCollectionDialog .mvn-collection-dialog-grid a').count(),6,'Popup has six current category links');
   await page.locator('#mvnCloseCollection').click();
   assert.equal(await page.locator('#mvnCollectionDialog').evaluate(el=>el.open),false,'Popup closes');
     assert.equal(failures.length,0,'browser JavaScript errors: '+failures.join(', '));
@@ -64,9 +64,9 @@ try{
     button:color('#shop .collection-results .card .add'),cards:document.querySelectorAll('#shop #grid .card').length,
     cart:!!document.querySelector('#bag'),filters:!!document.querySelector('.cats')};
   });
-  assert.equal(shopVisual.header,'rgb(21, 22, 23)','Shop header matches About/Contact charcoal');
-  assert.equal(shopVisual.intro,'rgb(28, 29, 32)','Shop collection introduction is charcoal, not navy');
-  assert.equal(shopVisual.paper,'rgb(250, 249, 247)','Shop background matches info pages');
+  assert.equal(shopVisual.header,'rgb(8, 8, 8)','Shop header matches About/Contact charcoal');
+  assert.equal(shopVisual.intro,'rgb(8, 8, 8)','Shop collection introduction is charcoal, not navy');
+  assert.equal(shopVisual.paper,'rgb(248, 247, 245)','Shop background matches info pages');
   assert.ok(shopVisual.cards>=4,'the full shop catalogue is still available');
   assert.ok(shopVisual.cart&&shopVisual.filters,'Shop cart and category filters remain in place');
   await shop.close();

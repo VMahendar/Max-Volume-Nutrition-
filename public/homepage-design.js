@@ -1,8 +1,9 @@
 'use strict';
 (()=>{
-const targets={header:'.storehead',hero:'#mvnEditorial',categories:'.mvn-editorial-categories',bestsellers:'.mvn-preview-best',brands:'.mvn-globtech-launch',footer:'.mvn-home-contact',logo:'.storehead .original-brand-logo',banner:'.mvn-owner-banner-img',whey:'.mvn-editorial-category-whey .goal-main',pre:'.mvn-editorial-category-pre .goal-main',creatine:'.mvn-editorial-category-creatine .goal-main',massPromo:'.mvn-editorial-promo-mass img',creatinePromo:'.mvn-editorial-promo-creatine img',bestWhey:'.mvn-preview-best-grid a:nth-child(1) img',bestMass:'.mvn-preview-best-grid a:nth-child(2) img',bestCreatine:'.mvn-preview-best-grid a:nth-child(3) img',bestPre:'.mvn-preview-best-grid a:nth-child(4) img'};
+const targets={header:'.storehead',hero:'#mvnEditorial',categories:'.mvn-editorial-categories',bestsellers:'.mvn-preview-best',brands:'.gt-banner,.mvn-globtech-launch',footer:'.mvn-home-contact',logo:'.storehead .original-brand-logo',banner:'.mvn-owner-banner-img',whey:'.mvn-editorial-category-whey .goal-main',pre:'.mvn-editorial-category-pre .goal-main',creatine:'.mvn-editorial-category-creatine .goal-main',massPromo:'.mvn-editorial-promo-mass img',creatinePromo:'.mvn-editorial-promo-creatine img',bestWhey:'.mvn-preview-best-grid a:nth-child(1) img',bestMass:'.mvn-preview-best-grid a:nth-child(2) img',bestCreatine:'.mvn-preview-best-grid a:nth-child(3) img',bestPre:'.mvn-preview-best-grid a:nth-child(4) img'};
 const editing=document.body.dataset.homepageEditor==='true';
 const node=id=>document.querySelector(targets[id]);
+const computed=selector=>{const el=document.querySelector(selector);return el?getComputedStyle(el):null;};
 const style=(selector,property,value)=>document.querySelectorAll(selector).forEach(el=>el.style.setProperty(property,value,'important'));
 // Restore original markup/styles between previews so undo and reset are exact.
 const originals=[...document.querySelectorAll('body,body *')].map(el=>({el,style:el.getAttribute('style'),hidden:el.hidden}));
@@ -21,9 +22,9 @@ const texts={
  bestCreatineTitle:'.mvn-preview-best-grid a:nth-child(3) strong',bestPreTitle:'.mvn-preview-best-grid a:nth-child(4) strong',
  bestWheyCaption:'.mvn-preview-best-grid a:nth-child(1) small',bestMassCaption:'.mvn-preview-best-grid a:nth-child(2) small',
  bestCreatineCaption:'.mvn-preview-best-grid a:nth-child(3) small',bestPreCaption:'.mvn-preview-best-grid a:nth-child(4) small',
- brandTag:'.mvn-globtech-launch .mvn-launch-kicker',brandTitle:'#mvnGlobTechTitle',
- brandHighlight:'.mvn-globtech-launch > div > strong',brandDescription:'.mvn-globtech-launch > div > p:not(.mvn-launch-kicker)',
- brandButton:'.mvn-globtech-launch > a'
+ brandTag:'.gt-kicker,.mvn-globtech-launch .mvn-launch-kicker',brandTitle:'#gtBannerTitle,#mvnGlobTechTitle',
+ brandHighlight:'.gt-banner h2 em,.mvn-globtech-launch > div > strong',brandDescription:'.gt-banner-copy > p,.mvn-globtech-launch > div > p:not(.mvn-launch-kicker)',
+ brandButton:'.gt-primary,.mvn-globtech-launch > a'
 };
 const originalText=Object.fromEntries(Object.entries(texts).map(([id,selector])=>[id,document.querySelector(selector)?.innerHTML]));
 const originalImages=Object.fromEntries(Object.entries(targets).filter(([,selector])=>document.querySelector(selector)?.tagName==='IMG').map(([id])=>{const image=node(id);return [id,{src:image.getAttribute('src'),srcset:image.getAttribute('srcset'),sources:[...image.parentElement.querySelectorAll('source')].map(source=>[source,source.getAttribute('srcset')])}]}));
@@ -197,13 +198,13 @@ for(const id of Object.keys(originalImages)){
  baseline[id+'Zoom']=100;baseline[id+'X']=0;baseline[id+'Y']=0;baseline[id+'Fit']=id==='banner'?'cover':'contain';
 }
 baseline.bannerPositionY=50;baseline.bannerZoom=100;baseline.heroFullWidth=true;baseline.heroTextX=0;baseline.heroTextY=0;baseline.bannerHeightMobile=320;
-baseline.descriptionSize=Math.round(parseFloat(getComputedStyle(document.querySelector('.mvn-launch-hero-copy > p')).fontSize))||16;
+baseline.descriptionSize=Math.round(parseFloat(computed('.mvn-launch-hero-copy > p')?.fontSize))||16;
 baseline.heroCopyWidth=92;baseline.heroAlign='left';
 baseline.categoryCardHeight=130;baseline.categoryGap=12;baseline.bestImageHeight=180;
 baseline.footerColor='#151617';baseline.footerText='#ffffff';baseline.categoryCardColor='#ffffff';
-baseline.promoVisible=getComputedStyle(document.querySelector('.mvn-editorial-promos')).display!=='none';
+baseline.promoVisible=!!computed('.mvn-editorial-promos')&&computed('.mvn-editorial-promos').display!=='none';
 baseline.goalPhotosVisible=!!document.querySelector('.mvn-theme-goal-art')&&getComputedStyle(document.querySelector('.mvn-theme-goal-art')).display!=='none';
 baseline.headerColor='#151617';baseline.headerText='#ffffff';baseline.pageColor='#ffffff';baseline.accentColor='#ff6449';baseline.logoWidth=Math.round(node('logo').getBoundingClientRect().width);baseline.headerHeight=Math.round(node('header').getBoundingClientRect().height);baseline.sectionGap=24;baseline.bannerHeight=Math.round(node('banner').getBoundingClientRect().height);baseline.bannerPosition=70;baseline.titleSize=80;baseline.imageScale=100;baseline.bannerFit='cover';baseline.logoAlign='left';
-for(const id of ['hero','categories','bestsellers','brands'])baseline[id+'Visible']=!!node(id)&&getComputedStyle(node(id)).display!=='none';baseline.heroTextVisible=getComputedStyle(document.querySelector('.mvn-launch-hero-copy')).display!=='none';baseline.navVisible=getComputedStyle(document.querySelector('.mvn-preview-nav')).display!=='none';
+for(const id of ['hero','categories','bestsellers','brands'])baseline[id+'Visible']=!!node(id)&&getComputedStyle(node(id)).display!=='none';baseline.heroTextVisible=!!computed('.mvn-launch-hero-copy')&&computed('.mvn-launch-hero-copy').display!=='none';baseline.navVisible=!!computed('.mvn-preview-nav')&&computed('.mvn-preview-nav').display!=='none';
 parent.postMessage({type:'mvn-ready',baseline},location.origin);
 })();

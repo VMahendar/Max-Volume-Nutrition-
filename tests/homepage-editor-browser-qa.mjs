@@ -49,8 +49,9 @@ try{
  assert.equal(await page.locator('#currentPhoto').isVisible(),true);
  const changeRange=async(selector,value)=>page.locator(selector).evaluate((el,v)=>{el.value=String(v);el.dispatchEvent(new Event('input',{bubbles:true}))},value);
  // Direct manipulation must work in the real iframe, not only via sliders.
+ await page.locator('#field-heroFullWidth').uncheck();
  await page.locator('#field-heroFullWidth').check();
- await page.waitForFunction(()=>document.querySelector('#preview')?.contentDocument?.querySelector('#mvnEditorial')?.style.getPropertyValue('width')==='100vw',null,{timeout:15000});
+ await page.waitForFunction(()=>{const frame=document.querySelector('#preview'),hero=frame?.contentDocument?.querySelector('#mvnEditorial');if(!hero)return false;const r=hero.getBoundingClientRect();return r.width>=frame.contentWindow.innerWidth*.98&&r.left>=-2&&r.right<=frame.contentWindow.innerWidth+2;},null,{timeout:15000});
  const iframe=page.frameLocator('#preview');
  const imgDrag=iframe.locator('.mvn-owner-banner-img');
  const initial=await imgDrag.boundingBox();

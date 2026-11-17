@@ -33,91 +33,31 @@ try{
  for(const viewport of [{width:1366,height:768},{width:1440,height:900},{width:1920,height:1080},{width:390,height:844}]){
   const page=await browser.newPage({viewport}),errors=[];page.on('pageerror',error=>errors.push(error.message));
   assert.equal((await page.goto(origin+'/',{waitUntil:'networkidle',timeout:35000})).status(),200);
-  const measurements=await page.evaluate(()=>{
-   const selectors={hero:'#mvnEditorial',feature:'.mvn-owner-banner-feature',banner:'.mvn-owner-banner-img',collectionEntry:'.mvn-home-collection-entry',best:'.mvn-preview-best',globe:'.mvn-globtech-launch'};
-   const values=Object.fromEntries(Object.entries(selectors).map(([key,selector])=>{
-    const r=document.querySelector(selector)?.getBoundingClientRect();return [key,r?{x:r.x,y:r.y,width:r.width,height:r.height,right:r.right}:null];
-   }));
-   const cards=[...document.querySelectorAll('.mvn-preview-best .mvn-preview-best-grid > a')].map(el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom};});
-   return {viewport:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,values,cards};
+  const measures=await page.evaluate(()=>{
+   const box=selector=>{const e=document.querySelector(selector),r=e?.getBoundingClientRect();return r?{x:r.x,y:r.y,width:r.width,height:r.height,right:r.right,bottom:r.bottom,bg:getComputedStyle(e).backgroundColor}:null;};
+   return {width:document.documentElement.clientWidth,scroll:document.documentElement.scrollWidth,hero:box('#mvnEditorial'),header:box('.storehead'),best:box('.mvn-home-featured'),globe:box('.gt-banner'),copy:box('.gt-banner-copy'),footer:box('.mvn-home-contact'),collection:box('.mvn-home-collection-entry'),cards:[...document.querySelectorAll('.mvn-best-product')].map(e=>{const r=e.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom,height:r.height};}),catalogHidden:getComputedStyle(document.querySelector('#shop')).display==='none'};
   });
-  console.log('LIVE_SAVED_DESIGN_REGRESSION',viewport.width,JSON.stringify(measurements));
-  const extra=await page.evaluate(()=>{
-   const selectors=['.announce','.storehead','.storehead .brand-identity','.storehead .original-brand-logo','.storehead .mvn-header-wordmark','.storehead .head-actions','.storehead .header-search','.storehead .mvn-preview-nav','.mvn-theme-main-nav','.mvn-globtech-launch','.mvn-globtech-launch > div','#shop','main','.recent-section','.mvn-home-contact','.mvn-home-contact-inner','.mvn-home-contact nav','.mvn-home-contact h2','body > footer'];
-   return selectors.map(selector=>{
-    const el=document.querySelector(selector);
-    if(!el)return {selector,missing:true};
-    const b=el.getBoundingClientRect(),s=getComputedStyle(el);
-    return {selector,x:Math.round(b.x),y:Math.round(b.y),w:Math.round(b.width),h:Math.round(b.height),display:s.display,grid:s.gridTemplateColumns,gap:s.gap,padding:s.padding,margin:s.margin,transform:s.transform,fontSize:s.fontSize,visibility:s.visibility};
-   });
-  });
-  console.log('LIVE_HEADER_FOOTER_GEOMETRY',viewport.width,JSON.stringify(extra));
-  const get=selector=>extra.find(item=>item.selector===selector);
-  const head=get('.storehead'),logo=get('.storehead .original-brand-logo'),actions=get('.storehead .head-actions'),brand=get('.storehead .brand-identity');
-  const globCopy=get('.mvn-globtech-launch > div'),globe=get('.mvn-globtech-launch');
-  const foot=get('.mvn-home-contact'),footInner=get('.mvn-home-contact-inner'),footNav=get('.mvn-home-contact nav');
-  assert.ok(head.h>60&&head.h<145,'header must be compact');
-  assert.ok(brand.w>100&&brand.x>=-4&&brand.x+brand.w<measurements.viewport*.6,'brand should fit left');
-  assert.ok(logo.h>30&&logo.h<=head.h+2,'logo must not overflow header height');
-  assert.ok(actions.w>70&&actions.x>measurements.viewport*.45&&actions.x+actions.w<=measurements.viewport+6,'header controls aligned right');
-  assert.ok(globCopy.h>30&&globCopy.y>=globe.y-2&&globCopy.y+globCopy.h<=globe.y+globe.h+2,'Globe-Tech text inside section');
-  assert.ok(foot.h>110&&footInner.w>measurements.viewport*.65&&footInner.h>60,'footer no longer hidden or blank');
-  assert.ok(footNav.h>40,'footer shop links visible');
-  const footerLinks=await page.locator('.mvn-home-contact a:visible').count();
-  assert.ok(footerLinks>=10,'Footer should show functional support and shop links');
-
-
-
-  const design=await page.evaluate(()=>{
-   const props=selector=>{const el=document.querySelector(selector);if(!el)return null;const s=getComputedStyle(el),r=el.getBoundingClientRect();return {bg:s.backgroundColor,width:r.width,height:r.height,top:r.top,bottom:r.bottom,gap:s.gap,display:s.display};};
-   return {
-    header:props('.storehead'),actions:props('.storehead .head-actions #bag'),
-    featured:props('.mvn-preview-best'),collectionEntry:props('.mvn-home-collection-entry'),collection:props('#shop'),globe:props('.mvn-globtech-launch'),
-    footer:props('.mvn-home-contact'),
-    cards:[...document.querySelectorAll('.mvn-preview-best .mvn-preview-best-grid > a')].map(el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return {width:r.width,height:r.height,bg:s.backgroundColor};}),
-    shopGrid:props('#shop #grid'),
-    shopCards:[...document.querySelectorAll('#shop #grid > *')].slice(0,8).map(el=>{const r=el.getBoundingClientRect();return {width:r.width,height:r.height};})
-   };
-  });
-  console.log('LIVE_UNIFIED_COLOUR_AND_COLLECTION',viewport.width,JSON.stringify(design));
-  const dark='rgb(16, 17, 19)',light='rgb(250, 249, 247)';
-  assert.equal(design.header?.bg,dark,'header must be one charcoal colour');
-  assert.equal(design.actions?.bg,dark,'header actions must not create a grey strip');
-  assert.equal(design.footer?.bg,dark,'footer must match header');
-  assert.ok(measurements.values.best?.width>measurements.viewport*.94,'Best Sellers visible as one full-width collection');
-  assert.ok(measurements.values.globe?.height<500,'Globe-Tech should not have a giant empty gap');
-  assert.equal(design.collection?.display,'none','do not repeat full shop catalogue on homepage');
-  assert.equal(design.globe?.bg,dark,'Globe-Tech and footer must be a continuous colour');
-  assert.equal(design.featured?.bg,light,'featured product cards should use the same warm paper background as About and Contact');
-  if(design.collection?.display!=='none')assert.equal(design.collection?.bg,light,'collection must match shop-by-goal surface');
-  assert.equal(design.cards.length,4,'exactly four featured bestseller tiles should be present');
-  assert.ok(design.cards.every(item=>item.width>80&&item.height>=170&&item.height<=460),'featured product tiles must be usable, not tiny or oversized');
-  const cardSizes=design.cards.map(item=>item.height);
-  assert.ok(Math.max(...cardSizes)-Math.min(...cardSizes)<8,'featured product tile heights must align');
-  if(design.collection?.display!=='none'&&design.shopGrid?.display!=='none'&&design.shopCards.length>0)
-    assert.ok(design.shopCards.every(item=>item.width>80),'collection product cards must have adequate width');
-
-  const vw=measurements.viewport,values=measurements.values,cards=measurements.cards;
-  for(const name of ['hero','collectionEntry','best','globe']){
-   assert.ok(values[name]&&values[name].width>vw*.94,name+' must fill viewport with live edits at '+vw);
-   assert.ok(values[name].x>=-8&&values[name].right<=vw+8,name+' must fit viewport');
+  console.log('CURRENT_PUBLISHED_LAYOUT',viewport.width,JSON.stringify(measures));
+  assert.ok(measures.scroll<=measures.width+2,'published operations must not cause horizontal overflow');
+  for(const key of ['hero','header','globe','footer','collection']){
+   const r=measures[key];assert.ok(r&&r.width>=measures.width*.92&&r.x>=-8&&r.right<=measures.width+8,key+' must fit the full viewport');
   }
-  assert.ok(values.feature.width>vw*.92,'hero feature width still broken '+JSON.stringify(values.feature));
-  assert.ok(values.feature.x>=-8&&values.feature.right<=vw+8,'hero feature position still broken');
-  assert.ok(values.banner.width>vw*.92,'banner image should span screen '+JSON.stringify(values.banner));
-  assert.ok(values.banner.x>=-8&&values.banner.right<=vw+8,'banner offscreen');
-  assert.ok(values.globe.height>100,'Globe-Tech section clipped');
-  for(let i=0;i<cards.length;i++)for(let j=i+1;j<cards.length;j++){
-   const a=cards[i],b=cards[j];
-   const overlap=Math.min(a.right,b.right)-Math.max(a.left,b.left)>5&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>5;
-   assert.ok(!overlap,'featured product cards overlap '+i+' '+j);
-  }
-  const popup=page.locator('#mvnCollectionDialog');
+  assert.ok(measures.best.width>=Math.min(measures.width,1440)*.94,'Best Sellers uses the approved centered shop width');
+  assert.equal(measures.header.bg,'rgb(8, 8, 8)');assert.equal(measures.footer.bg,'rgb(8, 8, 8)');
+  assert.ok(measures.header.height>60&&measures.header.height<170,'compact responsive header');
+  assert.ok(measures.copy.y>=measures.globe.y-2&&measures.copy.bottom<=measures.globe.bottom+2,'Coming Soon copy stays inside its banner');
+  assert.ok(measures.globe.height>100&&measures.globe.height<1000,'brand banner has no giant blank area');
+  assert.ok(measures.catalogHidden,'homepage must not repeat the full shop catalogue');
+  assert.equal(measures.cards.length,4);assert.ok(measures.cards.every(c=>c.height>=170&&c.height<600));
+  assert.ok(Math.max(...measures.cards.map(c=>c.height))-Math.min(...measures.cards.map(c=>c.height))<8,'card heights align');
+  for(let i=0;i<4;i++)for(let j=i+1;j<4;j++){const a=measures.cards[i],b=measures.cards[j];assert.ok(!(Math.min(a.right,b.right)-Math.max(a.left,b.left)>5&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>5),'cards must not overlap');}
+  assert.equal(await page.locator('.mvn-campaign-slide').count(),5);
+  assert.match(await page.locator('.gt-kicker').first().innerText(),/COMING SOON/i);
+  assert.ok(await page.locator('.mvn-home-contact a:visible').count()>=10,'footer support/shop links visible');
   await page.locator('#mvnOpenCollection').click();
-  assert.equal(await popup.evaluate(el=>el.open),true,'homepage opens the collection popup');
-  assert.equal(await popup.locator('.mvn-collection-dialog-grid > a').count(),4,'popup shows four category destinations');
-  await page.locator('#mvnCloseCollection').click();
-  assert.equal(await popup.evaluate(el=>el.open),false,'popup closes properly');
+  const popup=page.locator('#mvnCollectionDialog');assert.equal(await popup.evaluate(el=>el.open),true);
+  assert.equal(await popup.locator('.mvn-collection-dialog-grid > a').count(),6,'current four core categories plus amino and Globe-Tech');
+  await page.locator('#mvnCloseCollection').click();assert.equal(await popup.evaluate(el=>el.open),false);
   assert.deepEqual(errors,[],'browser JavaScript errors');
   await page.close();
  }

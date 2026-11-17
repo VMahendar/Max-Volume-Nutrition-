@@ -599,7 +599,7 @@ if(['/', '/index.html'].includes(u.pathname)){
  const carousel=u.searchParams.get('carousel_preview')==='1'?(C.setting('homepageCarouselDraftV1')||C.setting('homepageCarouselPublishedV1')||defaultCarousel):(C.setting('homepageCarouselPublishedV1')||defaultCarousel);
  const carouselJSON=JSON.stringify(carousel).replace(/</g,'\\u003c');
  const editing=u.searchParams.get('homepage_editor')==='1';
- let html=file.toString('utf8').replace('</body>',`<script nonce="${scriptNonce}" type="application/json" id="mvnCarouselState">${carouselJSON}</script><script nonce="${scriptNonce}" type="application/json" id="mvnHomepageDesign">${serialized}</script><script nonce="${scriptNonce}" src="/homepage-design.js?v=20261117-featured-2" defer></script></body>`);
+ let html=file.toString('utf8').replace('</body>',`<script nonce="${scriptNonce}" type="application/json" id="mvnCarouselState">${carouselJSON}</script><script nonce="${scriptNonce}" type="application/json" id="mvnHomepageDesign">${serialized}</script><script nonce="${scriptNonce}" src="/homepage-design.js?v=20261118-editor-1" defer></script></body>`);
  if(editing)html=html.replace('<body ','<body data-homepage-editor="true" ');
  file=Buffer.from(html);
 }

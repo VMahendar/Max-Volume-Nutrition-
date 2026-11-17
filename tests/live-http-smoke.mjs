@@ -14,13 +14,13 @@ const request=async(path)=>{
 };
 const home=await request('/');
 const markup=await home.text();
-assert.match(markup,/option-two-product-store\.css/, 'Option 2 stylesheet must be in live homepage');
-assert.match(markup,/option2-site-nav/, 'Option 2 header must be live');
+assert.match(markup,/mvn-brand-gold-20261117\.css/, 'Current shared brand stylesheet is live');
+assert.match(markup,/mvn-preview-nav/, 'Current storefront navigation is live');
 assert.doesNotMatch(markup,/coming soon placeholder/i,'live home is not a placeholder');
 const indexing=home.headers.get('x-robots-tag')||'';
 assert.doesNotMatch(indexing,/noindex/i,'live homepage must not be blocked from indexing');
-const style=await request('/option-two-product-store.css');
-assert.match(await style.text(),/SCREENSHOT-LOCKED REFERENCE/,'live CSS is the approved Option 2 layout');
+const style=await request('/mvn-product-shop-match.css');
+assert.match(await style.text(),/Shared Shop All presentation/,'live CSS is the approved shared product layout');
 await request('/healthz');
 const retail=await request('/api/retail/catalog');
 const catalogue=await retail.json();
