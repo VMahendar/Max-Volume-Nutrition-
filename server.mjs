@@ -552,7 +552,7 @@ if(['/', '/index.html'].includes(u.pathname)){
  const design=C.setting('homepagePublishedV2');
  const serialized=JSON.stringify(design).replace(/</g,'\\u003c');
  const editing=u.searchParams.get('homepage_editor')==='1';
- let html=file.toString('utf8').replace('</body>',`<script type="application/json" id="mvnHomepageDesign">${serialized}</script><script src="/homepage-design.js?v=20261116-full-1" defer></script></body>`);
+ let html=file.toString('utf8').replace('</body>',`<script type="application/json" id="mvnHomepageDesign">${serialized}</script><script src="/homepage-design.js?v=20261117-featured-2" defer></script></body>`);
  if(editing)html=html.replace('<body ','<body data-homepage-editor="true" ');
  file=Buffer.from(html);
 }
