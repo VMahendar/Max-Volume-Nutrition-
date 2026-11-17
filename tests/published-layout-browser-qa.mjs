@@ -6,18 +6,18 @@ import {resolve} from 'node:path';
 import {tmpdir} from 'node:os';
 import {setTimeout as delay} from 'node:timers/promises';
 import {openCommerce} from '../commerce.mjs';
-let live=null;
+let raw=null;
 for(let attempt=0;attempt<6;attempt++){
  try{
   const response=await fetch('https://maxvolumenutriton.shop/?qa=prod-regression-'+attempt,{signal:AbortSignal.timeout(20000),headers:{'Cache-Control':'no-cache'}});
-  if(response.ok){live=response;break;}
-  console.warn('Production snapshot temporarily unavailable, HTTP '+response.status+' (attempt '+(attempt+1)+')');
- }catch(error){console.warn('Production snapshot retry '+(attempt+1)+': '+error.message);}
+  const html=await response.text();
+  raw=html.match(/<script\b[^>]*\bid="mvnVisualBuilderConfig"[^>]*>([\s\S]*?)<\/script>/)?.[1];
+  if(response.ok&&raw)break;
+  console.warn('Waiting for complete production HTML: HTTP '+response.status+', configuration present: '+Boolean(raw));
+ }catch(error){console.warn('Production snapshot retry: '+error.message);}
  await delay(1500*(attempt+1));
 }
-assert.ok(live,'live production homepage must be reachable to reproduce published layout');
-const raw=(await live.text()).match(/<script type="application\/json" id="mvnVisualBuilderConfig">([\s\S]*?)<\/script>/)?.[1];
-assert.ok(raw,'live site should contain published visual builder design');
+assert.ok(raw,'complete live production HTML must include its published design configuration');
 const published=JSON.parse(raw);
 assert.ok(published.pages?.['/']?.length>0,'reproduce real published operations');
 console.log('REAL_PUBLISHED_LAYOUT_OPS',published.pages['/'].length);
