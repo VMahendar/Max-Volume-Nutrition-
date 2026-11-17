@@ -6,8 +6,16 @@ import {resolve} from 'node:path';
 import {tmpdir} from 'node:os';
 import {setTimeout as delay} from 'node:timers/promises';
 import {openCommerce} from '../commerce.mjs';
-const live=await fetch('https://maxvolumenutriton.shop/?qa=prod-regression',{signal:AbortSignal.timeout(30000)});
-assert.equal(live.status,200,'public homepage available');
+let live=null;
+for(let attempt=0;attempt<6;attempt++){
+ try{
+  const response=await fetch('https://maxvolumenutriton.shop/?qa=prod-regression-'+attempt,{signal:AbortSignal.timeout(20000),headers:{'Cache-Control':'no-cache'}});
+  if(response.ok){live=response;break;}
+  console.warn('Production snapshot temporarily unavailable, HTTP '+response.status+' (attempt '+(attempt+1)+')');
+ }catch(error){console.warn('Production snapshot retry '+(attempt+1)+': '+error.message);}
+ await delay(1500*(attempt+1));
+}
+assert.ok(live,'live production homepage must be reachable to reproduce published layout');
 const raw=(await live.text()).match(/<script type="application\/json" id="mvnVisualBuilderConfig">([\s\S]*?)<\/script>/)?.[1];
 assert.ok(raw,'live site should contain published visual builder design');
 const published=JSON.parse(raw);
@@ -58,6 +66,36 @@ try{
   const footerLinks=await page.locator('.mvn-home-contact a:visible').count();
   assert.ok(footerLinks>=10,'Footer should show functional support and shop links');
 
+
+
+  const design=await page.evaluate(()=>{
+   const props=selector=>{const el=document.querySelector(selector);if(!el)return null;const s=getComputedStyle(el),r=el.getBoundingClientRect();return {bg:s.backgroundColor,width:r.width,height:r.height,top:r.top,bottom:r.bottom,gap:s.gap,display:s.display};};
+   return {
+    header:props('.storehead'),actions:props('.storehead .head-actions #bag'),
+    goals:props('.mvn-theme-shop-goals'),collection:props('#shop'),globe:props('.mvn-globtech-launch'),
+    footer:props('.mvn-home-contact'),
+    cards:[...document.querySelectorAll('.mvn-theme-shop-goals .mvn-editorial-category-grid > a')].map(el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return {width:r.width,height:r.height,bg:s.backgroundColor};}),
+    shopGrid:props('#shop #grid'),
+    shopCards:[...document.querySelectorAll('#shop #grid > *')].slice(0,8).map(el=>{const r=el.getBoundingClientRect();return {width:r.width,height:r.height};})
+   };
+  });
+  console.log('LIVE_UNIFIED_COLOUR_AND_COLLECTION',viewport.width,JSON.stringify(design));
+  const dark='rgb(16, 17, 19)',light='rgb(246, 246, 244)';
+  assert.equal(design.header?.bg,dark,'header must be one charcoal colour');
+  assert.equal(design.actions?.bg,dark,'header actions must not create a grey strip');
+  assert.equal(design.footer?.bg,dark,'footer must match header');
+  assert.ok(measurements.values.best?.width>measurements.viewport*.94,'Best Sellers visible as one full-width collection');
+  assert.ok(measurements.values.globe?.height<500,'Globe-Tech should not have a giant empty gap');
+  assert.equal(design.collection?.display,'none','do not repeat full shop catalogue on homepage');
+  assert.equal(design.globe?.bg,dark,'Globe-Tech and footer must be a continuous colour');
+  assert.equal(design.goals?.bg,light,'shop-by-goal background must be consistent neutral white');
+  if(design.collection?.display!=='none')assert.equal(design.collection?.bg,light,'collection must match shop-by-goal surface');
+  assert.ok(design.cards.length>=4,'goal category tiles are present');
+  assert.ok(design.cards.every(item=>item.width>80&&item.height>=170&&item.height<=320),'goal tiles must be usable, not tiny or oversized');
+  const cardSizes=design.cards.map(item=>item.height);
+  assert.ok(Math.max(...cardSizes)-Math.min(...cardSizes)<8,'goal tile heights must align');
+  if(design.collection?.display!=='none'&&design.shopGrid?.display!=='none'&&design.shopCards.length>0)
+    assert.ok(design.shopCards.every(item=>item.width>80),'collection product cards must have adequate width');
 
   const vw=measurements.viewport,values=measurements.values,cards=measurements.cards;
   for(const name of ['hero','goal','best','globe']){

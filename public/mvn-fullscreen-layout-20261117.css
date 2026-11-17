@@ -200,3 +200,43 @@ body.retail-home.mvn-showcase-home > .storehead .mvn-header-email svg{
   padding:5px!important;justify-content:center!important;
  }
 }
+
+/* FINAL CONSISTENT MVN SKIN. One charcoal header/footer and one clean collection surface. */
+html:has(body.retail-home.mvn-showcase-home){background:#101113!important}
+body.retail-home.mvn-showcase-home{background:#101113!important}
+body.retail-home.mvn-showcase-home > .storehead,
+body.retail-home.mvn-showcase-home > .storehead::before,
+body.retail-home.mvn-showcase-home > .storehead::after{
+ background:#101113!important;background-image:none!important;
+ box-shadow:none!important;
+}
+body.retail-home.mvn-showcase-home > .storehead .head-actions,
+body.retail-home.mvn-showcase-home > .storehead .brand-identity,
+body.retail-home.mvn-showcase-home > .storehead .mvn-theme-categories,
+body.retail-home.mvn-showcase-home > .storehead .mvn-header-search-toggle,
+body.retail-home.mvn-showcase-home > .storehead .mvn-header-more{
+ background:transparent!important;background-image:none!important;
+}
+body.retail-home.mvn-showcase-home > .storehead .head-actions summary,
+body.retail-home.mvn-showcase-home > .storehead .head-actions #bag,
+body.retail-home.mvn-showcase-home > .storehead .head-actions .account-link{
+ background:#101113!important;background-image:none!important;
+ border-color:#30343a!important;box-shadow:none!important;color:white!important;
+}
+body.retail-home.mvn-showcase-home > .mvn-theme-shop-goals,
+body.retail-home.mvn-showcase-home > #shop{
+ background:#f6f6f4!important;background-image:none!important;
+}
+body.retail-home.mvn-showcase-home > .mvn-theme-shop-goals .mvn-editorial-category-grid>a{
+ background:#fff!important;border:1px solid #dedfdf!important;
+ border-radius:8px!important;box-shadow:none!important;
+}
+body.retail-home.mvn-showcase-home > .mvn-globtech-launch,
+body.retail-home.mvn-showcase-home > .mvn-home-contact{
+ background:#101113!important;background-image:none!important;
+ color:#f6f6f6!important;box-shadow:none!important;
+}
+body.retail-home.mvn-showcase-home > .mvn-home-contact .mvn-home-contact-inner,
+body.retail-home.mvn-showcase-home > .mvn-home-contact .mvn-home-contact-inner>*{
+ background:transparent!important;background-image:none!important;
+}
