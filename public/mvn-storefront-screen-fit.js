@@ -275,6 +275,25 @@
     transform:'none',opacity:'1',visibility:'visible'
   });
 
+  // Published historic editor operations may hide the Globe-Tech copy; keep
+  // its factual coming-soon text visible and properly inside the section.
+  rules('.mvn-globtech-launch > div',{
+    display:'block',position:'relative',transform:'none',inset:'auto',
+    width:'auto',height:'auto','min-height':'0','max-height':'none',
+    'max-width':'900px',flex:'0 1 auto','flex-basis':'auto',
+    opacity:'1',visibility:'visible',margin:'0',padding:'0'
+  });
+  for(const element of document.querySelectorAll('.mvn-globtech-launch h2,.mvn-globtech-launch p,.mvn-globtech-launch strong')){
+    set(element,'display','block');set(element,'position','relative');
+    set(element,'transform','none');set(element,'inset','auto');
+    set(element,'height','auto');set(element,'opacity','1');
+  }
+  rules('.mvn-globtech-launch',{
+    display:'flex',height:'auto','min-height':'0','max-height':'none',
+    'align-items':desktop?'center':'flex-start','justify-content':'space-between',
+    padding:desktop?'36px 48px':'26px 16px',
+    'background-color':'#101113',color:'#fff'
+  });
   // Homepage is editorial: only the four featured products are visible.
   // The full retail catalogue is preserved and accessible on /shop.html;
   // do not repeat that long product grid beneath the home banner.
