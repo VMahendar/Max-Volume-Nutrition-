@@ -20,7 +20,7 @@ const cssParts=[
 test('homepage uses its focused theme while shop retains the ordered CSS bundle',()=>{
  assert.equal(root,home,'root and served homepage remain byte-identical');
  assert.equal(readFileSync('shop.html','utf8'),shop,'shop preview and served page remain byte-identical');
- assert.ok(home.includes('href="/mvn-orange-home-20261117.css?v=4"'),'replacement homepage uses its own responsive skin');
+ assert.ok(home.includes('href="/mvn-orange-home-20261117.css?v=5"'),'replacement homepage uses its own responsive skin');
  for(const file of [shop]){
   assert.ok(file.includes('href="/mvn-shopping-bundle-20261115.css?v=1"'),'optimized CSS is linked');
   for(const name of cssParts)assert.ok(!file.includes('href="/'+name+'?'),'separate blocking '+name+' request was removed');

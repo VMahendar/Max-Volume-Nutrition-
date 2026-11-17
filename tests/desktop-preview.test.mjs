@@ -35,6 +35,6 @@ test('desktop preview is linked early in both canonical homepage copies',()=>{
  for(const path of ['index.html','public/index.html']){
   const html=readFileSync(path,'utf8');
   assert.ok(html.includes('<script src="/desktop-preview.js"></script>'),path);
-  assert.ok(html.indexOf('/desktop-preview.js')<html.indexOf('<link rel="stylesheet" href="/mvn-orange-home-20261117.css?v=4">'),path);
+  assert.ok(html.indexOf('/desktop-preview.js')<html.indexOf('<link rel="stylesheet" href="/mvn-orange-home-20261117.css?v=5">'),path);
  }
 });
