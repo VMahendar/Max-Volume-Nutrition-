@@ -343,6 +343,125 @@
     transform:'none',overflow:'visible'
   });
 
+
+  // Single finishing pass after older theme and published owner overrides.
+  // Avoid split charcoal/grey header, oversized collection tiles and mixed
+  // footer backgrounds. The structural edit records remain untouched.
+  const DARK='#101113',PANEL='#151719',LIGHT='#f6f6f4',TEXT='#17191b';
+  rules('.storehead',{
+    background:DARK,'background-color':DARK,'background-image':'none',
+    'border-top':'0','border-bottom':'1px solid #292c2f',
+    'box-shadow':'none',margin:'0',transform:'none',
+    'border-radius':'0'
+  });
+  for(const selector of ['.storehead .brand-identity','.storehead .head-actions','.storehead .head-actions details',
+   '.storehead .head-actions .mvn-header-search-toggle',
+   '.storehead .head-actions .mvn-header-more',
+   '.storehead .mvn-theme-categories']){
+    rules(selector,{background:'transparent','background-color':'transparent',
+      'background-image':'none','box-shadow':'none','border-color':'transparent'});
+  }
+  for(const el of document.querySelectorAll('.storehead .head-actions summary,.storehead .head-actions .account-link,.storehead .head-actions #bag')){
+    for(const [k,v] of Object.entries({
+      background:DARK,'background-color':DARK,'background-image':'none',
+      color:'#fff',border:'1px solid #30343a',
+      'border-radius':'4px','box-shadow':'none',transform:'none'
+    }))set(el,k,v);
+  }
+  rules('.mvn-theme-shop-goals',{
+    background:LIGHT,'background-color':LIGHT,'background-image':'none',
+    color:TEXT,padding:desktop?'32px clamp(20px,4vw,56px) 44px':'24px 14px 30px',
+    margin:'0','border-top':'0','border-bottom':'0'
+  });
+  rules('.mvn-theme-shop-goals .mvn-editorial-categories-heading',{
+    width:'100%','max-width':'1440px',height:'auto',
+    margin:desktop?'0 auto 20px':'0 auto 16px',
+    'text-align':'left',padding:'0'
+  });
+  rules('.mvn-theme-shop-goals .mvn-editorial-categories-heading h2',{
+    'font-size':desktop?'clamp(29px,3vw,42px)':'clamp(25px,7vw,32px)',
+    'line-height':'1.12','letter-spacing':'-.025em',
+    margin:'0',color:TEXT,height:'auto',transform:'none'
+  });
+  rules('.mvn-theme-shop-goals .mvn-editorial-category-grid',{
+    width:'100%','max-width':'1440px',
+    'grid-template-columns':desktop?'repeat(4,minmax(0,1fr))':'repeat(2,minmax(0,1fr))',
+    gap:desktop?'clamp(12px,1.5vw,20px)':'10px',
+    margin:'0 auto',padding:'0',height:'auto','align-items':'stretch'
+  });
+  for(const card of document.querySelectorAll('.mvn-theme-shop-goals .mvn-editorial-category-grid>a')){
+    for(const [k,v] of Object.entries({
+      display:'flex','flex-direction':'column','justify-content':'flex-end',
+      'align-items':'center','min-height':desktop?'242px':'184px',
+      height:'auto',padding:desktop?'14px 12px 16px':'10px 7px 12px',
+      margin:'0',transform:'none',position:'relative',inset:'auto',
+      background:'#fff','background-color':'#fff',
+      border:'1px solid #dedfdf','border-radius':'8px',
+      'box-shadow':'none',overflow:'hidden','text-align':'center',gap:'4px'
+    }))set(card,k,v);
+    const art=card.querySelector('.mvn-theme-goal-art');
+    if(art){for(const [k,v] of Object.entries({
+      display:'flex','align-items':'center','justify-content':'center',
+      width:'100%',height:desktop?'160px':'112px','min-height':'0',
+      'max-height':'none',margin:'0 0 7px',padding:'0',
+      transform:'none',position:'relative',overflow:'visible'
+    }))set(art,k,v);}
+    const img=art?.querySelector('img');
+    if(img){for(const [k,v] of Object.entries({
+      display:'block',width:'100%',height:desktop?'154px':'105px',
+      'max-height':desktop?'154px':'105px','max-width':'100%',
+      'object-fit':'contain',position:'static',transform:'none',
+      margin:'0 auto',padding:'0',visibility:'visible',opacity:'1'
+    }))set(img,k,v);}
+    for(const lbl of card.querySelectorAll('strong,small')){
+      set(lbl,'position','static');set(lbl,'transform','none');
+      set(lbl,'height','auto');set(lbl,'max-width','100%');
+      set(lbl,'line-height','1.25');set(lbl,'text-align','center');
+      set(lbl,'white-space','normal');set(lbl,'color',lbl.tagName==='STRONG'?TEXT:'#58616a');
+      set(lbl,'font-size',lbl.tagName==='STRONG'?(desktop?'clamp(14px,1.3vw,19px)':'13px'):'12px');
+    }
+  }
+  // A single light collection surface: eliminate arbitrary grey gutters.
+  rules('#shop',{
+    background:LIGHT,'background-color':LIGHT,'background-image':'none',
+    color:TEXT,width:'100%','max-width':'none',
+    padding:desktop?'38px clamp(20px,4vw,56px) 54px':'28px 14px 36px',
+    margin:'0',transform:'none'
+  });
+  rules('#shop .collection-results',{
+    background:'transparent','background-color':'transparent',
+    width:'100%',margin:'0 auto','max-width':'1440px',
+    height:'auto',padding:'0'
+  });
+  rules('#shop #grid',{
+    width:'100%','max-width':'1440px','margin-left':'auto','margin-right':'auto',
+    gap:desktop?'clamp(12px,1.5vw,20px)':'10px',
+    'align-items':'stretch'
+  });
+  for(const el of document.querySelectorAll('#shop #grid > *')){
+    set(el,'min-width','0');set(el,'max-width','none');
+    set(el,'box-sizing','border-box');set(el,'transform','none');
+  }
+  // Keep the bottom one continuous charcoal field, not alternating greys.
+  rules('.mvn-globtech-launch',{
+    background:DARK,'background-color':DARK,'background-image':'none',
+    color:'#f6f6f6',margin:'0',padding:desktop?'34px clamp(20px,4vw,56px)':'26px 16px',
+    'border-top':'1px solid #292c2f','border-bottom':'0'
+  });
+  rules('.mvn-home-contact',{
+    background:DARK,'background-color':DARK,'background-image':'none',
+    color:'#f6f6f6',margin:'0',
+    'border-top':'1px solid #292c2f','border-bottom':'0','box-shadow':'none'
+  });
+  rules('body.retail-home',{
+    'background-color':DARK,
+    'background-image':'none'
+  });
+  for(const el of document.querySelectorAll('.mvn-home-contact-inner,.mvn-home-contact-inner > *')){
+    set(el,'background-color','transparent');set(el,'background-image','none');
+    set(el,'box-shadow','none');
+  }
+
   // Do not modify prices, product records, checkout, accounts or cart state.
  }
  addEventListener('load',repair);
