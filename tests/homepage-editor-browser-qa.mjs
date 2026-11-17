@@ -26,13 +26,21 @@ try{
  assert.ok(started,'Preview server failed: '+stderr);
  browser=await chromium.launch({headless:true,args:['--no-sandbox']});
  const context=await browser.newContext({viewport:{width:1280,height:850}});
- // Confirm the current customer homepage still renders a genuine group banner before any owner edits.
+ // Confirm the public slideshow loads real packs without fetching the hidden editor montage.
  const originalStore=await context.newPage();
+ const imageRequests=[];originalStore.on('request',r=>{if(r.resourceType()==='image')imageRequests.push(r.url());});
  await originalStore.goto(origin+'/',{waitUntil:'domcontentloaded'});
- await originalStore.waitForFunction(()=>{const image=document.querySelector('.mvn-owner-banner-img');return image?.complete&&image.naturalWidth>300;},null,{timeout:15000});
+ await originalStore.waitForFunction(()=>{const image=document.querySelector('.mvn-campaign-stage img');return image?.complete&&image.naturalWidth>0;},null,{timeout:15000});
  assert.equal(await originalStore.locator('.storehead .original-brand-logo').count(),1,'one customer-facing logo');
- assert.equal(await originalStore.locator('.mvn-owner-banner-img').count(),1,'one actual homepage banner');
+ assert.equal(await originalStore.locator('.mvn-campaign-carousel').count(),1,'one hydrated carousel');
+ assert.equal(await originalStore.locator('.mvn-campaign-slide').count(),5,'all configured campaign slides');
+ assert.ok(!imageRequests.some(url=>/mvn-orange-lineup-20261117(?:-768)?\.webp/.test(url)),'hidden editor montage consumes no image request');
  await originalStore.close();
+ const noScriptContext=await browser.newContext({javaScriptEnabled:false,viewport:{width:390,height:844}});
+ const noScript=await noScriptContext.newPage();await noScript.goto(origin+'/');
+ assert.equal(await noScript.locator('[data-server-rendered] .mvn-campaign-title').innerText(),'YOUR DAILY\nPROTEIN.','real first banner exists before hydration');
+ assert.ok(await noScript.locator('[data-server-rendered] .mvn-campaign-cta').isVisible(),'first-banner link works without scripts');
+ await noScriptContext.close();
  const page=await context.newPage(),errors=[];
  page.on('pageerror',error=>{errors.push('editor: '+error.message);console.log('EDITOR_JS_ERROR',error.message);});
  assert.equal((await page.goto(origin+'/layout-editor.html',{waitUntil:'domcontentloaded'})).status(),200);

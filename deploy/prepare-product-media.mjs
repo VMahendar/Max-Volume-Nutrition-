@@ -8,6 +8,13 @@ const media=[
   const compact=photo.srcset.split(' ')[0];
   return ['data/image-assets/'+compact.replace('assets/','')+'.b64','public/'+compact];
  }),
+ ['data/image-assets/mvn-wide-logo-420-20261118.webp.b64', 'public/assets/mvn-wide-logo-420-20261118.webp'],
+ ['data/image-assets/mvn-header-logo-440-20261118.webp.b64', 'public/assets/mvn-header-logo-440-20261118.webp'],
+ ['data/image-assets/mvn-certificate-480-20261118.webp.b64', 'public/assets/mvn-certificate-480-20261118.webp'],
+ ['data/image-assets/mvn-certificate-960-20261118.webp.b64', 'public/assets/mvn-certificate-960-20261118.webp'],
+ ['data/image-assets/musclevite-front-440-20261118.webp.b64', 'public/assets/musclevite-front-440-20261118.webp'],
+ ['data/image-assets/musclevite-front-880-20261118.webp.b64', 'public/assets/musclevite-front-880-20261118.webp'],
+
  ['data/image-assets/globtech-creatine-monohydrate-official.webp.b64','public/assets/globtech-creatine-monohydrate-official.webp'],
  ['data/image-assets/globtech-crea-pump-official.webp.b64','public/assets/globtech-crea-pump-official.webp'],
  ['data/image-assets/globtech-amino-lean-edge-official.webp.b64','public/assets/globtech-amino-lean-edge-official.webp'],
