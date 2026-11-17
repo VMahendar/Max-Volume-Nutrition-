@@ -59,6 +59,33 @@ try{
   assert.ok(footerLinks>=10,'Footer should show functional support and shop links');
 
 
+
+  const design=await page.evaluate(()=>{
+   const props=selector=>{const el=document.querySelector(selector);if(!el)return null;const s=getComputedStyle(el),r=el.getBoundingClientRect();return {bg:s.backgroundColor,width:r.width,height:r.height,top:r.top,bottom:r.bottom,gap:s.gap,display:s.display};};
+   return {
+    header:props('.storehead'),actions:props('.storehead .head-actions #bag'),
+    goals:props('.mvn-theme-shop-goals'),collection:props('#shop'),globe:props('.mvn-globtech-launch'),
+    footer:props('.mvn-home-contact'),
+    cards:[...document.querySelectorAll('.mvn-theme-shop-goals .mvn-editorial-category-grid > a')].map(el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return {width:r.width,height:r.height,bg:s.backgroundColor};}),
+    shopGrid:props('#shop #grid'),
+    shopCards:[...document.querySelectorAll('#shop #grid > *')].slice(0,8).map(el=>{const r=el.getBoundingClientRect();return {width:r.width,height:r.height};})
+   };
+  });
+  console.log('LIVE_UNIFIED_COLOUR_AND_COLLECTION',viewport.width,JSON.stringify(design));
+  const dark='rgb(16, 17, 19)',light='rgb(246, 246, 244)';
+  assert.equal(design.header?.bg,dark,'header must be one charcoal colour');
+  assert.equal(design.actions?.bg,dark,'header actions must not create a grey strip');
+  assert.equal(design.footer?.bg,dark,'footer must match header');
+  assert.equal(design.globe?.bg,dark,'Globe-Tech and footer must be a continuous colour');
+  assert.equal(design.goals?.bg,light,'shop-by-goal background must be consistent neutral white');
+  if(design.collection?.display!=='none')assert.equal(design.collection?.bg,light,'collection must match shop-by-goal surface');
+  assert.ok(design.cards.length>=4,'goal category tiles are present');
+  assert.ok(design.cards.every(item=>item.width>80&&item.height>=170&&item.height<=320),'goal tiles must be usable, not tiny or oversized');
+  const cardSizes=design.cards.map(item=>item.height);
+  assert.ok(Math.max(...cardSizes)-Math.min(...cardSizes)<8,'goal tile heights must align');
+  if(design.shopGrid?.display!=='none'&&design.shopCards.length>0)
+    assert.ok(design.shopCards.every(item=>item.width>80),'collection product cards must have adequate width');
+
   const vw=measurements.viewport,values=measurements.values,cards=measurements.cards;
   for(const name of ['hero','goal','best','globe']){
    assert.ok(values[name]&&values[name].width>vw*.94,name+' must fill viewport with live edits at '+vw);
