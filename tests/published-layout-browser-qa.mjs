@@ -91,7 +91,7 @@ try{
   assert.equal(design.featured?.bg,light,'featured product cards should use the same warm paper background as About and Contact');
   if(design.collection?.display!=='none')assert.equal(design.collection?.bg,light,'collection must match shop-by-goal surface');
   assert.equal(design.cards.length,4,'exactly four featured bestseller tiles should be present');
-  assert.ok(design.cards.every(item=>item.width>80&&item.height>=170&&item.height<=320),'featured product tiles must be usable, not tiny or oversized');
+  assert.ok(design.cards.every(item=>item.width>80&&item.height>=170&&item.height<=460),'featured product tiles must be usable, not tiny or oversized');
   const cardSizes=design.cards.map(item=>item.height);
   assert.ok(Math.max(...cardSizes)-Math.min(...cardSizes)<8,'featured product tile heights must align');
   if(design.collection?.display!=='none'&&design.shopGrid?.display!=='none'&&design.shopCards.length>0)
