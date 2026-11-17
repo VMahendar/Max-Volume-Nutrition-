@@ -17,7 +17,7 @@ test('supplement store screenshot reference drives the actual homepage structure
  assert.equal((html.match(/class="mvn-editorial-category mvn-editorial-category-/g)||[]).length,0,"old Shop by Goal no longer appears");
  assert.equal((html.match(/class="mvn-home-collection-entry"/g)||[]).length,1,"one clear collection entry point");
  assert.equal((html.match(/class="mvn-preview-best-grid"/g)||[]).length,1,"one featured products grid");
- assert.equal((html.match(/<a href="\/(?:potency-whey|pro-creatine|sturdy-pre-workout|nitro-mass)\.html">/g)||[]).length,4,"four original featured supplement links");
+ assert.equal((html.match(/<a class="mvn-best-product" href="\/(?:potency-whey|pro-creatine|sturdy-pre-workout|nitro-mass)\.html"/g)||[]).length,4,"four original featured supplement links");
  assert.doesNotMatch(html,/class="mvn-advance-welcome"/,'do not insert text-heavy repeat section between goals and catalogue');
  assert.match(html,/assets\/mvn-orange-lineup-20261117\.webp/);
  assert.ok(readFileSync('public/assets/mvn-orange-lineup-20261117.webp').length>100000);
