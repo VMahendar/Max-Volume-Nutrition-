@@ -32,6 +32,7 @@ try{
   for(const path of ['potency-whey.html','nitro-mass.html','sturdy-pre-workout.html','pro-creatine.html']){
    await page.goto(origin+'/'+path,{waitUntil:'networkidle'});
    await page.locator('[data-mvn-product-order]').waitFor({state:'visible'});
+   const brand=await page.locator('header .brand-link').boundingBox();assert.ok(brand&&brand.width>=180&&brand.width<width,'clear, contained product-page logo');
    await page.waitForFunction(()=>{const images=[...document.querySelectorAll('main .media img, main .nitro-pack-choose img')];return images.length>0&&images.every(img=>img.complete&&img.naturalWidth>0);});
    assert.ok(await page.locator('[data-order-field="price"]').innerText());
    const overflow=await page.evaluate(()=>document.documentElement.scrollWidth-innerWidth);assert.ok(overflow<=2,path+' overflow at '+width+': '+overflow);
