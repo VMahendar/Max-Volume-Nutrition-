@@ -53,6 +53,23 @@ try{
   assert.equal(await page.locator('#mvnCollectionDialog').evaluate(el=>el.open),false,'Popup closes');
     assert.equal(failures.length,0,'browser JavaScript errors: '+failures.join(', '));
   await page.screenshot({path:'reports/visual-qa/fullscreen-'+viewport.width+'.png',fullPage:true});
+  // Shop keeps its live product/cart functionality but matches the About/Contact
+  // charcoal, paper and copper design rather than the old blue header/cards.
+  const shop=await browser.newPage({viewport});
+  const shopResponse=await shop.goto(origin+'/shop.html',{waitUntil:'networkidle'});
+  assert.equal(shopResponse.status(),200);
+  const shopVisual=await shop.evaluate(()=>{
+   const color=selector=>{const el=document.querySelector(selector);return el?getComputedStyle(el).backgroundColor:null;};
+   return {header:color('header.storehead'),intro:color('#shop>.section-title'),paper:color('#shop'),
+    button:color('#shop .collection-results .card .add'),cards:document.querySelectorAll('#shop #grid .card').length,
+    cart:!!document.querySelector('#bag'),filters:!!document.querySelector('.cats')};
+  });
+  assert.equal(shopVisual.header,'rgb(21, 22, 23)','Shop header matches About/Contact charcoal');
+  assert.equal(shopVisual.intro,'rgb(28, 29, 32)','Shop collection introduction is charcoal, not navy');
+  assert.equal(shopVisual.paper,'rgb(250, 249, 247)','Shop background matches info pages');
+  assert.ok(shopVisual.cards>=4,'the full shop catalogue is still available');
+  assert.ok(shopVisual.cart&&shopVisual.filters,'Shop cart and category filters remain in place');
+  await shop.close();
   await page.close();
  }
  console.log('MVN_FULLSCREEN_DESKTOP_MOBILE_QA_PASS');
