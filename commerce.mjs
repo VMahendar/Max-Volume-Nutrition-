@@ -64,6 +64,17 @@ const referenceVariants=new Map(seedProducts.flatMap(p=>p.variants.map(v=>[v.id,
 if(!setting('seeded'))tx(()=>{const seed=seedProducts;for(const p of seed){p.id ||= 'product-'+randomUUID();db.prepare('INSERT INTO products VALUES(?,?)').run(p.id,JSON.stringify(p));for(const v of p.variants)db.prepare('INSERT INTO inventory(variant_id,on_hand) VALUES(?,?)').run(v.id,v.stock);}for(const row of db.prepare("SELECT payload FROM orders WHERE status='paid'").all())for(const line of JSON.parse(row.payload).lines)db.prepare('UPDATE inventory SET on_hand=MAX(0,on_hand-?) WHERE variant_id=?').run(line.quantity,line.variantId);set('store',JSON.parse(readFileSync('data/store.json')));set('tax',{enabled:false,approved:false,sellerStateCode:'33',sellerGstin:'',legalName:'',address:'',shippingRateBps:0,invoicePrefix:'MV'});set('seeded',true);});
 
 
+// Add owner-requested Globe-Tech catalogue entries to persistent stores without
+// overwriting existing prices, stock, media or owner edits. Null price means enquiry.
+tx(()=>{
+ for(const product of seedProducts.filter(p=>p.brand==='Globe-Tech Nutrition')){
+  if(db.prepare('SELECT id FROM products WHERE id=?').get(product.id))continue;
+  db.prepare('INSERT INTO products VALUES(?,?)').run(product.id,JSON.stringify(product));
+  for(const v of product.variants)db.prepare('INSERT OR IGNORE INTO inventory(variant_id,on_hand) VALUES(?,?)').run(v.id,v.stock);
+  audit('system','product.add',product.id,{brand:product.brand,pricing:'enquiry'});
+ }
+});
+
 // Owner-approved November 2026 Whey retail price change. Modify only the two
 // unchanged legacy ₹4,999 prices; preserve owner custom prices, trade tiers and stock.
 if(!setting('retail-whey-5500-nov2026'))tx(()=>{

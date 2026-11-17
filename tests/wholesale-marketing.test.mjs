@@ -26,7 +26,7 @@ test('existing SQLite schema is preserved with separate dealer profiles and opt-
   c=openCommerce(dir);
   const tables=c.db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map(x=>x.name);
   for(const name of ['orders','users','dealers','dealer_profiles','marketing_preferences','inventory','audit'])assert.ok(tables.includes(name),name+' exists');
-  assert.equal(c.catalogue(null).length,5);
+  assert.equal(c.catalogue(null).filter(p=>p.brand==='Unicorn Pro Series').length,5);
   assert.equal(c.db.prepare('SELECT COUNT(*) AS c FROM marketing_preferences').get().c,0,'marketing starts with nobody enrolled');
   assert.equal(c.db.prepare('SELECT COUNT(*) AS c FROM dealer_profiles').get().c,0,'do not manufacture dealer records');
  }finally{c?.db.close();rmSync(dir,{recursive:true,force:true});}

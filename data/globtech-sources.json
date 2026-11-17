@@ -1,0 +1,31 @@
+{
+  "verified": "2026-11-17",
+  "catalogue": "https://globtechnutrition.com/shop/",
+  "products": [
+    {
+      "name": "Force 1 – Red Fusion Berry",
+      "url": "https://globtechnutrition.com/product/force-1-red/",
+      "image": "https://globtechnutrition.com/wp-content/uploads/F1-Red-1.png"
+    },
+    {
+      "name": "CREA PUMP – Advanced Strength & Pump Formula –  Pineapple Charge",
+      "url": "https://globtechnutrition.com/product/crea-pump/",
+      "image": "https://globtechnutrition.com/wp-content/uploads/crea-pump-2-1.png"
+    },
+    {
+      "name": "Force 1 – Pineapple Voltage",
+      "url": "https://globtechnutrition.com/product/f1-2/",
+      "image": "https://globtechnutrition.com/wp-content/uploads/F1-1.png"
+    },
+    {
+      "name": "Amino Lean Edge – Tropical Guava",
+      "url": "https://globtechnutrition.com/product/amino-lean-edge/",
+      "image": "https://globtechnutrition.com/wp-content/uploads/Amino-Lean-1.png"
+    },
+    {
+      "name": "Creatine Monohydrate – Unflavored",
+      "url": "https://globtechnutrition.com/product/creatine-monohydrate/",
+      "image": "https://globtechnutrition.com/wp-content/uploads/Creatine-mono.png"
+    }
+  ]
+}

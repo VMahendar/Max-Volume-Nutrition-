@@ -9,8 +9,11 @@ const P=[
 {id:"vitamins",name:"Musclevite Multivitamin",cat:"vitamins",variants:[{label:"60 tablets",price:699,img:"assets/musclevite-front-20261116.webp",images:[{src:"assets/musclevite-front-20261116.webp",label:"Front of bottle",alt:"Unicorn Pro Series Musclevite Multivitamin 60 tablets front bottle"},{src:"assets/musclevite-facts-20261116.webp",label:"Supplement facts",alt:"Original Musclevite 60-tablet supplement facts panel"},{src:"assets/musclevite-back.webp",label:"Directions and batch label",alt:"Original Musclevite directions, batch and printed MRP label"}]}],desc:"Multivitamin and multimineral supplement. Each bottle contains 60 tablets.",img:""}
 ];
 
+P.push(...[{"id": "catalog-globtech-creatine", "name": "Creatine Monohydrate", "brand": "Globe-Tech Nutrition", "cat": "creatine", "desc": "Globe-Tech Creatine Monohydrate, Unflavored, 400 g. Refer to the current pack for ingredients and serving directions.", "img": "assets/globtech-creatine-monohydrate-official.webp", "variants": [{"label": "400 g · Unflavored", "price": null, "img": "assets/globtech-creatine-monohydrate-official.webp", "images": [{"src": "assets/globtech-creatine-monohydrate-official.webp", "label": "Official front pack", "alt": "Globe-Tech 400 g · Unflavored official product pack"}]}]}, {"id": "catalog-globtech-crea-pump", "name": "Crea Pump", "brand": "Globe-Tech Nutrition", "cat": "creatine", "desc": "Globe-Tech Crea Pump, Pineapple Charge, 300 g. A creatine, amino and electrolyte formula. Confirm the current pack label before ordering.", "img": "assets/globtech-crea-pump-official.webp", "variants": [{"label": "300 g · Pineapple Charge", "price": null, "img": "assets/globtech-crea-pump-official.webp", "images": [{"src": "assets/globtech-crea-pump-official.webp", "label": "Official front pack", "alt": "Globe-Tech 300 g · Pineapple Charge official product pack"}]}]}, {"id": "catalog-globtech-amino", "name": "Amino Lean Edge", "brand": "Globe-Tech Nutrition", "cat": "amino", "desc": "Globe-Tech Amino Lean Edge, Tropical Guava, 300 g. An amino acid and electrolyte supplement. Check the current pack for ingredients and directions.", "img": "assets/globtech-amino-lean-edge-official.webp", "variants": [{"label": "300 g · Tropical Guava", "price": null, "img": "assets/globtech-amino-lean-edge-official.webp", "images": [{"src": "assets/globtech-amino-lean-edge-official.webp", "label": "Official front pack", "alt": "Globe-Tech 300 g · Tropical Guava official product pack"}]}]}, {"id": "catalog-globtech-force-1", "name": "Force 1 Pre-Workout", "brand": "Globe-Tech Nutrition", "cat": "pre", "desc": "Globe-Tech Force 1 pre-workout in Pineapple Voltage or Red Fusion Berry, 400 g. Check caffeine, ingredients and serving guidance on the current pack.", "img": "assets/globtech-f1-2-official.webp", "variants": [{"label": "400 g · Pineapple Voltage", "price": null, "img": "assets/globtech-f1-2-official.webp", "images": [{"src": "assets/globtech-f1-2-official.webp", "label": "Official front pack", "alt": "Globe-Tech 400 g · Pineapple Voltage official product pack"}]}, {"label": "400 g · Red Fusion Berry", "price": null, "img": "assets/globtech-force-1-red-official.webp", "images": [{"src": "assets/globtech-force-1-red-official.webp", "label": "Official front pack", "alt": "Globe-Tech 400 g · Red Fusion Berry official product pack"}]}]}]);
+
 /* The eight invoice-verified packs only; current stock remains subject to confirmation. */
 const retailVariantIds={whey:['whey-chocolate','whey-coffee'],mass:['mass-3kg','mass-5kg'],pre:['pre-watermelon'],creatine:['creatine-blueberry','creatine-cranberry'],vitamins:['musclevite-pack']};
+Object.assign(retailVariantIds,{"catalog-globtech-creatine": ["globtech-creatine-unflavored"], "catalog-globtech-crea-pump": ["globtech-crea-pump-pineapple"], "catalog-globtech-amino": ["globtech-amino-guava"], "catalog-globtech-force-1": ["globtech-force-pineapple", "globtech-force-berry"]});
 async function refreshRetailPrices(){
  const response=await fetch('/api/retail/catalog',{cache:'no-store',signal:AbortSignal.timeout(8000)});
  if(!response.ok)throw Error('Current prices are unavailable. Please reconnect and try again.');
@@ -19,20 +22,20 @@ async function refreshRetailPrices(){
  let changed=false;
  const mappedIds=new Set(Object.entries(retailVariantIds).filter(([id])=>!id.startsWith('catalog-')).flatMap(([,ids])=>ids));
  for(const product of data.products){
-  const packs=(product.variants||[]).filter(v=>Number.isSafeInteger(v.pricePaise)&&v.pricePaise>0);
+  const packs=(product.variants||[]).filter(v=>v.pricePaise===null||(Number.isSafeInteger(v.pricePaise)&&v.pricePaise>0));
   if(!packs.length||packs.every(v=>mappedIds.has(v.id)))continue;
   const id='catalog-'+product.id;if(!/^[a-z0-9-]+$/.test(id))continue;
-  let item=P.find(p=>p.id===id);if(!item){item={id,name:product.name,brand:product.brand,cat:['whey','mass','pre','creatine','vitamins'].includes(product.category)?product.category:'other',desc:product.description||product.subtitle||'',img:product.image||'',variants:[]};P.push(item);changed=true;}
+  let item=P.find(p=>p.id===id);if(!item){item={id,name:product.name,brand:product.brand,cat:['whey','mass','pre','creatine','vitamins','amino'].includes(product.category)?product.category:'other',desc:product.description||product.subtitle||'',img:product.image||'',variants:[]};P.push(item);changed=true;}
   if(item.name!==product.name||item.brand!==product.brand||item.desc!==(product.description||product.subtitle||'')||item.img!==(product.image||''))changed=true;
   item.name=product.name;item.brand=product.brand;item.desc=product.description||product.subtitle||'';item.img=product.image||'';
   const previous=new Map(item.variants.map((v,i)=>[retailVariantIds[id]?.[i],v]));
   changed=true;
-  item.variants=packs.map(v=>({...previous.get(v.id),label:v.label,price:v.pricePaise/100,img:v.image||product.image||'',...(Number.isSafeInteger(v.mrpPaise)?{mrp:v.mrpPaise/100}:{})}));retailVariantIds[id]=packs.map(v=>v.id);
+  item.variants=packs.map(v=>({...previous.get(v.id),label:v.label,price:v.pricePaise===null?null:v.pricePaise/100,img:v.image||product.image||'',...(Number.isSafeInteger(v.mrpPaise)?{mrp:v.mrpPaise/100}:{})}));retailVariantIds[id]=packs.map(v=>v.id);
  }
  const variants=new Map(data.products.flatMap(p=>p.variants||[]).map(v=>[v.id,v]));
- const updates=P.flatMap(p=>p.variants.map((v,index)=>{const current=variants.get(retailVariantIds[p.id][index]);if(!current||!Number.isSafeInteger(current.pricePaise)||current.pricePaise<=0)throw Error('A selected pack needs price confirmation. Please contact our team.');return {v,current}}));
+ const updates=P.flatMap(p=>p.variants.map((v,index)=>{const current=variants.get(retailVariantIds[p.id][index]);if(!current||(current.pricePaise!==null&&(!Number.isSafeInteger(current.pricePaise)||current.pricePaise<=0)))throw Error('A selected pack needs price confirmation. Please contact our team.');return {v,current}}));
  for(const {v,current} of updates){
-  const price=current.pricePaise/100;
+  const price=current.pricePaise===null?null:current.pricePaise/100;
   const mrp=Number.isSafeInteger(current.mrpPaise)&&current.mrpPaise>current.pricePaise?current.mrpPaise/100:null;
   if(v.price!==price||(v.mrp??null)!==mrp)changed=true;
   v.price=price;delete v.mrp;if(mrp!==null)v.mrp=mrp;
@@ -48,20 +51,21 @@ const isFullShop=document.body.classList.contains('mvn-full-shop');
 const shopRouteParams=isFullShop?new URLSearchParams(location.search):null;
 if(isFullShop){
  const requestedCat=shopRouteParams.get('cat');
- if(['all','whey','mass','pre','creatine','vitamins'].includes(requestedCat))cat=requestedCat;
+ if(['all','whey','mass','pre','creatine','vitamins','amino'].includes(requestedCat))cat=requestedCat;
  q=(shopRouteParams.get('q')||'').slice(0,120);
 }
+let brandFilter=shopRouteParams?.get("brand")==="globtech"?"globtech":shopRouteParams?.get("brand")==="unicorn"?"unicorn":"all";
 let priceRange="all",recent=[],appliedOffer=null,availableOffers=[];
 const offerSurface=document.body.classList.contains("app-store")?"app":"web";
 const cartSignature=()=>JSON.stringify(Object.entries(cart).sort().map(([key,qty])=>[key,qty,getItem(key)?.v.price]));
-const categoryNames={all:"ALL PRODUCTS",whey:"WHEY PROTEIN",mass:"MASS GAINERS",pre:"PRE-WORKOUT",creatine:"CREATINE",vitamins:"VITAMINS"};
+const categoryNames={all:"ALL PRODUCTS",whey:"WHEY PROTEIN",mass:"MASS GAINERS",pre:"PRE-WORKOUT",creatine:"CREATINE",vitamins:"VITAMINS",amino:"AMINO & INTRA-WORKOUT"};
 const priceLabels={all:"All prices",under1000:"Under ₹1,000","1000to3000":"₹1,000 – ₹3,000",over3000:"Over ₹3,000"};
-function matchesPrice(v){return priceRange==="all"||(priceRange==="under1000"&&v.price<1000)||(priceRange==="1000to3000"&&v.price>=1000&&v.price<=3000)||(priceRange==="over3000"&&v.price>3000)}
+function matchesPrice(v){return priceRange==="all"||(Number.isFinite(v.price)&&((priceRange==="under1000"&&v.price<1000)||(priceRange==="1000to3000"&&v.price>=1000&&v.price<=3000)||(priceRange==="over3000"&&v.price>3000)))}
 const failedPackPhotos=new Set();
 function visiblePackOptions(p){
  // A missing or broken photograph must not hide a real, priced supplement.
  // Keep exact-size/flavour product photos optional; never substitute another pack.
- return p.variants.map((v,i)=>({v,i})).filter(({v})=>Number.isFinite(v.price)&&v.price>0);
+ return p.variants.map((v,i)=>({v,i})).filter(({v})=>v.price===null||(Number.isFinite(v.price)&&v.price>0));
 }
 function displayVariant(p){
  const options=visiblePackOptions(p),matching=options.filter(({v})=>matchesPrice(v));
@@ -87,12 +91,12 @@ function renderRecent(){
   const image=coverImage(p,index);
   if(image){const img=document.createElement("img");img.src=image;img.alt="";img.loading="lazy";img.onerror=()=>img.hidden=true;button.append(img)}
   const name=document.createElement("strong");name.textContent=p.name;
-  const price=document.createElement("span");price.textContent=v.label+" · "+money(v.price);
+  const price=document.createElement("span");price.textContent=v.label+" · "+(v.price===null?"Ask for price":money(v.price));
   button.append(name,price);button.onclick=()=>showDetail(id);return button;
  }));
 }
 try{const v=JSON.parse(localStorage.getItem("mvn-cart-v2")||"{}");if(v&&typeof v==="object")cart=v}catch(e){}
-function getItem(k){if(!/^[a-z0-9-]+\|[0-9]+$/.test(k))return null;const [id,i]=k.split("|");const p=P.find(x=>x.id===id),v=p&&p.variants[Number(i)];return p&&v?{p,v}:null}
+function getItem(k){if(!/^[a-z0-9-]+\|[0-9]+$/.test(k))return null;const [id,i]=k.split("|");const p=P.find(x=>x.id===id),v=p&&p.variants[Number(i)];return p&&v&&Number.isFinite(v.price)&&v.price>0?{p,v}:null}
 cart=Object.fromEntries(Object.entries(cart).filter(([k,v])=>/^[a-z0-9-]+\|[0-9]+$/.test(k)&&Number.isSafeInteger(v)&&v>0&&v<=999));
 function persist(){try{localStorage.setItem("mvn-cart-v2",JSON.stringify(cart))}catch{}drawCart()}
 function coverImage(p,i){const v=p.variants[Number(i)];return v&&Object.prototype.hasOwnProperty.call(v,"img")?(v.img||""):(p.img||"")}
@@ -115,7 +119,9 @@ function retailOfferMarkup(v){
  const subtotal=Math.round(v.price*100),best=bestRetailOffer(v);
  return best?'<div class="retail-offer-price"><span class="limited-deal-label">LIMITED '+(best.campaign.occasion?.toLowerCase().includes('diwali')?'DIWALI':'RETAIL')+' OFFER</span><strong>'+money((subtotal-best.discount)/100)+'</strong><span>Code '+best.campaign.code+' at checkout</span><span>Valid through '+new Date(Date.parse(best.campaign.endsAt)-1).toLocaleDateString('en-IN',{timeZone:'Asia/Kolkata',day:'numeric',month:'short'})+'</span></div>':'';
 }
+function enquiryURL(p,v,qty=1){return "https://wa.me/"+PHONE+"?text="+encodeURIComponent("Hello Max Volume Nutrition, please confirm the selling price and availability for "+p.brand+" "+p.name+" — "+v.label+". Quantity: "+qty+".");}
 function priceMarkup(v){
+ if(v.price===null)return '<div class="price-main"><b class="selling-price quote-price">Ask for price</b></div><small class="selling-caption">Price & availability on WhatsApp</small>';
  const hasMrp=Number.isSafeInteger(v.mrp)&&v.mrp>v.price;
  const percent=hasMrp?Math.round((v.mrp-v.price)*100/v.mrp):0;
  return '<div class="price-main"><b class="selling-price">'+money(v.price)+'</b>'+
@@ -124,6 +130,7 @@ function priceMarkup(v){
  '<small class="selling-caption">Regular retail price</small>'+retailOfferMarkup(v);
 }
 function appPriceMarkup(v){
+ if(v.price===null)return '<strong class="price-current">Ask for price</strong>';
  const offer=bestRetailOffer(v),regular=Math.round(v.price*100);
  if(offer){const end=new Date(Date.parse(offer.campaign.endsAt)-1).toLocaleDateString('en-IN',{timeZone:'Asia/Kolkata',day:'numeric',month:'short'});return '<span class="app-price-offer-label">'+safe(offer.campaign.occasion||'Retail offer')+'</span><strong class="price-current price-current--promo">'+money((regular-offer.discount)/100)+'</strong><span class="price-original">Regular <del>'+money(v.price)+'</del></span><span class="price-note">With code '+safe(offer.campaign.code)+' at checkout · through '+safe(end)+'</span>';}
  return '<strong class="price-current">'+money(v.price)+'</strong>'+(Number.isSafeInteger(v.mrp)&&v.mrp>v.price?'<span class="price-original">MRP <del>'+money(v.mrp)+'</del></span>':'')+'<span class="price-note">Regular selling price</span>';
@@ -142,7 +149,7 @@ const smallCardImages={
 const seoProductDetailUrls=Object.freeze({whey:'potency-whey.html',mass:'nitro-mass.html',pre:'sturdy-pre-workout.html',creatine:'pro-creatine.html',vitamins:'musclevite-multivitamin.html'});
 function card(p){
 const featured=displayVariant(p);const originalCover=coverImage(p,featured);const cover=failedPackPhotos.has(originalCover)?'':originalCover;const thumbnail=smallCardImages[cover]||cover;const pic=cover?'<img loading="lazy" decoding="async" src="'+safe(thumbnail)+'" alt="'+safe(p.name)+'"><div class="placeholder" hidden><b>'+safe(p.name)+'</b>Photo coming soon</div>':'<div class="placeholder"><b>'+safe(p.name)+'</b>Correct pack photo being verified</div>';
-return '<article class="card"><div class="photo">'+pic+'</div><div class="info"><small>'+safe(p.brand||'Unicorn Pro Series')+'</small><h3>'+(seoProductDetailUrls[p.id]?'<a href="'+safe(seoProductDetailUrls[p.id])+'">'+safe(p.name)+'</a>':safe(p.name))+'</h3><p>'+safe(p.desc)+'</p><label class="variant-label" for="v-'+p.id+'">FLAVOUR / PACK SIZE</label><select id="v-'+p.id+'" class="variant">'+visiblePackOptions(p).map(({v,i})=>'<option value="'+i+'"'+(i===featured?' selected':'')+'>'+safe(v.label)+'</option>').join("")+'</select><div class="price" id="price-'+p.id+'">'+priceMarkup(p.variants[featured])+'</div><button class="details-link" type="button" data-detail="'+p.id+'">VIEW PRODUCT DETAILS →</button><button class="add" data-id="'+p.id+'">ADD TO CART +</button></div></article>';
+return '<article class="card"><div class="photo '+(p.brand==='Globe-Tech Nutrition'?'gt-pack':'')+'">'+pic+'</div><div class="info"><small>'+safe(p.brand||'Unicorn Pro Series')+'</small><h3>'+(seoProductDetailUrls[p.id]?'<a href="'+safe(seoProductDetailUrls[p.id])+'">'+safe(p.name)+'</a>':safe(p.name))+'</h3><p>'+safe(p.desc)+'</p><label class="variant-label" for="v-'+p.id+'">FLAVOUR / PACK SIZE</label><select id="v-'+p.id+'" class="variant">'+visiblePackOptions(p).map(({v,i})=>'<option value="'+i+'"'+(i===featured?' selected':'')+'>'+safe(v.label)+'</option>').join("")+'</select><div class="price" id="price-'+p.id+'">'+priceMarkup(p.variants[featured])+'</div><button class="details-link" type="button" data-detail="'+p.id+'">VIEW PRODUCT DETAILS →</button><button class="add" data-id="'+p.id+'"'+(p.variants[featured].price===null?' hidden':'')+'>ADD TO CART +</button><a class="quote-action" href="'+safe(enquiryURL(p,p.variants[featured]))+'" target="_blank" rel="noopener noreferrer"'+(p.variants[featured].price===null?'':' hidden')+'>ASK ON WHATSAPP ↗</a></div></article>';
 }
 
 function installCategoryShortcuts(){
@@ -151,7 +158,7 @@ function installCategoryShortcuts(){
  const nav=document.createElement('nav');nav.className='mvn-quick-categories';nav.id='mvn-quick-categories';
  nav.setAttribute('aria-label','Browse by supplement category');
  nav.innerHTML='<div class="mvn-quick-caption"><strong>SHOP BY CATEGORY</strong><span>Find your supplements fast</span></div><div class="mvn-quick-track">'+[
- ['all','All'],['whey','Whey'],['mass','Mass Gainers'],['creatine','Creatine'],['pre','Pre-workout'],['vitamins','Vitamins']
+ ['all','All'],['whey','Whey'],['mass','Mass Gainers'],['creatine','Creatine'],['pre','Pre-workout'],['vitamins','Vitamins'],['amino','Amino']
  ].map(([id,label])=>'<button type="button" data-cat="'+id+'">'+label+'</button>').join('')+'</div>';
  shop.before(nav);
  nav.querySelectorAll('[data-cat]').forEach(button=>button.onclick=()=>setCat(button.dataset.cat));
@@ -165,7 +172,7 @@ function renderPurchasedPacks(){
  if(!section){
   section=document.createElement('section');section.id='mvn-purchased-packs';
   section.className='mvn-purchased-section';
-  section.innerHTML='<div class="mvn-purchased-heading"><div><span class="mvn-label">MAX VOLUME NUTRITION · UNICORN PRO SERIES</span><h2>SHOP YOUR EXACT PACK.</h2><p>Browse individual packs with matching photos. Stock is confirmed before fulfilment.</p></div><a href="tel:+917708830513" aria-label="Call Max Volume Nutrition">CALL OUR TEAM ↗</a></div><div id="mvn-purchased-grid" class="mvn-purchased-grid"></div>';
+  section.innerHTML='<div class="mvn-purchased-heading"><div><span class="mvn-label">MAX VOLUME NUTRITION · SUPPLEMENT COLLECTION</span><h2>SHOP YOUR EXACT PACK.</h2><p>Browse individual packs with matching photos. Stock is confirmed before fulfilment.</p></div><a href="tel:+917708830513" aria-label="Call Max Volume Nutrition">CALL OUR TEAM ↗</a></div><div id="mvn-purchased-grid" class="mvn-purchased-grid"></div>';
   const title=$('shop').querySelector('.section-title');
   if(title)title.after(section);else $('shop').prepend(section);
  }
@@ -183,7 +190,7 @@ function renderPurchasedPacks(){
   const image=coverImage(p,i),src=failedPackPhotos.has(image)?'':image,label=p.name+' · '+v.label;
   const photo=src?'<img src="'+safe(src)+'" alt="'+safe(label)+' verified variant photograph" loading="lazy"><div class="mvn-hd-placeholder" hidden><strong>'+safe(p.name)+'</strong><span>Correct high-resolution pack photo requested</span></div>':'<div class="mvn-hd-placeholder"><span>UNICORN PRO SERIES</span><strong>'+safe(p.name)+'</strong><em>'+safe(v.label)+'</em><small>1080 × 1080 product photo pending</small></div>';
   const text='Hello Max Volume Nutrition, please confirm the exact pack, current stock and delivery for '+label+'.';
-  return {cat:p.cat,markup:'<article class="mvn-purchased-card product-card" data-purchase-pack="'+safe(retailVariantIds[p.id]?.[i]||'')+'"><div class="mvn-purchased-photo">'+photo+'</div><div class="mvn-purchased-details"><span class="mvn-purchased-brand product-series">UNICORN PRO SERIES</span><h3 class="product-name">'+safe(p.name)+'</h3><p class="product-variant">'+safe(v.label)+'</p><div class="mvn-purchased-price product-prices">'+appPriceMarkup(v)+'</div><div class="mvn-purchased-actions product-actions"><button type="button" class="product-button product-button--cart" data-pack-add="'+safe(p.id)+'" data-index="'+i+'" data-add="'+safe(retailVariantIds[p.id]?.[i]||'')+'" aria-label="Add '+safe(label)+' to cart">Add to Cart</button><button type="button" class="mvn-detail-btn product-button product-button--details" data-pack-details="'+safe(p.id)+'" data-index="'+i+'" data-details="'+safe(retailVariantIds[p.id]?.[i]||'')+'" aria-label="Details for '+safe(label)+'">Details</button></div><div class="mvn-purchased-secondary"><a href="https://wa.me/'+PHONE+'?text='+encodeURIComponent(text)+'" rel="noopener noreferrer" target="_blank" aria-label="Ask on WhatsApp about '+safe(label)+'">WhatsApp enquiry ↗</a><a href="tel:+917708830513" aria-label="Call about '+safe(label)+'">Call ↗</a></div></div></article>'};
+  return {cat:p.cat,markup:'<article class="mvn-purchased-card product-card" data-purchase-pack="'+safe(retailVariantIds[p.id]?.[i]||'')+'"><div class="mvn-purchased-photo '+(p.brand==='Globe-Tech Nutrition'?'gt-pack':'')+'">'+photo+'</div><div class="mvn-purchased-details"><span class="mvn-purchased-brand product-series">'+safe(p.brand||'Unicorn Pro Series')+'</span><h3 class="product-name">'+safe(p.name)+'</h3><p class="product-variant">'+safe(v.label)+'</p><div class="mvn-purchased-price product-prices">'+appPriceMarkup(v)+'</div><div class="mvn-purchased-actions product-actions"><button type="button" '+(v.price===null?'hidden':'')+' class="product-button product-button--cart" data-pack-add="'+safe(p.id)+'" data-index="'+i+'" data-add="'+safe(retailVariantIds[p.id]?.[i]||'')+'" aria-label="Add '+safe(label)+' to cart">Add to Cart</button><button type="button" class="mvn-detail-btn product-button product-button--details" data-pack-details="'+safe(p.id)+'" data-index="'+i+'" data-details="'+safe(retailVariantIds[p.id]?.[i]||'')+'" aria-label="Details for '+safe(label)+'">Details</button></div><div class="mvn-purchased-secondary"><a href="https://wa.me/'+PHONE+'?text='+encodeURIComponent(text)+'" rel="noopener noreferrer" target="_blank" aria-label="Ask on WhatsApp about '+safe(label)+'">WhatsApp enquiry ↗</a><a href="tel:+917708830513" aria-label="Call about '+safe(label)+'">Call ↗</a></div></div></article>'};
  });
  const html=cat==='all'
   ? Array.from(new Set(['whey','mass','creatine','pre','vitamins',...cards.map(item=>item.cat)]))
@@ -193,12 +200,12 @@ function renderPurchasedPacks(){
     const titles={whey:'Whey Protein',mass:'Mass Gainers',creatine:'Creatine',pre:'Pre-Workout',vitamins:'Vitamins'};
     const title=titles[group]||'More Supplements';
     const note=group==='mass'?'Nitro Mass 3 kg and 5 kg — choose each pack separately.':group==='whey'?'Choose your whey flavour and exact pack.':'Browse the available packs below.';
-    return '<section class="mvn-product-group" data-group="'+safe(group)+'" aria-label="'+safe(title)+'"><header class="mvn-product-group-heading"><span>UNICORN PRO SERIES</span><h2>'+safe(title)+'</h2><p>'+safe(note)+'</p></header><div class="mvn-product-group-grid">'+grouped.map(item=>item.markup).join('')+'</div></section>';
+    return '<section class="mvn-product-group" data-group="'+safe(group)+'" aria-label="'+safe(title)+'"><header class="mvn-product-group-heading"><span>MAX VOLUME NUTRITION</span><h2>'+safe(title)+'</h2><p>'+safe(note)+'</p></header><div class="mvn-product-group-grid">'+grouped.map(item=>item.markup).join('')+'</div></section>';
    }).join('')
   : cards.map(item=>item.markup).join('');
  section.querySelector('#mvn-purchased-grid').innerHTML=html||'<p class="mvn-empty-packs">No purchased variants match this filter.</p>';
  document.body.classList.toggle('app-catalog-ready',all.length>0);
- section.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{const pack=purchasedPack(b.dataset.add);if(!pack)return;const key=pack.p.id+'|'+pack.i;cart[key]=Math.min(999,(cart[key]||0)+1);persist();openBag()});
+ section.querySelectorAll('[data-add]').forEach(b=>b.onclick=()=>{const pack=purchasedPack(b.dataset.add);if(!pack||pack.v.price===null)return;const key=pack.p.id+'|'+pack.i;cart[key]=Math.min(999,(cart[key]||0)+1);persist();openBag()});
  section.querySelectorAll('[data-details]').forEach(b=>b.onclick=()=>{const pack=purchasedPack(b.dataset.details);if(pack)showDetail(pack.p.id,pack.i)});
  section.querySelectorAll('.mvn-purchased-photo img').forEach(img=>img.addEventListener('error',()=>hideFailedPackPhoto(img)));
 }
@@ -302,21 +309,22 @@ function render(){
  renderPurchasedPacks();
  renderAppProduct();
 // The website uses this product-family grid. The app displays the individual packs.
-const items=P.filter(p=>(cat==="all"||p.cat===cat)&&visiblePackOptions(p).some(({v})=>matchesPrice(v))&&((p.name+" "+(p.brand||"")+" "+visiblePackOptions(p).map(({v})=>v.label).join(" ")).toLowerCase().includes(q.toLowerCase())));
+const items=P.filter(p=>(brandFilter==="all"||(brandFilter==="globtech"?p.brand==="Globe-Tech Nutrition":p.brand!=="Globe-Tech Nutrition"))&&(cat==="all"||p.cat===cat)&&visiblePackOptions(p).some(({v})=>matchesPrice(v))&&((p.name+" "+(p.brand||"")+" "+visiblePackOptions(p).map(({v})=>v.label).join(" ")).toLowerCase().includes(q.toLowerCase())));
 if($("sort").value==="default")items.sort((a,b)=>Number(Boolean(coverImage(b,b.featuredIndex||0)))-Number(Boolean(coverImage(a,a.featuredIndex||0))));
 if($("sort").value==="name")items.sort((a,b)=>a.name.localeCompare(b.name));
-if($("sort").value==="low")items.sort((a,b)=>a.variants[displayVariant(a)].price-b.variants[displayVariant(b)].price);
-if($("sort").value==="high")items.sort((a,b)=>b.variants[displayVariant(b)].price-a.variants[displayVariant(a)].price);
+if($("sort").value==="low")items.sort((a,b)=>(a.variants[displayVariant(a)].price??Infinity)-(b.variants[displayVariant(b)].price??Infinity));
+if($("sort").value==="high")items.sort((a,b)=>(b.variants[displayVariant(b)].price??-Infinity)-(a.variants[displayVariant(a)].price??-Infinity));
 $("grid").innerHTML=items.length?items.map(card).join(""):'<div class="no-products"><h3>No matching products</h3><p>Try clearing your search and filters.</p><button type="button" id="emptyReset">View all products</button></div>';
 if($("emptyReset"))$("emptyReset").onclick=resetFilters;
-if($("collectionTitle"))$("collectionTitle").textContent=categoryNames[cat];
+if($("collectionTitle"))$("collectionTitle").textContent=brandFilter==="globtech"&&cat==="all"?"GLOBE-TECH NUTRITION":categoryNames[cat];
+ document.querySelectorAll("[data-brand]").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.brand===brandFilter)));
 document.querySelectorAll("[data-cat]").forEach(button=>{const active=button.dataset.cat===cat;button.classList.toggle("active",active);if(button.tagName==="BUTTON")button.setAttribute("aria-pressed",String(active));});
 const filters=$("activeFilters");if(filters){filters.replaceChildren();for(const [label,clear] of [[q?"Search: "+q:"",()=>{q="";$("q").value="";}],[priceRange!=="all"?priceLabels[priceRange]:"",()=>{priceRange="all";$("priceRange").value="all";}]]){if(!label)continue;const button=document.createElement("button");button.type="button";button.textContent=label+" ×";button.setAttribute("aria-label","Clear "+label);button.onclick=()=>{clear();render()};filters.append(button)}filters.hidden=!filters.childElementCount;}
  document.querySelectorAll(".photo img").forEach(img=>img.addEventListener("error",()=>hideFailedPackPhoto(img)));
 $("resultText").textContent=items.length+" product range"+(items.length===1?"":"s")+" · choose pack and flavour";
-document.querySelectorAll(".variant").forEach(s=>s.addEventListener("change",()=>{const p=P.find(x=>x.id===s.id.slice(2));$("price-"+p.id).innerHTML=priceMarkup(p.variants[Number(s.value)]);swapPhoto(s.closest(".card").querySelector(".photo"),coverImage(p,s.value),p.name)}));
+document.querySelectorAll(".variant").forEach(s=>s.addEventListener("change",()=>{const p=P.find(x=>x.id===s.id.slice(2));$("price-"+p.id).innerHTML=priceMarkup(p.variants[Number(s.value)]);swapPhoto(s.closest(".card").querySelector(".photo"),coverImage(p,s.value),p.name);const v=p.variants[Number(s.value)],card=s.closest(".card");card.querySelector(".add").hidden=v.price===null;const quote=card.querySelector(".quote-action");quote.hidden=v.price!==null;quote.href=enquiryURL(p,v)}));
 document.querySelectorAll(".details-link").forEach(b=>b.addEventListener("click",()=>showDetail(b.dataset.detail)));
-document.querySelectorAll(".add").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.id+"|"+$("v-"+b.dataset.id).value;cart[k]=Math.min(999,(cart[k]||0)+1);persist();openBag()}));
+document.querySelectorAll(".add").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.id+"|"+$("v-"+b.dataset.id).value;if(!getItem(k))return;cart[k]=Math.min(999,(cart[k]||0)+1);persist();openBag()}));
 }
 function setCat(c){if(!Object.hasOwn(categoryNames,c))return;cat=c;document.querySelectorAll(".cats [data-cat],.mvn-quick-track [data-cat]").forEach(b=>b.classList.toggle("active",b.dataset.cat===c));render();$("shop").scrollIntoView({behavior:"smooth"})}
 function totals(){let n=0,subtotal=0;for(const [k,qty] of Object.entries(cart)){const item=getItem(k);if(!item)continue;const quantity=Math.min(999,Math.max(0,Number(qty)||0));n+=quantity;subtotal+=item.v.price*quantity;}const discount=appliedOffer?.signature===cartSignature()&&appliedOffer.campaign.code===$("offerCode").value.trim().toUpperCase()&&Date.parse(appliedOffer.campaign.endsAt)>Date.now()?appliedOffer.discountPaise/100:0;return{n,subtotal,discount,total:subtotal-discount}}
@@ -397,7 +405,7 @@ $("bag").onclick=openBag;if($("floatingCart"))$("floatingCart").onclick=openBag;
 document.querySelectorAll("[data-cat]").forEach(x=>x.onclick=e=>{
  e.preventDefault();
  if(isShowcaseHome){
-  const category=['all','whey','mass','pre','creatine','vitamins'].includes(x.dataset.cat)?x.dataset.cat:'all';
+  const category=['all','whey','mass','pre','creatine','vitamins','amino'].includes(x.dataset.cat)?x.dataset.cat:'all';
   location.assign('shop.html?cat='+encodeURIComponent(category));
   return;
  }
@@ -414,7 +422,8 @@ $("q").oninput=e=>{if(isShowcaseHome)return;q=e.target.value;render()};
 for(const id of ['customerName','customerAddress','customerCity','customerState'])$(id).addEventListener('input',()=>$(id).setCustomValidity(''));
 $("checkoutFields").addEventListener("input",()=>{retailLeadKey=crypto.randomUUID()});
 $("checkoutFields").onsubmit=e=>{e.preventDefault();retailEnquiry()};
-function resetFilters(){cat="all";q="";priceRange="all";$("q").value="";if($("priceRange"))$("priceRange").value="all";$("sort").value="default";render()}
+document.querySelectorAll("[data-brand]").forEach(b=>b.onclick=()=>{brandFilter=b.dataset.brand;render()});
+function resetFilters(){brandFilter="all";cat="all";q="";priceRange="all";$("q").value="";if($("priceRange"))$("priceRange").value="all";$("sort").value="default";render()}
 if($("priceRange"))$("priceRange").onchange=e=>{priceRange=e.target.value;render()};
 if($("resetFilters"))$("resetFilters").onclick=resetFilters;
 if($("clearRecent"))$("clearRecent").onclick=()=>{recent=[];try{localStorage.removeItem("mvn-recent-v1")}catch{}renderRecent()};
@@ -505,6 +514,7 @@ function showDetail(id,chosenIndex){
  const options=document.body.classList.contains('app-store')?p.variants.map((v,i)=>({v,i})):visiblePackOptions(p);
  const initialIndex=options.some(({i})=>i===selected)?selected:options[0]?.i;
  if(initialIndex===undefined)return;
+ if(p.variants[initialIndex].price===null)return showQuoteProductDetail(p,options,initialIndex,dlg,root);
  if(!document.body.classList.contains('app-store'))return showWebsiteProductDetail(p,options,initialIndex,dlg,root);
  const cover=coverImage(p,initialIndex);const photo=cover?'<img src="'+safe(cover)+'" alt="'+safe(p.name)+'" loading="lazy"><div class="placeholder" hidden>Verified product image pending</div>':'<div class="placeholder"><b>'+safe(p.name)+'</b>Verified product image pending</div>';
  root.innerHTML='<div class="detail-layout"><div class="detail-photo">'+photo+'</div><div class="detail-copy"><span class="eyebrow dark">'+safe(p.brand||'Unicorn Pro Series')+'</span><h2>'+safe(p.name)+'</h2><p>'+safe(p.desc)+'</p><p class="detail-note">Product pack and flavour availability are confirmed before fulfilment. Front/back pack-label and ingredient photos will be added after verification; please request the current label when ordering.</p><label for="detail-variant">FLAVOUR / PACK SIZE</label><select id="detail-variant">'+options.map(({v,i})=>'<option value="'+i+'"'+(i===initialIndex?' selected':'')+'>'+safe(v.label)+'</option>').join("")+'</select><div class="price detail-price" id="detail-price">'+priceMarkup(p.variants[initialIndex])+'</div><button class="primary" id="detail-add">ADD TO CART +</button></div></div>';
@@ -516,3 +526,10 @@ function showDetail(id,chosenIndex){
 $("detailClose").onclick=()=>$("productDialog").close();
 
 document.querySelectorAll(".hero-visual img,.detail-photo img").forEach(img=>img.addEventListener("error",()=>{img.hidden=true}));
+
+function showQuoteProductDetail(p,options,initialIndex,dlg,root){
+ root.innerHTML='<div class="gt-quote-detail"><div class="gt-pack"><img alt="'+safe(p.brand+' '+p.name)+'"></div><section><span class="gt-kicker">'+safe(p.brand)+'</span><h2>'+safe(p.name)+'</h2><p>'+safe(p.desc)+'</p><label for="gt-quote-variant">CHOOSE YOUR PACK</label><select id="gt-quote-variant">'+options.map(({v,i})=>'<option value="'+i+'"'+(i===initialIndex?' selected':'')+'>'+safe(v.label)+'</option>').join('')+'</select><div class="price">'+priceMarkup(p.variants[initialIndex])+'</div><a class="quote-action" target="_blank" rel="noopener noreferrer">ASK ON WHATSAPP ↗</a><p class="fine">Our team confirms the selected flavour, price and stock before accepting your order.</p></section></div>';
+ const select=root.querySelector('select'),image=root.querySelector('img'),link=root.querySelector('a');
+ const update=()=>{const v=p.variants[Number(select.value)];image.src=v.img||p.img;image.alt=p.brand+' '+p.name+' — '+v.label;link.href=enquiryURL(p,v);};
+ select.onchange=update;update();if(typeof dlg.showModal==='function')dlg.showModal();else dlg.setAttribute('open','');
+}

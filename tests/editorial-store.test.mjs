@@ -5,7 +5,7 @@ import {readFileSync} from 'node:fs';
 test('store remains a multi-brand retailer and does not make unverified territory claims',()=>{
  const index=readFileSync('public/index.html','utf8');
  assert.match(index,/UNICORN PRO SERIES/,'current verified brand displayed');
- assert.match(readFileSync('public/brands.html','utf8'),/GLOB TECH is on the Max Volume Nutrition upcoming-brand roadmap/,'upcoming brand clearly labelled on its own page');
+ assert.match(readFileSync('public/brands.html','utf8'),/shop.html\?brand=globtech/,'Globe-Tech collection reachable from its brand page');
  assert.match(index,/href="brands.html"/,'homepage links to the brand page instead of expanding it inline');
  assert.doesNotMatch(index,/Max Volume Nutrition is the authorized exclusive distributor for Tamil Nadu and Puducherry/);
 

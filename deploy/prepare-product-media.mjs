@@ -4,6 +4,12 @@
 import {readFileSync,writeFileSync,existsSync,mkdirSync} from 'node:fs';
 import {resolve,dirname} from 'node:path';
 const media=[
+ ['data/image-assets/globtech-creatine-monohydrate-official.webp.b64','public/assets/globtech-creatine-monohydrate-official.webp'],
+ ['data/image-assets/globtech-crea-pump-official.webp.b64','public/assets/globtech-crea-pump-official.webp'],
+ ['data/image-assets/globtech-amino-lean-edge-official.webp.b64','public/assets/globtech-amino-lean-edge-official.webp'],
+ ['data/image-assets/globtech-f1-2-official.webp.b64','public/assets/globtech-f1-2-official.webp'],
+ ['data/image-assets/globtech-force-1-red-official.webp.b64','public/assets/globtech-force-1-red-official.webp'],
+
  ['data/image-assets/mvn-orange-lineup-20261117-768.webp.b64','public/assets/mvn-orange-lineup-20261117-768.webp'],
  ['data/image-assets/mvn-orange-whey-20261117.webp.b64','public/assets/mvn-orange-whey-20261117.webp'],
  ['data/image-assets/mvn-orange-lineup-20261117.webp.b64','public/assets/mvn-orange-lineup-20261117.webp'],

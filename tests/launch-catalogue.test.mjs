@@ -11,7 +11,7 @@ test('eight verified retail variants retain published customer prices and privat
  try{
   c=openCommerce(dir);
   const guest=c.catalogue(null);
-  const variants=guest.flatMap(p=>p.variants);
+  const variants=guest.filter(p=>p.brand==='Unicorn Pro Series').flatMap(p=>p.variants);
   assert.equal(variants.length,8);
   const retail={
    'whey-chocolate':550000,'whey-coffee':550000,'mass-5kg':349900,'mass-3kg':259900,

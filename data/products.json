@@ -198,5 +198,119 @@
       }
     ],
     "brand": "Unicorn Pro Series"
+  },
+  {
+    "id": "globtech-creatine",
+    "name": "Creatine Monohydrate",
+    "category": "creatine",
+    "subtitle": "Daily strength",
+    "description": "Globe-Tech Creatine Monohydrate, Unflavored, 400 g. Refer to the current pack for ingredients and serving directions.",
+    "variants": [
+      {
+        "id": "globtech-creatine-unflavored",
+        "label": "400 g · Unflavored",
+        "pricePaise": null,
+        "stock": null,
+        "image": "assets/globtech-creatine-monohydrate-official.webp",
+        "images": [
+          {
+            "src": "assets/globtech-creatine-monohydrate-official.webp",
+            "label": "Official front pack",
+            "alt": "Globe-Tech 400 g · Unflavored official product pack"
+          }
+        ]
+      }
+    ],
+    "brand": "Globe-Tech Nutrition",
+    "image": "assets/globtech-creatine-monohydrate-official.webp"
+  },
+  {
+    "id": "globtech-crea-pump",
+    "name": "Crea Pump",
+    "category": "creatine",
+    "subtitle": "Strength performance",
+    "description": "Globe-Tech Crea Pump, Pineapple Charge, 300 g. A creatine, amino and electrolyte formula. Confirm the current pack label before ordering.",
+    "variants": [
+      {
+        "id": "globtech-crea-pump-pineapple",
+        "label": "300 g · Pineapple Charge",
+        "pricePaise": null,
+        "stock": null,
+        "image": "assets/globtech-crea-pump-official.webp",
+        "images": [
+          {
+            "src": "assets/globtech-crea-pump-official.webp",
+            "label": "Official front pack",
+            "alt": "Globe-Tech 300 g · Pineapple Charge official product pack"
+          }
+        ]
+      }
+    ],
+    "brand": "Globe-Tech Nutrition",
+    "image": "assets/globtech-crea-pump-official.webp"
+  },
+  {
+    "id": "globtech-amino",
+    "name": "Amino Lean Edge",
+    "category": "amino",
+    "subtitle": "Intra-workout",
+    "description": "Globe-Tech Amino Lean Edge, Tropical Guava, 300 g. An amino acid and electrolyte supplement. Check the current pack for ingredients and directions.",
+    "variants": [
+      {
+        "id": "globtech-amino-guava",
+        "label": "300 g · Tropical Guava",
+        "pricePaise": null,
+        "stock": null,
+        "image": "assets/globtech-amino-lean-edge-official.webp",
+        "images": [
+          {
+            "src": "assets/globtech-amino-lean-edge-official.webp",
+            "label": "Official front pack",
+            "alt": "Globe-Tech 300 g · Tropical Guava official product pack"
+          }
+        ]
+      }
+    ],
+    "brand": "Globe-Tech Nutrition",
+    "image": "assets/globtech-amino-lean-edge-official.webp"
+  },
+  {
+    "id": "globtech-force-1",
+    "name": "Force 1 Pre-Workout",
+    "category": "pre",
+    "subtitle": "Pre-workout",
+    "description": "Globe-Tech Force 1 pre-workout in Pineapple Voltage or Red Fusion Berry, 400 g. Check caffeine, ingredients and serving guidance on the current pack.",
+    "variants": [
+      {
+        "id": "globtech-force-pineapple",
+        "label": "400 g · Pineapple Voltage",
+        "pricePaise": null,
+        "stock": null,
+        "image": "assets/globtech-f1-2-official.webp",
+        "images": [
+          {
+            "src": "assets/globtech-f1-2-official.webp",
+            "label": "Official front pack",
+            "alt": "Globe-Tech 400 g · Pineapple Voltage official product pack"
+          }
+        ]
+      },
+      {
+        "id": "globtech-force-berry",
+        "label": "400 g · Red Fusion Berry",
+        "pricePaise": null,
+        "stock": null,
+        "image": "assets/globtech-force-1-red-official.webp",
+        "images": [
+          {
+            "src": "assets/globtech-force-1-red-official.webp",
+            "label": "Official front pack",
+            "alt": "Globe-Tech 400 g · Red Fusion Berry official product pack"
+          }
+        ]
+      }
+    ],
+    "brand": "Globe-Tech Nutrition",
+    "image": "assets/globtech-f1-2-official.webp"
   }
 ]

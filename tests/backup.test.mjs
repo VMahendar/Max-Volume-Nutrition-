@@ -22,7 +22,7 @@ test('online SQLite backup preserves committed orders-related data and restores 
   copy=new DatabaseSync(dest,{readOnly:true});
   assert.equal(copy.prepare('PRAGMA integrity_check').get().integrity_check,'ok','snapshot passes integrity check');
   assert.equal(copy.prepare("SELECT name FROM users WHERE id='backup-account'").get().name,'Backup Test','restored backup preserves committed records');
-  assert.equal(copy.prepare("SELECT COUNT(*) AS n FROM products").get().n,5,'catalogue survives backup');
+  assert.equal(copy.prepare("SELECT COUNT(*) AS n FROM products").get().n,live.db.prepare("SELECT COUNT(*) AS n FROM products").get().n,'catalogue survives backup');
   assert.ok(copy.prepare("SELECT value FROM settings WHERE key='store'").get().value,'business settings survive backup');
   live.db.prepare('DELETE FROM users WHERE id=?').run('backup-account');
   assert.equal(copy.prepare("SELECT name FROM users WHERE id='backup-account'").get().name,'Backup Test','snapshot is independent of subsequent live changes');
