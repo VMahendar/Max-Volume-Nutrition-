@@ -14,7 +14,7 @@ test('home presents original supplements once; shopping catalogue opens on a sep
  assert.match(home,/href="shop\.html\?cat=pre"/);
  assert.match(home,/href="shop\.html\?cat=creatine"/);
  assert.equal((home.match(/id="mvnOpenCollection"/g)||[]).length,1,'one homepage collection-popup trigger');
- assert.equal((home.match(/id="mvnCollectionDialog"/g)||[]).length,2,'one collection modal and its accessible button reference');
+ assert.equal((home.match(/id="mvnCollectionDialog"/g)||[]).length,1,'one collection dialog; trigger references it using aria-controls');
  assert.match(css,/mvn-showcase-home[^\n]* main#shop/,'homepage visually hides full catalogue');
  assert.match(css,/mvn-full-shop[^\n]* #shop/,'separate shop displays catalogue');
  assert.doesNotMatch(shop,/id="mvnEditorial"/,'shop does not repeat full group banner');
