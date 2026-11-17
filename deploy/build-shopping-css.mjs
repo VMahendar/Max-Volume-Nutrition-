@@ -22,3 +22,8 @@ for(const target of ['public/mvn-shopping-bundle-20261115.css','mvn-shopping-bun
  try{same=readFileSync(path,'utf8')===combined}catch{}
  if(!same)writeFileSync(path,combined);
 }
+
+// Home keeps its own approved cascade, including contrast and compact pack fixes.
+const homeFiles=['style.css','commerce.css','mvn-orange-home-20261117.css','mvn-brand-gold-20261117.css','mvn-globtech-20261117.css','mvn-hero-carousel.css','mvn-best-sellers-shop-match.css'];
+const homeCSS=homeFiles.map(name=>'/* '+name+' */\n'+readFileSync(resolve('public',name),'utf8').trim()).join('\n')+'\n';
+writeFileSync(resolve('public/mvn-home-critical-20261118.css'),homeCSS);

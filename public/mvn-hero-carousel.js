@@ -21,7 +21,7 @@
   const products=el('div','mvn-campaign-products');products.dataset.count=item.images.length;
   item.images.forEach((photo,index)=>{
    const pack=el('div','mvn-campaign-pack'+(photo.format==='official'?' mvn-campaign-official':''));
-   const img=el('img');img.src='/'+photo.src;img.alt=photo.alt;img.loading=i===0?'eager':'lazy';img.decoding='async';if(i===0&&index===0)img.fetchPriority='high';
+   const img=el('img');if(photo.width){img.width=photo.width;img.height=photo.height;}if(photo.srcset){img.srcset=photo.srcset.replaceAll('assets/','/assets/');img.sizes='(max-width:760px) 44vw, 28vw';}img.src='/'+photo.src;img.alt=photo.alt;img.loading=i===0?'eager':'lazy';img.decoding='async';if(i===0&&index===0)img.fetchPriority='high';
    pack.append(img);products.append(pack);
   });
   stage.append(products,el('span','mvn-campaign-photo-note',item.name.toUpperCase()));
@@ -38,7 +38,7 @@
   }const dot=el('button','mvn-campaign-dot');dot.type='button';dot.setAttribute('aria-label',`Show banner ${i+1}: ${item.name}`);dot.addEventListener('click',()=>show(i,true));dots.push(dot);pages.append(dot);});
  const counter=el('span','mvn-campaign-counter'),pause=el('button','mvn-campaign-pause');pause.type='button';
  const status=el('span','mvn-campaign-status');status.setAttribute('aria-live','polite');status.setAttribute('aria-atomic','true');
- controls.append(previous,pages,next,counter,pause,status);root.append(viewport,controls);hero.append(root);hero.dataset.carouselReady='true';hero.removeAttribute('aria-labelledby');
+ controls.append(previous,pages,next,counter,pause,status);root.append(viewport,controls);const initial=hero.querySelector('[data-server-rendered]');if(initial)initial.replaceWith(root);else hero.append(root);hero.dataset.carouselReady='true';hero.removeAttribute('aria-labelledby');
  const motion=matchMedia('(prefers-reduced-motion: reduce)');
  let current=0,timer=null,paused=!config.autoplay||motion.matches,hover=false,focus=false,inView=true;
  const label=()=>{pause.textContent=paused?'▶ Play':'Ⅱ Pause';pause.setAttribute('aria-label',paused?'Play automatic banner slides':'Pause automatic banner slides');counter.textContent=String(current+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');dots.forEach((d,i)=>d.setAttribute('aria-current',String(i===current)));};

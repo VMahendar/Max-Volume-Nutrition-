@@ -4,6 +4,10 @@
 import {readFileSync,writeFileSync,existsSync,mkdirSync} from 'node:fs';
 import {resolve,dirname} from 'node:path';
 const media=[
+ ...Object.entries(JSON.parse(readFileSync(new URL('../data/homepage-responsive-media.json',import.meta.url),'utf8'))).map(([,photo])=>{
+  const compact=photo.srcset.split(' ')[0];
+  return ['data/image-assets/'+compact.replace('assets/','')+'.b64','public/'+compact];
+ }),
  ['data/image-assets/globtech-creatine-monohydrate-official.webp.b64','public/assets/globtech-creatine-monohydrate-official.webp'],
  ['data/image-assets/globtech-crea-pump-official.webp.b64','public/assets/globtech-crea-pump-official.webp'],
  ['data/image-assets/globtech-amino-lean-edge-official.webp.b64','public/assets/globtech-amino-lean-edge-official.webp'],
