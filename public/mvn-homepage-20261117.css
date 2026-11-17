@@ -1,0 +1,227 @@
+/* MVN customer homepage • 17 Nov 2026
+   Single design layer. Historical visual-builder transforms are not applied to public home.
+   Preserves catalogue, cart, pricing, accounts and checkout selectors. */
+html,body.retail-home.mvn-showcase-home{width:100%;max-width:100%;overflow-x:clip}
+body.retail-home.mvn-showcase-home{background:#fff;color:#171b1f;font-family:Arial,Helvetica,sans-serif}
+body.retail-home.mvn-showcase-home *,
+body.retail-home.mvn-showcase-home *::before,
+body.retail-home.mvn-showcase-home *::after{box-sizing:border-box}
+body.retail-home.mvn-showcase-home .announce,
+body.retail-home.mvn-showcase-home .mvn-theme-main-nav,
+body.retail-home.mvn-showcase-home .mvn-preview-nav,
+body.retail-home.mvn-showcase-home nav.nav,
+body.retail-home.mvn-showcase-home .mvn-preview-best,
+body.retail-home.mvn-showcase-home #mvnSpotlight,
+body.retail-home.mvn-showcase-home > section.hero,
+body.retail-home.mvn-showcase-home > section.benefits,
+body.retail-home.mvn-showcase-home .mvn-editorial-promos,
+body.retail-home.mvn-showcase-home .mvn-editorial-benefits,
+body.retail-home.mvn-showcase-home .storehead .header-search,
+body.retail-home.mvn-showcase-home .storehead .mvn-theme-categories,
+body.retail-home.mvn-showcase-home .storehead .mvn-header-wordmark,
+body.retail-home.mvn-showcase-home .storehead .mvn-header-email,
+body.retail-home.mvn-showcase-home .storehead .head-actions>.wa{display:none!important}
+html body.retail-home.mvn-showcase-home>.storehead{
+  display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+  align-items:center!important;justify-content:space-between!important;
+  width:100%!important;max-width:none!important;height:70px!important;min-height:70px!important;
+  padding:7px clamp(12px,3vw,34px)!important;margin:0!important;gap:8px!important;
+  background:#171b1f!important;color:white!important;border:0!important;
+  border-bottom:2px solid #e85d35!important;position:relative!important;z-index:50!important;
+  overflow:visible!important;box-shadow:none!important;
+}
+html body.retail-home.mvn-showcase-home>.storehead .brand-identity{
+ display:flex!important;align-items:center!important;justify-content:flex-start!important;
+ flex:1 1 auto!important;width:auto!important;max-width:320px!important;
+ min-width:0!important;height:55px!important;margin:0!important;padding:0!important;
+ border:0!important;background:transparent!important;transform:none!important;
+}
+html body.retail-home.mvn-showcase-home>.storehead .original-brand-logo{
+ display:block!important;width:100%!important;max-width:300px!important;
+ height:55px!important;max-height:55px!important;object-fit:contain!important;
+ object-position:left center!important;margin:0!important;padding:0!important;transform:none!important;
+}
+html body.retail-home.mvn-showcase-home>.storehead .head-actions{
+ display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+ flex:0 0 auto!important;align-items:center!important;justify-content:flex-end!important;
+ position:relative!important;width:auto!important;height:auto!important;gap:5px!important;
+ margin:0!important;padding:0!important;transform:none!important;background:transparent!important;
+}
+html body.retail-home.mvn-showcase-home>.storehead .head-actions>*{flex:0 0 auto!important}
+html body.retail-home.mvn-showcase-home>.storehead .head-actions .account-link span,
+html body.retail-home.mvn-showcase-home>.storehead .head-actions #bag>span{display:none!important}
+html body.retail-home.mvn-showcase-home>.storehead .head-actions summary,
+html body.retail-home.mvn-showcase-home>.storehead .head-actions .account-link,
+html body.retail-home.mvn-showcase-home>.storehead .head-actions #bag{
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ min-height:40px!important;height:40px!important;min-width:38px!important;width:auto!important;
+ padding:7px!important;margin:0!important;color:white!important;background:#24282d!important;
+ border:1px solid #484c52!important;border-radius:5px!important;box-shadow:none!important;
+ text-decoration:none!important;
+}
+html body.retail-home.mvn-showcase-home>.storehead .head-actions svg{width:19px!important;height:19px!important}
+html body.retail-home.mvn-showcase-home>.storehead .mvn-more-panel,
+html body.retail-home.mvn-showcase-home>.storehead .mvn-header-search-popover{
+ background:#fff!important;color:#171b1f!important;border-radius:6px!important;
+ box-shadow:0 12px 30px #0004!important;z-index:100!important;
+}
+html body.retail-home.mvn-showcase-home>.storehead .mvn-more-panel a{color:#171b1f!important}
+html body.retail-home.mvn-showcase-home>#mvnEditorial{
+ display:block!important;position:relative!important;width:100%!important;max-width:none!important;
+ height:auto!important;min-height:0!important;max-height:none!important;overflow:hidden!important;
+ margin:0!important;padding:0!important;background:#111315!important;transform:none!important;
+}
+html body.retail-home.mvn-showcase-home>#mvnEditorial .mvn-editorial-layout{
+ display:block!important;width:100%!important;max-width:none!important;height:auto!important;
+ margin:0!important;padding:0!important;transform:none!important;
+}
+html body.retail-home.mvn-showcase-home>#mvnEditorial .mvn-editorial-feature{
+ display:block!important;position:relative!important;width:100%!important;max-width:none!important;
+ min-height:0!important;height:auto!important;overflow:hidden!important;margin:0!important;
+ border-radius:0!important;transform:none!important;
+}
+html body.retail-home.mvn-showcase-home>#mvnEditorial .mvn-owner-banner-link,
+html body.retail-home.mvn-showcase-home>#mvnEditorial picture{
+ display:block!important;position:relative!important;inset:auto!important;
+ width:100%!important;max-width:none!important;height:auto!important;
+ min-height:0!important;margin:0!important;padding:0!important;transform:none!important;
+}
+html body.retail-home.mvn-showcase-home>#mvnEditorial .mvn-owner-banner-img{
+ display:block!important;width:100%!important;max-width:none!important;height:auto!important;
+ min-height:0!important;max-height:none!important;object-fit:contain!important;
+ object-position:center!important;transform:none!important;opacity:1!important;
+}
+html body.retail-home.mvn-showcase-home>.mvn-theme-shop-goals{
+ display:block!important;position:relative!important;width:100%!important;max-width:none!important;
+ height:auto!important;min-height:0!important;max-height:none!important;overflow:visible!important;
+ padding:clamp(26px,4vw,52px) clamp(12px,3vw,38px)!important;
+ background:#f5f5f3!important;margin:0!important;transform:none!important;
+}
+html body.retail-home.mvn-showcase-home .mvn-editorial-categories-heading{
+ display:block!important;width:100%!important;max-width:1400px!important;
+ height:auto!important;margin:0 auto 20px!important;padding:0!important;
+ position:relative!important;inset:auto!important;transform:none!important;text-align:left!important;
+}
+html body.retail-home.mvn-showcase-home .mvn-editorial-categories-heading h2{
+ font:900 clamp(27px,4vw,44px)/1.1 Impact,'Arial Narrow',Arial,sans-serif!important;
+ color:#171b1f!important;margin:0!important;opacity:1!important;transform:none!important;
+}
+html body.retail-home.mvn-showcase-home .mvn-editorial-categories-heading h2 em{color:#e85d35!important}
+html body.retail-home.mvn-showcase-home .mvn-editorial-category-grid{
+ display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ width:100%!important;max-width:1400px!important;min-height:0!important;height:auto!important;
+ margin:0 auto!important;padding:0!important;gap:14px!important;transform:none!important;
+}
+html body.retail-home.mvn-showcase-home .mvn-editorial-category-grid>a{
+ display:flex!important;flex-direction:column!important;align-items:center!important;
+ justify-content:flex-end!important;position:relative!important;inset:auto!important;
+ width:100%!important;min-width:0!important;height:auto!important;min-height:244px!important;
+ padding:14px 9px!important;margin:0!important;background:#fff!important;color:#171b1f!important;
+ border:1px solid #e0e3e5!important;border-radius:6px!important;
+ box-shadow:none!important;overflow:visible!important;text-align:center!important;transform:none!important;
+ opacity:1!important;visibility:visible!important;
+}
+html body.retail-home.mvn-showcase-home .mvn-editorial-category-grid .mvn-theme-goal-art{
+ display:flex!important;position:relative!important;inset:auto!important;
+ align-items:center!important;justify-content:center!important;
+ width:100%!important;height:166px!important;min-height:166px!important;
+ margin:0 0 8px!important;padding:0!important;overflow:visible!important;
+ transform:none!important;opacity:1!important;visibility:visible!important;
+}
+html body.retail-home.mvn-showcase-home .mvn-editorial-category-grid img.goal-main{
+ display:block!important;position:static!important;width:100%!important;
+ max-width:170px!important;height:162px!important;max-height:162px!important;
+ object-fit:contain!important;transform:none!important;filter:none!important;
+ margin:0 auto!important;padding:0!important;opacity:1!important;visibility:visible!important;
+}
+html body.retail-home.mvn-showcase-home .mvn-editorial-category-grid>a strong,
+html body.retail-home.mvn-showcase-home .mvn-editorial-category-grid>a small{
+ display:block!important;position:relative!important;inset:auto!important;
+ height:auto!important;transform:none!important;opacity:1!important;
+ text-shadow:none!important;color:#171b1f!important;
+}
+html body.retail-home.mvn-showcase-home .mvn-editorial-category-grid>a strong{
+ font-size:15px!important;font-weight:850!important;line-height:1.25!important;margin:0 0 4px!important;
+}
+html body.retail-home.mvn-showcase-home .mvn-editorial-category-grid>a small{
+ font-size:12px!important;color:#59636c!important;line-height:1.4!important;
+}
+html body.retail-home.mvn-showcase-home>.mvn-globtech-launch{
+ display:flex!important;position:relative!important;width:100%!important;max-width:none!important;
+ height:auto!important;min-height:0!important;max-height:none!important;
+ padding:clamp(26px,4vw,52px) clamp(14px,4vw,50px)!important;
+ margin:0!important;transform:none!important;background:#182026!important;color:#fff!important;
+ align-items:center!important;gap:20px!important;
+}
+html body.retail-home.mvn-showcase-home>.mvn-globtech-launch h2{color:#fff!important}
+html body.retail-home.mvn-showcase-home>#shop{
+ display:block!important;position:relative!important;width:100%!important;max-width:1440px!important;
+ height:auto!important;min-height:0!important;max-height:none!important;
+ visibility:visible!important;opacity:1!important;overflow:visible!important;
+ transform:none!important;margin:0 auto!important;padding:36px clamp(14px,3vw,38px) 52px!important;
+ background:#fff!important;color:#171b1f!important;
+}
+html body.retail-home.mvn-showcase-home>#shop .section-title{margin-top:0!important}
+html body.retail-home.mvn-showcase-home>#shop .collection-results,
+html body.retail-home.mvn-showcase-home>#shop #grid{
+ visibility:visible!important;opacity:1!important;height:auto!important;
+ min-height:0!important;max-height:none!important;overflow:visible!important;transform:none!important;
+}
+html body.retail-home.mvn-showcase-home>#shop #grid{
+ display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ width:100%!important;gap:16px!important;
+}
+html body.retail-home.mvn-showcase-home>#shop #grid .card{
+ display:flex!important;flex-direction:column!important;min-width:0!important;
+ height:auto!important;border:1px solid #e0e4e6!important;border-radius:6px!important;
+ background:#fff!important;box-shadow:none!important;overflow:hidden!important;
+}
+html body.retail-home.mvn-showcase-home>#shop #grid .card .photo{
+ display:grid!important;place-items:center!important;width:100%!important;
+ height:auto!important;min-height:0!important;aspect-ratio:1/1!important;
+ background:#f5f5f3!important;
+}
+html body.retail-home.mvn-showcase-home>#shop #grid .card .photo img{
+ width:100%!important;height:100%!important;max-height:none!important;object-fit:contain!important;
+}
+html body.retail-home.mvn-showcase-home>.mvn-home-contact{
+ display:block!important;position:relative!important;width:100%!important;max-width:none!important;
+ min-height:0!important;height:auto!important;max-height:none!important;
+ overflow:visible!important;margin:0!important;padding:25px clamp(14px,4vw,50px)!important;
+ background:#171b1f!important;color:#fff!important;border-top:3px solid #e85d35!important;transform:none!important;
+}
+html body.retail-home.mvn-showcase-home .mvn-home-contact a{color:#f4f4f4!important}
+@media(max-width:900px){
+ html body.retail-home.mvn-showcase-home .mvn-editorial-category-grid,
+ html body.retail-home.mvn-showcase-home>#shop #grid{
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+ }
+ html body.retail-home.mvn-showcase-home>.mvn-globtech-launch{flex-direction:column!important;align-items:flex-start!important}
+}
+@media(max-width:600px){
+ html body.retail-home.mvn-showcase-home>.storehead{
+  height:64px!important;min-height:64px!important;padding:6px 10px!important;
+ }
+ html body.retail-home.mvn-showcase-home>.storehead .brand-identity{max-width:calc(100% - 160px)!important;height:46px!important}
+ html body.retail-home.mvn-showcase-home>.storehead .original-brand-logo{height:46px!important;max-height:46px!important}
+ html body.retail-home.mvn-showcase-home>.storehead .head-actions{gap:3px!important}
+ html body.retail-home.mvn-showcase-home>.storehead .head-actions summary,
+ html body.retail-home.mvn-showcase-home>.storehead .head-actions .account-link,
+ html body.retail-home.mvn-showcase-home>.storehead .head-actions #bag{
+  min-width:35px!important;min-height:37px!important;height:37px!important;padding:5px!important;
+ }
+ html body.retail-home.mvn-showcase-home>.mvn-theme-shop-goals{padding:28px 12px 32px!important}
+ html body.retail-home.mvn-showcase-home .mvn-editorial-category-grid{gap:10px!important}
+ html body.retail-home.mvn-showcase-home .mvn-editorial-category-grid>a{
+  min-height:210px!important;padding:12px 8px!important;
+ }
+ html body.retail-home.mvn-showcase-home .mvn-editorial-category-grid .mvn-theme-goal-art{
+  height:126px!important;min-height:126px!important;
+ }
+ html body.retail-home.mvn-showcase-home .mvn-editorial-category-grid img.goal-main{
+  height:122px!important;max-height:122px!important;max-width:130px!important;
+ }
+ html body.retail-home.mvn-showcase-home .mvn-editorial-category-grid>a strong{font-size:13px!important}
+ html body.retail-home.mvn-showcase-home>#shop{padding:28px 12px 36px!important}
+ html body.retail-home.mvn-showcase-home>#shop #grid{gap:10px!important}
+}
