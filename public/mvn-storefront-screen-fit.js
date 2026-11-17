@@ -275,6 +275,64 @@
     transform:'none',opacity:'1',visibility:'visible'
   });
 
+  // Published historic editor operations may hide the Globe-Tech copy; keep
+  // its factual coming-soon text visible and properly inside the section.
+  rules('.mvn-globtech-launch > div',{
+    display:'block',position:'relative',transform:'none',inset:'auto',
+    width:'auto',height:'auto','min-height':'0','max-height':'none',
+    'max-width':'900px',flex:'0 1 auto','flex-basis':'auto',
+    opacity:'1',visibility:'visible',margin:'0',padding:'0'
+  });
+  for(const element of document.querySelectorAll('.mvn-globtech-launch h2,.mvn-globtech-launch p,.mvn-globtech-launch strong')){
+    set(element,'display','block');set(element,'position','relative');
+    set(element,'transform','none');set(element,'inset','auto');
+    set(element,'height','auto');set(element,'opacity','1');
+  }
+  rules('.mvn-globtech-launch',{
+    display:'flex',height:'auto','min-height':'0','max-height':'none',
+    'align-items':desktop?'center':'flex-start','justify-content':'space-between',
+    padding:desktop?'36px 48px':'26px 16px',
+    'background-color':'#101113',color:'#fff'
+  });
+  // Homepage is editorial: only the four featured products are visible.
+  // The full retail catalogue is preserved and accessible on /shop.html;
+  // do not repeat that long product grid beneath the home banner.
+  rules('#shop',{display:'none',height:'0','min-height':'0',padding:'0',margin:'0',overflow:'hidden'});
+  rules('.mvn-preview-best',{display:'block',width:'100%',height:'auto','max-width':'none','max-height':'none',
+    'min-height':'0',margin:'0',overflow:'visible',transform:'none',
+    background:'#faf9f7',color:'#171819'});
+  rules('.mvn-preview-best .mvn-preview-best-grid',{display:'grid',width:'100%',height:'auto',
+    'grid-template-columns':desktop?'repeat(4,minmax(0,1fr))':'repeat(2,minmax(0,1fr))',
+    gap:desktop?'clamp(10px,1.5vw,20px)':'10px'});
+  rules('.mvn-home-collection-entry',{display:'flex',width:'100%',height:'auto',
+    transform:'none',margin:'0',background:'#171819',color:'#fff'});
+  // Old published visual edits hid the old Best Sellers cards. Restore the
+  // newly approved four real product cards without changing their images.
+  rules('.mvn-preview-best .mvn-preview-best-grid',{
+    display:'grid',height:'auto','max-height':'none',opacity:'1',visibility:'visible',
+    'grid-template-columns':desktop?'repeat(4,minmax(0,1fr))':'repeat(2,minmax(0,1fr))'
+  });
+  for(const card of document.querySelectorAll('.mvn-preview-best .mvn-preview-best-grid > a')){
+    for(const [key,value] of Object.entries({
+      display:'flex','flex-direction':'column','min-height':'0',
+      width:'100%',height:'auto','max-height':'none',opacity:'1',visibility:'visible',
+      margin:'0',transform:'none',position:'relative',inset:'auto'
+    }))set(card,key,value);
+    const img=card.querySelector('img');
+    if(img)for(const [key,value] of Object.entries({
+      display:'block',height:desktop?'clamp(155px,20vw,270px)':'clamp(120px,34vw,190px)',
+      width:'100%','max-width':'100%','max-height':'none',
+      'object-fit':'contain',transform:'none',visibility:'visible',opacity:'1'
+    }))set(img,key,value);
+  }
+  rules('.storehead',{
+    background:'#101113','background-color':'#101113','background-image':'none',
+    'border-bottom':'1px solid #292c2f'
+  });
+  for(const control of document.querySelectorAll('.storehead .head-actions summary,.storehead .head-actions .account-link,.storehead #bag')){
+    set(control,'background','#101113');set(control,'background-color','#101113');
+    set(control,'border-color','#30343a');
+  }
   // Do not modify prices, product records, checkout, accounts or cart state.
  }
  addEventListener('load',repair);

@@ -34,11 +34,11 @@ try{
   const page=await browser.newPage({viewport}),errors=[];page.on('pageerror',error=>errors.push(error.message));
   assert.equal((await page.goto(origin+'/',{waitUntil:'networkidle',timeout:35000})).status(),200);
   const measurements=await page.evaluate(()=>{
-   const selectors={hero:'#mvnEditorial',feature:'.mvn-owner-banner-feature',banner:'.mvn-owner-banner-img',goal:'.mvn-theme-shop-goals',best:'.mvn-preview-best',globe:'.mvn-globtech-launch'};
+   const selectors={hero:'#mvnEditorial',feature:'.mvn-owner-banner-feature',banner:'.mvn-owner-banner-img',collectionEntry:'.mvn-home-collection-entry',best:'.mvn-preview-best',globe:'.mvn-globtech-launch'};
    const values=Object.fromEntries(Object.entries(selectors).map(([key,selector])=>{
     const r=document.querySelector(selector)?.getBoundingClientRect();return [key,r?{x:r.x,y:r.y,width:r.width,height:r.height,right:r.right}:null];
    }));
-   const cards=[...document.querySelectorAll('.mvn-theme-shop-goals .mvn-editorial-category-grid > a')].map(el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom};});
+   const cards=[...document.querySelectorAll('.mvn-preview-best .mvn-preview-best-grid > a')].map(el=>{const r=el.getBoundingClientRect();return {left:r.left,right:r.right,top:r.top,bottom:r.bottom};});
    return {viewport:document.documentElement.clientWidth,scrollWidth:document.documentElement.scrollWidth,values,cards};
   });
   console.log('LIVE_SAVED_DESIGN_REGRESSION',viewport.width,JSON.stringify(measurements));
@@ -72,15 +72,15 @@ try{
    const props=selector=>{const el=document.querySelector(selector);if(!el)return null;const s=getComputedStyle(el),r=el.getBoundingClientRect();return {bg:s.backgroundColor,width:r.width,height:r.height,top:r.top,bottom:r.bottom,gap:s.gap,display:s.display};};
    return {
     header:props('.storehead'),actions:props('.storehead .head-actions #bag'),
-    goals:props('.mvn-theme-shop-goals'),collection:props('#shop'),globe:props('.mvn-globtech-launch'),
+    featured:props('.mvn-preview-best'),collectionEntry:props('.mvn-home-collection-entry'),collection:props('#shop'),globe:props('.mvn-globtech-launch'),
     footer:props('.mvn-home-contact'),
-    cards:[...document.querySelectorAll('.mvn-theme-shop-goals .mvn-editorial-category-grid > a')].map(el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return {width:r.width,height:r.height,bg:s.backgroundColor};}),
+    cards:[...document.querySelectorAll('.mvn-preview-best .mvn-preview-best-grid > a')].map(el=>{const s=getComputedStyle(el),r=el.getBoundingClientRect();return {width:r.width,height:r.height,bg:s.backgroundColor};}),
     shopGrid:props('#shop #grid'),
     shopCards:[...document.querySelectorAll('#shop #grid > *')].slice(0,8).map(el=>{const r=el.getBoundingClientRect();return {width:r.width,height:r.height};})
    };
   });
   console.log('LIVE_UNIFIED_COLOUR_AND_COLLECTION',viewport.width,JSON.stringify(design));
-  const dark='rgb(16, 17, 19)',light='rgb(246, 246, 244)';
+  const dark='rgb(16, 17, 19)',light='rgb(250, 249, 247)';
   assert.equal(design.header?.bg,dark,'header must be one charcoal colour');
   assert.equal(design.actions?.bg,dark,'header actions must not create a grey strip');
   assert.equal(design.footer?.bg,dark,'footer must match header');
@@ -88,17 +88,17 @@ try{
   assert.ok(measurements.values.globe?.height<500,'Globe-Tech should not have a giant empty gap');
   assert.equal(design.collection?.display,'none','do not repeat full shop catalogue on homepage');
   assert.equal(design.globe?.bg,dark,'Globe-Tech and footer must be a continuous colour');
-  assert.equal(design.goals?.bg,light,'shop-by-goal background must be consistent neutral white');
+  assert.equal(design.featured?.bg,light,'featured product cards should use the same warm paper background as About and Contact');
   if(design.collection?.display!=='none')assert.equal(design.collection?.bg,light,'collection must match shop-by-goal surface');
-  assert.ok(design.cards.length>=4,'goal category tiles are present');
-  assert.ok(design.cards.every(item=>item.width>80&&item.height>=170&&item.height<=320),'goal tiles must be usable, not tiny or oversized');
+  assert.equal(design.cards.length,4,'exactly four featured bestseller tiles should be present');
+  assert.ok(design.cards.every(item=>item.width>80&&item.height>=170&&item.height<=460),'featured product tiles must be usable, not tiny or oversized');
   const cardSizes=design.cards.map(item=>item.height);
-  assert.ok(Math.max(...cardSizes)-Math.min(...cardSizes)<8,'goal tile heights must align');
+  assert.ok(Math.max(...cardSizes)-Math.min(...cardSizes)<8,'featured product tile heights must align');
   if(design.collection?.display!=='none'&&design.shopGrid?.display!=='none'&&design.shopCards.length>0)
     assert.ok(design.shopCards.every(item=>item.width>80),'collection product cards must have adequate width');
 
   const vw=measurements.viewport,values=measurements.values,cards=measurements.cards;
-  for(const name of ['hero','goal','best','globe']){
+  for(const name of ['hero','collectionEntry','best','globe']){
    assert.ok(values[name]&&values[name].width>vw*.94,name+' must fill viewport with live edits at '+vw);
    assert.ok(values[name].x>=-8&&values[name].right<=vw+8,name+' must fit viewport');
   }
@@ -110,8 +110,14 @@ try{
   for(let i=0;i<cards.length;i++)for(let j=i+1;j<cards.length;j++){
    const a=cards[i],b=cards[j];
    const overlap=Math.min(a.right,b.right)-Math.max(a.left,b.left)>5&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>5;
-   assert.ok(!overlap,'goal cards overlap '+i+' '+j);
+   assert.ok(!overlap,'featured product cards overlap '+i+' '+j);
   }
+  const popup=page.locator('#mvnCollectionDialog');
+  await page.locator('#mvnOpenCollection').click();
+  assert.equal(await popup.evaluate(el=>el.open),true,'homepage opens the collection popup');
+  assert.equal(await popup.locator('.mvn-collection-dialog-grid > a').count(),4,'popup shows four category destinations');
+  await page.locator('#mvnCloseCollection').click();
+  assert.equal(await popup.evaluate(el=>el.open),false,'popup closes properly');
   assert.deepEqual(errors,[],'browser JavaScript errors');
   await page.close();
  }

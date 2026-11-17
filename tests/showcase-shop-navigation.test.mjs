@@ -13,7 +13,8 @@ test('home presents original supplements once; shopping catalogue opens on a sep
  assert.match(home,/href="shop\.html\?cat=whey"/);
  assert.match(home,/href="shop\.html\?cat=pre"/);
  assert.match(home,/href="shop\.html\?cat=creatine"/);
- assert.equal((home.match(/SHOP THE COLLECTION/g)||[]).length,1,'no repeated Shop the Collection button');
+ assert.equal((home.match(/id="mvnOpenCollection"/g)||[]).length,1,'one homepage collection-popup trigger');
+ assert.equal((home.match(/id="mvnCollectionDialog"/g)||[]).length,1,'one collection dialog; trigger references it using aria-controls');
  assert.match(css,/mvn-showcase-home[^\n]* main#shop/,'homepage visually hides full catalogue');
  assert.match(css,/mvn-full-shop[^\n]* #shop/,'separate shop displays catalogue');
  assert.doesNotMatch(shop,/id="mvnEditorial"/,'shop does not repeat full group banner');
@@ -31,7 +32,8 @@ test('home presents original supplements once; shopping catalogue opens on a sep
 });
 
 test('goal photography is grounded and source product packs remain unchanged',()=>{
- assert.equal((home.match(/class="mvn-editorial-category mvn-editorial-category-/g)||[]).length,3);
+ assert.equal((home.match(/class="mvn-preview-best-grid"/g)||[]).length,1,'four authentic best sellers rather than old goal tiles');
+ assert.match(home,/class="mvn-preview-best mvn-home-featured"/);
  assert.match(home,/src="assets\/mvn-homepage-banner-20261115\.webp"/);
  assert.match(home,/src="assets\/mvn-creatine-blueberry-official-250g\.webp"/,'genuine manufacturer Blueberry pack used in homepage');
  assert.match(home,/src="assets\/sturdy-watermelon-front-card\.webp"/);
@@ -66,7 +68,7 @@ test('homepage and shop provide compact store links',()=>{
 test('Blueberry and Cranberry images are never mixed',()=>{
  const product=readFileSync('public/pro-creatine.html','utf8');
  const original='assets/mvn-creatine-blueberry-official-250g.webp';
- assert.ok((home.match(/mvn-creatine-blueberry-official-250g\.webp/g)||[]).length===2,'the home promo and goal show the same Blueberry pack');
+ assert.ok((home.match(/mvn-creatine-blueberry-official-250g\.webp/g)||[]).length>=2,'the homepage featured image and collection popup use original Blueberry pack');
  assert.ok(product.includes(original),'product details use the same official Blueberry pack');
  assert.ok(app.includes(original),'Blueberry retail option uses that pack');
  assert.match(app,/name:"Pro Creatine",cat:"creatine",featuredIndex:0/,'Blueberry is selected first');
@@ -75,12 +77,13 @@ test('Blueberry and Cranberry images are never mixed',()=>{
 
 // Keep the top navigation, existing cart/filter JS hooks, and product grid
 // while making the in-page shopping controls less crowded on phone screens.
-test('shop only uses dark-blue brand panel, compact collection header and hidden duplicate filters',()=>{
+test('shop retains filters and uses a unified charcoal visual layer',()=>{
  const theme=readFileSync('public/mvn-shop-cleanup.css','utf8');
  assert.doesNotMatch(shop,/mvn-shop-hero-logo/,'remove the second logo from the deleted shop banner');
  assert.match(shop,/class="original-brand-logo" src="mvn-app-header-logo.webp"/,'keep one actual header logo');
  assert.match(shop,/mvn-shop-cleanup\.css\?v=20261115-dark-blue-1/);
- assert.match(theme,/#112f55/,'single collection area has a dark-blue palette');
+ assert.match(theme,/#112f55/,'legacy palette remains in fallback stylesheet');
+ assert.match(shop,/mvn-shop-unified-20261117\.css\?v=1/,'shared About/Contact presentation overrides legacy blue');
  assert.match(theme,/#shop > \.section-title/,'collection title has the shop-only blue treatment');
  assert.match(theme,/#shop \.cats,/,'remove duplicate category chip row visually');
  assert.match(theme,/\.productbar \.sort-label/,'hide sort dropdown visually');
