@@ -567,7 +567,7 @@ if(builderPage){
   const serialized=JSON.stringify(config||{version:1,pages:{}}).replace(/</g,'\\u003c');
   let html=file.toString('utf8');
   if(builderPreview)html=html.replace(/<html\b/i,'<html data-mvn-visual-builder="edit"');
-  html=html.replace('</body>','<script type="application/json" id="mvnVisualBuilderConfig">'+serialized+'</script><script src="/site-builder-runtime.js?v=20261117-unlocked" defer></script></body>');
+  html=html.replace('</body>','<script type="application/json" id="mvnVisualBuilderConfig">'+serialized+'</script><script src="/site-builder-runtime.js?v=20261117-orange-home" defer></script></body>');
   file=Buffer.from(html,'utf8');
  }
 }
