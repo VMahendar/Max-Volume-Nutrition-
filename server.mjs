@@ -4,6 +4,9 @@ import {validateHomepageDesign,homepageOrder} from './homepage-design.mjs';
 import {validateVisualBuilder,canonicalBuilderPage} from './site-builder.mjs';
 import {startLocalBackupScheduler} from './deploy/local-backups.mjs';
 import {startDriveBackupScheduler} from './deploy/drive-backup.mjs';
+import {backupStatus,verifyDownloadedBackup} from './deploy/backup-status.mjs';
+import {listCustomers,customerDetails} from './customer-directory.mjs';
+import {initializeOrderAlerts,enqueueOrderAlert,orderAlertReadiness,startOrderAlertScheduler} from './order-alerts.mjs';
 import http from 'node:http';
 import {validateCampaign,activeCampaigns,campaignQuote} from './promotions.mjs';
 import {validateUpdate,activeUpdates,updateConfig,initializeUpdates,whatsappUpdateReadiness,validUpdateSignature,receiveWhatsappUpdates} from './store-updates.mjs';
@@ -38,6 +41,7 @@ initializeUpdates(C);
 initializeOwnerDesk(C);
 initializeOwnerWork(C);
 initializeLeadInbox(C);
+initializeOrderAlerts(C);
 db.exec('CREATE TABLE IF NOT EXISTS homepage_images (path TEXT PRIMARY KEY, type TEXT NOT NULL, content BLOB NOT NULL)');
 const origin=process.env.PUBLIC_ORIGIN||'http://localhost:3000',production=process.env.NODE_ENV==='production';
 const previousStoreOrigin='https://max-volume-nutrition-preview.onrender.com';
@@ -256,6 +260,7 @@ if(path==='/api/me/marketing'&&req.method==='POST'){
  return json(res,200,{ok:true,subscribed});
 }
 if(path==='/api/me/claim-order'&&req.method==='POST'){requireUser(user);const b=JSON.parse(await body(req));C.tx(()=>{const row=db.prepare('SELECT * FROM orders WHERE id=? AND token=?').get(String(b.id),String(b.token));if(!row||row.user_id&&row.user_id!==user.id||JSON.parse(row.payload).customer.email.toLowerCase()!==user.email)fail(404,'Order not found for this account.');db.prepare('UPDATE orders SET user_id=? WHERE id=?').run(user.id,row.id);C.audit(user.id,'order.claim',row.id);});return json(res,200,{ok:true});}
+if(path==='/api/me/enquiries'&&req.method==='GET'){requireUser(user);return json(res,200,{enquiries:db.prepare('SELECT id,kind,status,created FROM lead_inbox WHERE user_id=? ORDER BY created DESC LIMIT 100').all(user.id)});}
 if(path==='/api/me/orders'&&req.method==='GET'){requireUser(user);return json(res,200,{orders:db.prepare('SELECT * FROM orders WHERE user_id=? ORDER BY created DESC LIMIT 100').all(user.id).map(C.publicOrder)});}
 if(path==='/api/invoice'&&req.method==='POST'){const b=JSON.parse(await body(req)),row=db.prepare('SELECT * FROM orders WHERE id=?').get(String(b.id));if(!accessible(row,user,b.token))fail(404,'Order not found.');const inv=db.prepare('SELECT data FROM invoices WHERE order_id=?').get(row.id);if(!inv)fail(404,'No GST invoice issued for this order.');return json(res,200,{invoice:JSON.parse(inv.data)});}
 
@@ -297,7 +302,7 @@ if(path==='/api/dealer/apply'&&req.method==='POST'){
 if(['/api/register','/api/login'].includes(path)&&req.method==='POST'){
 if(!rate('auth:'+ip,10))fail(429,'Too many attempts. Try again in a minute.');const b=JSON.parse(await body(req)),mail=email(b.email);if(!rate('account:'+hash(mail),10))fail(429,'Too many attempts. Try again in a minute.');let account;
 if(path==='/api/register'){const pass=await passwordHash(b.password),name=clean(b.name,100);if(db.prepare('SELECT id FROM users WHERE email=?').get(mail))fail(400,'Unable to register with these details.');const id=randomUUID();db.prepare('INSERT INTO users VALUES(?,?,?,?,?,?)').run(id,mail,name,pass,'customer',new Date().toISOString());account=db.prepare('SELECT * FROM users WHERE id=?').get(id);C.audit(id,'account.register',id);}else{account=db.prepare('SELECT * FROM users WHERE email=?').get(mail);const dummy='0123456789abcdef0123456789abcdef:'+('0'.repeat(128));const valid=await passwordMatches(b.password,account?.password||dummy);if(!account||!valid)fail(401,'Email or password is incorrect.');}
-const old=req.headers.cookie?.match(/(?:^|;\s*)mvn_session=([^;]+)/)?.[1];if(old)db.prepare('DELETE FROM sessions WHERE token=?').run(hash(old));cookie(res,C.issueSession(account));return json(res,200,{user:C.safeUser(account)});}
+const old=req.headers.cookie?.match(/(?:^|;\s*)mvn_session=([^;]+)/)?.[1];if(old)db.prepare('DELETE FROM sessions WHERE token=?').run(hash(old));if(path==='/api/login')C.audit(account.id,'account.login',account.id);cookie(res,C.issueSession(account));return json(res,200,{user:C.safeUser(account)});}
 if(path==='/api/logout'&&req.method==='POST'){const old=req.headers.cookie?.match(/(?:^|;\s*)mvn_session=([^;]+)/)?.[1];if(old)db.prepare('DELETE FROM sessions WHERE token=?').run(hash(old));cookie(res,'');return json(res,200,{ok:true});}
 if(path==='/api/password'&&req.method==='POST'){requireUser(user);if(!rate('password:'+ip,5))fail(429,'Please try again later.');const b=JSON.parse(await body(req));if(!await passwordMatches(b.currentPassword,user.password))fail(401,'Current password is incorrect.');const pass=await passwordHash(b.password);C.tx(()=>{db.prepare('UPDATE users SET password=? WHERE id=?').run(pass,user.id);db.prepare('DELETE FROM sessions WHERE user_id=?').run(user.id);C.audit(user.id,'account.password',user.id);});cookie(res,'');return json(res,200,{ok:true});}
 if(path==='/api/dealer'&&req.method==='POST'){requireUser(user);const b=JSON.parse(await body(req));if(!['gym','wholesale'].includes(b.kind))fail(400,'Choose gym or wholesale.');const business=clean(b.business,200),gstin=typeof b.gstin==='string'?b.gstin.trim().toUpperCase():'';if(gstin&&!/^\d{2}[A-Z0-9]{13}$/.test(gstin))fail(400,'Invalid GSTIN format.');C.tx(()=>{const previous=db.prepare('SELECT status FROM dealers WHERE user_id=?').get(user.id);if(previous&&previous.status!=='rejected')fail(409,'An application already exists.');db.prepare("INSERT INTO dealers VALUES(?,?,?,?, 'pending',NULL,?) ON CONFLICT(user_id) DO UPDATE SET kind=excluded.kind,business=excluded.business,gstin=excluded.gstin,status='pending',reviewed_by=NULL").run(user.id,b.kind,business,gstin,new Date().toISOString());C.audit(user.id,'dealer.apply',user.id);});return json(res,200,{user:C.safeUser(user)});}
@@ -317,10 +322,23 @@ if(path==='/api/enquiries'&&req.method==='POST'){
  if(!rate('lead-ip:'+ip,8))fail(429,'Too many enquiries. Please contact us on WhatsApp.');
  const b=JSON.parse(await body(req,10000));
  if(!rate('lead-phone:'+hash(String(b.phone||'')),5))fail(429,'Please contact us on WhatsApp.');
- const lead=saveLead(C,b);
+ const lead=saveLead(C,b,user?.id||null);
+ enqueueOrderAlert(C,lead);
  return json(res,201,lead);
 }
 if(path.startsWith('/api/admin/')){admin(user);
+if(path==='/api/admin/customers'&&req.method==='GET')return json(res,200,listCustomers(C,u.searchParams));
+if(path==='/api/admin/customer'&&req.method==='GET')return json(res,200,customerDetails(C,String(u.searchParams.get('id')||'')));
+if(path==='/api/admin/store-health'&&req.method==='GET')return json(res,200,{
+ backup:backupStatus(resolve(process.env.DATA_DIR||'runtime')),
+ alerts:orderAlertReadiness(),alertCounts:db.prepare('SELECT status,COUNT(*) count FROM order_alerts GROUP BY status').all()
+});
+if(path==='/api/admin/backup-restore-check'&&req.method==='POST'){
+ if(!rate('restore-check:'+user.id,2))fail(429,'Please wait before running another restore check.');
+ const chunks=[];let length=0;for await(const chunk of req){length+=chunk.length;if(length>6*1024*1024+34)fail(413,'Backup is too large.');chunks.push(chunk);}
+ const result=verifyDownloadedBackup(resolve(process.env.DATA_DIR||'runtime'),Buffer.concat(chunks),u.searchParams.get('name'));
+ C.audit(user.id,'backup.restore-check',result.name,{integrity:result.integrity});return json(res,200,result);
+}
 if(path==='/api/admin/visual-builder'){
  if(req.method==='GET')return json(res,200,{
   draft:C.setting('visualBuilderDraftV1'),
@@ -675,5 +693,6 @@ function validImage(value){
 startLocalBackupScheduler();
 const stopMarketing=startMarketingScheduler(C);
 const stopDriveBackup=startDriveBackupScheduler(resolve(process.env.DATA_DIR||'runtime'));
+const stopOrderAlerts=startOrderAlertScheduler(C);
 server.requestTimeout=30000;server.headersTimeout=15000;const portArg=process.argv.indexOf('--port');server.listen(Number(portArg>=0?process.argv[portArg+1]:process.env.PORT)||3000,process.env.HOST||'0.0.0.0',()=>console.log('Store running at '+origin));
-for(const signal of ['SIGTERM','SIGINT'])process.on(signal,()=>{stopMarketing();stopDriveBackup?.();server.close(()=>{db.close();process.exit(0);});});
+for(const signal of ['SIGTERM','SIGINT'])process.on(signal,()=>{stopMarketing();stopDriveBackup?.();stopOrderAlerts();server.close(()=>{db.close();process.exit(0);});});

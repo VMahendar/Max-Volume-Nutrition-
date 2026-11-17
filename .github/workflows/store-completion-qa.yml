@@ -1,0 +1,28 @@
+name: Store completion acceptance
+on:
+  push:
+    branches: [fix/store-completion-20261117, main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  acceptance:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm run check
+      - run: npm test
+      - run: npm install --no-save --package-lock=false playwright@1.55.0
+      - run: npx playwright install --with-deps chromium
+      - run: node tests/store-completion-browser-qa.mjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: store-completion-acceptance
+          path: reports/visual-qa/
+          if-no-files-found: ignore
+          retention-days: 7

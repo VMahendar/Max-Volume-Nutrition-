@@ -25,6 +25,8 @@ export function initializeLeadInbox(C){
  );
  CREATE INDEX IF NOT EXISTS lead_inbox_status_due ON lead_inbox(status,follow_up_at,created);
  CREATE INDEX IF NOT EXISTS lead_inbox_phone ON lead_inbox(phone);`);
+ if(!C.db.prepare('PRAGMA table_info(lead_inbox)').all().some(column=>column.name==='user_id'))C.db.exec('ALTER TABLE lead_inbox ADD COLUMN user_id TEXT');
+ C.db.exec('CREATE INDEX IF NOT EXISTS lead_inbox_user ON lead_inbox(user_id)');
 }
 
 function validateLead(C,b){
@@ -70,7 +72,7 @@ function validateLead(C,b){
  return {...lead,fingerprint:hash(JSON.stringify(lead))};
 }
 
-export function saveLead(C,b){
+export function saveLead(C,b,accountId=null){
  const lead=validateLead(C,b),now=new Date().toISOString();
  return C.tx(()=>{
   const prior=C.db.prepare('SELECT id,fingerprint,created FROM lead_inbox WHERE request_key=?').get(lead.requestKey);
@@ -81,6 +83,7 @@ export function saveLead(C,b){
   const id='MVN-LEAD-'+randomUUID().slice(0,12).toUpperCase();
   C.db.prepare('INSERT INTO lead_inbox(id,request_key,fingerprint,kind,name,phone,business,region,city,detail,created,updated) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)')
    .run(id,lead.requestKey,lead.fingerprint,lead.kind,lead.name,lead.phone,lead.business,lead.region,lead.city,JSON.stringify(lead.detail),now,now);
+  if(accountId)C.db.prepare('UPDATE lead_inbox SET user_id=? WHERE id=?').run(accountId,id);
   C.audit('website','lead.created',id,{kind:lead.kind});
   return {id,created:now,recorded:true,alreadyRecorded:false};
  });

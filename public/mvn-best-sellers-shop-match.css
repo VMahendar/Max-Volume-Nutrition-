@@ -1,0 +1,199 @@
+/* MVN Best Sellers — use the same product-card visual language as Shop All.
+   Scoped to homepage Best Sellers; hero, category section and commerce unchanged. */
+body.mvn-showcase-home .mvn-home-featured {
+  display:block;
+  width:100%;
+  max-width:1440px;
+  margin:0 auto;
+  padding:clamp(28px,4vw,52px) clamp(12px,3vw,36px);
+  background:#fff;
+  color:#171b1f;
+  box-sizing:border-box;
+}
+body.mvn-showcase-home .mvn-home-featured .mvn-preview-best-head {
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+  margin:0 0 22px;
+}
+body.mvn-showcase-home .mvn-home-featured .mvn-preview-best-head h2 {
+  margin:5px 0 0;
+  color:#171b1f;
+  line-height:1.08;
+  font-size:clamp(27px,3.3vw,42px);
+}
+body.mvn-showcase-home .mvn-home-featured .mvn-preview-best-head > a {
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  font-size:13px;
+  font-weight:800;
+  color:#786039;
+  text-decoration:none;
+}
+body.mvn-showcase-home .mvn-home-featured .mvn-preview-best-grid {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:clamp(10px,1.5vw,20px);
+  width:100%;
+  max-width:none;
+  margin:0;
+  padding:0;
+}
+body.mvn-showcase-home .mvn-home-featured .mvn-preview-best-grid > a.mvn-best-product {
+  display:flex;
+  flex-direction:column;
+  width:100%;
+  min-width:0;
+  height:100%;
+  min-height:0;
+  padding:0;
+  margin:0;
+  gap:0;
+  border:1px solid #dedbd3;
+  border-radius:14px;
+  overflow:hidden;
+  background:#fff;
+  color:#171b1f;
+  box-shadow:0 3px 12px #1226440c;
+  text-decoration:none;
+  transform:none;
+}
+body.mvn-showcase-home .mvn-home-featured .mvn-preview-best-grid > a.mvn-best-product:hover {
+  border-color:#ced7df;
+  box-shadow:0 8px 20px #12264417;
+}
+body.mvn-showcase-home .mvn-home-featured .mvn-best-product-photo {
+  display:grid;
+  flex:none;
+  place-items:center;
+  width:100%;
+  aspect-ratio:1.06/1;
+  height:auto;
+  min-height:0;
+  overflow:hidden;
+  padding:12px;
+  margin:0;
+  background:#F8F7F5;
+  box-sizing:border-box;
+}
+body.mvn-showcase-home .mvn-home-featured .mvn-best-product-photo img {
+  display:block;
+  width:100%;
+  height:100%;
+  max-height:100%;
+  max-width:100%;
+  aspect-ratio:auto;
+  object-fit:contain;
+  object-position:center;
+  padding:0;
+  margin:0;
+  border:0;
+  background:transparent;
+  filter:none;
+  transform:none;
+}
+body.mvn-showcase-home .mvn-home-featured .mvn-best-product-info {
+  display:flex;
+  flex:1;
+  flex-direction:column;
+  align-items:stretch;
+  gap:0;
+  min-width:0;
+  padding:clamp(12px,1.5vw,20px);
+  background:#fff;
+  box-sizing:border-box;
+}
+body.mvn-showcase-home .mvn-home-featured .mvn-best-brand {
+  align-self:flex-start;
+  width:auto;
+  max-width:100%;
+  padding:4px 7px;
+  border-radius:4px;
+  background:#eee9df;
+  color:#5c482c;
+  font-size:10px;
+  font-weight:850;
+  letter-spacing:.05em;
+  line-height:1.3;
+}
+body.mvn-showcase-home .mvn-home-featured .mvn-best-product-info > strong {
+  display:block;
+  margin:12px 0 7px;
+  font-size:clamp(17px,1.65vw,22px);
+  font-weight:900;
+  line-height:1.2;
+  letter-spacing:-.025em;
+  text-transform:none;
+  color:#171b1f;
+}
+body.mvn-showcase-home .mvn-home-featured .mvn-best-pack {
+  display:block;
+  margin:0 0 18px;
+  font-size:13px;
+  line-height:1.4;
+  color:#465363;
+}
+body.mvn-showcase-home .mvn-home-featured .mvn-best-action {
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  width:100%;
+  min-height:44px;
+  margin-top:auto;
+  padding:9px 8px;
+  border:1px solid #1C222B;
+  border-radius:7px;
+  background:#1C222B;
+  color:#fff;
+  font-size:11px;
+  font-weight:850;
+  line-height:1.25;
+  text-align:center;
+  text-decoration:none;
+}
+@media(max-width:900px) {
+  body.mvn-showcase-home .mvn-home-featured .mvn-preview-best-grid {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+@media(max-width:560px) {
+  body.mvn-showcase-home .mvn-home-featured {
+    padding:26px 12px 36px;
+  }
+  body.mvn-showcase-home .mvn-home-featured .mvn-preview-best-head {
+    gap:9px;
+    margin-bottom:15px;
+  }
+  body.mvn-showcase-home .mvn-home-featured .mvn-preview-best-head h2 {
+    font-size:29px;
+  }
+  body.mvn-showcase-home .mvn-home-featured .mvn-preview-best-grid {
+    gap:10px;
+  }
+  body.mvn-showcase-home .mvn-home-featured .mvn-best-product-photo {
+    padding:9px;
+  }
+  body.mvn-showcase-home .mvn-home-featured .mvn-best-product-info {
+    padding:10px;
+  }
+  body.mvn-showcase-home .mvn-home-featured .mvn-best-brand {
+    font-size:9px;
+    padding:4px 5px;
+  }
+  body.mvn-showcase-home .mvn-home-featured .mvn-best-product-info > strong {
+    font-size:15px;
+    margin:9px 0 5px;
+  }
+  body.mvn-showcase-home .mvn-home-featured .mvn-best-pack {
+    font-size:12px;
+    margin-bottom:12px;
+  }
+  body.mvn-showcase-home .mvn-home-featured .mvn-best-action {
+    font-size:10px;
+    min-height:43px;
+  }
+}

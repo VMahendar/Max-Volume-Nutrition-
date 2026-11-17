@@ -1,4 +1,4 @@
-import {api,formObject,orderRows} from './commerce-api.js';
+import {api,formObject,orderRows,esc} from './commerce-api.js';
 
 const $=id=>document.getElementById(id);
 function notice(message,state='success'){
@@ -46,6 +46,8 @@ async function refresh(){
   }
   const result=await api('/api/me/orders');
   $('orders').innerHTML=orderRows(result.orders||[]);
+  const history=await api('/api/me/enquiries');
+  $('orders').insertAdjacentHTML('beforeend','<h3>WhatsApp order enquiries</h3>'+(history.enquiries.length?'<ul>'+history.enquiries.map(x=>'<li>'+esc(x.id)+' · '+esc(x.status)+' · '+esc(new Date(x.created).toLocaleDateString('en-IN',{timeZone:'Asia/Kolkata'}))+'</li>').join('')+'</ul>':'<p>Enquiries sent while signed in will appear here. Guest enquiries stay with their saved reference.</p>'));
 }
 
 async function perform(button,request,successText){

@@ -91,7 +91,7 @@ function renderRecent(){
   const image=coverImage(p,index);
   if(image){const img=document.createElement("img");img.src=image;img.alt="";img.loading="lazy";img.onerror=()=>img.hidden=true;button.append(img)}
   const name=document.createElement("strong");name.textContent=p.name;
-  const price=document.createElement("span");price.textContent=v.label+" · "+(v.price===null?"Ask for price":money(v.price));
+  const price=document.createElement("span");price.textContent=v.label+" · "+(v.price===null?"Coming soon":money(v.price));
   button.append(name,price);button.onclick=()=>showDetail(id);return button;
  }));
 }
@@ -119,9 +119,9 @@ function retailOfferMarkup(v){
  const subtotal=Math.round(v.price*100),best=bestRetailOffer(v);
  return best?'<div class="retail-offer-price"><span class="limited-deal-label">LIMITED '+(best.campaign.occasion?.toLowerCase().includes('diwali')?'DIWALI':'RETAIL')+' OFFER</span><strong>'+money((subtotal-best.discount)/100)+'</strong><span>Code '+best.campaign.code+' at checkout</span><span>Valid through '+new Date(Date.parse(best.campaign.endsAt)-1).toLocaleDateString('en-IN',{timeZone:'Asia/Kolkata',day:'numeric',month:'short'})+'</span></div>':'';
 }
-function enquiryURL(p,v,qty=1){return "https://wa.me/"+PHONE+"?text="+encodeURIComponent("Hello Max Volume Nutrition, please confirm the selling price and availability for "+p.brand+" "+p.name+" — "+v.label+". Quantity: "+qty+".");}
+function enquiryURL(p,v,qty=1){return "https://wa.me/"+PHONE+"?text="+encodeURIComponent("Hello Max Volume Nutrition, please share the launch details for "+p.brand+" "+p.name+" — "+v.label+". Quantity: "+qty+".");}
 function priceMarkup(v){
- if(v.price===null)return '<div class="price-main"><b class="selling-price quote-price">Ask for price</b></div><small class="selling-caption">Price & availability on WhatsApp</small>';
+ if(v.price===null)return '<div class="price-main"><b class="selling-price quote-price">Coming soon</b></div><small class="selling-caption">Launch date and prices will be announced</small>';
  const hasMrp=Number.isSafeInteger(v.mrp)&&v.mrp>v.price;
  const percent=hasMrp?Math.round((v.mrp-v.price)*100/v.mrp):0;
  return '<div class="price-main"><b class="selling-price">'+money(v.price)+'</b>'+
@@ -130,7 +130,7 @@ function priceMarkup(v){
  '<small class="selling-caption">Regular retail price</small>'+retailOfferMarkup(v);
 }
 function appPriceMarkup(v){
- if(v.price===null)return '<strong class="price-current">Ask for price</strong>';
+ if(v.price===null)return '<strong class="price-current">Coming soon</strong>';
  const offer=bestRetailOffer(v),regular=Math.round(v.price*100);
  if(offer){const end=new Date(Date.parse(offer.campaign.endsAt)-1).toLocaleDateString('en-IN',{timeZone:'Asia/Kolkata',day:'numeric',month:'short'});return '<span class="app-price-offer-label">'+safe(offer.campaign.occasion||'Retail offer')+'</span><strong class="price-current price-current--promo">'+money((regular-offer.discount)/100)+'</strong><span class="price-original">Regular <del>'+money(v.price)+'</del></span><span class="price-note">With code '+safe(offer.campaign.code)+' at checkout · through '+safe(end)+'</span>';}
  return '<strong class="price-current">'+money(v.price)+'</strong>'+(Number.isSafeInteger(v.mrp)&&v.mrp>v.price?'<span class="price-original">MRP <del>'+money(v.mrp)+'</del></span>':'')+'<span class="price-note">Regular selling price</span>';
@@ -149,7 +149,7 @@ const smallCardImages={
 const seoProductDetailUrls=Object.freeze({whey:'potency-whey.html',mass:'nitro-mass.html',pre:'sturdy-pre-workout.html',creatine:'pro-creatine.html',vitamins:'musclevite-multivitamin.html'});
 function card(p){
 const featured=displayVariant(p);const originalCover=coverImage(p,featured);const cover=failedPackPhotos.has(originalCover)?'':originalCover;const thumbnail=smallCardImages[cover]||cover;const pic=cover?'<img loading="lazy" decoding="async" src="'+safe(thumbnail)+'" alt="'+safe(p.name)+'"><div class="placeholder" hidden><b>'+safe(p.name)+'</b>Photo coming soon</div>':'<div class="placeholder"><b>'+safe(p.name)+'</b>Correct pack photo being verified</div>';
-return '<article class="card"><div class="photo '+(p.brand==='Globe-Tech Nutrition'?'gt-pack':'')+'">'+pic+'</div><div class="info"><small>'+safe(p.brand||'Unicorn Pro Series')+'</small><h3>'+(seoProductDetailUrls[p.id]?'<a href="'+safe(seoProductDetailUrls[p.id])+'">'+safe(p.name)+'</a>':safe(p.name))+'</h3><p>'+safe(p.desc)+'</p><label class="variant-label" for="v-'+p.id+'">FLAVOUR / PACK SIZE</label><select id="v-'+p.id+'" class="variant">'+visiblePackOptions(p).map(({v,i})=>'<option value="'+i+'"'+(i===featured?' selected':'')+'>'+safe(v.label)+'</option>').join("")+'</select><div class="price" id="price-'+p.id+'">'+priceMarkup(p.variants[featured])+'</div><button class="details-link" type="button" data-detail="'+p.id+'">VIEW PRODUCT DETAILS →</button><button class="add" data-id="'+p.id+'"'+(p.variants[featured].price===null?' hidden':'')+'>ADD TO CART +</button><a class="quote-action" href="'+safe(enquiryURL(p,p.variants[featured]))+'" target="_blank" rel="noopener noreferrer"'+(p.variants[featured].price===null?'':' hidden')+'>ASK ON WHATSAPP ↗</a></div></article>';
+return '<article class="card"><div class="photo '+(p.brand==='Globe-Tech Nutrition'?'gt-pack':'')+'">'+pic+'</div><div class="info"><small>'+safe(p.brand||'Unicorn Pro Series')+'</small><h3>'+(seoProductDetailUrls[p.id]?'<a href="'+safe(seoProductDetailUrls[p.id])+'">'+safe(p.name)+'</a>':safe(p.name))+'</h3><p>'+safe(p.desc)+'</p><label class="variant-label" for="v-'+p.id+'">FLAVOUR / PACK SIZE</label><select id="v-'+p.id+'" class="variant">'+visiblePackOptions(p).map(({v,i})=>'<option value="'+i+'"'+(i===featured?' selected':'')+'>'+safe(v.label)+'</option>').join("")+'</select><div class="price" id="price-'+p.id+'">'+priceMarkup(p.variants[featured])+'</div><button class="details-link" type="button" data-detail="'+p.id+'">VIEW PRODUCT DETAILS →</button><button class="add" data-id="'+p.id+'"'+(p.variants[featured].price===null?' hidden':'')+'>ADD TO CART +</button><a class="quote-action" href="'+safe(enquiryURL(p,p.variants[featured]))+'" target="_blank" rel="noopener noreferrer"'+(p.variants[featured].price===null?'':' hidden')+'>ASK ABOUT LAUNCH ↗</a></div></article>';
 }
 
 function installCategoryShortcuts(){
@@ -528,7 +528,7 @@ $("detailClose").onclick=()=>$("productDialog").close();
 document.querySelectorAll(".hero-visual img,.detail-photo img").forEach(img=>img.addEventListener("error",()=>{img.hidden=true}));
 
 function showQuoteProductDetail(p,options,initialIndex,dlg,root){
- root.innerHTML='<div class="gt-quote-detail"><div class="gt-pack"><img alt="'+safe(p.brand+' '+p.name)+'"></div><section><span class="gt-kicker">'+safe(p.brand)+'</span><h2>'+safe(p.name)+'</h2><p>'+safe(p.desc)+'</p><label for="gt-quote-variant">CHOOSE YOUR PACK</label><select id="gt-quote-variant">'+options.map(({v,i})=>'<option value="'+i+'"'+(i===initialIndex?' selected':'')+'>'+safe(v.label)+'</option>').join('')+'</select><div class="price">'+priceMarkup(p.variants[initialIndex])+'</div><a class="quote-action" target="_blank" rel="noopener noreferrer">ASK ON WHATSAPP ↗</a><p class="fine">Our team confirms the selected flavour, price and stock before accepting your order.</p></section></div>';
+ root.innerHTML='<div class="gt-quote-detail"><div class="gt-pack"><img alt="'+safe(p.brand+' '+p.name)+'"></div><section><span class="gt-kicker">'+safe(p.brand)+'</span><h2>'+safe(p.name)+'</h2><p>'+safe(p.desc)+'</p><label for="gt-quote-variant">CHOOSE YOUR PACK</label><select id="gt-quote-variant">'+options.map(({v,i})=>'<option value="'+i+'"'+(i===initialIndex?' selected':'')+'>'+safe(v.label)+'</option>').join('')+'</select><div class="price">'+priceMarkup(p.variants[initialIndex])+'</div><a class="quote-action" target="_blank" rel="noopener noreferrer">ASK ABOUT LAUNCH ↗</a><p class="fine">Globe-Tech is coming soon. Prices and order availability will be announced at launch.</p></section></div>';
  const select=root.querySelector('select'),image=root.querySelector('img'),link=root.querySelector('a');
  const update=()=>{const v=p.variants[Number(select.value)];image.src=v.img||p.img;image.alt=p.brand+' '+p.name+' — '+v.label;link.href=enquiryURL(p,v);};
  select.onchange=update;update();if(typeof dlg.showModal==='function')dlg.showModal();else dlg.setAttribute('open','');
