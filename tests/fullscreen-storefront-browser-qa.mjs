@@ -24,12 +24,12 @@ try{
   page.on('pageerror',e=>failures.push(e.message));
   assert.equal((await page.goto(origin+'/',{waitUntil:'networkidle'})).status(),200);
   const boxes=await page.evaluate(()=>{
-   const selectors={header:'.storehead',hero:'#mvnEditorial',goal:'.mvn-theme-shop-goals',best:'.mvn-preview-best',globe:'.mvn-globtech-launch'};
+   const selectors={header:'.storehead',hero:'#mvnEditorial',collection:'.mvn-home-collection-entry',best:'.mvn-preview-best',globe:'.mvn-globtech-launch'};
    const width=document.documentElement.clientWidth;
    return {width,sections:Object.fromEntries(Object.entries(selectors).map(([key,selector])=>{
     const node=document.querySelector(selector);const rect=node?.getBoundingClientRect();
     return [key,rect?{left:rect.left,right:rect.right,width:rect.width,height:rect.height}:null];
-   })),goalCards:[...document.querySelectorAll('.mvn-theme-shop-goals .mvn-editorial-category-grid>a')].map(e=>{
+   })),goalCards:[...document.querySelectorAll('.mvn-preview-best .mvn-preview-best-grid>a')].map(e=>{
     const box=e.getBoundingClientRect();return {left:box.left,top:box.top,right:box.right,bottom:box.bottom};
    })};
   });
@@ -39,13 +39,19 @@ try{
    assert.ok(b.width>=boxes.width*(viewport.width<600?.92:.94),name+' must span screen ('+JSON.stringify(b)+')');
    assert.ok(b.left>=-12&&b.right<=boxes.width+14,name+' must fit screen, not overflow');
   }
-  assert.ok(boxes.goalCards.length>=4,'shop by goal cards should be present');
+  assert.equal(boxes.goalCards.length,4,'exactly four featured best sellers should be visible');
   for(let i=0;i<boxes.goalCards.length;i++)for(let j=i+1;j<boxes.goalCards.length;j++){
    const a=boxes.goalCards[i],b=boxes.goalCards[j];
    const overlap=Math.min(a.right,b.right)-Math.max(a.left,b.left)>6&&Math.min(a.bottom,b.bottom)-Math.max(a.top,b.top)>6;
-   assert.ok(!overlap,'goal category tiles must not overlap: '+i+' '+j);
+   assert.ok(!overlap,'featured product tiles must not overlap: '+i+' '+j);
   }
-  assert.equal(failures.length,0,'browser JavaScript errors: '+failures.join(', '));
+  const popupButton=page.locator('#mvnOpenCollection');
+  await popupButton.click();
+  assert.equal(await page.locator('#mvnCollectionDialog').evaluate(el=>el.open),true,'Shop Collection popup opens');
+  assert.equal(await page.locator('#mvnCollectionDialog .mvn-collection-dialog-grid a').count(),4,'Popup has four category links');
+  await page.locator('#mvnCloseCollection').click();
+  assert.equal(await page.locator('#mvnCollectionDialog').evaluate(el=>el.open),false,'Popup closes');
+    assert.equal(failures.length,0,'browser JavaScript errors: '+failures.join(', '));
   await page.screenshot({path:'reports/visual-qa/fullscreen-'+viewport.width+'.png',fullPage:true});
   await page.close();
  }
