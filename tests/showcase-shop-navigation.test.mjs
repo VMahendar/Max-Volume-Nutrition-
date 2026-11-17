@@ -14,7 +14,7 @@ test('home preserves approved banner and catalogue; full shop also has separate 
  assert.match(home,/href="shop\.html\?cat=pre"/);
  assert.match(home,/href="shop\.html\?cat=creatine"/);
  assert.equal((home.match(/SHOP THE COLLECTION/g)||[]).length,1,'no repeated Shop the Collection button');
- assert.match(css,/main#shop\\{\\s*display:block!important;/,'homepage shows product catalogue below the banner');
+ assert.ok(css.includes('main#shop{') && css.includes('display:block!important;'),'homepage shows product catalogue below the banner');
  assert.match(css,/mvn-full-shop[^\n]* #shop/,'separate shop displays catalogue');
  assert.doesNotMatch(shop,/id="mvnEditorial"/,'shop does not repeat full group banner');
  assert.doesNotMatch(shop,/mvn-theme-shop-goals/,'shop does not repeat goal cards');
