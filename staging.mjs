@@ -24,6 +24,7 @@ export function stagingGate(env=process.env){
       // Public, approved product images and brand artwork only; private assets remain noindex.
       '/max-volume-logo-wide.png','/max-volume-logo.png',
       '/assets/potency-whey-coffee-5lb.webp',
+      '/assets/mvn-creatine-blueberry-official-250g.webp',
       '/assets/Screenshot_2026_1103_003852.jpg',
       '/assets/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout.webp',
       '/assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp',
