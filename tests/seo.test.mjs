@@ -76,6 +76,7 @@ test('Google Image sitemap points to approved public product photos only',()=>{
   const staging=readFileSync('staging.mjs','utf8');
   const imagePages=[
     ['/potency-whey.html','/assets/potency-whey-coffee-5lb.webp'],
+    ['/pro-creatine.html','/assets/mvn-creatine-blueberry-official-250g.webp'],
     ['/nitro-mass.html','/assets/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout.webp'],
     ['/nitro-mass.html','/assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp'],
     ['/sturdy-pre-workout.html','/assets/sturdy-watermelon-front.webp'],
@@ -92,4 +93,4 @@ test('Google Image sitemap points to approved public product photos only',()=>{
 });
 
 
-test('Potency Whey avoids invalid Product rich result without verified offer or review',()=>{const html=page('/potency-whey.html');assert.ok(!structuredData(html).some(x=>x['@type']==='Product'));assert.match(html,/<h1>Unicorn Pro Series Potency Whey Protein – Coffee 5 lb<\/h1>/);});
+test('Potency Whey avoids invalid Product rich result without verified offer or review',()=>{const html=page('/potency-whey.html');assert.ok(!structuredData(html).some(x=>x['@type']==='Product'));assert.match(html,/<h1>Unicorn Pro Series Potency Whey Protein – Coffee 5 lb<\/h1>/);assert.match(html,/<title>Potency Whey Protein Powder 5 lb Chennai \| MVN<\/title>/);assert.match(html,/Looking for whey protein powder in Chennai\?/);});
