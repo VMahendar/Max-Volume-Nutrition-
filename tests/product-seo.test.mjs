@@ -44,6 +44,18 @@ test('rich product snippet uses real catalog retail offers and visible matching 
  assert.ok(mass.gallery.includes('mass-5kg-double-rich-chocolate-cutout.webp'));
 });
 
+test('Pro Creatine merchant schema includes the pictured Blueberry 250 g image and matching offer',()=>{
+ const creatine={id:'pro-creatine',name:'Pro Creatine',brand:'Unicorn Pro Series',description:'Creatine 250 g Blueberry and Cranberry.',
+  variants:[{id:'creatine-cranberry',label:'250 g · Cranberry',pricePaise:89900},{id:'creatine-blueberry',label:'250 g · Blueberry',pricePaise:89900}]};
+ const result=buildProductFragments('/pro-creatine.html',[creatine],[]);
+ const data=schema(result);
+ assert.equal(data['@type'],'Product');
+ assert.equal(data.image,'https://maxvolumenutriton.shop/assets/mvn-creatine-blueberry-official-250g.webp');
+ assert.equal(data.offers.price,'899.00');
+ assert.equal(data.offers.availability,undefined,'Do not invent unverified stock');
+ assert.equal(PRODUCT_PAGE_IDS['/pro-creatine.html'].primaryVariantId,'creatine-blueberry');
+});
+
 test('only approved genuine reviews are shown and reflected in JSON-LD',()=>{
  const reviews=[
   {status:'approved',rating:5,title:'Good quality',body:'Worked well in my routine, consistent product.',created:'2026-11-14T00:00:00Z',name:'Customer One'},
