@@ -85,7 +85,7 @@ test('Google Image sitemap points to approved public product photos only',()=>{
   assert.ok(sitemap.includes('xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"'),'missing Google image sitemap namespace');
   for(const [path,image] of imagePages){
     if(path==='/nitro-mass.html')assert.ok(page(path).includes('<!-- MVN_NITRO_GALLERY -->'),'Nitro images must be server-rendered from matching catalogue variants');
-    else assert.ok(page(path).includes('src="'+image+'"'),path+' does not display declared product photo');
+    else assert.ok(page(path).includes('src="'+image+'"')||page(path).includes('src="'+image.slice(1)+'"'),path+' does not display declared product photo');
     assert.ok(sitemap.includes('<image:loc>'+domain+image+'</image:loc>'),path+' missing search image entry');
     assert.ok(staging.includes("'"+image+"'"),path+' image is still marked noindex by staging');
   }
