@@ -4,7 +4,7 @@
 export const PRODUCT_PAGE_IDS=Object.freeze({
  '/potency-whey.html':{primaryVariantId:'whey-coffee',id:'potency-whey',name:'Unicorn Pro Series Potency Whey Protein',image:'/assets/potency-whey-coffee-5lb.webp'},
  '/nitro-mass.html':{primaryVariantId:'mass-5kg',id:'nitro-mass',name:'Unicorn Pro Series Nitro Mass Gainer',image:'/assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp'},
- '/pro-creatine.html':{primaryVariantId:'creatine-cranberry',id:'pro-creatine',name:'Unicorn Pro Series Pro Creatine'},
+ '/pro-creatine.html':{primaryVariantId:'creatine-blueberry',id:'pro-creatine',name:'Unicorn Pro Series Pro Creatine',image:'/assets/mvn-creatine-blueberry-official-250g.webp'},
  '/sturdy-pre-workout.html':{id:'sturdy-pre',name:'Unicorn Pro Series Sturdy Pre-Workout',image:'/assets/sturdy-watermelon-front.webp'},
  '/musclevite-multivitamin.html':{id:'musclevite',name:'Unicorn Pro Series Musclevite Multivitamin',image:'/assets/musclevite-front-20261116.webp'}
 });
