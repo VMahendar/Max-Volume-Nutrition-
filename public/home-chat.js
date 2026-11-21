@@ -31,7 +31,7 @@
  function ask(question) {
   addMessage(question, true);
   const answer = topics.find(([match]) => match.test(question));
-  if (answer) addMessage(...answer.slice(1));
+  if (answer) addMessage(answer[1], false, answer[2], answer[3]);
   else addMessage('Our team can help with that. Use Call us below to speak with Max Volume Nutrition.');
   call.hidden = false;
  }
