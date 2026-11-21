@@ -511,13 +511,14 @@ function showWebsiteProductDetail(p,options,initialIndex,dlg,root){
     '<h2>'+safe(p.name)+'</h2>'+
     '<p class="mvn-detail-description">'+safe(p.desc)+'</p>'+
     '<div class="mvn-detail-price price" id="detail-price">'+priceMarkup(p.variants[initialIndex])+'</div>'+
+    '<p class="pack-label-facts" id="detail-pack-facts"'+(packFacts(p,initialIndex)?'':' hidden')+'>'+safe(packFacts(p,initialIndex))+'</p>'+
     '<div class="mvn-detail-step"><b>01</b><span>SELECT FLAVOUR / PACK SIZE</span></div>'+
     '<div class="mvn-pack-choices" aria-label="Choose the exact product pack">'+optionButtons+'</div>'+
     '<div class="mvn-detail-step"><b>02</b><span>QUANTITY</span></div>'+
     '<div class="mvn-quantity-row"><div class="mvn-quantity" aria-label="Quantity"><button type="button" data-mvn-qty="-1" aria-label="Decrease quantity">−</button><output id="mvn-detail-quantity" aria-live="polite">1</output><button type="button" data-mvn-qty="1" aria-label="Increase quantity">+</button></div><span>Stock confirmed with our team before fulfilment</span></div>'+
     '<button type="button" class="mvn-detail-cart" id="detail-add">ADD TO CART · '+money(p.variants[initialIndex].price)+'</button>'+
     '<button type="button" class="mvn-detail-checkout" id="detail-buy">REVIEW ORDER DETAILS</button>'+
-    '<p class="mvn-detail-order-note">No online payment is taken. Review your cart, then send your order request via WhatsApp.</p>'+
+    '<p class="mvn-detail-order-note">Review your cart and send your order request on WhatsApp. Our team will confirm available payment options.</p>'+
     '<details class="mvn-detail-accordion"><summary>About this product</summary><p>'+safe(p.desc)+'</p></details>'+
     '<details class="mvn-detail-accordion"><summary>Pack labels and availability</summary><p>Our team confirms the selected flavour, size and current stock before accepting your order. Request the current product label if needed.</p></details>'+
    '</section>'+
@@ -530,6 +531,8 @@ function showWebsiteProductDetail(p,options,initialIndex,dlg,root){
   photoIndex=Math.min(photoIndex,Math.max(0,photos.length-1));
   swapPhoto(stage,photos[photoIndex]?.src||coverImage(p,current),p.name+' — '+variant.label);
   root.querySelector('#detail-price').innerHTML=window.mvnSafeHTML(priceMarkup(variant));
+  const facts=root.querySelector('#detail-pack-facts');
+  facts.textContent=packFacts(p,current);facts.hidden=!facts.textContent;
   root.querySelector('#mvn-detail-quantity').textContent=quantity;
   root.querySelector('#detail-add').textContent='ADD TO CART · '+money(variant.price*quantity);
   packButtons.forEach(button=>button.setAttribute('aria-pressed',String(Number(button.dataset.mvnPack)===current)));
