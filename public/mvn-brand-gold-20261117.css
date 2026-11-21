@@ -7,7 +7,7 @@ html body.mvn-site-theme{
  --mvni-ink:#1C222B;--mvni-orange:#FFFFFF;--mvni-paper:#F8F7F5;
  --mvn-preview-ink:#1C222B;--mvn-preview-paper:#F8F7F5;--mvn-preview-accent:#FFFFFF;--mvn-preview-line:#dedbd3;
  --navy:#080808;--royal:#FFFFFF;--silver:#F8F7F5;
- margin:0;background:#080808!important;background-image:none!important;color:#FFFFFF;
+ margin:0;font-family:Arial,Helvetica,sans-serif;background:#080808!important;background-image:none!important;color:#FFFFFF;
 }
 html body.mvn-site-theme :is(a,button,input,select,textarea,summary):focus-visible{outline:3px solid #777777!important;outline-offset:3px!important}
 html body.mvn-site-theme :is(input[type=checkbox],input[type=radio]){accent-color:#777777}
@@ -201,3 +201,6 @@ html body.mvn-site-theme.mvn-fitness-product .nitro-pack-choose small{color:#1C2
 html body.mvn-site-theme .account-panel label small,html body.mvn-site-theme .account-bottom-note p{color:#52616b!important}
 html body.mvn-site-theme.mvn-info-page :is(.mvn-about-certificate,.mvn-about-explore) .mvn-info-eyebrow,
 html body.mvn-site-theme.mvn-info-page .mvn-quick-page :is(small,b){color:#414141!important}
+
+html body.mvn-site-theme.cart-open { overflow: hidden; }
+html body.mvn-site-theme.mvn-fitness-product main h1 { font-family: MVNDisplay, "Arial Narrow", Arial, sans-serif !important; }
