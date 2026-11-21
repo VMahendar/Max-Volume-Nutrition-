@@ -11,7 +11,8 @@ test('Codex and live Render storefront use identical shopping scripts, styling a
  const publicHTML=readFileSync('public/index.html','utf8');
  const rootHTML=readFileSync('index.html','utf8').replaceAll('href="https://max-volume-nutrition-preview.onrender.com/account.html"','href="account.html"').replaceAll('href="https://max-volume-nutrition-preview.onrender.com/dealer.html"','href="dealer.html"');
  assert.equal(rootHTML,publicHTML,'layout and visible catalogue must be the same on Codex and Render');
- assert.match(publicHTML,/id="floatingCart"/);
+ assert.doesNotMatch(publicHTML,/id="floatingCart"/);
+ assert.match(publicHTML,/id="bag"/);
  assert.match(publicHTML,/id="grid" class="grid"/);
 });
 

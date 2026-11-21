@@ -25,7 +25,7 @@ test('first banner is discoverable without script, with escaped text and respons
  assert.match(result,/data-carousel-ready="true"/);
  assert.match(result,/mvn-orange-whey-20261117-compact.webp 360w/);
  assert.match(result,/width="580" height="580"/);
- assert.match(result,/mvn-home-critical-20261118.css\?v=1/);
+ assert.match(result,/mvn-home-critical-20261118.css\?v=2/);
  assert.ok(!result.includes('<link rel="preload" as="image"'),'unused montage is not preloaded');
  assert.match(result,/<img class="mvn-owner-banner-img"[^>]*loading="lazy"/);
  assert.equal(renderInitialCarousel(html,{...config,enabled:false}),html,'disabled carousel retains the owner montage');
@@ -65,7 +65,7 @@ test('admin carousel draft stays private, publish persists, stale publishes fail
   assert.match(home,/data-server-rendered="true"/,'HTTP HTML contains real initial banner');
   const editor=await (await request('/?homepage_editor=1')).text();
   assert.ok(!editor.includes('data-server-rendered="true"'),'editor retains its original editable montage');
-  const css=await request('/mvn-home-critical-20261118.css?v=1');assert.equal(css.status,200);
+  const css=await request('/mvn-home-critical-20261118.css?v=2');assert.equal(css.status,200);
   assert.ok((await css.text()).includes('color:#666666!important'),'bundled styles retain the verified caption contrast');
   assert.equal((await request('/api/admin/homepage-carousel',null,false)).status,401);
   assert.equal((await request('/?carousel_preview=1',null,false)).status,401);

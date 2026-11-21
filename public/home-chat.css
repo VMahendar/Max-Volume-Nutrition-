@@ -1,32 +1,3 @@
-.mvn-chat-entry {
- display: flex;
- justify-content: flex-end;
- padding: 8px max(16px, env(safe-area-inset-right));
- background: #242424;
-}
-#mvn-chat-open {
- display: inline-flex;
- align-items: center;
- gap: 9px;
- min-height: 44px;
- padding: 8px 15px;
- border: 1px solid #fff;
- border-radius: 24px;
- background: #fff;
- color: #202020;
- cursor: pointer;
- font: 750 14px/1.2 system-ui, sans-serif;
-}
-#mvn-chat-open::before {
- content: "";
- width: 15px;
- height: 12px;
- border: 2px solid currentColor;
- border-radius: 7px 7px 7px 2px;
- box-sizing: border-box;
-}
-#mvn-chat-open:hover { background: #ececec; }
-#mvn-chat-open:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 #mvn-chat {
  position: fixed;
  inset: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) auto auto;
