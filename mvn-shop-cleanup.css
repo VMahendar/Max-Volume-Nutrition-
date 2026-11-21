@@ -14,7 +14,7 @@ body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop > .secti
   color: #fff!important;
 }
 body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop > .section-title .eyebrow {
-  color: #ffc297!important;
+  color: #ddd!important;
 }
 body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop > .section-title p {
   color: #dce7f5!important;
@@ -34,7 +34,7 @@ body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop .product
   color: #fff!important;
 }
 body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop .productbar .eyebrow {
-  color: #ffc297!important;
+  color: #ddd!important;
 }
 body.retail-home.mvn-full-shop.mvn-advance-layout:not(.app-store) #shop .productbar #resultText {
   color: #c7d7e9!important;

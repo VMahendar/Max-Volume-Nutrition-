@@ -31,7 +31,7 @@ export function optimizeHomeAssets(html){
  html=html.replace(/<link rel="stylesheet" href="\/([^"?]+)(?:\?[^\"]*)?">/g,(tag,file)=>{
   if(!styles.includes(file))return tag;
   if(bundled)return '';
-  bundled=true;return '<link rel="stylesheet" href="/mvn-home-critical-20261118.css?v=2">';
+  bundled=true;return '<link rel="stylesheet" href="/mvn-home-critical-20261118.css?v=3">';
  });
  return html.replace(/<img\b[^>]*>/g,tag=>{
   const src=tag.match(/\bsrc="\/?([^\"]+)"/)?.[1],photo=responsiveMedia[src];

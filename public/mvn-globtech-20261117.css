@@ -1,21 +1,21 @@
 /* Globe-Tech official catalogue — MVN black, white and gold. */
 html body.mvn-site-theme .gt-pack{position:relative!important;overflow:hidden!important;aspect-ratio:1!important;background:#FFFFFF!important;min-height:0!important;padding:0!important}
 html body.mvn-site-theme .gt-pack>img{position:absolute!important;display:block!important;width:147%!important;max-width:none!important;height:auto!important;max-height:none!important;min-height:0!important;left:-23.6%!important;top:-41%!important;margin:0!important;padding:0!important;object-fit:initial!important;transform:none!important;mix-blend-mode:normal!important}
-html body.mvn-site-theme .gt-banner{display:grid!important;grid-template-columns:1fr 1.2fr;align-items:center;gap:28px;padding:30px max(4.5vw,20px);margin:0!important;background:#080808!important;color:#FFFFFF!important;border-block:1px solid #B08B4C60}
+html body.mvn-site-theme .gt-banner{display:grid!important;grid-template-columns:1fr 1.2fr;align-items:center;gap:28px;padding:30px max(4.5vw,20px);margin:0!important;background:#080808!important;color:#FFFFFF!important;border-block:1px solid #77777760}
 html body.mvn-site-theme .gt-banner-copy{max-width:480px}
-html body.mvn-site-theme .gt-kicker{display:block;color:#B08B4C;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+html body.mvn-site-theme .gt-kicker{display:block;color:#777777;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase}
 html body.mvn-site-theme .gt-banner h2{font:800 clamp(28px,3vw,42px)/1.05 MVNDisplay,'Arial Narrow',Arial,sans-serif;color:#FFFFFF;margin:10px 0 12px;letter-spacing:-.02em}
-html body.mvn-site-theme .gt-banner h2 em{color:#D3AF37;font-style:normal}
+html body.mvn-site-theme .gt-banner h2 em{color:#FFFFFF;font-style:normal}
 html body.mvn-site-theme .gt-banner p{color:#F8F7F5;max-width:42ch;font:13px/1.6 Arial,sans-serif;margin:0 0 16px}
-html body.mvn-site-theme .gt-primary,.quote-action{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:12px 18px;background:#D3AF37!important;color:#080808!important;text-decoration:none;font:700 11px/1.4 Arial,sans-serif;border:0;cursor:pointer;text-align:center;box-sizing:border-box}
+html body.mvn-site-theme .gt-primary,.quote-action{display:inline-flex;align-items:center;justify-content:center;min-height:46px;padding:12px 18px;background:#FFFFFF!important;color:#080808!important;text-decoration:none;font:700 11px/1.4 Arial,sans-serif;border:0;cursor:pointer;text-align:center;box-sizing:border-box}
 html body.mvn-site-theme .gt-banner-packs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;gap:14px;width:100%;max-width:480px;justify-self:center}
 html body.mvn-site-theme .gt-banner-packs a{color:#FFFFFF;text-decoration:none;min-width:0}
 html body.mvn-site-theme .gt-banner-packs .gt-pack{border-radius:8px;width:100%;max-width:150px;margin-inline:auto}
 html body.mvn-site-theme .gt-banner-packs strong{display:block;font:700 12px/1.4 Arial,sans-serif;margin:8px 0 0}
-html body.mvn-site-theme .gt-banner-packs small{font:11px/1.5 Arial,sans-serif;color:#B08B4C}
-html body.mvn-site-theme .gt-brand-filter{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:16px max(4.5vw,20px);background:#F8F7F5;color:#1C222B;border-bottom:1px solid #dedbd3}
+html body.mvn-site-theme .gt-banner-packs small{font:11px/1.5 Arial,sans-serif;color:#777777}
+html body.mvn-site-theme .gt-brand-filter{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:16px max(4.5vw,20px);background:#f5f5f5;color:#1C222B;border-bottom:1px solid #dedbd3}
 html body.mvn-site-theme .gt-brand-filter>span{font:700 10px Arial,sans-serif;letter-spacing:.1em;margin-right:5px}
-html body.mvn-site-theme .gt-brand-filter button{padding:11px 14px;min-height:44px;border:1px solid #B08B4C;background:#FFFFFF;color:#1C222B;font:700 12px Arial,sans-serif;cursor:pointer}
+html body.mvn-site-theme .gt-brand-filter button{padding:11px 14px;min-height:44px;border:1px solid #777777;background:#FFFFFF;color:#1C222B;font:700 12px Arial,sans-serif;cursor:pointer}
 html body.mvn-site-theme .gt-brand-filter button[aria-pressed=true]{background:#1C222B;color:#FFFFFF}
 html body.mvn-site-theme #grid .quote-price{font-size:clamp(15px,2vw,21px)!important}
 html body.mvn-site-theme #grid .quote-action{width:100%;margin-top:auto;grid-column:1/-1}
@@ -25,7 +25,7 @@ html body.mvn-site-theme .gt-quote-detail{display:grid;grid-template-columns:min
 html body.mvn-site-theme .gt-quote-detail h2{font:800 28px/1.1 Arial,sans-serif;margin:14px 0}
 html body.mvn-site-theme .gt-quote-detail p{font:14px/1.7 Arial,sans-serif}
 html body.mvn-site-theme .gt-quote-detail label{display:block;font:700 11px Arial,sans-serif;margin:20px 0 8px}
-html body.mvn-site-theme .gt-quote-detail select{display:block;width:100%;padding:12px;font-size:14px;min-height:48px;background:#FFFFFF;color:#1C222B;border:1px solid #B08B4C}
+html body.mvn-site-theme .gt-quote-detail select{display:block;width:100%;padding:12px;font-size:14px;min-height:48px;background:#FFFFFF;color:#1C222B;border:1px solid #777777}
 html body.mvn-site-theme .gt-quote-detail .price{margin:20px 0}
 html body.mvn-site-theme .gt-quote-detail .quote-action{width:100%}
 @media(max-width:760px){html body.mvn-site-theme .gt-banner{grid-template-columns:1fr;gap:18px;padding:24px 18px}html body.mvn-site-theme .gt-banner h2{font-size:30px}html body.mvn-site-theme .gt-banner-packs{gap:8px}html body.mvn-site-theme .gt-banner-packs strong{font-size:10px}html body.mvn-site-theme .gt-banner-packs small{font-size:9px}html body.mvn-site-theme .gt-quote-detail{grid-template-columns:1fr;padding:16px;gap:16px}html body.mvn-site-theme .gt-quote-detail>.gt-pack{width:100%;max-width:220px;margin:auto}html body.mvn-site-theme .gt-quote-detail h2{font-size:26px}html body.mvn-site-theme .gt-brand-filter{padding:14px 16px;gap:6px}html body.mvn-site-theme .gt-brand-filter>span{width:100%}html body.mvn-site-theme .gt-brand-filter button{font-size:11px;padding:9px 12px}}

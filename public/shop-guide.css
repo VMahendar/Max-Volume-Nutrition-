@@ -1,0 +1,30 @@
+.mvn-shop-guide {
+ padding: clamp(20px, 5vw, 56px) max(4.5vw, 16px);
+ background: #242424;
+ color: #fff;
+}
+.mvn-shop-guide h2 { margin: 0 0 16px; font-size: clamp(24px, 5vw, 38px); }
+.mvn-shop-guide h3, .mvn-shop-guide h4 { margin: 0 0 8px; }
+.mvn-shop-guide-grid, .mvn-pack-compare-grid { display: grid; gap: 16px; }
+.mvn-shop-guide-grid { grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); }
+.mvn-shop-guide-grid > div { padding: 16px; border: 1px solid #666; border-radius: 8px; min-width: 0; }
+.mvn-shop-guide nav { display: flex; flex-wrap: wrap; gap: 8px; }
+.mvn-shop-guide :is(a, summary) {
+ min-height: 44px;
+ padding: 10px 12px;
+ color: #fff;
+ border-radius: 4px;
+ cursor: pointer;
+}
+.mvn-shop-guide a { display: inline-flex; align-items: center; text-decoration: underline; }
+.mvn-shop-guide summary { background: #fff; color: #242424; font-weight: 700; }
+.mvn-shop-guide details { margin-top: 12px; }
+#mvnPackCompareStatus:empty, .mvn-pack-compare-grid:empty { display: none; }
+.mvn-pack-compare-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 12px; }
+.mvn-pack-compare-grid article { background: #fff; color: #242424; padding: 10px; border-radius: 5px; overflow-wrap: anywhere; }
+.mvn-pack-compare-grid img { display: block; width: 100%; aspect-ratio: 1; object-fit: contain; margin-bottom: 8px; }
+.mvn-pack-compare-grid p { margin: 0; font-weight: 700; }
+.mvn-shop-guide .store-update-card { color: #242424; }
+.mvn-shop-guide .store-update-card .campaign-kicker { color: #444; }
+.mvn-shop-guide [data-store-updates] { grid-template-columns: 1fr; margin-bottom: 0; }
+html body.mvn-site-theme.mvn-orange-home .mvn-home-collection-entry #mvnOpenCollection { color: #fff; border-color: #aaa; }
