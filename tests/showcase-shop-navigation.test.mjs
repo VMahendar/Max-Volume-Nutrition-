@@ -83,7 +83,7 @@ test('shop retains filters and uses a unified charcoal visual layer',()=>{
  assert.match(shop,/class="original-brand-logo" src="mvn-app-header-logo.webp"/,'keep one actual header logo');
  assert.match(shop,/mvn-shop-cleanup\.css\?v=20261115-dark-blue-1/);
  assert.match(theme,/#112f55/,'legacy palette remains in fallback stylesheet');
- assert.match(shop,/mvn-shop-unified-20261117\.css\?v=2/,'shared About/Contact presentation overrides legacy blue');
+ assert.match(shop,/mvn-shop-unified-20261117\.css\?v=3/,'shared About/Contact presentation overrides legacy blue');
  assert.match(theme,/#shop > \.section-title/,'collection title has the shop-only blue treatment');
  assert.match(theme,/#shop \.cats,/,'remove duplicate category chip row visually');
  assert.match(theme,/\.productbar \.sort-label/,'hide sort dropdown visually');
