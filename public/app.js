@@ -331,8 +331,23 @@ function totals(){let n=0,subtotal=0;for(const [k,qty] of Object.entries(cart)){
 function drawCart(){
 const {n,subtotal,discount,total}=totals();$("count").textContent=n;if($("floatingCount"))$("floatingCount").textContent=n;if($("floatingCart"))$("floatingCart").hidden=!n;
 let html=n?"":'<p class="empty-cart">Your cart is empty. Choose your supplements to get started.</p>';
-for(const [k,qty] of Object.entries(cart)){const item=getItem(k);if(!item)continue;html+='<div class="row"><b>'+safe(item.p.name)+'</b><small>'+safe(item.v.label)+' · '+money(item.v.price)+'</small><div class="qty"><button data-minus="'+k+'" aria-label="Decrease quantity">−</button><span>'+qty+'</span><button data-plus="'+k+'" aria-label="Increase quantity">+</button><strong>'+money(item.v.price*qty)+'</strong></div></div>'}
-$("items").innerHTML=window.mvnSafeHTML(html);
+for(const [k,qty] of Object.entries(cart)){
+ const item=getItem(k);
+ if(!item)continue;
+ const {p,v}=item;
+ const image=coverImage(p,k.split('|')[1]);
+ const photo=image?'<img class="cart-pack-photo" src="'+safe(image)+'" alt="" width="64" height="64" style="flex:none;object-fit:contain">':'';
+ html+='<div class="row"><div style="display:flex;align-items:center;gap:12px">'+photo+
+  '<div><b>'+safe(p.name)+'</b><small>'+safe(v.label)+' · '+money(v.price)+'</small></div></div>'+
+  '<div class="qty"><button data-minus="'+k+'" aria-label="Decrease quantity">−</button><span>'+qty+
+  '</span><button data-plus="'+k+'" aria-label="Increase quantity">+</button><strong>'+money(v.price*qty)+'</strong></div></div>';
+}
+const items=$("items");
+items.innerHTML=window.mvnSafeHTML(html);
+for(const img of items.querySelectorAll(".cart-pack-photo")){
+ img.addEventListener("error",()=>img.remove(),{once:true});
+ if(img.complete&&!img.naturalWidth)img.remove();
+}
 $("cart-totals").innerHTML=window.mvnSafeHTML(n?'<div><span>Subtotal</span><b>'+money(subtotal)+'</b></div>'+(discount?'<div><span>Offer savings</span><b>−'+money(discount)+'</b></div><div><span>Products total</span><b>'+money(total)+'</b></div>':''):"");
 $("send").disabled=!n;
 document.querySelectorAll("[data-minus]").forEach(b=>b.onclick=()=>{const k=b.dataset.minus;cart[k]-=1;if(cart[k]<=0)delete cart[k];persist()});
