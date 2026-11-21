@@ -1,31 +1,53 @@
-#mvn-chat-open {
- position: fixed;
- bottom: max(16px, env(safe-area-inset-bottom));
- left: max(16px, env(safe-area-inset-left));
- z-index: 20;
- border: 1px solid #565656;
- border-radius: 24px;
+.mvn-chat-entry {
+ display: flex;
+ justify-content: flex-end;
+ padding: 8px max(16px, env(safe-area-inset-right));
  background: #242424;
- color: white;
- padding: 10px 16px;
- min-height: 44px;
- cursor: pointer;
- font-weight: 700;
 }
+#mvn-chat-open {
+ display: inline-flex;
+ align-items: center;
+ gap: 9px;
+ min-height: 44px;
+ padding: 8px 15px;
+ border: 1px solid #fff;
+ border-radius: 24px;
+ background: #fff;
+ color: #202020;
+ cursor: pointer;
+ font: 750 14px/1.2 system-ui, sans-serif;
+}
+#mvn-chat-open::before {
+ content: "";
+ width: 15px;
+ height: 12px;
+ border: 2px solid currentColor;
+ border-radius: 7px 7px 7px 2px;
+ box-sizing: border-box;
+}
+#mvn-chat-open:hover { background: #ececec; }
+#mvn-chat-open:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
 #mvn-chat {
  position: fixed;
- inset: auto auto max(16px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+ inset: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) auto auto;
  margin: 0;
- width: min(380px, calc(100vw - 24px));
- max-height: calc(100dvh - 32px);
+ width: min(400px, calc(100vw - 24px));
+ max-height: calc(100dvh - max(12px, env(safe-area-inset-top)) - max(12px, env(safe-area-inset-bottom)));
  padding: 0;
  border: 1px solid #565656;
  border-radius: 16px;
  background: #fff;
  color: #242424;
- box-shadow: 0 16px 48px #0004;
+ box-shadow: 0 20px 52px #0006;
 }
-#mvn-chat::backdrop { background: #0005; }
+#mvn-chat::backdrop { background: #0006; }
+@media (prefers-reduced-motion: no-preference) {
+ #mvn-chat[open] { animation: mvn-chat-appear 180ms ease-out; }
+ @keyframes mvn-chat-appear {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+ }
+}
 #mvn-chat > header {
  display: flex;
  justify-content: space-between;
@@ -48,4 +70,3 @@
 #mvn-chat footer { padding: 0 12px 12px; background: white; color: #242424; }
 #mvn-chat footer a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
 #mvn-chat [hidden] { display: none !important; }
-body.cart-open #mvn-chat-open { visibility: hidden; }
