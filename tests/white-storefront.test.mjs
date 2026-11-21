@@ -14,10 +14,10 @@ test('retail flagship keeps original logo, integrates masthead and leads with pr
  assert.match(css,/mix-blend-mode:screen/,'original black-background logo integrates with masthead');
  assert.match(css,/\.retail-home \.placeholder\[hidden\]/,'hidden placeholders must remain hidden after a real product image loads');
  assert.ok(html.includes('src="mvn-app-header-logo.webp"'),'approved original MVN header image is retained without repeating it in a huge footer');
- assert.ok(html.includes('FUEL EVERY<br><strong>REP.</strong>'),'product-first hero rather than duplicating company name');
+ assert.doesNotMatch(html,/THE PERFORMANCE NUTRITION STORE|Shop your supplements|id="mvnSpotlight"/);
  assert.ok(!html.includes('distribution-feature'),'repeated Unicorn promotion removed');
  assert.ok(!html.includes('category-tiles'),'no duplicated category lists');
- assert.match(html,/section class="benefits" aria-label="Shop by category"/);
+ assert.match(html,/aria-label="Explore supplement categories"/);
  assert.ok(html.includes('href="dealer.html"'),'dealer destination retained');
  assert.ok(html.includes('UNICORN PRO SERIES'),'genuine brand retained in product and distributor context');
 });

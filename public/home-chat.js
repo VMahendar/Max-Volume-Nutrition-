@@ -8,7 +8,7 @@
  const topics = [
   [/wholesale|dealer|trainer|gym owner|distribut/i, 'For gym, trainer and shop supply, tell us what you need through our wholesale enquiry page.', 'Wholesale enquiry', '/dealer.html'],
   [/deliver|shipp|courier|pincode|dispatch|டெலிவரி/i, 'We confirm delivery availability and charges for your location when we review your order. Call us if you want to check before ordering.'],
-  [/payment|pay|koduk|cod|cash|upi|razorpay|order|checkout/i, 'Add your packs to the cart and send your order request through checkout. Our team confirms it on WhatsApp. Online payment is currently unavailable.', 'Shop products', '/shop.html'],
+  [/payment|pay|koduk|cod|cash|upi|razorpay|order|checkout/i, 'Add your packs to the cart and send your order request through checkout. Our team confirms stock, your final total and available payment options on WhatsApp.', 'Shop products', '/shop.html'],
   [/whey|isolate|protein|creatine|gainer|nitro|sturdy|workout|vitamin|musclevite|vilai|விலை|price|cost|stock|flavo[u]?r|product|supplement/i, 'Our shop shows the current pack sizes, flavours and retail prices. For live stock or help comparing packs, call our team.', 'Browse products', '/shop.html'],
   [/kelambakkam|address|location|where|hours|timing|contact/i, 'Max Volume Nutrition serves customers in Kelambakkam and Chennai. Call us for location and availability details.'],
   [/^(hi|hello|hey|vanakkam|வணக்கம்)[!. ]*$/i, 'Hi! Ask about products, ordering, delivery or wholesale.']

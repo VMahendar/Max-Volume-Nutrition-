@@ -199,3 +199,10 @@ body.mvn-full-shop:not(.app-store) #recentSection .eyebrow { color: #444 !import
 @media (prefers-reduced-motion: reduce) {
  body.mvn-full-shop:not(.app-store) #drawer { transition: none; }
 }
+
+/* Catalogue layout rules use explicit display values. Honour state attributes. */
+html body.mvn-full-shop #shop :is(.photo *, .add, .quote-action, .cats button)[hidden] {
+ display: none !important;
+}
+html body.mvn-full-shop #shop .pack-label-facts { margin: 0 0 8px; color: #444; font-size: .85rem; }
+html body.mvn-full-shop #shop .pack-label-facts:empty { display: none; }
