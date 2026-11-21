@@ -1,0 +1,51 @@
+#mvn-chat-open {
+ position: fixed;
+ bottom: max(16px, env(safe-area-inset-bottom));
+ left: max(16px, env(safe-area-inset-left));
+ z-index: 20;
+ border: 1px solid #565656;
+ border-radius: 24px;
+ background: #242424;
+ color: white;
+ padding: 10px 16px;
+ min-height: 44px;
+ cursor: pointer;
+ font-weight: 700;
+}
+#mvn-chat {
+ position: fixed;
+ inset: auto auto max(16px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+ margin: 0;
+ width: min(380px, calc(100vw - 24px));
+ max-height: calc(100dvh - 32px);
+ padding: 0;
+ border: 1px solid #565656;
+ border-radius: 16px;
+ background: #fff;
+ color: #242424;
+ box-shadow: 0 16px 48px #0004;
+}
+#mvn-chat::backdrop { background: #0005; }
+#mvn-chat > header {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ padding: 8px 16px;
+ background: #242424;
+ color: white;
+}
+#mvn-chat h2 { margin: 0; font: 700 17px/1.2 system-ui, sans-serif; }
+#mvn-chat button { cursor: pointer; font: inherit; }
+#mvn-chat [data-close] { min-width: 44px; min-height: 44px; background: transparent; color: inherit; border: 0; font-size: 24px; }
+#mvn-chat [role="log"] { height: clamp(120px, 34dvh, 280px); overflow: auto; padding: 12px; }
+#mvn-chat [role="log"] p { margin: 0 12px 8px 0; border-radius: 12px; padding: 9px 12px; background: #f0f0f0; overflow-wrap: anywhere; }
+#mvn-chat [role="log"] .mvn-chat-customer { margin: 0 0 8px 12px; background: #242424; color: white; }
+#mvn-chat [role="log"] a, #mvn-chat footer a { text-decoration: underline; }
+#mvn-chat .mvn-chat-topics, #mvn-chat form { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 12px 10px; }
+#mvn-chat .mvn-chat-topics button { border: 1px solid #777; background: white; color: #242424; border-radius: 20px; min-height: 34px; padding: 4px 10px; }
+#mvn-chat input { flex: 1; min-width: 0; min-height: 44px; padding: 8px; border: 1px solid #777; border-radius: 8px; background: white; color: #242424; font-size: 16px; }
+#mvn-chat form button { border: 0; background: #242424; color: white; padding: 0 14px; border-radius: 8px; }
+#mvn-chat footer { padding: 0 12px 12px; background: white; color: #242424; }
+#mvn-chat footer a { display: inline-flex; align-items: center; min-height: 44px; font-weight: 700; }
+#mvn-chat [hidden] { display: none !important; }
+body.cart-open #mvn-chat-open { visibility: hidden; }
