@@ -38,6 +38,9 @@ async function refreshRetailPrices(){
   const price=current.pricePaise===null?null:current.pricePaise/100;
   const mrp=Number.isSafeInteger(current.mrpPaise)&&current.mrpPaise>current.pricePaise?current.mrpPaise/100:null;
   if(v.price!==price||(v.mrp??null)!==mrp)changed=true;
+  const stock=Number.isSafeInteger(current.stock)&&current.stock>=0?current.stock:null;
+  if(v.stock!==stock||v.catalogLabel!==current.label)changed=true;
+  v.stock=stock;v.catalogLabel=current.label;
   v.price=price;delete v.mrp;if(mrp!==null)v.mrp=mrp;
  }
  return changed;
@@ -61,6 +64,65 @@ const cartSignature=()=>JSON.stringify(Object.entries(cart).sort().map(([key,qty
 const categoryNames={all:"ALL PRODUCTS",whey:"WHEY PROTEIN",mass:"MASS GAINERS",pre:"PRE-WORKOUT",creatine:"CREATINE",vitamins:"VITAMINS",amino:"AMINO & INTRA-WORKOUT"};
 const priceLabels={all:"All prices",under1000:"Under ₹1,000","1000to3000":"₹1,000 – ₹3,000",over3000:"Over ₹3,000"};
 function matchesPrice(v){return priceRange==="all"||(Number.isFinite(v.price)&&((priceRange==="under1000"&&v.price<1000)||(priceRange==="1000to3000"&&v.price>=1000&&v.price<=3000)||(priceRange==="over3000"&&v.price>3000)))}
+const finder=$("supplementFinder");
+const finderCategory=$("finderCategory");
+const finderBudget=$("finderBudget");
+const finderFlavour=$("finderFlavour");
+const finderSize=$("finderSize");
+const finderAvailability=$("finderAvailability");
+let finderLive=false;
+
+function finderPackFacts(v){
+ const parts=(v.catalogLabel||v.label).split('·').map(part=>part.trim());
+ const sizePattern=/^(\d+(?:\.\d+)?)\s*(kg|g|lbs?|tablets?|capsules?|servings?)(?:\s+(?:bucket|box|pouch|bottle|jar))?$/i;
+ const sizePart=parts.find(part=>sizePattern.test(part));
+ const sizeMatch=sizePart?.match(sizePattern);
+ const size=sizeMatch?sizeMatch[1]+' '+sizeMatch[2].toLowerCase().replace(/^lbs$/,'lb'):'';
+ const flavour=parts.find(part=>part!==sizePart&&!/^(?:bucket|box|pouch|bottle|jar)$/i.test(part))||'';
+ return {size,flavour};
+}
+function finderStock(v){return v.stock===0?'out':v.stock>0&&Number.isFinite(v.price)?'stock':'confirm'}
+function finderStockLabel(v){return !finderLive?'':({stock:'In stock',out:'Out of stock',confirm:'Confirm availability'})[finderStock(v)]}
+function matchesFinder(p,v){
+ if(!finder)return true;
+ const budget=finderBudget.valueAsNumber;
+ const {flavour,size}=finderPackFacts(v);
+ const stockStatus=finderStock(v);
+ const query=q.trim().toLowerCase().split(/\s+/);
+ const searchable=(p.name+' '+(p.brand||'')+' '+p.cat+' '+(v.catalogLabel||v.label)).toLowerCase();
+ return query.every(word=>searchable.includes(word))
+  && (!Number.isFinite(budget)||(finderLive&&budget>0&&Number.isFinite(v.price)&&v.price<=budget))
+  && (!finderFlavour.value||flavour===finderFlavour.value)
+  && (!finderSize.value||size===finderSize.value)
+  && (!finderAvailability.value||(finderLive&&stockStatus===finderAvailability.value));
+}
+function finderOptions(select,label,values){
+ const selected=select.value;
+ select.replaceChildren(new Option(label,''),...values.map(value=>new Option(value,value)));
+ select.value=values.includes(selected)?selected:'';
+}
+function syncFinder(){
+ if(!finder)return;
+ const packs=P.flatMap(product=>visiblePackOptions(product).map(({v})=>finderPackFacts(v)));
+ const values=key=>[...new Set(packs.map(pack=>pack[key]).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'en',{numeric:true}));
+ finderOptions(finderFlavour,'Any flavour',values('flavour'));
+ finderOptions(finderSize,'Any size',values('size'));
+ finderCategory.value=cat;
+}
+function finderOptionsFor(p){
+ const options=visiblePackOptions(p);
+ return finder?options.filter(({v})=>matchesPrice(v)&&matchesFinder(p,v)):options;
+}
+if(finder){
+ finderCategory.replaceChildren(...Object.entries(categoryNames).map(([value,label])=>new Option(label.charAt(0)+label.slice(1).toLowerCase(),value)));
+ finderBudget.disabled=true;
+ $("finderStatus").textContent='Checking current prices and stock…';
+ finderCategory.onchange=()=>{cat=finderCategory.value;render()};
+ for(const control of [finderBudget,finderFlavour,finderSize,finderAvailability])control.addEventListener('input',render);
+ $("finderReset").onclick=resetFilters;
+ finder.hidden=false;
+}
+
 const failedPackPhotos=new Set();
 function visiblePackOptions(p){
  // A missing or broken photograph must not hide a real, priced supplement.
@@ -68,7 +130,7 @@ function visiblePackOptions(p){
  return p.variants.map((v,i)=>({v,i})).filter(({v})=>v.price===null||(Number.isFinite(v.price)&&v.price>0));
 }
 function displayVariant(p){
- const options=visiblePackOptions(p),matching=options.filter(({v})=>matchesPrice(v));
+ const options=visiblePackOptions(p),matching=finderOptionsFor(p).filter(({v})=>matchesPrice(v));
  return (matching.find(({i})=>i===(p.featuredIndex||0))??matching[0]??options[0])?.i;
 }
 function hideFailedPackPhoto(img){
@@ -156,7 +218,7 @@ const seoProductDetailUrls=Object.freeze({whey:'potency-whey.html',mass:'nitro-m
 function packFacts(p,index){const fact=packLabelFacts[retailVariantIds[p.id]?.[Number(index)]];return fact?"Pack label: "+fact:"";}
 function card(p){
 const featured=displayVariant(p);const originalCover=coverImage(p,featured);const cover=failedPackPhotos.has(originalCover)?'':originalCover;const thumbnail=smallCardImages[cover]||cover;const pic=cover?'<img loading="lazy" decoding="async" src="'+safe(thumbnail)+'" alt="'+safe(p.name)+'"><div class="placeholder" hidden><b>'+safe(p.name)+'</b>Photo coming soon</div>':'<div class="placeholder"><b>'+safe(p.name)+'</b>Correct pack photo being verified</div>';
-return '<article class="card"><div class="photo '+(p.brand==='Globe-Tech Nutrition'?'gt-pack':'')+'">'+pic+'</div><div class="info"><small>'+safe(p.brand||'Unicorn Pro Series')+'</small><h3>'+(seoProductDetailUrls[p.id]?'<a href="'+safe(seoProductDetailUrls[p.id])+'">'+safe(p.name)+'</a>':safe(p.name))+'</h3><p>'+safe(p.desc)+'</p><label class="variant-label" for="v-'+p.id+'">FLAVOUR / PACK SIZE</label><select id="v-'+p.id+'" class="variant">'+visiblePackOptions(p).map(({v,i})=>'<option value="'+i+'"'+(i===featured?' selected':'')+'>'+safe(v.label)+'</option>').join("")+'</select><div class="price" id="price-'+p.id+'">'+priceMarkup(p.variants[featured])+'</div><p class="pack-label-facts">'+safe(packFacts(p,featured))+'</p><button class="details-link" type="button" data-detail="'+p.id+'">VIEW PRODUCT DETAILS →</button><button class="add" data-id="'+p.id+'"'+(p.variants[featured].price===null?' hidden':'')+'>ADD TO CART</button><a class="quote-action" href="'+safe(enquiryURL(p,p.variants[featured]))+'" target="_blank" rel="noopener noreferrer"'+(p.variants[featured].price===null?'':' hidden')+'>ASK ABOUT LAUNCH ↗</a></div></article>';
+return '<article class="card"><div class="photo '+(p.brand==='Globe-Tech Nutrition'?'gt-pack':'')+'">'+pic+'</div><div class="info"><small>'+safe(p.brand||'Unicorn Pro Series')+'</small><h3>'+(seoProductDetailUrls[p.id]?'<a href="'+safe(seoProductDetailUrls[p.id])+'">'+safe(p.name)+'</a>':safe(p.name))+'</h3><p>'+safe(p.desc)+'</p><label class="variant-label" for="v-'+p.id+'">FLAVOUR / PACK SIZE</label><select id="v-'+p.id+'" class="variant">'+finderOptionsFor(p).map(({v,i})=>'<option value="'+i+'"'+(i===featured?' selected':'')+'>'+safe(v.label)+'</option>').join("")+'</select><div class="price" id="price-'+p.id+'">'+priceMarkup(p.variants[featured])+'</div>'+(finder?'<p class="finder-stock">'+finderStockLabel(p.variants[featured])+'</p>':'')+'<p class="pack-label-facts">'+safe(packFacts(p,featured))+'</p><button class="details-link" type="button" data-detail="'+p.id+'">VIEW PRODUCT DETAILS →</button><button class="add" data-id="'+p.id+'"'+(p.variants[featured].price===null?' hidden':'')+'>ADD TO CART</button><a class="quote-action" href="'+safe(enquiryURL(p,p.variants[featured]))+'" target="_blank" rel="noopener noreferrer"'+(p.variants[featured].price===null?'':' hidden')+'>ASK ABOUT LAUNCH ↗</a></div></article>';
 }
 
 function installCategoryShortcuts(){
@@ -316,7 +378,10 @@ function render(){
  renderPurchasedPacks();
  renderAppProduct();
 // The website uses this product-family grid. The app displays the individual packs.
-const items=P.filter(p=>(brandFilter==="all"||(brandFilter==="globtech"?p.brand==="Globe-Tech Nutrition":p.brand!=="Globe-Tech Nutrition"))&&(cat==="all"||p.cat===cat)&&visiblePackOptions(p).some(({v})=>matchesPrice(v))&&((p.name+" "+(p.brand||"")+" "+visiblePackOptions(p).map(({v})=>v.label).join(" ")).toLowerCase().includes(q.toLowerCase())));
+syncFinder();
+const items=P.filter(p=>(brandFilter==="all"||(brandFilter==="globtech"?p.brand==="Globe-Tech Nutrition":p.brand!=="Globe-Tech Nutrition"))
+ &&(cat==="all"||p.cat===cat)
+ &&(finder?finderOptionsFor(p).length>0:visiblePackOptions(p).some(({v})=>matchesPrice(v))&&((p.name+" "+(p.brand||"")+" "+visiblePackOptions(p).map(({v})=>v.label).join(" ")).toLowerCase().includes(q.toLowerCase()))));
 if($("sort").value==="default")items.sort((a,b)=>Number(Boolean(coverImage(b,b.featuredIndex||0)))-Number(Boolean(coverImage(a,a.featuredIndex||0))));
 if($("sort").value==="name")items.sort((a,b)=>a.name.localeCompare(b.name));
 if($("sort").value==="low")items.sort((a,b)=>(a.variants[displayVariant(a)].price??Infinity)-(b.variants[displayVariant(b)].price??Infinity));
@@ -329,8 +394,8 @@ document.querySelectorAll("[data-cat]").forEach(button=>{const active=button.dat
 const filters=$("activeFilters");if(filters){filters.replaceChildren();for(const [label,clear] of [[q?"Search: "+q:"",()=>{q="";$("q").value="";}],[priceRange!=="all"?priceLabels[priceRange]:"",()=>{priceRange="all";$("priceRange").value="all";}]]){if(!label)continue;const button=document.createElement("button");button.type="button";button.textContent=label+" ×";button.setAttribute("aria-label","Clear "+label);button.onclick=()=>{clear();render()};filters.append(button)}filters.hidden=!filters.childElementCount;}
  document.querySelectorAll(".photo img").forEach(img=>img.addEventListener("error",()=>hideFailedPackPhoto(img)));
 $("resultText").textContent=items.length+" product range"+(items.length===1?"":"s")+" · choose pack and flavour";
-document.querySelectorAll(".variant").forEach(s=>s.addEventListener("change",()=>{const p=P.find(x=>x.id===s.id.slice(2));$("price-"+p.id).innerHTML=window.mvnSafeHTML(priceMarkup(p.variants[Number(s.value)]));const facts=s.closest(".card").querySelector(".pack-label-facts");if(facts)facts.textContent=packFacts(p,s.value);swapPhoto(s.closest(".card").querySelector(".photo"),coverImage(p,s.value),p.name);const v=p.variants[Number(s.value)],card=s.closest(".card");card.querySelector(".add").hidden=v.price===null;const quote=card.querySelector(".quote-action");quote.hidden=v.price!==null;quote.href=enquiryURL(p,v)}));
-document.querySelectorAll(".details-link").forEach(b=>b.addEventListener("click",()=>showDetail(b.dataset.detail)));
+document.querySelectorAll(".variant").forEach(s=>s.addEventListener("change",()=>{const p=P.find(x=>x.id===s.id.slice(2));$("price-"+p.id).innerHTML=window.mvnSafeHTML(priceMarkup(p.variants[Number(s.value)]));const facts=s.closest(".card").querySelector(".pack-label-facts");if(facts)facts.textContent=packFacts(p,s.value);swapPhoto(s.closest(".card").querySelector(".photo"),coverImage(p,s.value),p.name);const v=p.variants[Number(s.value)],card=s.closest(".card");const availability=card.querySelector(".finder-stock");if(availability)availability.textContent=finderStockLabel(v);card.querySelector(".add").hidden=v.price===null;const quote=card.querySelector(".quote-action");quote.hidden=v.price!==null;quote.href=enquiryURL(p,v)}));
+document.querySelectorAll(".details-link").forEach(b=>b.addEventListener("click",()=>showDetail(b.dataset.detail,finder?Number($("v-"+b.dataset.detail).value):undefined)));
 document.querySelectorAll(".add").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.id+"|"+$("v-"+b.dataset.id).value;if(!getItem(k))return;cart[k]=Math.min(999,(cart[k]||0)+1);persist();openBag()}));
 }
 function setCat(c){if(!Object.hasOwn(categoryNames,c))return;cat=c;document.querySelectorAll(".cats [data-cat],.mvn-quick-track [data-cat]").forEach(b=>b.classList.toggle("active",b.dataset.cat===c));render();$("shop").scrollIntoView({behavior:"smooth"})}
@@ -483,7 +548,7 @@ for(const id of ['customerName','customerAddress','customerCity','customerState'
 $("checkoutFields").addEventListener("input",()=>{retailLeadKey=crypto.randomUUID()});
 $("checkoutFields").onsubmit=e=>{e.preventDefault();retailEnquiry()};
 document.querySelectorAll("[data-brand]").forEach(b=>b.onclick=()=>{brandFilter=b.dataset.brand;render()});
-function resetFilters(){brandFilter="all";cat="all";q="";priceRange="all";$("q").value="";if($("priceRange"))$("priceRange").value="all";$("sort").value="default";render()}
+function resetFilters(){if(finder)for(const control of [finderBudget,finderFlavour,finderSize,finderAvailability])control.value="";brandFilter="all";cat="all";q="";priceRange="all";$("q").value="";if($("priceRange"))$("priceRange").value="all";$("sort").value="default";render()}
 if($("priceRange"))$("priceRange").onchange=e=>{priceRange=e.target.value;render()};
 if($("resetFilters"))$("resetFilters").onclick=resetFilters;
 if($("clearRecent"))$("clearRecent").onclick=()=>{recent=[];try{localStorage.removeItem("mvn-recent-v1")}catch{}renderRecent()};
@@ -493,7 +558,18 @@ document.addEventListener("keydown",e=>{
  if(e.key==="Tab"){const controls=[...$("drawer").querySelectorAll('button:not(:disabled),input:not(:disabled),textarea:not(:disabled),a[href],select:not(:disabled),[tabindex]:not([tabindex="-1"])')].filter(el=>el.getClientRects().length&&!el.closest('[hidden],[inert]'));const first=controls[0],last=controls.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
 });
 installCategoryShortcuts();render();drawCart();renderRecent();
-refreshRetailPrices().then(changed=>{if(changed){render();drawCart();renderRecent()}}).catch(error=>{if($("priceMessage"))$("priceMessage").textContent=error.message});
+refreshRetailPrices().then(changed=>{
+ if(finder){
+  finderLive=true;
+  finderBudget.disabled=false;
+  finderAvailability.disabled=false;
+  $("finderStatus").textContent='';
+ }
+ if(changed||finder){render();drawCart();renderRecent()}
+}).catch(error=>{
+ if(finder)$("finderStatus").textContent='Live prices and stock are unavailable. You can still browse by supplement type, flavour and pack size.';
+ if($("priceMessage"))$("priceMessage").textContent=error.message;
+});
 
 
 /* Website-only premium product detail. The installed app intentionally retains its own layout. */

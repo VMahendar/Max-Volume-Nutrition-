@@ -32,6 +32,17 @@
 .site-footer .footer-contact-card > .footer-contact-social { min-height: 56px; border-bottom: 1px solid #36404b; font-weight: 700; }
 .site-footer .footer-contact-card > .footer-contact-social + a:not(.footer-contact-social) { margin-top: 8px; }
 .site-footer .footer-contact-card > a > .footer-contact-arrow { margin-inline-start: auto; flex-basis: 15px; width: 15px; height: 15px; }
+
+.supplement-finder{margin:16px 0;padding:16px;border:1px solid #ddd5cd;border-radius:12px;background:#fff;color:#252222}
+.supplement-finder[hidden]{display:none}
+.finder-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px}
+.finder-heading h2{margin:0;font-size:1.25rem;color:inherit}
+.finder-heading button{min-height:44px;padding:0 12px;border:1px solid #a58f80;border-radius:6px;background:white;color:#332821;font:inherit;cursor:pointer}
+.finder-controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,145px),1fr));gap:10px}
+.finder-controls label{display:grid;gap:4px;font-size:.875rem;font-weight:600}
+.finder-controls select,.finder-controls input{width:100%;min-width:0;min-height:44px;padding:7px 9px;border:1px solid #a58f80;border-radius:6px;background:#fff;color:#252222;font:inherit}
+#finderStatus{margin:8px 0 0;font-size:.875rem;color:#4a4039}
+#finderStatus:empty{display:none}
 </style>
 <style>
 .retail-home:not(.app-store) .collection-results .grid {
@@ -539,6 +550,17 @@ body.retail-home.mvn-full-shop:not(.app-store) main#shop .collection-filters{
   <div class="productbar"><div><span class="eyebrow dark">AVAILABLE TO ORDER</span><h2 id="collectionTitle">ALL PRODUCTS</h2><span id="resultText" role="status" aria-live="polite">Current collection</span></div><label class="sort-label">SORT BY <select id="sort"><option value="default">Featured</option><option value="name">Name A–Z</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select></label></div>
   <div class="cats"><button class="active" data-cat="all" type="button">ALL PRODUCTS</button><button data-cat="whey" type="button">WHEY</button><button data-cat="mass" type="button">MASS GAINER</button><button data-cat="creatine" type="button">CREATINE</button><button data-cat="pre" type="button">PRE-WORKOUT</button><button data-cat="vitamins" type="button">VITAMINS</button><button data-cat="amino" type="button" hidden>AMINO</button></div>
   <nav class="gt-brand-filter" aria-label="Filter by brand"><span>SHOP BY BRAND</span><button data-brand="all" aria-pressed="true" type="button">All brands</button><button data-brand="unicorn" aria-pressed="false" type="button">Unicorn Pro Series</button><button data-brand="globtech" aria-pressed="false" type="button">Globe-Tech Nutrition</button></nav>
+  <section class="supplement-finder" id="supplementFinder" aria-labelledby="finderTitle" hidden>
+    <div class="finder-heading"><h2 id="finderTitle">Supplement finder</h2><button type="button" id="finderReset">Clear filters</button></div>
+    <div class="finder-controls">
+      <label>Supplement type<select id="finderCategory"></select></label>
+      <label>Max price (₹)<input id="finderBudget" type="number" min="1" step="1" inputmode="numeric" placeholder="Any price"></label>
+      <label>Flavour<select id="finderFlavour"><option value="">Any flavour</option></select></label>
+      <label>Pack size<select id="finderSize"><option value="">Any size</option></select></label>
+      <label>Availability<select id="finderAvailability" disabled><option value="">Any stock status</option><option value="stock">In stock</option><option value="confirm">Confirm with us</option><option value="out">Out of stock</option></select></label>
+    </div>
+    <p id="finderStatus" role="status"></p>
+  </section>
   <div class="shopping-layout">
   <aside class="collection-filters" aria-label="Collection filters">
     <div class="option2-goal-filters" style="display:none" aria-label="Shop by goal">
@@ -580,7 +602,7 @@ body.retail-home.mvn-full-shop:not(.app-store) main#shop .collection-filters{
 <div id="shade" hidden></div><div id="drawer" inert hidden role="dialog" aria-modal="true" tabindex="-1" aria-hidden="true" aria-label="Shopping bag"><div class="dhead"><div><small>MAX VOLUME NUTRITION</small><h2>YOUR CART</h2></div><button id="close" aria-label="Close bag">×</button></div><div id="items"></div><div class="drawerfoot"><div class="cart-offer"><label for="offerCode">Have an offer code?</label><div><input id="offerCode" maxlength="30" autocomplete="off" placeholder="Enter code"><button id="applyOffer" type="button">Apply</button><button id="removeOffer" type="button" hidden>Remove</button></div><p id="offerMessage" role="status"></p></div><div id="cart-totals"></div><p id="priceMessage" role="status" aria-live="polite"></p><form id="checkoutFields"><h3 class="checkout-heading">CHECKOUT DETAILS</h3><label>Full name<input id="customerName" required maxlength="100" autocomplete="name" placeholder="Enter your name"></label><label>Mobile number<input id="customerPhone" required type="tel" inputmode="numeric" pattern="[0-9]{10}" maxlength="10" autocomplete="tel-national" title="Enter a 10-digit mobile number" placeholder="10-digit mobile number"></label><fieldset class="whatsapp-delivery"><legend>Delivery details</legend><label>Street address / door number<textarea id="customerAddress" required maxlength="350" rows="2" autocomplete="street-address" placeholder="Door number, street and area"></textarea></label><label>City<input id="customerCity" required maxlength="80" autocomplete="address-level2" placeholder="City / town"></label><div class="delivery-columns"><label>State<input id="customerState" required maxlength="80" autocomplete="address-level1" placeholder="State"></label><label>PIN code<input id="customerPincode" required pattern="[1-9][0-9]{5}" inputmode="numeric" maxlength="6" autocomplete="postal-code" placeholder="6-digit PIN"></label></div></fieldset><label>Payment preference<select id="paymentPreference"><option value="Confirm payment on WhatsApp">Confirm payment on WhatsApp</option><option value="Request UPI payment instructions">Request UPI payment instructions</option><option value="Request bank transfer instructions">Request bank transfer instructions</option><option value="Ask whether cash on delivery is available">Ask about cash on delivery</option></select></label><p class="checkout-message"><strong>Confirm your order on WhatsApp.</strong> Our team confirms stock, delivery availability, the final total and available payment options.</p><small>Sending the message requests confirmation. Our team will confirm stock, delivery and payment arrangements before your order is accepted.</small><label class="lead-capture-consent" style="font-size:12px;line-height:1.5;display:flex;gap:9px;align-items:flex-start"><input type="checkbox" id="leadConsent" required style="margin-top:3px"> I understand Max Volume Nutrition will save my order enquiry and contact details to respond. This does not subscribe me to marketing messages.</label><div id="orderWhatsappChoice" hidden><label><input type="checkbox" id="orderWhatsappOptIn"> Send me WhatsApp updates when this order is confirmed or dispatched.</label></div><p><a href="/track-order.html">Track an existing order request</a></p><button class="primary send" id="send" type="submit">CONFIRM VIA WHATSAPP ↗</button></form></div></div>
 <button id="floatingCart" class="floating-cart" type="button" aria-label="View shopping cart"><span>🛒 VIEW CART</span><strong id="floatingCount" aria-live="polite">0</strong></button>
 <nav class="app-bottom-nav" aria-label="App navigation"><a href="#shop">Shop</a><a href="offers.html">Offers</a><a href="brands.html">Brands</a><a href="certificate.html">Certificate</a><a href="account.html">Account</a></nav>
-<script src="app.js?v=20261122-order-messages" defer></script><script src="/mvn-product-entry-20261116.js" defer></script><script src="/mvn-cart-entry-20261116.js?v=inline-2" defer></script><script src="secure-payments.js" defer></script>
+<script src="app.js?v=20261122-supplement-finder" defer></script><script src="/mvn-product-entry-20261116.js" defer></script><script src="/mvn-cart-entry-20261116.js?v=inline-2" defer></script><script src="secure-payments.js" defer></script>
 <script src="header-more.js?v=20261114-e" defer></script>
 <script src="mvn-editorial-home.js?v=20261114-premium-hero-a" defer></script>
 </body></html>
