@@ -389,6 +389,10 @@ function closeBag(){
  bagCloseTimer=setTimeout(()=>{drawer.hidden=true;},300);
 }
 let retailLeadKey=crypto.randomUUID();
+const orderWhatsappChoice=$("orderWhatsappChoice");
+if(orderWhatsappChoice)fetch('/api/order-message-availability').then(response=>response.json()).then(data=>{
+ orderWhatsappChoice.hidden=data.whatsapp!==true;
+}).catch(()=>{});
 async function retailEnquiry(){
 let entries=Object.entries(cart).filter(([k])=>getItem(k));if(!entries.length)return;
 const name=$("customerName").value.trim(),phone=$("customerPhone").value.trim();
@@ -407,7 +411,7 @@ const msg="Hello Max Volume Nutrition, I would like to confirm my order request 
 let whatsappMessage=msg;
  try{
   const items=entries.map(([k,quantity])=>{const [id,index]=k.split('|');return {variantId:retailVariantIds[id][Number(index)],quantity};});
-  const response=await fetch('/api/enquiries',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({requestKey:retailLeadKey,kind:'retail',name,phone,address,city,state,pincode,paymentPreference:payment,items,offerCode:$("offerCode").value.trim(),acknowledgeStorage:$("leadConsent").checked}),signal:AbortSignal.timeout(10000)});
+  const response=await fetch('/api/enquiries',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({requestKey:retailLeadKey,kind:'retail',name,phone,address,city,state,pincode,paymentPreference:payment,items,offerCode:$("offerCode").value.trim(),acknowledgeStorage:$("leadConsent").checked,orderWhatsappOptIn:$("orderWhatsappOptIn")?.checked===true}),signal:AbortSignal.timeout(10000)});
   const result=await response.json();if(!response.ok||!result.recorded)throw Error(result.error||'Enquiry not saved');
   whatsappMessage+='\n\nOrder request reference: '+result.id;
   if(result.trackingToken){

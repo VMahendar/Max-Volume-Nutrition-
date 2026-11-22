@@ -12,6 +12,8 @@ async function load(){
  try{
   const data=await api('/api/admin/leads');
   summary.textContent=data.total+' recorded enquiries · '+data.new+' new · '+data.due+' follow-ups due'+(data.total>data.showing?' · showing latest '+data.showing:'')+'. Follow-ups and messages are manual until sending is connected.';
+  summary.textContent+=' Order status WhatsApp updates: '+(data.orderWhatsappReady?'enabled for opted-in orders.':'awaiting setup.');
+  if(data.orderMessageCounts?.length)summary.textContent+=' WhatsApp requests: '+data.orderMessageCounts.map(row=>row.count+' '+row.status).join(', ')+'.';
   rows.replaceChildren();
   if(!data.rows.length){const p=el('p','No website enquiries recorded yet. This inbox is separate from WhatsApp chats that were never submitted through the website.');rows.append(p);return;}
   const table=el('table'),thead=el('thead'),header=el('tr');

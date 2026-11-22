@@ -382,3 +382,36 @@ test('review automation protects owner controls, records delivery events and pro
   const challenge=await fetch(f.origin+'/api/reviews/whatsapp-webhook?hub.mode=subscribe&hub.verify_token=fixture-verify&hub.challenge=123');assert.equal(await challenge.text(),'123');
  }finally{await f.close();}
 });
+
+test('retail checkout and approved trade requests track real owner status changes over HTTP',async()=>{
+ const f=await fixture({PAYMENTS_ENABLED:'false',STAGING_MODE:'false'});
+ try{
+  const guest=f.client(),dealer=f.client(),admin=f.client();
+  const retail=await guest('/api/enquiries',{...customer,requestKey:randomUUID(),kind:'retail',items:[{variantId:'a',quantity:1}],acknowledgeStorage:true});
+  assert.equal(retail.status,201);
+  const link={id:retail.body.id,token:retail.body.trackingToken};
+  assert.equal((await guest('/api/track-order',link)).body.status,'received');
+  assert.equal((await guest('/api/track-order',{...link,token:'0'.repeat(64)})).status,404);
+  assert.equal((await guest('/api/admin/leads')).status,401);
+  assert.equal((await guest('/api/order-message-availability')).body.whatsapp,false);
+  await admin('/api/register',{name:'Owner',email:'test-owner@example.com',password});
+  f.db.prepare("UPDATE users SET role='admin' WHERE email='test-owner@example.com'").run();
+  assert.ok((await admin('/api/admin/leads')).body.rows.some(row=>row.id===link.id));
+  assert.equal((await admin('/api/admin/leads',{id:link.id,status:'converted',orderStatus:'confirmed'})).status,200);
+  assert.equal((await guest('/api/track-order',link)).body.status,'confirmed');
+
+  const registration=await dealer('/api/dealer/register',{...customer,email:'test-dealer@example.com',kind:'wholesale',business:'Test Store',password});
+  assert.ok(registration.status===200 || registration.status===201,JSON.stringify(registration.body));
+  const tradeRequest={requestKey:randomUUID(),items:[{variantId:'a',quantity:2}]};
+  assert.equal((await dealer('/api/dealer/orders',tradeRequest)).status,403);
+  const userId=(await dealer('/api/session')).body.user.id;
+  assert.equal((await admin('/api/admin/dealer',{userId,status:'approved'})).status,200);
+  const trade=await dealer('/api/dealer/orders',tradeRequest);
+  assert.equal(trade.status,201);
+  assert.equal(trade.body.detail.totalBeforeOffersPaise,16000);
+  assert.equal((await dealer('/api/dealer/orders',tradeRequest)).body.id,trade.body.id);
+  assert.equal((await admin('/api/admin/leads',{id:trade.body.id,status:'converted',orderStatus:'dispatched'})).status,200);
+  assert.equal((await dealer('/api/dealer/orders')).body.orders[0].status,'dispatched');
+  assert.equal(f.db.prepare('SELECT COUNT(*) AS count FROM orders').get().count,0);
+ }finally{await f.close();}
+});
