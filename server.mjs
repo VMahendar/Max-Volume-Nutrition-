@@ -100,6 +100,10 @@ const server=http.createServer(async(req,res)=>{res.setHeader('Cache-Control','n
 try{if(!await allowStaging(req,res))return;const u=new URL(req.url,'http://localhost');
 
 if(u.pathname==='/healthz')return json(res,200,{ok:true});
+if(production&&u.pathname==='/index.html'&&['GET','HEAD'].includes(req.method)){
+ res.writeHead(301,{'Location':'/'+u.search});
+ return res.end();
+}
 // Provide a conventional root favicon fallback for browsers and crawlers.
 if(u.pathname==='/favicon.ico'&&['GET','HEAD'].includes(req.method)){
  res.writeHead(302,{'Location':'/icons/app-192.png'});
