@@ -1,3 +1,4 @@
+import {initializeOrderMessages,queueOrderMessage} from './order-status-messages.mjs';
 import {randomUUID,randomBytes,timingSafeEqual} from 'node:crypto';
 import {clean,fail,hash,integer} from './commerce.mjs';
 
@@ -8,6 +9,7 @@ const required=(v,max)=>clean(v,max);
 const optional=(v,max)=>v===undefined||v===null||v===''?'':clean(v,max);
 
 export function initializeLeadInbox(C){
+ initializeOrderMessages(C);
  C.db.exec(`CREATE TABLE IF NOT EXISTS lead_inbox(
    id TEXT PRIMARY KEY,
    request_key TEXT UNIQUE NOT NULL,
@@ -79,6 +81,7 @@ function validateLead(C,b){
   const paymentPreference=optional(b.paymentPreference,100);
   detail={lines,address,pincode,paymentPreference,offerCode:optional(b.offerCode,30),totalBeforeOffersPaise:lines.reduce((t,v)=>t+v.quantity*v.unitPricePaise,0),marketingOptIn:false,source:'website-whatsapp-checkout'};
  }
+ if(kind==='retail'&&b.orderWhatsappOptIn===true)detail.orderWhatsappOptIn=true;
  const lead={requestKey,kind,name,phone,business,region,city,detail};
  return {...lead,fingerprint:hash(JSON.stringify(lead))};
 }
@@ -110,7 +113,7 @@ export function saveTradeOrder(C,user,b){
  if(tier==='retail')fail(403,'Dealer approval is required.');
  const requestKey=required(b?.requestKey,36);
  if(!/^[a-f0-9-]{36}$/i.test(requestKey))fail(400,'Invalid order reference.');
- const fingerprint=hash(JSON.stringify({accountId:user.id,items:b.items}));
+ const fingerprint=hash(JSON.stringify({accountId:user.id,items:b.items,...(b.orderWhatsappOptIn===true?{orderWhatsappOptIn:true}:{})}));
  const prior=C.db.prepare('SELECT id,created,fingerprint,user_id,detail,tracking_token FROM lead_inbox WHERE request_key=?').get(requestKey);
  if(prior){
   if(prior.user_id!==user.id||prior.fingerprint!==fingerprint)fail(409,'Order request changed. Start a new request.');
@@ -120,7 +123,7 @@ export function saveTradeOrder(C,user,b){
  const dealer=C.db.prepare('SELECT d.business,p.phone,p.city FROM dealers d LEFT JOIN dealer_profiles p ON p.user_id=d.user_id WHERE d.user_id=?').get(user.id);
  const local=String(dealer?.phone||'').slice(-10);
  if(!/^[6-9]\d{9}$/.test(local))fail(409,'Contact our team to add a business mobile number to your account.');
- const detail={source:'website-trade-order',tier,lines,totalBeforeOffersPaise:lines.reduce((total,line)=>total+line.quantity*line.unitPricePaise,0)};
+ const detail={source:'website-trade-order',tier,lines,orderWhatsappOptIn:b.orderWhatsappOptIn===true,totalBeforeOffersPaise:lines.reduce((total,line)=>total+line.quantity*line.unitPricePaise,0)};
  const lead={requestKey,kind:'wholesale',name:user.name,phone:'91'+local,business:dealer.business,region:'',city:dealer.city||'',detail};
  return {...recordLead(C,{...lead,fingerprint},user.id),detail};
 }
@@ -151,7 +154,7 @@ export function listLeads(C){
  return {rows,total,due,new:fresh,showing:rows.length};
 }
 
-export function updateLead(C,user,b){
+export function updateLead(C,user,b,env=process.env){
  const id=required(b.id,50),status=required(b.status,30);
  if(!statuses.has(status))fail(400,'Invalid enquiry status.');
  const ownerNote=optional(b.ownerNote,1000);
@@ -167,6 +170,7 @@ export function updateLead(C,user,b){
   if(b.orderStatus!==undefined && (!orderStatuses.includes(orderStatus)||!canTrack(row.kind,JSON.parse(row.detail))))fail(400,'Invalid order status.');
   C.db.prepare('UPDATE lead_inbox SET status=?,follow_up_at=?,owner_note=?,order_status=?,updated=? WHERE id=?')
    .run(status,followUpAt,ownerNote,orderStatus,new Date().toISOString(),id);
+  if(orderStatus!==row.order_status)queueOrderMessage(C,id,orderStatus,env);
   C.audit(user.id,'lead.review',id,{status,orderStatus});
   return {ok:true};
  });

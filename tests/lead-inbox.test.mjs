@@ -7,9 +7,9 @@ import {randomUUID} from 'node:crypto';
 import {openCommerce} from '../commerce.mjs';
 import {initializeLeadInbox,saveLead,listLeads,updateLead,saveTradeOrder,listTradeOrders,trackLeadOrder} from '../lead-inbox.mjs';
 
-function withDatabase(fn){
+async function withDatabase(fn){
  const dir=mkdtempSync(join(tmpdir(),'mvn-lead-'));let C;
- try{C=openCommerce(dir);initializeLeadInbox(C);return fn(C);}
+ try{C=openCommerce(dir);initializeLeadInbox(C);return await fn(C);}
  finally{C?.db.close();rmSync(dir,{recursive:true,force:true});}
 }
 test('wholesale enquiry is stored once, private, and follows a manual state workflow',()=>withDatabase(C=>{
@@ -71,3 +71,28 @@ test('only approved dealers can save and view their own trade orders, and privat
  assert.equal(listTradeOrders(C,dealer)[0].status,'dispatched');
  assert.equal(listTradeOrders(C,dealer)[0].ownerNote,undefined);
 }));
+
+test('WhatsApp order updates are opt-in, skip stale milestones, and only submit each milestone once',async()=>{
+ const {dispatchOrderMessages}=await import('../order-status-messages.mjs');
+ await withDatabase(async C=>{
+  const env={NODE_ENV:'production',ORDER_STATUS_WHATSAPP_ENABLED:'true',WHATSAPP_ACCESS_TOKEN:'test',WHATSAPP_PHONE_NUMBER_ID:'123',WHATSAPP_GRAPH_VERSION:'v99.0',ORDER_STATUS_WHATSAPP_TEMPLATE:'order_status',ORDER_STATUS_WHATSAPP_LANGUAGE:'en'};
+  const variant=C.catalogue(null)[0].variants.find(v=>Number.isSafeInteger(v.pricePaise));
+  const request={kind:'retail',name:'Test',phone:'9876543210',address:'Test Road',city:'Chennai',state:'Tamil Nadu',pincode:'600001',acknowledgeStorage:true,items:[{variantId:variant.id,quantity:1}]};
+  const optedIn=saveLead(C,{...request,requestKey:randomUUID(),orderWhatsappOptIn:true});
+  const noConsent=saveLead(C,{...request,requestKey:randomUUID()});
+  const owner={id:'owner'};
+  for(const order of [optedIn,noConsent])updateLead(C,owner,{id:order.id,status:'converted',orderStatus:'confirmed'},env);
+  updateLead(C,owner,{id:optedIn.id,status:'converted',orderStatus:'dispatched'},env);
+  const messages=[];
+  const send=async (_url, options)=>{
+   messages.push(JSON.parse(options.body));
+   return new Response(JSON.stringify({messages:[{id:'mock-id'}]}));
+  };
+  await dispatchOrderMessages(C,env,send);
+  await dispatchOrderMessages(C,env,send);
+  assert.equal(messages.length,1);
+  assert.equal(messages[0].template.components[0].parameters[1].text,'Dispatched');
+  assert.equal(messages[0].template.components[1].parameters[0].text,optedIn.id+'.'+optedIn.trackingToken);
+  assert.deepEqual(C.db.prepare('SELECT status FROM order_status_messages ORDER BY milestone').all().map(row=>row.status),['skipped','accepted']);
+ });
+});

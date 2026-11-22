@@ -80,7 +80,7 @@ function renderHistory(orders) {
 
 export async function loadTradeOrders() {
  const current = generation;
- const [catalogue,{orders}] = await Promise.all([api('/api/dealer/catalog'),api('/api/dealer/orders')]);
+ const [catalogue,{orders},availability] = await Promise.all([api('/api/dealer/catalog'),api('/api/dealer/orders'),api('/api/order-message-availability')]);
  if (current !== generation) return;
  for (const product of catalogue.products) {
   for (const variant of product.variants) {
@@ -99,6 +99,7 @@ export async function loadTradeOrders() {
    inputs.set(variant.id,{field,price:variant.pricePaise});
   }
  }
+ document.getElementById('tradeWhatsappChoice').hidden = availability.whatsapp!==true;
  form.hidden = !inputs.size;
  if (!inputs.size) message.textContent = 'No trade packs are currently available.';
  updateTotal();
@@ -124,7 +125,7 @@ form.addEventListener('submit', async event => {
  message.textContent = 'Saving your order request…';
  try {
   requestKey ||= crypto.randomUUID();
-  const order = await api('/api/dealer/orders',{requestKey,items});
+  const order = await api('/api/dealer/orders',{requestKey,items,orderWhatsappOptIn:document.getElementById('tradeWhatsappOptIn').checked});
   if (current !== generation) return;
   const whatsapp = whatsappLink({id:order.id,...order.detail});
   message.replaceChildren('Saved '+order.id+'. ',whatsapp);

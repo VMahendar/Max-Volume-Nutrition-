@@ -1,3 +1,4 @@
+import {orderMessageReady,startOrderMessageScheduler} from './order-status-messages.mjs';
 import {responseSecurity,nonceTemplateScripts} from './security-headers.mjs';
 import './deploy/prepare-product-media.mjs';
 import {defaultCarousel,validateCarousel,carouselMedia,renderInitialCarousel,optimizeHomeAssets} from './homepage-carousel.mjs';
@@ -345,6 +346,7 @@ try{const remote=await razor('orders',{amount:p.totalPaise,currency:'INR',receip
 if(path==='/api/verify'&&req.method==='POST'){const b=JSON.parse(await body(req)),row=db.prepare('SELECT * FROM orders WHERE id=? AND token=?').get(String(b.id),String(b.token));if(!row)fail(404,'Order not found.');if(b.razorpay_order_id!==row.provider_id||!signatureMatches(row.provider_id+'|'+b.razorpay_payment_id,b.razorpay_signature,process.env.RAZORPAY_KEY_SECRET))fail(400,'Payment verification failed. Contact support.');if(!/^pay_[A-Za-z0-9]+$/.test(b.razorpay_payment_id))fail(400,'Invalid payment reference.');return json(res,200,fulfil(row,await razor('payments/'+b.razorpay_payment_id)));}
 if(path==='/api/webhook'&&req.method==='POST'){const raw=await body(req);if(!signatureMatches(raw,req.headers['x-razorpay-signature'],process.env.RAZORPAY_WEBHOOK_SECRET))fail(400,'Invalid signature.');const b=JSON.parse(raw),p=b.payload?.payment?.entity;if(['payment.captured','order.paid'].includes(b.event)&&p){const row=db.prepare('SELECT * FROM orders WHERE provider_id=?').get(p.order_id);if(!row)fail(503,'Payment order is awaiting reconciliation.');fulfil(row,p);}return json(res,200,{received:true});}
 if(path==='/api/order-status'&&req.method==='POST'){const b=JSON.parse(await body(req)),row=db.prepare('SELECT * FROM orders WHERE id=?').get(String(b.id));if(!accessible(row,user,b.token))fail(404,'Order not found.');return json(res,200,C.publicOrder(row));}
+if(path==='/api/order-message-availability'&&req.method==='GET')return json(res,200,{whatsapp:orderMessageReady()});
 if(path==='/api/track-order'&&req.method==='POST'){
  if(!rate('order-tracking:'+ip,30))fail(429,'Please wait before checking again.');
  return json(res,200,trackLeadOrder(C,JSON.parse(await body(req,2048))));
@@ -530,7 +532,7 @@ if(path==='/api/admin/launch-readiness'&&req.method==='GET'){
  const report=evaluateLaunch({env:process.env,products,store,tax,databaseExists:true});
  return json(res,200,{...report,mode:process.env.STAGING_MODE==='true'?'staging':'production',paymentsCurrentlyEnabled:!!enabled(),shippingCurrentlyEnabled:!!shippingReady(),note:'Read-only. Does not activate billing, payments, shipping, messaging, advertising or production.'});
 }
-if(path==='/api/admin/leads'&&req.method==='GET')return json(res,200,listLeads(C));
+if(path==='/api/admin/leads'&&req.method==='GET')return json(res,200,{...listLeads(C),orderWhatsappReady:orderMessageReady(),orderMessageCounts:db.prepare('SELECT status,COUNT(*) AS count FROM order_status_messages GROUP BY status').all()});
 if(path==='/api/admin/leads'&&req.method==='POST'){
  if(!rate('lead-review:'+user.id,30))fail(429,'Please wait before saving another change.');
  return json(res,200,updateLead(C,user,JSON.parse(await body(req))));
@@ -747,5 +749,6 @@ const stopMarketing=startMarketingScheduler(C);
 const stopReviewRequestsScheduler=startReviewRequestScheduler(C);
 const stopDriveBackup=startDriveBackupScheduler(resolve(process.env.DATA_DIR||'runtime'));
 const stopOrderAlerts=startOrderAlertScheduler(C);
+const stopOrderMessages=startOrderMessageScheduler(C);
 server.requestTimeout=30000;server.headersTimeout=15000;const portArg=process.argv.indexOf('--port');server.listen(Number(portArg>=0?process.argv[portArg+1]:process.env.PORT)||3000,process.env.HOST||'0.0.0.0',()=>console.log('Store running at '+origin));
-for(const signal of ['SIGTERM','SIGINT'])process.on(signal,()=>{stopMarketing();stopReviewRequestsScheduler();stopDriveBackup?.();stopOrderAlerts();server.close(()=>{db.close();process.exit(0);});});
+for(const signal of ['SIGTERM','SIGINT'])process.on(signal,()=>{stopMarketing();stopReviewRequestsScheduler();stopDriveBackup?.();stopOrderAlerts();stopOrderMessages();server.close(()=>{db.close();process.exit(0);});});
