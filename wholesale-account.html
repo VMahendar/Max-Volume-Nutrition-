@@ -54,6 +54,18 @@
 <section id="wholesaleSigned" class="wholesale-signed" hidden>
 <div class="account-profile"><div><span class="panel-step">BUSINESS ACCOUNT OVERVIEW</span><h2 id="wholesaleWelcome">Welcome.</h2><p id="wholesaleStatus">Checking your trade application.</p></div><button id="wholesaleLogout" class="account-signout" type="button">Sign out →</button></div>
 <div class="wholesale-status-card"><span class="panel-step">DEALER ACCESS</span><p id="wholesaleStatusDetails"></p><a id="wholesalePricesLink" href="dealer.html" class="account-submit inline-button" hidden>View dealer products and pricing →</a></div>
+<section id="tradeOrders" class="account-panel" hidden>
+<h2>Build a trade order</h2>
+<p>Choose your quantities and send your request on WhatsApp for confirmation.</p>
+<form id="tradeOrderForm">
+<div id="tradePacks"></div>
+<p id="tradeTotal" aria-live="polite"></p>
+<button class="account-submit" type="submit">Save order request</button>
+</form>
+<p id="tradeOrderMessage" role="status"></p>
+<h2>Recent trade orders</h2>
+<div id="tradeHistory"></div>
+</section>
 <section id="wholesaleApplySection" class="account-panel" hidden><div class="panel-heading"><span class="panel-step">UPGRADE YOUR ACCOUNT</span><h2>Apply for trade pricing</h2><p>You already have a customer login. Add your business details here—no need to create a second account.</p></div>
 <form id="b2bApply"><div class="wholesale-form-grid">
 <div class="field-span"><label>Shop / gym name<input name="business" maxlength="200" required placeholder="Business name"></label></div>

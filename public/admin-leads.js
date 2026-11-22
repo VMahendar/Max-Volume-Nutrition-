@@ -1,4 +1,4 @@
-import {api} from './commerce-api.js';
+import {api,money} from './commerce-api.js';
 const summary=document.getElementById('leadInboxSummary');
 const rows=document.getElementById('leadInboxRows');
 const message=document.getElementById('leadInboxMessage');
@@ -25,20 +25,28 @@ async function load(){
    contact.append(el('div',item.phone),el('div',item.region+(item.city?' · '+item.city:'')));
    tr.append(td(contact));
    const description=el('div');
-   if(item.kind==='wholesale'){description.textContent=(item.detail.businessType||'')+' · '+(item.detail.requirements||'');if(item.detail.gstin)description.append(el('div','GSTIN: '+item.detail.gstin));}
-   else{for(const line of item.detail.lines||[])description.append(el('div',line.product+' · '+line.pack+' × '+line.quantity));description.append(el('small','Quoted total not final; confirm stock, offers and delivery.'));}
+   if(item.kind==='wholesale'&&!item.trackingToken){description.textContent=(item.detail.businessType||'')+' · '+(item.detail.requirements||'');if(item.detail.gstin)description.append(el('div','GSTIN: '+item.detail.gstin));}
+   else{for(const line of item.detail.lines||[])description.append(el('div',line.product+' · '+line.pack+' × '+line.quantity));if(item.detail.source==='website-trade-order')description.append(el('div','Trade subtotal: '+money(item.detail.totalBeforeOffersPaise)));description.append(el('small','Quoted total not final; confirm stock, offers and delivery.'));}
    tr.append(td(description));
    const controls=el('div');controls.className='lead-controls';
    const status=el('select');status.setAttribute('aria-label','Status for '+item.id);
    for(const name of ['new','contacted','quoted','converted','closed']){const opt=el('option',name);opt.value=name;opt.selected=item.status===name;status.append(opt);}
+   const orderStatus=el('select');
+   if(item.trackingToken){
+    orderStatus.setAttribute('aria-label','Customer tracking status for '+item.id);
+    for(const [value,label] of Object.entries({received:'Request received',confirmed:'Confirmed',dispatched:'Dispatched',delivered:'Delivered',cancelled:'Cancelled'})){
+     const option=el('option',label);option.value=value;option.selected=item.orderStatus===value;orderStatus.append(option);
+    }
+    const label=el('label','Customer tracking status');label.append(orderStatus);controls.append(label);
+   }
    const follow=el('input');follow.type='datetime-local';follow.value=timeLocal(item.followUpAt);follow.setAttribute('aria-label','Follow-up time for '+item.id);
    const note=el('textarea');note.rows=2;note.maxLength=1000;note.placeholder='Private notes and next action';note.value=item.ownerNote||'';note.setAttribute('aria-label','Notes for '+item.id);
    const buttons=el('div');buttons.className='lead-buttons';
-   const send=el('a','Open WhatsApp');send.href='https://wa.me/'+encodeURIComponent(item.phone)+'?text='+encodeURIComponent('Hello '+item.name+', thank you for contacting Max Volume Nutrition about your '+(item.kind==='retail'?'order request':'wholesale enquiry')+'. How can we assist?');send.target='_blank';send.rel='noopener noreferrer';
-   const save=el('button','Save follow-up');save.type='button';save.onclick=async()=>{
+   const send=el('a','Open WhatsApp');send.href='https://wa.me/'+encodeURIComponent(item.phone)+'?text='+encodeURIComponent('Hello '+item.name+', thank you for contacting Max Volume Nutrition about your '+(item.kind==='retail'?'order request':'wholesale enquiry')+'. How can we assist?'+(item.trackingToken?'\nTrack your request: '+location.origin+'/track-order.html#'+item.id+'.'+item.trackingToken:''));send.target='_blank';send.rel='noopener noreferrer';
+   const save=el('button','Save status and follow-up');save.type='button';save.onclick=async()=>{
     save.disabled=true;message.textContent='Saving…';
     try{
-     await api('/api/admin/leads',{id:item.id,status:status.value,followUpAt:follow.value?new Date(follow.value).toISOString():null,ownerNote:note.value});
+     await api('/api/admin/leads',{id:item.id,status:status.value,orderStatus:item.trackingToken?orderStatus.value:undefined,followUpAt:follow.value?new Date(follow.value).toISOString():null,ownerNote:note.value});
      message.textContent='Follow-up saved. No message was sent.';
      await loadAfterSave();
     }catch(error){message.textContent=error.message;}finally{save.disabled=false;}

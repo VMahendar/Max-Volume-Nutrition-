@@ -15,7 +15,7 @@ import {validateCampaign,activeCampaigns,campaignQuote} from './promotions.mjs';
 import {validateUpdate,activeUpdates,updateConfig,initializeUpdates,whatsappUpdateReadiness,validUpdateSignature,receiveWhatsappUpdates} from './store-updates.mjs';
 import {initializeOwnerDesk,recordOwnerEntry} from './owner-desk.mjs';
 import {initializeOwnerWork,saveOwnerWork,workContext} from './owner-work.mjs';
-import {initializeLeadInbox,saveLead,listLeads,updateLead} from './lead-inbox.mjs';
+import {initializeLeadInbox,saveLead,listLeads,updateLead,saveTradeOrder,listTradeOrders,trackLeadOrder} from './lead-inbox.mjs';
 import {evaluateLaunch} from './deploy/launch-readiness.mjs';
 import {initializeMarketing,marketingReadiness,enqueueMarketing,startMarketingScheduler,verifyUnsubscribe} from './marketing-automation.mjs';
 import {stagingGate} from './staging.mjs';
@@ -149,7 +149,7 @@ if(launchRemaining>0){
     res.writeHead(200,{'Content-Type':'text/html; charset=utf-8','X-Robots-Tag':'noindex, follow'});
     return res.end(req.method==='HEAD'?undefined:nonceTemplateScripts(countdown,scriptNonce));
   }
-  if(req.method==='POST'&&['/api/checkout','/api/enquiries'].includes(launchPath)){
+  if(req.method==='POST'&&['/api/checkout','/api/enquiries','/api/dealer/orders'].includes(launchPath)){
     res.setHeader('Retry-After',String(Math.ceil(launchRemaining/1000)));
     return json(res,503,{error:'The store opens at 11:00 AM IST.'});
   }
@@ -345,6 +345,20 @@ try{const remote=await razor('orders',{amount:p.totalPaise,currency:'INR',receip
 if(path==='/api/verify'&&req.method==='POST'){const b=JSON.parse(await body(req)),row=db.prepare('SELECT * FROM orders WHERE id=? AND token=?').get(String(b.id),String(b.token));if(!row)fail(404,'Order not found.');if(b.razorpay_order_id!==row.provider_id||!signatureMatches(row.provider_id+'|'+b.razorpay_payment_id,b.razorpay_signature,process.env.RAZORPAY_KEY_SECRET))fail(400,'Payment verification failed. Contact support.');if(!/^pay_[A-Za-z0-9]+$/.test(b.razorpay_payment_id))fail(400,'Invalid payment reference.');return json(res,200,fulfil(row,await razor('payments/'+b.razorpay_payment_id)));}
 if(path==='/api/webhook'&&req.method==='POST'){const raw=await body(req);if(!signatureMatches(raw,req.headers['x-razorpay-signature'],process.env.RAZORPAY_WEBHOOK_SECRET))fail(400,'Invalid signature.');const b=JSON.parse(raw),p=b.payload?.payment?.entity;if(['payment.captured','order.paid'].includes(b.event)&&p){const row=db.prepare('SELECT * FROM orders WHERE provider_id=?').get(p.order_id);if(!row)fail(503,'Payment order is awaiting reconciliation.');fulfil(row,p);}return json(res,200,{received:true});}
 if(path==='/api/order-status'&&req.method==='POST'){const b=JSON.parse(await body(req)),row=db.prepare('SELECT * FROM orders WHERE id=?').get(String(b.id));if(!accessible(row,user,b.token))fail(404,'Order not found.');return json(res,200,C.publicOrder(row));}
+if(path==='/api/track-order'&&req.method==='POST'){
+ if(!rate('order-tracking:'+ip,30))fail(429,'Please wait before checking again.');
+ return json(res,200,trackLeadOrder(C,JSON.parse(await body(req,2048))));
+}
+if(path==='/api/dealer/orders'){
+ requireUser(user);
+ if(req.method==='GET')return json(res,200,{orders:listTradeOrders(C,user)});
+ if(req.method==='POST'){
+  if(process.env.STAGING_MODE==='true')fail(503,'Trade order requests are unavailable on this test storefront.');
+  if(!rate('dealer-orders:'+user.id,10))fail(429,'Please wait before submitting another order request.');
+  const order=saveTradeOrder(C,user,JSON.parse(await body(req,10000)));
+  return json(res,201,order);
+ }
+}
 if(path==='/api/enquiries'&&req.method==='POST'){
  if(process.env.STAGING_MODE==='true')fail(503,'Enquiry saving is not active on this test storefront. Please send your request through WhatsApp.');
  if(!rate('lead-ip:'+ip,8))fail(429,'Too many enquiries. Please contact us on WhatsApp.');

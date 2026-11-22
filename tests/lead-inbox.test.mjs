@@ -5,7 +5,7 @@ import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {randomUUID} from 'node:crypto';
 import {openCommerce} from '../commerce.mjs';
-import {initializeLeadInbox,saveLead,listLeads,updateLead} from '../lead-inbox.mjs';
+import {initializeLeadInbox,saveLead,listLeads,updateLead,saveTradeOrder,listTradeOrders,trackLeadOrder} from '../lead-inbox.mjs';
 
 function withDatabase(fn){
  const dir=mkdtempSync(join(tmpdir(),'mvn-lead-'));let C;
@@ -44,4 +44,30 @@ test('retail order enquiry snapshots verified product variants without capturing
  assert.equal(row.detail.marketingOptIn,false);
  assert.equal(row.status,'new');
  assert.throws(()=>saveLead(C,{requestKey:randomUUID(),kind:'retail',name:'Retail Customer',phone:'9876543210',address:'Market Road',city:'Kelambakkam',state:'Tamil Nadu',pincode:'603103',items:[{variantId:'not-a-real-product',quantity:1}],acknowledgeStorage:true}),{status:409});
+}));
+test('only approved dealers can save and view their own trade orders, and private tracking reflects owner updates',()=>withDatabase(C=>{
+ const dealer={id:'buyer',name:'Trade Buyer'},other={id:'other',name:'Other Buyer'};
+ for(const user of [dealer,other]){
+  C.db.prepare('INSERT INTO users VALUES(?,?,?,?,?,?)').run(user.id,user.id+'@example.com',user.name,'unused','customer',new Date().toISOString());
+  C.db.prepare("INSERT INTO dealers VALUES(?,?,?,?,'pending',NULL,?)").run(user.id,'gym',user.name,'',new Date().toISOString());
+  C.db.prepare('INSERT INTO dealer_profiles(user_id,phone,city,address,pincode,notes,updated) VALUES(?,?,?,?,?,?,?)')
+   .run(user.id,'919876543210','Chennai','Example address','603103','',new Date().toISOString());
+ }
+ assert.throws(()=>listTradeOrders(C,dealer),{status:403});
+ C.db.prepare("UPDATE dealers SET status='approved'").run();
+ const variant=C.catalogue(dealer).flatMap(p=>p.variants).find(v=>Number.isSafeInteger(v.pricePaise)&&v.stock!==0);
+ assert.ok(variant);
+ const request={requestKey:randomUUID(),items:[{variantId:variant.id,quantity:1,pricePaise:1}]};
+ const saved=saveTradeOrder(C,dealer,request);
+ const link={id:saved.id,token:saved.trackingToken};
+ assert.equal(saved.detail.totalBeforeOffersPaise,variant.pricePaise);
+ assert.equal(saveTradeOrder(C,dealer,request).id,saved.id);
+ assert.throws(()=>saveTradeOrder(C,other,request),{status:409});
+ assert.equal(listTradeOrders(C,other).length,0);
+ assert.throws(()=>trackLeadOrder(C,{...link,token:'0'.repeat(64)}),{status:404});
+ assert.deepEqual(trackLeadOrder(C,link),{id:saved.id,status:'received',created:saved.created});
+ updateLead(C,{id:'owner'},{id:saved.id,status:'converted',orderStatus:'dispatched',ownerNote:'Private'});
+ assert.equal(trackLeadOrder(C,link).status,'dispatched');
+ assert.equal(listTradeOrders(C,dealer)[0].status,'dispatched');
+ assert.equal(listTradeOrders(C,dealer)[0].ownerNote,undefined);
 }));
