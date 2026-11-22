@@ -1,10 +1,12 @@
 import {api,formObject} from './commerce-api.js';
+import {clearTradeOrders,loadTradeOrders} from './trade-orders.js';
 const $=id=>document.getElementById(id);
 function message(text,error=false){const el=$('wholesaleMessage');el.textContent=text;el.dataset.state=error?'error':'success';el.hidden=false;el.scrollIntoView({behavior:'smooth',block:'center'});}
 async function refresh(){
  const {user}=await api('/api/session');
  $('wholesaleAnon').hidden=!!user;
  $('wholesaleSigned').hidden=!user;
+ clearTradeOrders();
  if(!user)return;
  $('wholesaleWelcome').textContent='Welcome, '+user.name;
  const d=user.dealer;
@@ -18,6 +20,7 @@ async function refresh(){
      ?'Your '+d.kind+' application is pending administrator verification. Retail prices apply until approval.'
      :'Complete the separate business application below for trade pricing review.';
  $('wholesalePricesLink').hidden=!approved;
+ if(approved)await loadTradeOrders();
 }
 async function submit(form,endpoint,success){
  const btn=form.querySelector('button[type="submit"]'),old=btn.innerHTML;
