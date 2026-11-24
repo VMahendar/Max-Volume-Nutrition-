@@ -84,3 +84,27 @@ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page
  html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop .mvn-filter-content{padding:12px}
  html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop>.section-title{padding:20px!important}
 }
+
+/* Filter sidebar: all existing options in one disclosure, beside the catalogue. */
+@media(min-width:761px){
+ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .shopping-layout{display:grid!important;grid-template-columns:minmax(200px,230px) minmax(0,1fr)!important;align-items:start!important;gap:24px!important;max-width:1440px!important;margin-inline:auto!important}
+ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .shopping-layout>.mvn-single-filter{grid-column:1;grid-row:1;align-self:start;width:100%;min-width:0;margin:0!important;box-sizing:border-box}
+ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .shopping-layout>.collection-results{grid-column:2;grid-row:1;min-width:0!important;width:100%!important}
+ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .mvn-filter-content{padding:12px!important;gap:12px!important}
+ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .mvn-filter-content .gt-brand-filter{flex-direction:column!important;align-items:stretch!important}
+ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .mvn-filter-content .gt-brand-filter button{text-align:left!important;min-height:38px!important;white-space:normal!important}
+ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .mvn-filter-content #supplementFinder .finder-heading{display:flex!important;flex-wrap:wrap!important;gap:6px!important;align-items:center!important}
+ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .mvn-filter-content #supplementFinder .finder-heading h2{font-size:15px!important}
+ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .mvn-filter-content #supplementFinder .finder-controls,html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .mvn-filter-extra{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:10px!important}
+ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .mvn-filter-content #supplementFinder .finder-controls label{min-width:0!important}
+ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .mvn-filter-content :is(select,input){max-width:100%!important;min-width:0!important;box-sizing:border-box!important}
+ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .mvn-filter-done{width:100%}
+}
+@media(min-width:761px) and (max-width:1199px){
+ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .collection-results #grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .shopping-layout{grid-template-columns:200px minmax(0,1fr)!important;gap:16px!important}
+}
+@media(max-width:760px){
+ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .shopping-layout>.mvn-single-filter{margin:0 0 16px!important;max-width:100%;width:100%;box-sizing:border-box}
+ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .shopping-layout>.mvn-single-filter:not([open]){width:190px}
+}

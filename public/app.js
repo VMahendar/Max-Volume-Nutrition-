@@ -401,7 +401,10 @@ function compactShopFilters(){
  const panel=document.createElement('details');panel.id='mvnShopFilters';panel.className='mvn-single-filter';
  const summary=document.createElement('summary');summary.textContent='Filter & sort';
  const content=document.createElement('div');content.className='mvn-filter-content';
- panel.append(summary,content);bar.after(panel);
+ panel.append(summary,content);
+ const layout=shop.querySelector('.shopping-layout'),results=layout?.querySelector('.collection-results');
+ if(!layout||!results)return;
+ layout.insertBefore(panel,results);
  const sort=bar.querySelector('.sort-label'),range=$('priceRange'),rangeLabel=shop.querySelector('label[for="priceRange"]');
  content.append(brand,finder);
  const extra=document.createElement('div');extra.className='mvn-filter-extra';
