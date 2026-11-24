@@ -15,7 +15,7 @@
   }
   const slide=el('div','mvn-campaign-slide');slide.setAttribute('role','group');slide.setAttribute('aria-roledescription','slide');slide.setAttribute('aria-label',`${i+1} of ${config.slides.length}: ${item.name}`);
   const copy=el('div','mvn-campaign-copy');copy.append(el('span','mvn-campaign-eyebrow',item.eyebrow));
-  const title=el('h1','mvn-campaign-title');title.append(document.createTextNode(item.title+' '),el('em','',item.highlight));copy.append(title,el('p','mvn-campaign-description',item.description));
+  const title=el('h1','mvn-campaign-title');const words=item.title.trim().split(/\s+/);title.append(el('span','mvn-campaign-title-first',words.shift()||''));if(words.length)title.append(el('span','mvn-campaign-title-middle',words.join(' ')));title.append(el('em','',item.highlight));copy.append(title,el('p','mvn-campaign-description',item.description));
   const cta=el('a','mvn-campaign-cta',item.button+' →');cta.href=item.href;copy.append(cta);
   const stage=el('a','mvn-campaign-stage');stage.href=item.href;stage.setAttribute('aria-label','Explore '+item.name);
   const products=el('div','mvn-campaign-products');products.dataset.count=item.images.length;
