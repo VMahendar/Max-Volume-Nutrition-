@@ -163,3 +163,35 @@ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] sect
 html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop .collection-results #grid>article.mvn-compact-shop-card .info>.add,
 html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop .collection-results #grid>article.mvn-compact-shop-card .info>.quote-action,
 html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .mvn-filter-done{border-radius:10px!important}
+
+/* Reference-inspired desktop campaign: a coherent rounded hero and live purchase panel. */
+html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy{display:none}
+@media(min-width:1100px){
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial{background:#fff!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-carousel{background:#fff!important;padding:24px 40px 0!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-slide:not([hidden]){background:#eee5d6!important;border-radius:24px!important;padding:32px!important;min-height:420px!important;gap:24px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-slide.mvn-campaign-with-buy:not([hidden]){grid-template-columns:minmax(0,1.05fr) minmax(0,1fr) minmax(245px,.85fr)!important;grid-template-rows:auto!important;align-items:center!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-with-buy .mvn-campaign-title{font:800 clamp(38px,4.15vw,64px)/1.02 Arial,sans-serif!important;letter-spacing:-.055em!important;text-align:left!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-with-buy .mvn-campaign-copy{gap:16px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-with-buy .mvn-campaign-stage{grid-column:2;grid-row:1;background:#fff!important;border-radius:16px!important;height:320px!important;padding:14px!important;min-width:0}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-with-buy .mvn-campaign-products{height:264px!important;max-width:100%!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-with-buy .mvn-campaign-products .mvn-campaign-pack{min-width:0!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-with-buy .mvn-campaign-products[data-count="1"] .mvn-campaign-pack:first-child{max-width:100%!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy{grid-column:3;grid-row:1;display:flex;flex-direction:column;gap:12px;min-width:0;background:#fff;color:#202020;border-radius:18px;padding:22px;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-name{font:800 21px/1.2 Arial,sans-serif;letter-spacing:-.025em}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-label{font:600 12px/1.4 Arial,sans-serif;color:#555}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-select{width:100%;min-width:0;min-height:44px;padding:8px;border:1px solid #ddd;border-radius:8px;background:#fff;color:#202020;font:400 13px/1.4 Arial,sans-serif}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-price{display:flex;flex-direction:column;gap:5px}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-row{display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 8px}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-row>b{font:800 30px/1.1 Arial,sans-serif;letter-spacing:-.03em}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-row>del{font:400 13px/1.3 Arial,sans-serif;color:#666}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-discount{font:700 11px/1.3 Arial,sans-serif;background:#f2ebe4;color:#714827;border-radius:5px;padding:4px 6px}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-price small,html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-facts,html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-status{font:400 12px/1.5 Arial,sans-serif;color:#555;margin:0}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-add{min-height:46px;border:0;border-radius:10px;background:#202020;color:#fff;font:700 14px/1.3 Arial,sans-serif;cursor:pointer}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-add:disabled{opacity:.55;cursor:not-allowed}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial :is(.mvn-hero-buy-status,.mvn-hero-buy-facts):empty{display:none}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-home-collection-entry .mvn-approved-tiles>a{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:auto minmax(0,1fr) auto!important;min-height:210px!important;border-radius:16px!important;padding:16px!important;gap:8px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-home-collection-entry .mvn-approved-tiles>a strong{grid-column:1;grid-row:1;align-self:start}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-home-collection-entry .mvn-approved-tiles>a img{grid-column:1;grid-row:2;height:155px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-home-collection-entry .mvn-approved-tiles>a span{grid-column:1;grid-row:3;justify-self:end;margin:0!important}
+}

@@ -3,7 +3,7 @@
 const PHONE="917708830513";
 const P=[
 {id:"whey",name:"Potency Whey",cat:"whey",size:"5 lbs",featuredIndex:1,variants:[{label:"Chocolate · 5 lbs",price:5500,mrp:8599,img:null},{label:"Coffee · 5 lbs",price:5500,mrp:8599,img:"assets/potency-whey-coffee-5lb.webp"}],desc:"Premium whey protein for daily training and recovery.",img:""},
-{id:"mass",name:"Nitro Mass",cat:"mass",featuredIndex:1,variants:[{label:"3 kg · Double Rich Chocolate",price:2599,img:"assets/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout.webp"},{label:"5 kg · Bucket",price:3499,img:"assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp"}],desc:"Mass gainer available in two pack sizes.",img:""},
+{id:"mass",name:"Nitro Mass",cat:"mass",featuredIndex:1,variants:[{label:"3 kg · Double Rich Chocolate",price:2599,img:"assets/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout.webp"},{label:"5 kg · Bucket",price:3499,mrp:6580,img:"assets/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout.webp"}],desc:"Mass gainer available in two pack sizes.",img:""},
 {id:"pre",name:"Sturdy Pre-Workout",cat:"pre",variants:[{label:"Watermelon · 250 g",price:1800,mrp:2199,img:"assets/sturdy-watermelon-front.webp",images:[{src:"assets/sturdy-watermelon-front.webp",label:"Front"},{src:"assets/sturdy-watermelon-back.webp",label:"Original back label"}]}],desc:"Pre-workout formula for your training routine.",img:""},
 {id:"creatine",name:"Pro Creatine",cat:"creatine",featuredIndex:0,variants:[{label:"Blueberry · 250 g",price:899,mrp:1499,img:"assets/mvn-creatine-blueberry-official-250g.webp"},{label:"Cranberry · 250 g",price:899,mrp:1499,img:"assets/pro-creatine.png"}],desc:"Creatine supplement in two flavour options.",img:""},
 {id:"vitamins",name:"Musclevite Multivitamin",cat:"vitamins",variants:[{label:"60 tablets",price:699,img:"assets/musclevite-front-20261116.webp",images:[{src:"assets/musclevite-front-20261116.webp",label:"Front of bottle",alt:"Unicorn Pro Series Musclevite Multivitamin 60 tablets front bottle"},{src:"assets/musclevite-facts-20261116.webp",label:"Supplement facts",alt:"Original Musclevite 60-tablet supplement facts panel"},{src:"assets/musclevite-back.webp",label:"Directions and batch label",alt:"Original Musclevite directions, batch and printed MRP label"}]}],desc:"Multivitamin and multimineral supplement. Each bottle contains 60 tablets.",img:""}
@@ -618,6 +618,52 @@ document.addEventListener("keydown",e=>{
 
 /* Homepage cards use the same verified retail catalogue and cart as the shop.
    Keep crawlable detail links as the fallback if live prices are unavailable. */
+/* Desktop campaign purchase panel: uses exact public catalogue variants and the existing cart. */
+function enhanceDesktopCampaignPurchase(){
+ if(!isShowcaseHome)return;
+ const root=document.querySelector('#mvnEditorial .mvn-campaign-carousel');
+ if(!root)return;
+ const map={'/potency-whey.html':'whey','/nitro-mass.html':'mass','/sturdy-pre-workout.html':'pre','/pro-creatine.html':'creatine'};
+ const make=(tag,cls,value)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(value!==undefined)n.textContent=value;return n;};
+ for(const slide of root.querySelectorAll('.mvn-campaign-slide')){
+  if(slide.querySelector('.mvn-hero-buy'))continue;
+  const stage=slide.querySelector('.mvn-campaign-stage'),p=P.find(x=>x.id===map[stage?.getAttribute('href')]);
+  if(!stage||!p)continue;
+  const options=p.variants.map((v,i)=>({v,i,id:retailVariantIds[p.id]?.[i]})).filter(({v,id})=>id&&Number.isFinite(v.price)&&v.price>0);
+  if(!options.length)continue;
+  const card=make('section','mvn-hero-buy'),name=make('strong','mvn-hero-buy-name',p.name);
+  const label=make('label','mvn-hero-buy-label','Flavour / pack size'),sel=make('select','mvn-hero-buy-select');
+  sel.id='hero-buy-'+p.id+'-'+Array.from(root.querySelectorAll('.mvn-campaign-slide')).indexOf(slide);label.htmlFor=sel.id;
+  for(const {v,id} of options){const o=make('option','',v.catalogLabel||v.label);o.value=id;sel.append(o);}
+  sel.value=options.find(x=>x.i===(p.featuredIndex||0))?.id||options[0].id;
+  const price=make('div','mvn-hero-buy-price'),facts=make('p','mvn-hero-buy-facts');
+  const add=make('button','mvn-hero-buy-add','Add to cart');add.type='button';
+  const status=make('p','mvn-hero-buy-status');status.setAttribute('role','status');
+  const selected=()=>retailVariantIds[p.id]?.indexOf(sel.value)??-1;
+  const update=()=>{
+   const i=selected(),v=p.variants[i];price.replaceChildren();facts.textContent='';
+   const ok=Number.isFinite(v?.price)&&v.price>0;add.disabled=!ok;
+   if(!ok){price.textContent='Confirm price with our team';return;}
+   const row=make('div','mvn-hero-buy-row');row.append(make('b','',money(v.price)));
+   if(Number.isFinite(v.mrp)&&v.mrp>v.price){row.append(make('del','',money(v.mrp)));const off=Math.floor((v.mrp-v.price)*100/v.mrp);if(off>0)row.append(make('span','mvn-hero-buy-discount',off+'% off'));}
+   price.append(row);
+   const fact=packFacts(p,i);const servings=fact.match(/(\d+) servings per pack/i);
+   if(servings&&Number(servings[1])>0)price.append(make('small','','≈'+money(Math.round(v.price/Number(servings[1])))+'/serving'));
+   facts.textContent=fact.replace(/^Pack label: /,'');
+  };
+  sel.addEventListener('change',()=>{status.textContent='';update();});
+  add.addEventListener('click',async()=>{
+   const id=sel.value,i=selected(),old=p.variants[i]?.price;add.disabled=true;sel.disabled=true;
+   try{await refreshRetailPrices();const index=retailVariantIds[p.id]?.indexOf(id)??-1,v=p.variants[index];
+    if(!Number.isFinite(v?.price)||v.price<=0){status.textContent='Confirm availability with our team.';return;}
+    if(v.price!==old){status.textContent='Price updated. Please review and add again.';return;}
+    const key=p.id+'|'+index;cart[key]=Math.min(999,(cart[key]||0)+1);persist();status.textContent='Added to cart.';openBag();
+   }catch(e){status.textContent=e.message||'Could not verify price.';}finally{sel.disabled=false;update();}
+  });
+  card.append(name,label,sel,price,facts,add,status);slide.append(card);slide.classList.add('mvn-campaign-with-buy');update();
+ }
+}
+
 function enhanceHomeBestSellers(){
  if(!isShowcaseHome)return;
  const allLink=document.querySelector('.mvn-preview-best-head>a[href="/shop.html"]');
@@ -700,6 +746,9 @@ function enhanceHomeBestSellers(){
 installCategoryShortcuts();compactShopFilters();render();drawCart();renderRecent();
 refreshRetailPrices().then(changed=>{
  enhanceHomeBestSellers();
+ enhanceDesktopCampaignPurchase();
+ if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',enhanceDesktopCampaignPurchase,{once:true});
+ else if(!document.querySelector('#mvnEditorial .mvn-campaign-carousel')&&isShowcaseHome){const target=document.getElementById('mvnEditorial');if(target){const observer=new MutationObserver(()=>{if(target.querySelector('.mvn-campaign-carousel')){observer.disconnect();enhanceDesktopCampaignPurchase();}});observer.observe(target,{childList:true});}}
  if(finder){
   finderLive=true;
   finderBudget.disabled=false;

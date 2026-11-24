@@ -55,7 +55,7 @@
  pause.onclick=()=>{paused=!paused;if(!paused){focus=false;hover=false;}label();schedule();};
  root.addEventListener('mouseenter',()=>{hover=true;schedule();});root.addEventListener('mouseleave',()=>{hover=false;schedule();});
  root.addEventListener('focusin',()=>{focus=true;schedule();});root.addEventListener('focusout',()=>requestAnimationFrame(()=>{focus=root.contains(document.activeElement);schedule();}));
- root.addEventListener('keydown',event=>{if(event.key==='ArrowLeft'||event.key==='ArrowRight'){event.preventDefault();show(current+(event.key==='ArrowRight'?1:-1),true);}});
+ root.addEventListener('keydown',event=>{if(!event.target.closest('select,input,textarea,button')&&(event.key==='ArrowLeft'||event.key==='ArrowRight')){event.preventDefault();show(current+(event.key==='ArrowRight'?1:-1),true);}});
  document.addEventListener('visibilitychange',schedule);
  motion.addEventListener('change',()=>{if(motion.matches){paused=true;label();schedule();}});
  if('IntersectionObserver' in window)new IntersectionObserver(([entry])=>{inView=entry.isIntersecting;schedule();},{threshold:.15}).observe(root);

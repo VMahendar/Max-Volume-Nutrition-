@@ -104,6 +104,21 @@ if(!setting('retail-sturdy-pre-1800-mrp2199-nov2026'))tx(()=>{
  set('retail-sturdy-pre-1800-mrp2199-nov2026',true);
 });
 
+// Owner-confirmed Nitro Mass bucket MRP: INR 1,316/kg x 5 kg.
+if(!setting('retail-mass-5kg-mrp6580-20261124'))tx(()=>{
+ const row=db.prepare("SELECT data FROM products WHERE id='nitro-mass'").get();
+ if(row){
+  const p=JSON.parse(row.data),v=p.variants?.find(v=>v.id==='mass-5kg');
+  if(v&&v.mrpPaise!==658000){
+   const previous=v.mrpPaise??null;
+   v.mrpPaise=658000;
+   db.prepare("UPDATE products SET data=? WHERE id='nitro-mass'").run(JSON.stringify(p));
+   audit('system','retail.price.mrp.update','nitro-mass',{variantId:v.id,previousMrpPaise:previous,mrpPaise:658000});
+  }
+ }
+ set('retail-mass-5kg-mrp6580-20261124',true);
+});
+
 // Attach the owner's actual Watermelon pack photos to existing Render SQLite stores.
 // Only replace absent or retired placeholder media; do not touch prices, quantities or custom photos.
 if(!setting('sturdy-watermelon-photos-20261112'))tx(()=>{
