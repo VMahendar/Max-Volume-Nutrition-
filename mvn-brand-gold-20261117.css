@@ -204,3 +204,28 @@ html body.mvn-site-theme.mvn-info-page .mvn-quick-page :is(small,b){color:#41414
 
 html body.mvn-site-theme.cart-open { overflow: hidden; }
 html body.mvn-site-theme.mvn-fitness-product main h1 { font-family: MVNDisplay, "Arial Narrow", Arial, sans-serif !important; }
+
+
+/* 2026-11-24: editorial storefront theme; preserve all commerce hooks. */
+html body.mvn-site-theme { --mvn-paper:#faf9f6; --mvn-ink:#242424; --mvn-accent:#a77a4f; }
+html body.mvn-site-theme :is(.storehead,.mvn-unified-header,.mvn-info-header),
+html body.mvn-site-theme.mvn-fitness-product>header,
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) header.storehead {background:#fff!important;color:#242424!important;border-color:#e3dfda!important}
+html body.mvn-site-theme :is(.storehead,.native-app-header) .head-actions :is(a,button,summary),
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) header.storehead .head-actions :is(a,button,summary),
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) header.storehead .mvn-shop-search-disclosure>summary {background:transparent!important;color:#242424!important;border-color:#ddd!important}
+html body.mvn-site-theme :is(.mvn-info-nav,.mvn-theme-main-nav,.account-mainnav){background:#fff!important;color:#242424!important;border-color:#e3dfda!important}
+html body.mvn-site-theme :is(.mvn-info-nav,.mvn-theme-main-nav,.account-mainnav) a {color:#242424!important}
+html body.mvn-site-theme :is(.mvn-info-nav,.mvn-theme-main-nav,.account-mainnav) a:is(:hover,[aria-current=page]){color:#80552e!important}
+html body.mvn-site-theme :is(.mvn-info-hero,.account-intro,.support-hero,.business-hero,.wholesale-intro) h1,
+html body.mvn-site-theme.mvn-fitness-product main h1,
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store) #shop>.section-title :is(h1,h1 strong) {font-family:Arial,Helvetica,sans-serif!important;font-weight:900!important;letter-spacing:-.055em!important;line-height:1.03!important}
+html body.mvn-site-theme :is(.mvn-info-hero,.account-intro,.support-hero,.business-hero,.wholesale-intro) h1{font-size:clamp(2.3rem,5vw,5rem)!important}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorialTitle {font-family:Arial,Helvetica,sans-serif!important;font-weight:900!important;letter-spacing:-.065em!important;line-height:.95!important;font-size:clamp(2.5rem,6vw,6.5rem)!important;text-transform:none!important}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorialTitle em {color:#fff!important;font-style:normal!important}
+html body.mvn-site-theme.mvn-orange-home :is(#mvnBestSellers,#mvnCollectionEntryTitle) {font-family:Arial,Helvetica,sans-serif!important;font-weight:900!important;letter-spacing:-.055em!important;text-transform:none!important}
+html body.mvn-site-theme :is(.mvn-info-panel,.account-panel,.business-form,.support-card,.mvn-best-product){border-radius:4px!important;box-shadow:none!important}
+html body.mvn-site-theme :is(.mvn-unified-footer,.mvn-info-footer,.mvn-compact-footer,.account-footer){background:#242424!important}
+html body.mvn-site-theme :is(.mvn-theme-categories>summary,.header-descriptor){color:#242424!important}
+html body.mvn-site-theme :is(.mvn-header-search-popover,.mvn-theme-category-menu,.mvn-more-panel) a{color:#fff!important}
+@media(max-width:760px){html body.mvn-site-theme.mvn-orange-home #mvnEditorialTitle{font-size:clamp(2.2rem,9vw,4rem)!important}}
