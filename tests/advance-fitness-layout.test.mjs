@@ -22,7 +22,12 @@ test('supplement store screenshot reference drives the actual homepage structure
  assert.match(html,/assets\/mvn-orange-lineup-20261117\.webp/);
  assert.ok(readFileSync('public/assets/mvn-orange-lineup-20261117.webp').length>100000);
  assert.ok(html.indexOf('<section id="mvnEditorial"')<html.indexOf('class="mvn-preview-best mvn-home-featured"'),'hero before featured cards');
- assert.ok(html.indexOf('class="mvn-preview-best mvn-home-featured"')<html.indexOf('class="mvn-home-collection-entry"'),'best sellers before collection popup');
+ assert.ok(html.indexOf('<section id="mvnEditorial"')<html.indexOf('class="mvn-home-collection-entry"'),'hero before collection');
+ assert.ok(html.indexOf('class="mvn-home-collection-entry"')<html.indexOf('class="mvn-preview-best mvn-home-featured"'),'approved editorial layout places collection before best sellers');
+ const collection=html.match(/<section class="mvn-home-collection-entry"[\s\S]*?<\/section>/)?.[0]||'';
+ assert.match(collection,/class="mvn-approved-tiles"/);
+ for(const cat of ['whey','mass','creatine','pre']) assert.ok(collection.includes('/shop.html?cat='+cat+'"'),'category tile links to '+cat);
+ assert.match(collection,/id="mvnOpenCollection"/,'accessible collection trigger retained');
  assert.match(css,/mvn-editorial-layout\s*\{/,'split-screen campaign layout');
  assert.match(css,/mvn-editorial-promos\s*\{/,'right-side promos are styled');
  assert.match(css,/@media\(max-width:560px\)/,'Android mobile responsive layout');
