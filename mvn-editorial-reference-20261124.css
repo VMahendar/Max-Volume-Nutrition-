@@ -28,7 +28,7 @@ html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-slide:not([
  display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);grid-template-rows:auto 1fr auto auto;
  align-items:start;align-content:center;gap:14px 2vw;min-height:clamp(420px,45vw,690px)!important;
  padding:clamp(24px,4vw,60px) clamp(12px,2vw,32px);position:relative;isolation:isolate;
- background:repeating-linear-gradient(90deg,transparent 0,transparent calc(12.5% - 1px),#998e781c calc(12.5% - 1px),#998e781c 12.5%),radial-gradient(ellipse at 65% 35%,#fffaf1,#f4ebd9 78%)
+ background:var(--mvn-paper)!important
 }
 html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-slide[hidden]{display:none!important}
 html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-copy{display:contents}
@@ -153,4 +153,86 @@ html body.mvn-site-theme.mvn-orange-home .mvn-footer-legal{border-color:var(--mv
  html body.mvn-site-theme.mvn-orange-home .mvn-approved-tiles{grid-column:1;grid-row:2}
  html body.mvn-site-theme.mvn-orange-home #mvnOpenCollection{grid-column:1;grid-row:3}
  html body.mvn-site-theme.mvn-orange-home .mvn-approved-wholesale{flex-direction:column;align-items:flex-start}
+}
+
+/* 2026-11-24: clean, mobile-first visual refinement inspired by the supplied video.
+   Product surfaces are pure white; no grid lines or photo alterations. */
+html body.mvn-site-theme.mvn-orange-home{
+ --mvn-ink:#202020;--mvn-muted:#505050;--mvn-rule:#dedbd5;
+ font-family:Arial,Helvetica,sans-serif!important
+}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-slide:not([hidden]),
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-owner-banner-feature{
+ background:var(--mvn-paper)!important;background-image:none!important
+}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-stage{
+ background:#fff!important;background-image:none!important;mix-blend-mode:normal!important;
+ border-radius:14px!important;padding:clamp(10px,2vw,24px)!important;overflow:hidden!important
+}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products,
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products .mvn-campaign-pack,
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-pack>img,
+html body.mvn-site-theme.mvn-orange-home .mvn-approved-tiles>a,
+html body.mvn-site-theme.mvn-orange-home .mvn-approved-tiles>a img,
+html body.mvn-site-theme.mvn-orange-home .mvn-preview-best-grid>a.mvn-best-product,
+html body.mvn-site-theme.mvn-orange-home .mvn-preview-best-grid .mvn-best-product-photo,
+html body.mvn-site-theme.mvn-orange-home .mvn-preview-best-grid .mvn-best-product-photo img,
+html body.mvn-site-theme.mvn-orange-home .mvn-preview-best-grid .mvn-best-product-info,
+html body.mvn-site-theme.mvn-orange-home .gt-banner-packs .gt-pack,
+html body.mvn-site-theme.mvn-orange-home .gt-banner-packs .gt-pack>img,
+html body.mvn-site-theme.mvn-orange-home .mvn-pack-compare-grid article,
+html body.mvn-site-theme.mvn-orange-home .mvn-pack-compare-grid img,
+html body.mvn-site-theme.mvn-orange-home .mvn-collection-dialog-grid a,
+html body.mvn-site-theme.mvn-orange-home .mvn-collection-dialog-grid img{
+ background:#fff!important;background-image:none!important;mix-blend-mode:normal!important
+}
+html body.mvn-site-theme.mvn-orange-home .mvn-approved-tiles>a,
+html body.mvn-site-theme.mvn-orange-home .mvn-preview-best-grid>a.mvn-best-product,
+html body.mvn-site-theme.mvn-orange-home .mvn-shop-guide-grid>div{
+ border:1px solid var(--mvn-rule)!important;border-radius:12px!important;box-shadow:none!important;overflow:hidden
+}
+html body.mvn-site-theme.mvn-orange-home .mvn-preview-best-grid .mvn-best-product-photo img{
+ border:0!important;filter:none!important
+}
+html body.mvn-site-theme.mvn-orange-home :is(.mvn-home-collection-entry,.mvn-preview-best,.mvn-shop-guide,.gt-banner,.mvn-approved-wholesale,.mvn-home-contact)
+ :is(h2,h3,h4,strong,p,a,small,summary,button,span){
+ font-family:Arial,Helvetica,sans-serif!important
+}
+html body.mvn-site-theme.mvn-orange-home :is(#mvnCollectionEntryTitle,#mvnBestSellers,.mvn-shop-guide h2,.gt-banner h2,.mvn-approved-wholesale h2){
+ font:800 clamp(30px,4vw,54px)/1.04 Arial,Helvetica,sans-serif!important;
+ letter-spacing:-.045em!important;color:var(--mvn-ink)!important
+}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title{
+ font-family:Arial,Helvetica,sans-serif!important;font-weight:800!important;letter-spacing:-.06em!important;
+ color:var(--mvn-ink)!important;line-height:.94!important
+}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title :is(.mvn-campaign-title-first,.mvn-campaign-title-middle,em){
+ font-family:inherit!important;font-weight:inherit!important;font-style:normal!important;font-size:inherit!important;letter-spacing:inherit!important;
+ line-height:inherit!important;color:var(--mvn-ink)!important;text-align:left!important
+}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title em{margin-left:9%;max-width:91%}
+html body.mvn-site-theme.mvn-orange-home :is(.mvn-approved-tiles>a strong,.mvn-preview-best-grid .mvn-best-product-info>strong,.mvn-shop-guide h3,.gt-banner-packs strong){
+ font-family:Arial,Helvetica,sans-serif!important;font-weight:700!important;letter-spacing:-.025em!important;color:var(--mvn-ink)!important
+}
+html body.mvn-site-theme.mvn-orange-home :is(.mvn-featured-kicker,.mvn-best-brand,.mvn-best-pack,.gt-kicker,.gt-banner-packs small,.mvn-footer-legal){
+ color:var(--mvn-muted)!important;font-family:Arial,Helvetica,sans-serif!important
+}
+html body.mvn-site-theme.mvn-orange-home :is(#mvnOpenCollection,.mvn-best-action,.gt-primary,.mvn-approved-wholesale a),
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-cta,
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-launch-primary{
+ background:#202020!important;color:#fff!important;border:1px solid #202020!important;
+ border-radius:28px!important;font-family:Arial,Helvetica,sans-serif!important;font-weight:700!important;letter-spacing:0!important
+}
+html body.mvn-site-theme.mvn-orange-home :is(#mvnOpenCollection,.mvn-best-action,.gt-primary,.mvn-approved-wholesale a) span{
+ color:#fff!important
+}
+html body.mvn-site-theme.mvn-orange-home .mvn-shop-guide-grid>div{background:#fff!important}
+@media(max-width:760px){
+ html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title{
+ font-size:clamp(40px,11.5vw,76px)!important;line-height:.96!important
+ }
+ html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-stage{
+ width:100%!important;max-width:420px!important;padding:12px!important
+ }
+ html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title em{margin-left:9%;max-width:91%}
 }
