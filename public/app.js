@@ -204,7 +204,7 @@ const smallCardImages={
  'assets/pro-creatine.png':'assets/pro-creatine-card.webp',
  'assets/sturdy-watermelon-front.webp':'assets/sturdy-watermelon-front-card.webp',
  'assets/mvn-hero-creatine-cutout.png':'assets/mvn-hero-creatine-cutout-card.webp',
- 'assets/mvn-hero-whey-cutout.png':'assets/mvn-hero-whey-cutout-card.webp',
+ 'assets/mvn-hero-whey-cutout.png':'assets/mvn-hero-whey-cutout-card.webp?v=20261124-intact-cap',
  'assets/mvn-hero-nitro-cutout.png':'assets/mvn-hero-nitro-cutout-card.webp'
 };
 /* Crawlable product-detail links complement the existing quick-detail modal and cart. */
