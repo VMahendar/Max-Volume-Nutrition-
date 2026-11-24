@@ -640,6 +640,21 @@ if(u.pathname==='/layout-editor.html'){
 }
 if(!['GET','HEAD'].includes(req.method))fail(405,'Method not allowed.');const path=resolve(root,'.'+decodeURIComponent(u.pathname==='/'?'/index.html':u.pathname));if(!path.startsWith(root+sep))fail(403,'Forbidden');let file;try{if(!realpathSync(path).startsWith(root+sep))fail(403,'Forbidden');file=readFileSync(path);
 if(extname(path)==='.html')file=Buffer.from(nonceTemplateScripts(file.toString('utf8'),scriptNonce));
+ // Public storefront analytics only. No account, checkout, admin or preview pages.
+ const analyticsPublicPage=['/','/index.html','/shop.html','/dealer.html'].includes(u.pathname)||Object.hasOwn(PRODUCT_PAGE_IDS,u.pathname);
+ if(production&&process.env.STAGING_MODE!=='true'&&analyticsPublicPage&&!u.searchParams.has('visual_builder')&&!u.searchParams.has('homepage_editor')&&!u.searchParams.has('carousel_preview')){
+  const analyticsCsp=String(res.getHeader('Content-Security-Policy'))
+    .replace("connect-src 'self' https://*.razorpay.com","connect-src 'self' https://*.razorpay.com https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com")
+    .replace("img-src 'self'","img-src 'self' https://*.google-analytics.com https://*.googletagmanager.com");
+  const analyticsTag='<script nonce="'+scriptNonce+'" async src="https://www.googletagmanager.com/gtag/js?id=G-LVBBGSYGNQ"></script>'+
+   '<script nonce="'+scriptNonce+'">window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","G-LVBBGSYGNQ",{allow_google_signals:false,allow_ad_personalization_signals:false,page_location:location.origin+location.pathname,page_referrer:document.referrer.split("?")[0].split("#")[0]});document.addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a[href]");if(!a)return;try{var url=new URL(a.href);if(url.hostname==="wa.me"||url.hostname==="api.whatsapp.com"||url.hostname==="web.whatsapp.com"){gtag("event","whatsapp_click",{page_path:location.pathname});}}catch(_){}});</script>';
+  const html=file.toString('utf8');
+  if(html.includes('</head>')){
+   res.setHeader('Content-Security-Policy',analyticsCsp);
+   file=Buffer.from(html.replace('</head>',analyticsTag+'</head>'),'utf8');
+  }
+ }
+
 if(['/', '/index.html'].includes(u.pathname)){
  const design=C.setting('homepagePublishedV2');
  const serialized=JSON.stringify(design).replace(/</g,'\\u003c');
