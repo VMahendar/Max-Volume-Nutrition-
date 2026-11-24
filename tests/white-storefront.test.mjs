@@ -46,7 +46,7 @@ test('homepage excludes demonstrably incorrect product photos and retains verifi
  assert.ok(existsSync(new URL('../data/image-assets/sturdy-watermelon-back.webp.b64',import.meta.url)),'isolated original back is stored in repo');
  assert.ok(app.includes('assets/sturdy-watermelon-front.webp'));
  assert.match(app,/3 kg · Double Rich Chocolate",price:2599,img:"assets\/unicorn-pro-series-nitro-mass-3kg-double-rich-chocolate-cutout\.webp"/,'3 kg must use its own verified jar photo');
- assert.match(app,/5 kg · Bucket",price:3499,img:"assets\/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout\.webp/,'5 kg must use its own bucket cutout');
+ assert.match(app,/5 kg · Bucket",price:3499,mrp:6580,img:"assets\/unicorn-pro-series-nitro-mass-5kg-double-rich-chocolate-cutout\.webp/,'5 kg must use its own bucket cutout');
  assert.match(app,/Chocolate · 5 lbs.*?img:null/,'Chocolate must not use Coffee photo');
  assert.match(app,/Blueberry · 250 g.*?img:"assets\/mvn-creatine-blueberry-official-250g\.webp"/,'Blueberry uses manufacturer original white-and-blue pack');
 });
@@ -59,6 +59,11 @@ test('public retail offers use verified MRP and keep confidential wholesale pric
  const whey=seed.find(p=>p.id==='potency-whey').variants;
  assert.deepEqual(whey.map(v=>v.mrpPaise),[859900,859900]);
  assert.deepEqual(whey.map(v=>v.pricePaise),[550000,550000]);
- assert.ok(seed.find(p=>p.id==='nitro-mass').variants.every(v=>v.mrpPaise===undefined),'never invent Nitro MRP');
+ for(const source of [seed,JSON.parse(read('data/products.json'))]){
+  const mass=source.find(p=>p.id==='nitro-mass').variants;
+  assert.equal(mass.find(v=>v.id==='mass-5kg').mrpPaise,658000,'owner confirmed MRP: Rs 1316/kg × 5 kg');
+  assert.equal(mass.find(v=>v.id==='mass-5kg').pricePaise,349900,'selling price remains unchanged');
+  assert.equal(mass.find(v=>v.id==='mass-3kg').mrpPaise,undefined,'never invent the 3 kg MRP');
+ }
  assert.ok(!app.includes('wholesale":'),'wholesale prices cannot ship in public JS');
 });
