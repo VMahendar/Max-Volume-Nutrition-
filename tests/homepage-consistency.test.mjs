@@ -4,7 +4,7 @@ import {readFileSync} from 'node:fs';
 test('screenshot reference maintains a consistent scrolling storefront without duplicated Whey panels',()=>{
  const html=readFileSync('public/index.html','utf8'),css=readFileSync('public/mvn-supplement-store-reference.css','utf8');
  assert.match(html,/mvn-orange-home-20261117\.css\?v=7/);
- assert.match(html,/id="mvnBestSellers">BEST SELLERS/);
+ assert.match(html,/id="mvnBestSellers">Best sellers<\//);
  assert.equal((html.match(/class="mvn-home-collection-entry"/g)||[]).length,1);
  assert.equal((html.match(/class="mvn-preview-best-grid"/g)||[]).length,1);
  assert.match(html,/id="mvnCollectionDialog"/,"collection opens an accessible modal");
