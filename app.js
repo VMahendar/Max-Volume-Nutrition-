@@ -392,6 +392,41 @@ function renderSpotlight(){
  $('mvnSpotlightDetails').onclick=()=>showDetail(p.id,item.i);
 }
 
+
+/* Compact shop: a single expandable filter panel, with existing controls and handlers. */
+function compactShopFilters(){
+ if(!isFullShop||document.body.classList.contains('app-store')||!finder||$('mvnShopFilters'))return;
+ const shop=$('shop'),bar=shop?.querySelector('.productbar'),brand=shop?.querySelector('.gt-brand-filter'),cats=shop?.querySelector('.cats');
+ if(!bar||!brand||!cats)return;
+ const panel=document.createElement('details');panel.id='mvnShopFilters';panel.className='mvn-single-filter';
+ const summary=document.createElement('summary');summary.textContent='Filter & sort';
+ const content=document.createElement('div');content.className='mvn-filter-content';
+ panel.append(summary,content);bar.after(panel);
+ const sort=bar.querySelector('.sort-label'),range=$('priceRange'),rangeLabel=shop.querySelector('label[for="priceRange"]');
+ content.append(brand,finder);
+ const extra=document.createElement('div');extra.className='mvn-filter-extra';
+ if(range){const field=document.createElement('label');field.textContent=rangeLabel?.textContent||'Price per pack';field.append(range);extra.append(field);if(rangeLabel)rangeLabel.hidden=true;}
+ if(sort)extra.append(sort);
+ content.append(extra);
+ const done=document.createElement('button');done.type='button';done.className='mvn-filter-done';done.textContent='Show products';done.addEventListener('click',()=>{panel.open=false;summary.focus();});content.append(done);
+ // The category selector in the finder replaces redundant category chips.
+ cats.hidden=true;const quick=$('mvn-quick-categories');if(quick)quick.hidden=true;
+ const aside=shop.querySelector('.collection-filters');if(aside)aside.hidden=true;
+ shop.classList.add('mvn-compact-filters-ready');
+}
+function compactShopCards(){
+ if(!isFullShop||document.body.classList.contains('app-store'))return;
+ for(const card of document.querySelectorAll('#grid>article.card')){
+  const photo=card.querySelector('.photo'),details=card.querySelector('.details-link'),select=card.querySelector('select.variant'),label=card.querySelector('.variant-label');
+  if(!photo||!details||!select)continue;
+  card.classList.add('mvn-compact-shop-card');
+  const name=card.querySelector('h3')?.textContent||'product';
+  details.textContent='View '+name;details.setAttribute('aria-label','View '+name+' details');photo.append(details);
+  if(select.options.length===1){const pack=document.createElement('p');pack.className='mvn-single-pack';pack.textContent=select.options[0].textContent;select.before(pack);select.hidden=true;if(label)label.hidden=true;}
+  else if(label){label.classList.add('mvn-visually-hidden');}
+ }
+}
+
 function render(){
  renderSpotlight();
  renderPurchasedPacks();
@@ -414,6 +449,7 @@ const filters=$("activeFilters");if(filters){filters.replaceChildren();for(const
  document.querySelectorAll(".photo img").forEach(img=>img.addEventListener("error",()=>hideFailedPackPhoto(img)));
 $("resultText").textContent=items.length+" product range"+(items.length===1?"":"s")+" · choose pack and flavour";
 document.querySelectorAll(".variant").forEach(s=>s.addEventListener("change",()=>{const p=P.find(x=>x.id===s.id.slice(2));$("price-"+p.id).innerHTML=window.mvnSafeHTML(shopCardPrice(p,s.value));const facts=s.closest(".card").querySelector(".pack-label-facts");if(facts)facts.innerHTML=window.mvnSafeHTML(shopCardFacts(p,s.value));swapPhoto(s.closest(".card").querySelector(".photo"),coverImage(p,s.value),p.name);const v=p.variants[Number(s.value)],card=s.closest(".card");const availability=card.querySelector(".finder-stock");if(availability)availability.textContent=finderStockLabel(v);card.querySelector(".add").hidden=v.price===null;const quote=card.querySelector(".quote-action");quote.hidden=v.price!==null;quote.href=enquiryURL(p,v)}));
+compactShopCards();
 document.querySelectorAll(".details-link").forEach(b=>b.addEventListener("click",()=>showDetail(b.dataset.detail,finder?Number($("v-"+b.dataset.detail).value):undefined)));
 document.querySelectorAll(".add").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.id+"|"+$("v-"+b.dataset.id).value;if(!getItem(k))return;cart[k]=Math.min(999,(cart[k]||0)+1);persist();openBag()}));
 }
@@ -618,7 +654,7 @@ function enhanceHomeBestSellers(){
     const row=create('div','mvn-home-price-row');
     row.append(create('strong','mvn-home-price',money(v.price)));
     if(Number.isFinite(v.mrp)&&v.mrp>v.price){
-     const off=Math.round((v.mrp-v.price)*100/v.mrp);
+     const off=Math.floor((v.mrp-v.price)*100/v.mrp);
      row.append(create('del','mvn-home-mrp','MRP '+money(v.mrp)));
      if(off>0)row.append(create('span','mvn-home-discount',off+'% off'));
     }
@@ -630,7 +666,7 @@ function enhanceHomeBestSellers(){
    }else prices.append(create('span','','Price confirmation required'));
    pack.textContent=v?.catalogLabel||v?.label||'';
    const verifiedFacts=packFacts(p,i).replace(/^Pack label: /,'').split(' · ').filter(Boolean);
-   facts.replaceChildren(...verifiedFacts.map(fact=>create('span','mvn-home-fact-chip',fact.replace(/ per pack$/,''))));
+   facts.textContent=verifiedFacts.filter(fact=>!/BCAAs/i.test(fact)).map(fact=>fact.replace(/ per pack$/,'')).join(' · ');
    facts.hidden=!verifiedFacts.length;
    const src=i===originalIndex?originalSrc:(coverImage(p,i)||'');
    img.hidden=!src;placeholder.hidden=!!src;
@@ -651,12 +687,14 @@ function enhanceHomeBestSellers(){
    }catch(error){status.textContent=error.message||'Could not verify the current price. Please try again.';}
    finally{select.disabled=false;update();}
   });
-  details.textContent='View product details →';
+  details.hidden=true;
+  if(options.length===1){label.hidden=true;select.hidden=true;}else pack.hidden=true;
+  shell.classList.toggle('mvn-home-has-options',options.length>1);
   link.before(shell);shell.append(link,controls);controls.append(facts,prices,label,select,add,status);update();
  }
 }
 
-installCategoryShortcuts();render();drawCart();renderRecent();
+installCategoryShortcuts();compactShopFilters();render();drawCart();renderRecent();
 refreshRetailPrices().then(changed=>{
  enhanceHomeBestSellers();
  if(finder){
