@@ -562,6 +562,9 @@ document.addEventListener("keydown",e=>{
    Keep crawlable detail links as the fallback if live prices are unavailable. */
 function enhanceHomeBestSellers(){
  if(!isShowcaseHome)return;
+ const allLink=document.querySelector('.mvn-preview-best-head>a[href="/shop.html"]');
+ const count=P.filter(p=>visiblePackOptions(p).length).length;
+ if(allLink&&count>0)allLink.textContent='View all '+count+' products →';
  const mapping={'/potency-whey.html':'whey','/nitro-mass.html':'mass','/sturdy-pre-workout.html':'pre','/pro-creatine.html':'creatine'};
  const create=(tag,cls,txt)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(txt!==undefined)el.textContent=txt;return el;};
  for(const link of document.querySelectorAll('.mvn-preview-best-grid>a.mvn-best-product')){
@@ -577,7 +580,7 @@ function enhanceHomeBestSellers(){
   for(const {v,i} of options){const option=create('option','',v.catalogLabel||v.label);option.value=String(i);select.append(option);}
   select.value=String(options.find(x=>x.i===(p.featuredIndex||0))?.i??options[0].i);
   const prices=create('div','mvn-home-live-price');
-  const facts=create('p','mvn-home-pack-facts');
+  const facts=create('div','mvn-home-pack-facts');
   const add=create('button','mvn-home-add','ADD TO CART');add.type='button';
   const status=create('p','mvn-home-buy-status');status.setAttribute('role','status');
   const info=link.querySelector('.mvn-best-product-info');
@@ -598,12 +601,18 @@ function enhanceHomeBestSellers(){
     if(Number.isFinite(v.mrp)&&v.mrp>v.price){
      const off=Math.round((v.mrp-v.price)*100/v.mrp);
      row.append(create('del','mvn-home-mrp','MRP '+money(v.mrp)));
-     if(off>0)prices.append(create('span','mvn-home-discount',off+'% OFF'));
+     if(off>0)row.append(create('span','mvn-home-discount',off+'% off'));
     }
-    prices.prepend(row);
+    prices.append(row);
+    const verifiedServings=packFacts(p,i).match(/(\d+) servings per pack/i);
+    if(verifiedServings&&Number(verifiedServings[1])>0){
+     prices.append(create('span','mvn-home-per-serving','≈'+money(Math.round(v.price/Number(verifiedServings[1])))+' per serving'));
+    }
    }else prices.append(create('span','','Price confirmation required'));
    pack.textContent=v?.catalogLabel||v?.label||'';
-   facts.textContent=packFacts(p,i).replace(/^Pack label: /,'');facts.hidden=!facts.textContent;
+   const verifiedFacts=packFacts(p,i).replace(/^Pack label: /,'').split(' · ').filter(Boolean);
+   facts.replaceChildren(...verifiedFacts.map(fact=>create('span','mvn-home-fact-chip',fact.replace(/ per pack$/,''))));
+   facts.hidden=!verifiedFacts.length;
    const src=i===originalIndex?originalSrc:(coverImage(p,i)||'');
    img.hidden=!src;placeholder.hidden=!!src;
    if(src){img.src=src;img.alt=p.name+' — '+(v.catalogLabel||v.label);}
@@ -624,7 +633,7 @@ function enhanceHomeBestSellers(){
    finally{select.disabled=false;update();}
   });
   details.textContent='View product details →';
-  link.before(shell);shell.append(link,controls);controls.append(label,select,prices,facts,add,status);update();
+  link.before(shell);shell.append(link,controls);controls.append(facts,prices,label,select,add,status);update();
  }
 }
 
