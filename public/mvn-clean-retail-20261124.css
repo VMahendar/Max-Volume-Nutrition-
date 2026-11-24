@@ -149,3 +149,17 @@ html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page
  html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop .collection-results #grid>article.mvn-compact-shop-card .photo.gt-pack{height:clamp(235px,69vw,330px)!important}
  html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop .collection-results #grid>article.mvn-compact-shop-card:has(>.gt-pack) .info :is(h3,h3 a){font-size:25px!important}
 }
+
+/* Softer corners on existing dark surfaces, without changing colours or content. */
+html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] header.storehead>a.brand.brand-identity,
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] header.storehead>a.brand.brand-identity{border-radius:14px!important;overflow:hidden!important}
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop>.section-title{border-radius:18px!important;overflow:hidden!important;background-clip:padding-box}
+html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-cta,
+html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-home-collection-entry #mvnOpenCollection,
+html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-shop-guide .mvn-guide-trust,
+html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.gt-banner .gt-primary,
+html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-approved-wholesale a,
+html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-preview-best .mvn-preview-best-grid>article.mvn-home-buy-card .mvn-home-add,
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop .collection-results #grid>article.mvn-compact-shop-card .info>.add,
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop .collection-results #grid>article.mvn-compact-shop-card .info>.quote-action,
+html body.mvn-site-theme.retail-home.mvn-full-shop:not(.app-store)[data-mvn-page="shop"] #shop.mvn-compact-filters-ready .mvn-filter-done{border-radius:10px!important}
