@@ -40,3 +40,8 @@ html,body{min-height:100%;height:auto;overflow-y:auto}
  .sidebar,.inspector{position:static;max-height:none;overflow:visible}
  #preview,#preview.mobile{height:800px;min-height:0;max-height:none}
 }
+
+/* Match the public desktop breakpoint even with inspector panels open. */
+.stage{justify-content:safe center!important;overflow-x:auto!important}
+#preview:not(.mobile){width:1280px;min-width:1280px;max-width:none;flex:0 0 1280px}
+#preview.mobile{width:390px!important;min-width:390px;max-width:390px;flex:0 0 390px}

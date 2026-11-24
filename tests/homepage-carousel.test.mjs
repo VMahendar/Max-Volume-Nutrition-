@@ -23,6 +23,7 @@ test('first banner is discoverable without script, with escaped text and respons
  const result=optimizeHomeAssets(renderInitialCarousel(html,config));
  assert.match(result,/data-server-rendered="true"/);
  assert.match(result,/data-carousel-ready="true"/);
+ assert.match(result,/Your daily<\/span> <em>protein\.<\/em>/,'Potency headline contains real whitespace and no separately positioned words');
  assert.match(result,/mvn-orange-whey-20261117-compact.webp 360w/);
  assert.match(result,/width="580" height="580"/);
  assert.match(result,/mvn-home-critical-20261118.css\?v=4/);

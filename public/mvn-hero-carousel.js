@@ -2,7 +2,8 @@
 (() => {
  const hero=document.getElementById('mvnEditorial');
  const state=document.getElementById('mvnCarouselState')||document.getElementById('mvnCarouselDefaults');
- if(!hero||!state||document.body.dataset.homepageEditor==='true'||new URLSearchParams(location.search).get('visual_builder')==='1')return;
+ if(!hero||!state||document.body.dataset.homepageEditor==='true')return;
+ const builderPreview=new URLSearchParams(location.search).get('visual_builder')==='1';
  let config;try{config=JSON.parse(state.textContent);}catch{return;}
  if(!config?.enabled||!Array.isArray(config.slides)||config.slides.length<3)return;
  const el=(tag,cls,text)=>{const n=document.createElement(tag);if(cls)n.className=cls;if(text!==undefined)n.textContent=text;return n;};
@@ -15,7 +16,7 @@
   }
   const slide=el('div','mvn-campaign-slide');slide.setAttribute('role','group');slide.setAttribute('aria-roledescription','slide');slide.setAttribute('aria-label',`${i+1} of ${config.slides.length}: ${item.name}`);
   const copy=el('div','mvn-campaign-copy');copy.append(el('span','mvn-campaign-eyebrow',item.eyebrow));
-  const title=el('h1','mvn-campaign-title');const words=item.title.trim().split(/\s+/);title.append(el('span','mvn-campaign-title-first',words.shift()||''));if(words.length)title.append(el('span','mvn-campaign-title-middle',words.join(' ')));title.append(el('em','',item.highlight));copy.append(title,el('p','mvn-campaign-description',item.description));
+  const title=el('h1','mvn-campaign-title');const potencyHeadline=/^your daily$/i.test(item.title.trim())&&/^protein\.$/i.test(item.highlight.trim());title.append(el('span','mvn-campaign-title-first',potencyHeadline?'Your daily':item.title.trim()),document.createTextNode(' '),el('em','',potencyHeadline?'protein.':item.highlight));copy.append(title,el('p','mvn-campaign-description',item.description));
   const cta=el('a','mvn-campaign-cta',item.button+' →');cta.href=item.href;copy.append(cta);
   const stage=el('a','mvn-campaign-stage');stage.href=item.href;stage.setAttribute('aria-label','Explore '+item.name);
   const products=el('div','mvn-campaign-products');products.dataset.count=item.images.length;
@@ -40,7 +41,7 @@
  const status=el('span','mvn-campaign-status');status.setAttribute('aria-live','polite');status.setAttribute('aria-atomic','true');
  controls.append(previous,pages,next,counter,pause,status);root.append(viewport,controls);const initial=hero.querySelector('[data-server-rendered]');if(initial)initial.replaceWith(root);else hero.append(root);hero.dataset.carouselReady='true';hero.removeAttribute('aria-labelledby');
  const motion=matchMedia('(prefers-reduced-motion: reduce)');
- let current=0,timer=null,paused=!config.autoplay||motion.matches,hover=false,focus=false,inView=true;
+ let current=0,timer=null,paused=builderPreview||!config.autoplay||motion.matches,hover=false,focus=false,inView=true;
  const label=()=>{pause.textContent=paused?'▶ Play':'Ⅱ Pause';pause.setAttribute('aria-label',paused?'Play automatic banner slides':'Pause automatic banner slides');counter.textContent=String(current+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');dots.forEach((d,i)=>d.setAttribute('aria-current',String(i===current)));};
  function schedule(){clearTimeout(timer);timer=null;if(!paused&&!hover&&!focus&&inView&&!document.hidden)timer=setTimeout(()=>show(current+1,false),config.intervalMs);}
  function show(index,manual){

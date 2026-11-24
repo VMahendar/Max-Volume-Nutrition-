@@ -134,7 +134,7 @@ function select(e){
 // True canvas interaction: grab the object itself (mouse or touch), not only the small handles.
 let directGesture=null;
 const beginDirect=ev=>{
- if(mode!=='move'||ev.target.closest?.('[data-mvn-builder-ui]'))return;
+ if(mode!=='move'||ev.target.closest?.('[data-mvn-builder-ui],.mvn-campaign-controls'))return;
  if(ev.button!==0&&ev.pointerType==='mouse')return;
  if(isProtected(ev.target))return;
  const el=ev.target.closest(nodes);
@@ -162,6 +162,8 @@ function endDirect(ev){
 document.addEventListener('pointerup',endDirect,true);
 document.addEventListener('pointercancel',endDirect,true);
 document.addEventListener('click',ev=>{
+ // Permit switching campaign slides in the editor, but never trigger storefront purchases.
+ if(ev.target.closest('.mvn-campaign-controls button'))return;
  if(ev.target.closest('[data-mvn-builder-ui]')&&!ev.target.closest('[data-mvn-builder-created]'))return;
  ev.preventDefault();ev.stopImmediatePropagation();
  let e=ev.target.closest(nodes);if(e&&!isProtected(e))select(e);

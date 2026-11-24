@@ -46,6 +46,7 @@ function choosePage(path){
  $('selectionName').textContent='Click any element on the page';$('propertyControls').hidden=true;$('emptyProperties').hidden=false;
  $('pageName').textContent=$('page').selectedOptions[0]?.textContent||path;
  frame.style.height='800px';
+ frame.style.width=view==='mobile'?'390px':'1280px';
  frame.src=path+(path.includes('?')?'&':'?')+'visual_builder=1';
  status('Opening editable '+path+'. Drag orange handles to move or resize.');
 }
@@ -73,7 +74,7 @@ for(const button of document.querySelectorAll('[data-view]'))button.onclick=()=>
  view=button.dataset.view;
  for(const b of document.querySelectorAll('[data-view]'))b.classList.toggle('selected',b===button);
  frame.classList.toggle('mobile',view==='mobile');
- frame.style.width=view==='mobile'?'390px':'100%';
+ frame.style.width=view==='mobile'?'390px':'1280px';
  frame.style.minHeight='0';
  frame.contentWindow?.location.reload();
 };
@@ -90,7 +91,7 @@ $('fit').onclick=()=>{
  const on=$('workspace').classList.toggle('canvas-wide');
  $('fit').textContent=on?'Show side panels':'Full width';
  status(on?'Full-width canvas. Click Show side panels to access editing properties.':'Editing panels restored.');
- requestAnimationFrame(()=>frame.style.width=view==='mobile'?'390px':'100%');
+ requestAnimationFrame(()=>frame.style.width=view==='mobile'?'390px':'1280px');
 };
 $('addText').onclick=()=>addNew('text');
 $('addButton').onclick=()=>addNew('button');

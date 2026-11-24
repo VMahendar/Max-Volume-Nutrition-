@@ -649,7 +649,7 @@ if(['/', '/index.html'].includes(u.pathname)){
  const editing=u.searchParams.get('homepage_editor')==='1';
  let html=file.toString('utf8').replace('</body>',`<script nonce="${scriptNonce}" type="application/json" id="mvnCarouselState">${carouselJSON}</script><script nonce="${scriptNonce}" type="application/json" id="mvnHomepageDesign">${serialized}</script><script nonce="${scriptNonce}" src="/homepage-design.js?v=20261118-editor-1" defer></script></body>`);
  if(editing)html=html.replace('<body ','<body data-homepage-editor="true" ');
- if(!editing&&u.searchParams.get('visual_builder')!=='1')html=optimizeHomeAssets(renderInitialCarousel(html,mediaCarousel));
+ if(!editing)html=optimizeHomeAssets(renderInitialCarousel(html,mediaCarousel));
  file=Buffer.from(html);
 }
 // Safe visual presentation layer: draft in owner iframe, published presentation on public pages.
@@ -663,7 +663,7 @@ if(builderPage){
   const serialized=JSON.stringify(config||{version:1,pages:{}}).replace(/</g,'\\u003c');
   let html=file.toString('utf8');
   if(builderPreview)html=html.replace(/<html\b/i,'<html data-mvn-visual-builder="edit"');
-  html=html.replace('</body>','<script nonce="'+scriptNonce+'" type="application/json" id="mvnVisualBuilderConfig">'+serialized+'</script><script nonce="'+scriptNonce+'" src="/site-builder-runtime.js?v=20261118-safe-html" defer></script></body>');
+  html=html.replace('</body>','<script nonce="'+scriptNonce+'" type="application/json" id="mvnVisualBuilderConfig">'+serialized+'</script><script nonce="'+scriptNonce+'" src="/site-builder-runtime.js?v=20261124-carousel-sync" defer></script></body>');
   file=Buffer.from(html,'utf8');
  }
 }

@@ -195,3 +195,23 @@ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvn
  html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-home-collection-entry .mvn-approved-tiles>a img{grid-column:1;grid-row:2;height:155px!important}
  html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-home-collection-entry .mvn-approved-tiles>a span{grid-column:1;grid-row:3;justify-self:end;margin:0!important}
 }
+
+/* Identical, readable campaign headlines in the live store and visual canvas. */
+html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-slide .mvn-campaign-title{
+ display:block!important;width:100%!important;max-width:100%!important;min-height:0!important;
+ font:800 clamp(34px,4.3vw,64px)/1.08 Arial,Helvetica,sans-serif!important;
+ letter-spacing:-.045em!important;text-align:left!important;text-transform:none!important;
+ overflow-wrap:normal!important;word-break:normal!important;text-wrap:balance;margin:0!important
+}
+html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-slide .mvn-campaign-title :is(.mvn-campaign-title-first,.mvn-campaign-title-middle,em){
+ display:inline!important;font:inherit!important;letter-spacing:inherit!important;margin:0!important;padding:0!important;
+ max-width:none!important;text-transform:none!important;white-space:normal!important;vertical-align:baseline!important
+}
+html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-slide .mvn-campaign-title :is(.mvn-campaign-title-middle,em)::before{content:none!important}
+html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-slide:has(.mvn-campaign-stage[href="/potency-whey.html"]) .mvn-campaign-title em{display:block!important}
+@media(min-width:1100px){
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-slide.mvn-campaign-with-buy .mvn-campaign-title{font-size:clamp(36px,3.5vw,52px)!important;line-height:1.08!important}
+}
+@media(max-width:760px){
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-slide .mvn-campaign-title{font-size:clamp(32px,8.8vw,48px)!important;line-height:1.08!important}
+}

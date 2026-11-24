@@ -74,7 +74,10 @@ test('visual builder is admin-only, saves private drafts and publishes only sele
   assert.equal(prev.status,200);
   assert.equal(prev.headers.get('x-frame-options'),'SAMEORIGIN');
   assert.match(prev.headers.get('content-security-policy'),/frame-ancestors 'self'/);
-  assert.match(await prev.text(),/site-builder-runtime.js/);
+  const previewHTML=await prev.text();
+  assert.match(previewHTML,/site-builder-runtime.js/);
+  assert.match(previewHTML,/data-server-rendered="true"/,'visual builder uses the same campaign as the public homepage');
+  assert.match(previewHTML,/Your daily<\/span> <em>protein\.<\/em>/);
   const publicBefore=await (await request('/')).text();
   assert.doesNotMatch(publicBefore,/mvnVisualBuilderConfig/);
   const multi={version:1,pages:{'/':[{id,action:'text',device:'all',target:anchor,text:'A custom editorial heading'}],'/about.html':[{id:'v123456789abcf',action:'move',device:'all',target:'body > main:nth-of-type(1)',values:{x:10,y:0}}]}};
