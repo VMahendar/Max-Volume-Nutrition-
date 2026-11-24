@@ -236,3 +236,56 @@ html body.mvn-site-theme.mvn-orange-home .mvn-shop-guide-grid>div{background:#ff
  }
  html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title em{margin-left:9%;max-width:91%}
 }
+
+/* Final homepage contrast: explicitly override legacy white-on-dark text rules.
+   Keep the original gold logo artwork, using a charcoal presentation surface. */
+html body.mvn-site-theme.mvn-orange-home.retail-home header.storehead>a.brand.brand-identity{
+ background:#202020!important;background-image:none!important;border:1px solid #383838!important;
+ border-radius:9px!important;padding:5px 9px!important;box-sizing:border-box!important;
+ display:flex!important;align-items:center!important;justify-content:center!important;
+ box-shadow:none!important;overflow:hidden!important
+}
+html body.mvn-site-theme.mvn-orange-home.retail-home header.storehead>a.brand.brand-identity>img.original-brand-logo{
+ background:transparent!important;filter:none!important;mix-blend-mode:normal!important;
+ width:100%!important;height:100%!important;object-fit:contain!important;object-position:center!important
+}
+html body.mvn-site-theme.mvn-orange-home.retail-home section.mvn-home-collection-entry>div:first-child :is(#mvnCollectionEntryTitle,p,span){
+ color:#202020!important;opacity:1!important;text-shadow:none!important;
+ font-family:Arial,Helvetica,sans-serif!important
+}
+html body.mvn-site-theme.mvn-orange-home.retail-home section.mvn-home-collection-entry>div:first-child>#mvnCollectionEntryTitle{
+ font-weight:800!important;letter-spacing:-.045em!important;line-height:1.04!important
+}
+html body.mvn-site-theme.mvn-orange-home.retail-home section.mvn-home-collection-entry>div:first-child>span{
+ font-weight:700!important;color:#505050!important
+}
+html body.mvn-site-theme.mvn-orange-home.retail-home section.mvn-home-collection-entry>div:first-child>p{
+ font-weight:400!important;line-height:1.5!important
+}
+html body.mvn-site-theme.mvn-orange-home.retail-home section.mvn-home-collection-entry #mvnOpenCollection,
+html body.mvn-site-theme.mvn-orange-home.retail-home section.mvn-home-collection-entry #mvnOpenCollection span{
+ color:#fff!important;background:#202020!important
+}
+html body.mvn-site-theme.mvn-orange-home.retail-home section.mvn-home-collection-entry .mvn-approved-tiles>a :is(strong,span){
+ color:#202020!important;font-family:Arial,Helvetica,sans-serif!important
+}
+html body.mvn-site-theme.mvn-orange-home.retail-home section.mvn-preview-best :is(#mvnBestSellers,.mvn-best-product-info>strong,.mvn-preview-best-head>a){
+ color:#202020!important
+}
+html body.mvn-site-theme.mvn-orange-home.retail-home section.gt-banner :is(#gtBannerTitle,h2,em,p,.gt-kicker,.gt-banner-packs strong,.gt-banner-packs small){
+ color:#202020!important
+}
+html body.mvn-site-theme.mvn-orange-home.retail-home section.mvn-shop-guide :is(h2,h3,h4,p,a,summary){
+ color:#202020!important
+}
+html body.mvn-site-theme.mvn-orange-home.retail-home footer.mvn-home-contact{
+ background:#202020!important;color:#fff!important;border-color:#383838!important
+}
+html body.mvn-site-theme.mvn-orange-home.retail-home footer.mvn-home-contact :is(h2,h3,p,a,small,.mvn-footer-legal){
+ color:#fff!important
+}
+@media(max-width:760px){
+ html body.mvn-site-theme.mvn-orange-home.retail-home header.storehead>a.brand.brand-identity{
+ width:155px!important;height:56px!important;max-width:45%!important;padding:4px 7px!important
+ }
+}
