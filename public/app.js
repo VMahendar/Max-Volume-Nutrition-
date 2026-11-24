@@ -216,9 +216,28 @@ const packLabelFacts=Object.freeze({
 });
 const seoProductDetailUrls=Object.freeze({whey:'potency-whey.html',mass:'nitro-mass.html',pre:'sturdy-pre-workout.html',creatine:'pro-creatine.html',vitamins:'musclevite-multivitamin.html'});
 function packFacts(p,index){const fact=packLabelFacts[retailVariantIds[p.id]?.[Number(index)]];return fact?"Pack label: "+fact:"";}
+
+/* Exact selected pack, current retail price, verified MRP and serving count. */
+function shopCardPrice(p,index){
+ const v=p.variants[Number(index)];
+ if(!isFullShop||document.body.classList.contains('app-store')||!Number.isFinite(v.price)||v.price<=0)return priceMarkup(v);
+ const hasMrp=Number.isFinite(v.mrp)&&v.mrp>v.price;
+ const off=hasMrp?Math.floor((v.mrp-v.price)*100/v.mrp):0;
+ const servings=packFacts(p,index).match(/(\d+) servings per pack/i);
+ const perServing=servings&&Number(servings[1])>0?'<span class="shop-per-serving">≈'+money(Math.round(v.price/Number(servings[1])))+'/serving</span>':'';
+ return '<div class="shop-price-cluster"><b class="selling-price">'+money(v.price)+'</b><div class="shop-price-secondary">'+
+ (hasMrp?'<del class="mrp-value">MRP '+money(v.mrp)+'</del>':'')+perServing+'</div>'+
+ (off>0?'<span class="discount-value shop-discount-pill">'+off+'% off</span>':'')+'</div>'+retailOfferMarkup(v);
+}
+function shopCardFacts(p,index){
+ const facts=packFacts(p,index);
+ if(!isFullShop||document.body.classList.contains('app-store'))return safe(facts);
+ return facts.replace(/^Pack label: /,'').split(' · ').filter(Boolean).map(fact=>'<span class="shop-fact-pill">'+safe(fact.replace(/ per pack$/,''))+'</span>').join('');
+}
+
 function card(p){
 const featured=displayVariant(p);const originalCover=coverImage(p,featured);const cover=failedPackPhotos.has(originalCover)?'':originalCover;const thumbnail=smallCardImages[cover]||cover;const pic=cover?'<img loading="lazy" decoding="async" src="'+safe(thumbnail)+'" alt="'+safe(p.name)+'"><div class="placeholder" hidden><b>'+safe(p.name)+'</b>Photo coming soon</div>':'<div class="placeholder"><b>'+safe(p.name)+'</b>Correct pack photo being verified</div>';
-return '<article class="card"><div class="photo '+(p.brand==='Globe-Tech Nutrition'?'gt-pack':'')+'">'+pic+'</div><div class="info"><small>'+safe(p.brand||'Unicorn Pro Series')+'</small><h3>'+(seoProductDetailUrls[p.id]?'<a href="'+safe(seoProductDetailUrls[p.id])+'">'+safe(p.name)+'</a>':safe(p.name))+'</h3><p>'+safe(p.desc)+'</p><label class="variant-label" for="v-'+p.id+'">FLAVOUR / PACK SIZE</label><select id="v-'+p.id+'" class="variant">'+finderOptionsFor(p).map(({v,i})=>'<option value="'+i+'"'+(i===featured?' selected':'')+'>'+safe(v.label)+'</option>').join("")+'</select><div class="price" id="price-'+p.id+'">'+priceMarkup(p.variants[featured])+'</div>'+(finder?'<p class="finder-stock">'+finderStockLabel(p.variants[featured])+'</p>':'')+'<p class="pack-label-facts">'+safe(packFacts(p,featured))+'</p><button class="details-link" type="button" data-detail="'+p.id+'">VIEW PRODUCT DETAILS →</button><button class="add" data-id="'+p.id+'"'+(p.variants[featured].price===null?' hidden':'')+'>ADD TO CART</button><a class="quote-action" href="'+safe(enquiryURL(p,p.variants[featured]))+'" target="_blank" rel="noopener noreferrer"'+(p.variants[featured].price===null?'':' hidden')+'>ASK ABOUT LAUNCH ↗</a></div></article>';
+return '<article class="card"><div class="photo '+(p.brand==='Globe-Tech Nutrition'?'gt-pack':'')+'">'+pic+'</div><div class="info"><small>'+safe(p.brand||'Unicorn Pro Series')+'</small><h3>'+(seoProductDetailUrls[p.id]?'<a href="'+safe(seoProductDetailUrls[p.id])+'">'+safe(p.name)+'</a>':safe(p.name))+'</h3><p>'+safe(p.desc)+'</p><label class="variant-label" for="v-'+p.id+'">FLAVOUR / PACK SIZE</label><select id="v-'+p.id+'" class="variant">'+finderOptionsFor(p).map(({v,i})=>'<option value="'+i+'"'+(i===featured?' selected':'')+'>'+safe(v.label)+'</option>').join("")+'</select><div class="price" id="price-'+p.id+'">'+shopCardPrice(p,featured)+'</div>'+(finder?'<p class="finder-stock">'+finderStockLabel(p.variants[featured])+'</p>':'')+'<p class="pack-label-facts">'+shopCardFacts(p,featured)+'</p><button class="details-link" type="button" data-detail="'+p.id+'">VIEW PRODUCT DETAILS →</button><button class="add" data-id="'+p.id+'"'+(p.variants[featured].price===null?' hidden':'')+'>ADD TO CART</button><a class="quote-action" href="'+safe(enquiryURL(p,p.variants[featured]))+'" target="_blank" rel="noopener noreferrer"'+(p.variants[featured].price===null?'':' hidden')+'>ASK ABOUT LAUNCH ↗</a></div></article>';
 }
 
 function installCategoryShortcuts(){
@@ -394,7 +413,7 @@ document.querySelectorAll("[data-cat]").forEach(button=>{const active=button.dat
 const filters=$("activeFilters");if(filters){filters.replaceChildren();for(const [label,clear] of [[q?"Search: "+q:"",()=>{q="";$("q").value="";}],[priceRange!=="all"?priceLabels[priceRange]:"",()=>{priceRange="all";$("priceRange").value="all";}]]){if(!label)continue;const button=document.createElement("button");button.type="button";button.textContent=label+" ×";button.setAttribute("aria-label","Clear "+label);button.onclick=()=>{clear();render()};filters.append(button)}filters.hidden=!filters.childElementCount;}
  document.querySelectorAll(".photo img").forEach(img=>img.addEventListener("error",()=>hideFailedPackPhoto(img)));
 $("resultText").textContent=items.length+" product range"+(items.length===1?"":"s")+" · choose pack and flavour";
-document.querySelectorAll(".variant").forEach(s=>s.addEventListener("change",()=>{const p=P.find(x=>x.id===s.id.slice(2));$("price-"+p.id).innerHTML=window.mvnSafeHTML(priceMarkup(p.variants[Number(s.value)]));const facts=s.closest(".card").querySelector(".pack-label-facts");if(facts)facts.textContent=packFacts(p,s.value);swapPhoto(s.closest(".card").querySelector(".photo"),coverImage(p,s.value),p.name);const v=p.variants[Number(s.value)],card=s.closest(".card");const availability=card.querySelector(".finder-stock");if(availability)availability.textContent=finderStockLabel(v);card.querySelector(".add").hidden=v.price===null;const quote=card.querySelector(".quote-action");quote.hidden=v.price!==null;quote.href=enquiryURL(p,v)}));
+document.querySelectorAll(".variant").forEach(s=>s.addEventListener("change",()=>{const p=P.find(x=>x.id===s.id.slice(2));$("price-"+p.id).innerHTML=window.mvnSafeHTML(shopCardPrice(p,s.value));const facts=s.closest(".card").querySelector(".pack-label-facts");if(facts)facts.innerHTML=window.mvnSafeHTML(shopCardFacts(p,s.value));swapPhoto(s.closest(".card").querySelector(".photo"),coverImage(p,s.value),p.name);const v=p.variants[Number(s.value)],card=s.closest(".card");const availability=card.querySelector(".finder-stock");if(availability)availability.textContent=finderStockLabel(v);card.querySelector(".add").hidden=v.price===null;const quote=card.querySelector(".quote-action");quote.hidden=v.price!==null;quote.href=enquiryURL(p,v)}));
 document.querySelectorAll(".details-link").forEach(b=>b.addEventListener("click",()=>showDetail(b.dataset.detail,finder?Number($("v-"+b.dataset.detail).value):undefined)));
 document.querySelectorAll(".add").forEach(b=>b.addEventListener("click",()=>{const k=b.dataset.id+"|"+$("v-"+b.dataset.id).value;if(!getItem(k))return;cart[k]=Math.min(999,(cart[k]||0)+1);persist();openBag()}));
 }
@@ -465,7 +484,7 @@ const address=$("customerAddress").value.trim(),city=$("customerCity").value.tri
 for(const id of ['customerName','customerAddress','customerCity','customerState'])$(id).setCustomValidity($(id).value.trim()?'':'Please complete this field.');
 if(!$("checkoutFields").reportValidity()||!name||!/^[0-9]{10}$/.test(phone)||!address||!city||!state||!/^[1-9][0-9]{5}$/.test(pincode))return;
 const message=$("priceMessage");const previous=totals().total;$("send").disabled=true;message.textContent="Checking current prices…";
-try{await refreshRetailPrices();if($("offerCode").value.trim())await quoteOffer();drawCart();renderRecent();document.querySelectorAll('.variant').forEach(select=>{const p=P.find(item=>item.id===select.id.slice(2));$("price-"+p.id).innerHTML=window.mvnSafeHTML(priceMarkup(p.variants[Number(select.value)]))});}catch(error){message.textContent=error.message;$("send").disabled=false;return;}
+try{await refreshRetailPrices();if($("offerCode").value.trim())await quoteOffer();drawCart();renderRecent();document.querySelectorAll('.variant').forEach(select=>{const p=P.find(item=>item.id===select.id.slice(2));$("price-"+p.id).innerHTML=window.mvnSafeHTML(shopCardPrice(p,select.value))});}catch(error){message.textContent=error.message;$("send").disabled=false;return;}
 if(totals().total!==previous){message.textContent="Prices have been updated. Please review your cart total and confirm again.";$("send").disabled=false;return;}
 message.textContent="";
 entries=Object.entries(cart).filter(([k])=>getItem(k));if(!entries.length)return;
