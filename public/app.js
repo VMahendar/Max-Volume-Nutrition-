@@ -557,8 +557,80 @@ document.addEventListener("keydown",e=>{
  if(e.key==="Escape"){e.preventDefault();closeBag()}
  if(e.key==="Tab"){const controls=[...$("drawer").querySelectorAll('button:not(:disabled),input:not(:disabled),textarea:not(:disabled),a[href],select:not(:disabled),[tabindex]:not([tabindex="-1"])')].filter(el=>el.getClientRects().length&&!el.closest('[hidden],[inert]'));const first=controls[0],last=controls.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}
 });
+
+/* Homepage cards use the same verified retail catalogue and cart as the shop.
+   Keep crawlable detail links as the fallback if live prices are unavailable. */
+function enhanceHomeBestSellers(){
+ if(!isShowcaseHome)return;
+ const mapping={'/potency-whey.html':'whey','/nitro-mass.html':'mass','/sturdy-pre-workout.html':'pre','/pro-creatine.html':'creatine'};
+ const create=(tag,cls,txt)=>{const el=document.createElement(tag);if(cls)el.className=cls;if(txt!==undefined)el.textContent=txt;return el;};
+ for(const link of document.querySelectorAll('.mvn-preview-best-grid>a.mvn-best-product')){
+  const p=P.find(item=>item.id===mapping[link.getAttribute('href')]);
+  if(!p)continue;
+  const options=p.variants.map((v,i)=>({v,i})).filter(({v})=>Number.isFinite(v.price)&&v.price>0);
+  if(!options.length)continue;
+  const shell=create('article','mvn-home-buy-card');
+  const controls=create('div','mvn-home-buy-controls');
+  const label=create('label','mvn-home-variant-label','Flavour / pack size');
+  const select=create('select','mvn-home-variant');
+  select.id='home-variant-'+p.id;label.htmlFor=select.id;
+  for(const {v,i} of options){const option=create('option','',v.catalogLabel||v.label);option.value=String(i);select.append(option);}
+  select.value=String(options.find(x=>x.i===(p.featuredIndex||0))?.i??options[0].i);
+  const prices=create('div','mvn-home-live-price');
+  const facts=create('p','mvn-home-pack-facts');
+  const add=create('button','mvn-home-add','ADD TO CART');add.type='button';
+  const status=create('p','mvn-home-buy-status');status.setAttribute('role','status');
+  const info=link.querySelector('.mvn-best-product-info');
+  const details=link.querySelector('.mvn-best-action');
+  const pack=link.querySelector('.mvn-best-pack');
+  const photo=link.querySelector('.mvn-best-product-photo');
+  const img=photo?.querySelector('img');
+  if(!info||!details||!pack||!photo||!img)continue;
+  const originalIndex=Number(select.value),originalSrc=img.getAttribute('src');
+  const placeholder=create('span','mvn-home-photo-note','Pack photo not available');placeholder.hidden=true;photo.append(placeholder);
+  const update=()=>{
+   const i=Number(select.value),v=p.variants[i];
+   const valid=Number.isFinite(v?.price)&&v.price>0;
+   prices.replaceChildren();
+   if(valid){
+    const row=create('div','mvn-home-price-row');
+    row.append(create('strong','mvn-home-price',money(v.price)));
+    if(Number.isFinite(v.mrp)&&v.mrp>v.price){
+     const off=Math.round((v.mrp-v.price)*100/v.mrp);
+     row.append(create('del','mvn-home-mrp','MRP '+money(v.mrp)));
+     if(off>0)prices.append(create('span','mvn-home-discount',off+'% OFF'));
+    }
+    prices.prepend(row);
+   }else prices.append(create('span','','Price confirmation required'));
+   pack.textContent=v?.catalogLabel||v?.label||'';
+   facts.textContent=packFacts(p,i).replace(/^Pack label: /,'');facts.hidden=!facts.textContent;
+   const src=i===originalIndex?originalSrc:(coverImage(p,i)||'');
+   img.hidden=!src;placeholder.hidden=!!src;
+   if(src){img.src=src;img.alt=p.name+' — '+(v.catalogLabel||v.label);}
+   add.disabled=!valid;
+  };
+  img.addEventListener('error',()=>{img.hidden=true;placeholder.hidden=false;});
+  select.addEventListener('change',()=>{status.textContent='';update();});
+  add.addEventListener('click',async()=>{
+   const i=Number(select.value),previousPrice=p.variants[i]?.price;
+   add.disabled=true;select.disabled=true;status.textContent='Checking current price…';
+   try{
+    await refreshRetailPrices();
+    const v=p.variants[i];
+    if(!Number.isFinite(v?.price)||v.price<=0){update();status.textContent='Please contact our team for availability.';return;}
+    if(v.price!==previousPrice){update();status.textContent='Price updated. Please review and add again.';return;}
+    const key=p.id+'|'+i;cart[key]=Math.min(999,(cart[key]||0)+1);persist();status.textContent='Added to cart.';openBag();
+   }catch(error){status.textContent=error.message||'Could not verify the current price. Please try again.';}
+   finally{select.disabled=false;update();}
+  });
+  details.textContent='View product details →';
+  link.before(shell);shell.append(link,controls);controls.append(label,select,prices,facts,add,status);update();
+ }
+}
+
 installCategoryShortcuts();render();drawCart();renderRecent();
 refreshRetailPrices().then(changed=>{
+ enhanceHomeBestSellers();
  if(finder){
   finderLive=true;
   finderBudget.disabled=false;
