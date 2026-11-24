@@ -215,3 +215,40 @@ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvn
 @media(max-width:760px){
  html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-slide .mvn-campaign-title{font-size:clamp(32px,8.8vw,48px)!important;line-height:1.08!important}
 }
+
+/* Desktop reference walkthrough: integrated hero, consistent product scale and compact retail cards. */
+html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-desktop-selected-pack{display:none!important}
+@media(min-width:1100px){
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"]{background:#fff!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-carousel{max-width:1440px!important;padding:22px clamp(28px,4vw,60px) 0!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-slide:not([hidden]){background:#f0e9dc!important;border-radius:26px!important;padding:clamp(24px,3vw,44px)!important;min-height:420px!important;gap:clamp(16px,2vw,30px)!important;box-sizing:border-box}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-slide.mvn-campaign-with-buy:not([hidden]){grid-template-columns:minmax(0,1.05fr) minmax(0,1.12fr) minmax(250px,.88fr)!important;align-items:center!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-with-buy .mvn-campaign-copy{gap:16px!important;align-self:center!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-slide.mvn-campaign-with-buy .mvn-campaign-title{font-size:clamp(36px,3.9vw,57px)!important;line-height:1.03!important;letter-spacing:-.05em!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-with-buy .mvn-campaign-description{font:400 15px/1.55 Arial,sans-serif!important;max-width:36ch!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-with-buy .mvn-campaign-cta{border-radius:24px!important;padding:12px 18px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-with-buy .mvn-campaign-stage{width:100%!important;max-width:none!important;height:clamp(300px,29vw,410px)!important;background:#fff!important;border-radius:18px!important;padding:16px!important;display:flex!important;align-items:center!important;justify-content:center!important;box-sizing:border-box!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-stage.mvn-selected-pack-ready .mvn-campaign-products{display:none!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-stage.mvn-selected-pack-ready .mvn-desktop-selected-pack:not([hidden]){display:block!important;width:100%!important;height:calc(100% - 24px)!important;max-width:100%!important;max-height:100%!important;object-fit:contain!important;object-position:center!important;background:#fff!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-stage .mvn-campaign-photo-note{flex:none!important;line-height:1.3!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-campaign-with-buy .mvn-hero-buy{align-self:center!important;padding:20px!important;gap:12px!important;border-radius:20px!important;border:1px solid #e5e0d8;box-shadow:0 5px 20px #3028200a}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-name{font:750 22px/1.15 Arial,sans-serif!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-row>b{font-size:32px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-discount{border-radius:20px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] #mvnEditorial .mvn-hero-buy-add{border-radius:24px!important;min-height:46px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-home-collection-entry,html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-preview-best,html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-shop-guide,html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.gt-banner,html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-approved-wholesale{max-width:1440px!important;padding-inline:clamp(28px,4vw,60px)!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-home-collection-entry .mvn-approved-tiles{gap:16px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-home-collection-entry .mvn-approved-tiles>a{min-height:245px!important;border-radius:18px!important;padding:18px!important;background:#fff!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-home-collection-entry .mvn-approved-tiles>a strong{font-size:20px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-home-collection-entry .mvn-approved-tiles>a img{height:clamp(155px,15vw,205px)!important;object-fit:contain!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-preview-best .mvn-preview-best-grid{gap:16px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-preview-best .mvn-preview-best-grid>article.mvn-home-buy-card{border-radius:18px!important;overflow:hidden!important;border-color:#e6e2dc!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-preview-best .mvn-preview-best-grid>article.mvn-home-buy-card .mvn-best-product-photo{height:clamp(210px,21vw,285px)!important;padding:16px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-preview-best .mvn-preview-best-grid>article.mvn-home-buy-card .mvn-best-product-info>strong{font-size:20px!important;min-height:2.4em!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-preview-best .mvn-preview-best-grid>article.mvn-home-buy-card .mvn-home-buy-controls{padding:10px 16px 16px!important;gap:9px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-preview-best .mvn-preview-best-grid>article.mvn-home-buy-card .mvn-home-price{font-size:29px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-preview-best .mvn-preview-best-grid>article.mvn-home-buy-card .mvn-home-add{border-radius:24px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-shop-guide .mvn-shop-guide-grid{gap:24px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.mvn-shop-guide .mvn-guide-trust{border-radius:20px!important}
+ html body.mvn-site-theme.retail-home.mvn-orange-home[data-mvn-page="index"] section.gt-banner{border-radius:22px!important;background:#f3eee5!important;margin-block:12px 24px!important}
+}

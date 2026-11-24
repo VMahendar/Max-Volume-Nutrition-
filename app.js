@@ -640,8 +640,16 @@ function enhanceDesktopCampaignPurchase(){
   const add=make('button','mvn-hero-buy-add','Add to cart');add.type='button';
   const status=make('p','mvn-hero-buy-status');status.setAttribute('role','status');
   const selected=()=>retailVariantIds[p.id]?.indexOf(sel.value)??-1;
+  // Original selected pack photo, desktop only. Keep the owner campaign photos as fallback.
+  const featured=make('img','mvn-desktop-selected-pack');featured.decoding='async';featured.loading='lazy';featured.hidden=true;
+  stage.append(featured);
+  featured.addEventListener('load',()=>{featured.hidden=false;stage.classList.add('mvn-selected-pack-ready');});
+  featured.addEventListener('error',()=>{featured.hidden=true;stage.classList.remove('mvn-selected-pack-ready');});
   const update=()=>{
    const i=selected(),v=p.variants[i];price.replaceChildren();facts.textContent='';
+   const src=coverImage(p,i);
+   if(src){featured.alt=p.name+' — '+(v.catalogLabel||v.label);if(featured.getAttribute('src')!==src){featured.hidden=true;stage.classList.remove('mvn-selected-pack-ready');featured.src=src;}}
+   else{featured.removeAttribute('src');featured.hidden=true;stage.classList.remove('mvn-selected-pack-ready');}
    const ok=Number.isFinite(v?.price)&&v.price>0;add.disabled=!ok;
    if(!ok){price.textContent='Confirm price with our team';return;}
    const row=make('div','mvn-hero-buy-row');row.append(make('b','',money(v.price)));
