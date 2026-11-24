@@ -1,83 +1,156 @@
 
-/* Homepage-only approved editorial composition. Existing order/admin hooks retained. */
-html body.mvn-site-theme.mvn-orange-home{--mvn-copper:#b88b63}
-html body.mvn-site-theme.mvn-orange-home > .storehead{background:#fff!important;color:#242424!important;height:auto!important;min-height:76px!important;gap:16px!important;padding:8px 4.5vw!important}
-html body.mvn-site-theme.mvn-orange-home .storehead .brand-identity{width:210px!important;height:64px!important}
-html body.mvn-site-theme.mvn-orange-home .mvn-preview-nav a{color:#242424!important;text-transform:none!important;font-size:14px!important;letter-spacing:0!important}
-html body.mvn-site-theme.mvn-orange-home .mvn-preview-nav a[aria-current="page"]{color:#80552e!important;text-decoration:underline;text-underline-offset:6px}
+/* MVN homepage presentation only. Keep all existing markup, assets and behaviour.
+   Cream paper, dark ink, oversized editorial typography, subtle column grid. */
+html body.mvn-site-theme.mvn-orange-home{
+ --mvn-paper:#f4ebd9;--mvn-paper-light:#fcf8ef;--mvn-ink:#20221d;--mvn-muted:#5d5c50;--mvn-rule:#c9beaa;
+ background:var(--mvn-paper)!important;color:var(--mvn-ink);font-family:Arial,Helvetica,sans-serif
+}
+html body.mvn-site-theme.mvn-orange-home.retail-home>.announce{
+ background:#e8ddc8!important;color:var(--mvn-ink)!important;border-bottom:1px solid var(--mvn-rule)!important
+}
+html body.mvn-site-theme.mvn-orange-home.retail-home>header.storehead{
+ background:var(--mvn-paper)!important;color:var(--mvn-ink)!important;border-bottom:1px solid var(--mvn-rule)!important;
+ min-height:76px!important;height:auto!important;padding:8px 4vw!important;gap:16px!important
+}
+html body.mvn-site-theme.mvn-orange-home.retail-home header.storehead .brand-identity{width:210px!important;height:64px!important}
+html body.mvn-site-theme.mvn-orange-home.retail-home header.storehead .head-actions>a,
+html body.mvn-site-theme.mvn-orange-home.retail-home header.storehead .head-actions>button,
+html body.mvn-site-theme.mvn-orange-home.retail-home header.storehead .head-actions>details:not([open])>summary{
+ color:var(--mvn-ink)!important;background:transparent!important;border-color:transparent!important
+}
+html body.mvn-site-theme.mvn-orange-home .storehead .mvn-preview-nav a{color:var(--mvn-ink)!important;font-family:Arial,Helvetica,sans-serif!important;letter-spacing:0!important;font-size:13px!important;text-transform:none!important}
+html body.mvn-site-theme.mvn-orange-home .storehead .mvn-preview-nav a[aria-current=page]{text-decoration:underline;text-underline-offset:5px}
 html body.mvn-site-theme.mvn-orange-home .head-actions :is(.account-link span,#bag>span){display:none!important}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-owner-banner-feature{grid-template-columns:1.08fr .92fr!important;min-height:440px!important;padding:40px 4.5vw 36px!important;max-width:none!important;background:radial-gradient(ellipse at 76% 50%,#555 0,#292929 36%,#101010 78%)!important}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorialTitle{font-family:Arial,Helvetica,sans-serif!important;font-size:clamp(46px,6.5vw,106px)!important;font-weight:900!important;letter-spacing:-.075em!important;line-height:.9!important;text-transform:none!important}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorialTitle em{color:var(--mvn-copper)!important;font-style:normal!important}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-owner-banner-link{width:100%!important;margin:0!important}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-launch-primary{background:transparent!important;color:#f5e4d3!important;border:1px solid var(--mvn-copper)!important}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-launch-hero-copy>p{color:#e0e0e0!important;max-width:48ch!important}
-html body.mvn-site-theme.mvn-orange-home .mvn-home-collection-entry{display:grid!important;grid-template-columns:minmax(190px,1fr) minmax(0,4fr)!important;gap:18px!important;align-items:center!important;background:#fff!important;color:#242424!important;padding:30px 4.5vw!important;border-bottom:1px solid #e3e3e3!important}
-html body.mvn-site-theme.mvn-orange-home .mvn-home-collection-entry>div:first-child{grid-column:1;grid-row:1}
-html body.mvn-site-theme.mvn-orange-home .mvn-home-collection-entry :is(#mvnCollectionEntryTitle,p,span){color:#242424!important}
-html body.mvn-site-theme.mvn-orange-home #mvnCollectionEntryTitle,html body.mvn-site-theme.mvn-orange-home #mvnBestSellers{font:900 clamp(30px,3.4vw,53px)/.96 Arial,Helvetica,sans-serif!important;letter-spacing:-.065em!important;text-transform:none!important;color:#242424!important}
-html body.mvn-site-theme.mvn-orange-home #mvnOpenCollection{grid-column:1;grid-row:2;justify-self:start;background:#242424!important;color:#fff!important;padding:12px!important;font-size:10px!important}
-html body.mvn-site-theme.mvn-orange-home #mvnOpenCollection span{color:#fff!important}
-.mvn-approved-tiles{grid-column:2;grid-row:1/3;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;min-width:0}
-.mvn-approved-tiles>a{position:relative;isolation:isolate;display:flex;align-items:flex-start;min-height:160px;overflow:hidden;background:radial-gradient(ellipse at 90% 80%,#595959,#242424 70%);color:#fff!important;padding:14px;border-radius:3px;text-decoration:none}
-.mvn-approved-tiles>a strong{position:relative;z-index:2;font:800 clamp(17px,1.7vw,28px)/1.04 Arial,sans-serif;max-width:85%;letter-spacing:-.045em}
-.mvn-approved-tiles>a img{position:absolute;right:0;bottom:0;width:67%;height:73%;object-fit:contain;object-position:right bottom;z-index:1}
-html body.mvn-site-theme.mvn-orange-home .mvn-approved-tiles>a span{position:absolute;bottom:12px;left:14px;color:#e9c5a1!important;font-size:20px!important;z-index:2}
-html body.mvn-site-theme.mvn-orange-home .mvn-preview-best{padding:30px 4.5vw!important}
-html body.mvn-site-theme.mvn-orange-home .mvn-preview-best-grid{gap:14px!important}
-.mvn-approved-wholesale{display:flex;align-items:center;justify-content:space-between;gap:24px;padding:30px 4.5vw;background:radial-gradient(ellipse at 0 100%,#4a4a4a,#242424 65%);color:white}
-.mvn-approved-wholesale h2{font:900 clamp(26px,3.2vw,48px)/.95 Arial,sans-serif;letter-spacing:-.04em;color:#d4ad87;margin:0}
-.mvn-approved-wholesale h2 span{font-size:.52em;color:white;letter-spacing:-.02em}
-.mvn-approved-wholesale p{max-width:40ch;color:#fff;margin:0}
-.mvn-approved-wholesale a{flex:none;padding:13px 19px;border:1px solid #b88b63;color:#f4dfcb;text-decoration:none;font-weight:700}
-@media(max-width:1000px){.mvn-approved-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}.mvn-approved-tiles>a{min-height:135px}}
-@media(max-width:760px){html body.mvn-site-theme.mvn-orange-home > .storehead{min-height:70px!important;padding:6px 12px!important;gap:6px!important}html body.mvn-site-theme.mvn-orange-home .storehead .brand-identity{width:155px!important;height:52px!important;max-width:45%!important}html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-owner-banner-feature{min-height:0!important;padding:28px 20px!important}html body.mvn-site-theme.mvn-orange-home #mvnEditorialTitle{font-size:clamp(42px,11vw,75px)!important}html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-owner-banner-link{margin:14px 0 0!important}html body.mvn-site-theme.mvn-orange-home .mvn-home-collection-entry{grid-template-columns:1fr!important;padding:24px 16px!important}html body.mvn-site-theme.mvn-orange-home .mvn-home-collection-entry>div:first-child{grid-row:1}html body.mvn-site-theme.mvn-orange-home .mvn-approved-tiles{grid-column:1;grid-row:2}html body.mvn-site-theme.mvn-orange-home #mvnOpenCollection{grid-row:3}.mvn-approved-wholesale{flex-direction:column;align-items:flex-start;padding:28px 20px}.mvn-approved-tiles>a strong{font-size:20px}}
-
-/* Reference-inspired editorial canvas: the live, server-rendered AND interactive carousel. */
-html body.mvn-site-theme.mvn-orange-home{--mvn-paper-editorial:#f4ebd9;--mvn-editorial-ink:#172019}
-html body.mvn-site-theme.mvn-orange-home>.announce{background:#e8ddc8!important;color:#242820!important}
-html body.mvn-site-theme.mvn-orange-home>.storehead{background:var(--mvn-paper-editorial)!important;border-bottom:1px solid #d8cdb9!important}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial{background:var(--mvn-paper-editorial)!important;color:var(--mvn-editorial-ink)!important}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-carousel{background:var(--mvn-paper-editorial)!important;color:var(--mvn-editorial-ink)!important;max-width:none!important;padding:0 3.5vw 0!important}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-slide{position:relative;isolation:isolate;display:block!important;min-height:clamp(510px,48vw,780px)!important;overflow:hidden;background:repeating-linear-gradient(90deg,transparent 0,transparent calc(11.11% - 1px),#998e781c calc(11.11% - 1px),#998e781c 11.11%),radial-gradient(ellipse at 70% 35%,#fffaf1 0%,#f4ebd9 70%);border:0}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial,
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-carousel{background:var(--mvn-paper)!important;color:var(--mvn-ink)!important;max-width:none!important}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-carousel{padding:0 4vw 0!important}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-slide:not([hidden]){
+ display:grid!important;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);grid-template-rows:auto 1fr auto auto;
+ align-items:start;align-content:center;gap:14px 2vw;min-height:clamp(420px,45vw,690px)!important;
+ padding:clamp(24px,4vw,60px) clamp(12px,2vw,32px);position:relative;isolation:isolate;
+ background:repeating-linear-gradient(90deg,transparent 0,transparent calc(12.5% - 1px),#998e781c calc(12.5% - 1px),#998e781c 12.5%),radial-gradient(ellipse at 65% 35%,#fffaf1,#f4ebd9 78%)
+}
 html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-slide[hidden]{display:none!important}
 html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-copy{display:contents}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-eyebrow{position:absolute;z-index:3;left:2%;top:4%;font-size:clamp(9px,1vw,13px);line-height:1.35;max-width:30%;letter-spacing:.18em;color:#282e25!important;margin:0}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title{position:absolute;z-index:2;left:2%;top:13%;right:1%;font:900 clamp(60px,11.6vw,190px)/.82 Arial,Helvetica,sans-serif!important;letter-spacing:-.085em!important;text-transform:none!important;color:#172019!important;overflow-wrap:normal;margin:0!important;pointer-events:none}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title :is(.mvn-campaign-title-first,.mvn-campaign-title-middle,em){display:block!important;color:#172019!important;font:inherit!important;letter-spacing:inherit!important;font-style:normal!important;text-transform:lowercase;overflow-wrap:anywhere}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-eyebrow{grid-column:1;grid-row:1;position:static;color:var(--mvn-ink)!important;font:700 clamp(10px,1vw,13px)/1.4 Arial,sans-serif;letter-spacing:.16em;margin:0!important;max-width:100%}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title{
+ grid-column:1;grid-row:2;align-self:center;position:relative;z-index:2;inset:auto;
+ font:900 clamp(54px,8.6vw,138px)/.86 Arial,Helvetica,sans-serif!important;letter-spacing:-.075em!important;
+ color:var(--mvn-ink)!important;text-transform:none!important;margin:0!important;min-height:0!important;
+ overflow-wrap:normal;max-width:100%;pointer-events:none
+}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title :is(.mvn-campaign-title-first,.mvn-campaign-title-middle,em){
+ display:block!important;font:inherit!important;font-style:normal!important;letter-spacing:inherit!important;color:var(--mvn-ink)!important;
+ text-transform:lowercase;overflow-wrap:anywhere;max-width:100%;text-align:left
+}
 html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title-first:first-letter{text-transform:uppercase}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title-middle{margin-left:13%;max-width:84%}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title em{margin-left:29%;max-width:70%;text-align:right;font-size:.86em!important}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-description{position:absolute;z-index:3;left:2%;bottom:12%;width:19%;max-width:25ch;font:500 clamp(12px,1.15vw,16px)/1.45 Arial,sans-serif;color:#273027!important;margin:0}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-cta{position:absolute;z-index:4;left:2%;bottom:3%;background:transparent!important;color:#172019!important;border:1px solid #172019!important;border-radius:100px;padding:10px 16px;font-size:10px;min-height:42px}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-stage{position:absolute;inset:0;width:100%;height:100%;z-index:1;display:block;background:transparent!important;overflow:hidden;border:0;border-radius:0}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title-middle{margin-left:9%;font-size:.88em!important}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title em{margin-left:15%;font-size:.72em!important;line-height:.95!important;max-width:85%}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-description{
+ grid-column:1;grid-row:3;position:static;width:auto;max-width:44ch;min-height:0!important;margin:0!important;
+ color:var(--mvn-ink)!important;font:400 clamp(13px,1.15vw,16px)/1.5 Arial,Helvetica,sans-serif
+}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-cta{
+ grid-column:1;grid-row:4;position:static;justify-self:start;min-height:44px;
+ background:transparent!important;color:var(--mvn-ink)!important;border:1px solid var(--mvn-ink)!important;
+ border-radius:30px;padding:12px 18px;font-size:11px
+}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-stage{
+ grid-column:2;grid-row:1/5;align-self:stretch;position:relative;inset:auto;width:100%;height:auto;min-height:0;
+ display:flex;flex-direction:column;justify-content:center;gap:8px;background:transparent!important;border:0;
+ border-radius:0;overflow:visible;mix-blend-mode:multiply
+}
 html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-stage::after{display:none}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products{position:absolute;inset:0;display:block;width:100%;height:100%;padding:0}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products .mvn-campaign-pack{position:absolute;overflow:visible;max-width:none!important;margin:0!important;aspect-ratio:1;mix-blend-mode:multiply;width:23%!important;z-index:1}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products .mvn-campaign-pack:first-child{width:34%!important;top:-2%;right:3%;z-index:2}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products .mvn-campaign-pack:nth-child(2){left:20%;bottom:-8%}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products .mvn-campaign-pack:nth-child(3){top:2%;right:31%;width:19%!important}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-pack>img{object-fit:contain;filter:drop-shadow(0 12px 9px #392b1b26)}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-pack.mvn-campaign-official{overflow:hidden}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-photo-note{top:4%;bottom:auto;right:2%;left:auto;max-width:20%;text-align:right;color:#273027;font-size:10px}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-controls{border-top:1px solid #a99f8b55;margin:0;padding:6px 0;min-height:48px}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-controls button,html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-counter{color:#172019!important}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-dot::after{background:#17201944}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-dot[aria-current=true]::after{background:#172019}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-owner-banner-feature{background:var(--mvn-paper-editorial)!important}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial #mvnEditorialTitle,html body.mvn-site-theme.mvn-orange-home #mvnEditorial #mvnEditorialTitle em,html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-launch-hero-copy>p,html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-orange-eyebrow{color:#172019!important}
-html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-launch-primary{color:#172019!important;border-color:#172019!important}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products{
+ display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);grid-template-rows:1fr 1fr;
+ gap:4px;align-items:center;position:relative;inset:auto;width:100%;height:auto;max-height:none;padding:0
+}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products .mvn-campaign-pack{
+ position:relative!important;inset:auto!important;width:100%!important;max-width:none!important;margin:0!important;
+ aspect-ratio:1;overflow:hidden;mix-blend-mode:multiply;justify-self:center
+}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products .mvn-campaign-pack:first-child{grid-column:1;grid-row:1/3}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products[data-count="2"]{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-rows:1fr}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products[data-count="2"] .mvn-campaign-pack:first-child{grid-row:1}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products[data-count="1"]{grid-template-columns:1fr;grid-template-rows:1fr}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products[data-count="1"] .mvn-campaign-pack:first-child{grid-row:1;max-width:420px!important}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-pack:not(.mvn-campaign-official)>img{
+ display:block;object-fit:contain;background:transparent!important;filter:none!important;mix-blend-mode:multiply
+}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-photo-note{
+ position:static;max-width:100%;text-align:center;color:var(--mvn-ink)!important;font-size:10px;letter-spacing:.1em
+}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-controls{border-top:1px solid var(--mvn-rule);margin:0;padding:4px 0;min-height:48px}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-controls button,
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-counter{color:var(--mvn-ink)!important}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-dot::after{background:#20221d45}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-dot[aria-current=true]::after{background:#20221d}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-owner-banner-feature{background:var(--mvn-paper)!important}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial #mvnEditorialTitle,
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial #mvnEditorialTitle em{font-family:Arial,Helvetica,sans-serif!important;font-weight:900!important;letter-spacing:-.065em!important;color:var(--mvn-ink)!important;text-transform:none!important}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-launch-hero-copy>p,
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-orange-eyebrow{color:var(--mvn-ink)!important}
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-launch-primary,
+html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-launch-secondary{color:var(--mvn-ink)!important;background:transparent!important;border:1px solid var(--mvn-ink)!important;border-radius:30px!important}
+/* Carry the same paper, type and spacing through every existing homepage section. */
+html body.mvn-site-theme.mvn-orange-home :is(.mvn-home-collection-entry,.mvn-preview-best,.mvn-shop-guide,.gt-banner,.mvn-approved-wholesale,.mvn-home-contact){
+ background:var(--mvn-paper)!important;color:var(--mvn-ink)!important;border-color:var(--mvn-rule)!important;
+ border-top:1px solid var(--mvn-rule)!important;padding:clamp(24px,4vw,56px) 4vw!important
+}
+html body.mvn-site-theme.mvn-orange-home :is(#mvnCollectionEntryTitle,#mvnBestSellers,.mvn-shop-guide h2,.gt-banner h2,.mvn-approved-wholesale h2){
+ font:900 clamp(30px,4vw,58px)/.98 Arial,Helvetica,sans-serif!important;letter-spacing:-.055em!important;
+ text-transform:none!important;color:var(--mvn-ink)!important;margin:0 0 10px!important
+}
+html body.mvn-site-theme.mvn-orange-home :is(.mvn-home-collection-entry p,.mvn-home-collection-entry span,.mvn-shop-guide h3,.mvn-shop-guide a,.gt-banner p,.gt-banner h2 em,.gt-banner-packs a,.gt-banner-packs small,.gt-kicker,.mvn-approved-wholesale h2 span,.mvn-approved-wholesale p,.mvn-home-contact p,.mvn-home-contact h3,.mvn-home-contact a,.mvn-footer-legal){color:var(--mvn-ink)!important}
+html body.mvn-site-theme.mvn-orange-home .mvn-home-collection-entry{
+ display:grid!important;grid-template-columns:minmax(180px,1fr) minmax(0,4fr)!important;gap:16px!important;align-items:center
+}
+html body.mvn-site-theme.mvn-orange-home .mvn-home-collection-entry>div:first-child{grid-column:1;grid-row:1}
+html body.mvn-site-theme.mvn-orange-home #mvnOpenCollection{grid-column:1;grid-row:2;justify-self:start}
+html body.mvn-site-theme.mvn-orange-home .mvn-approved-tiles{grid-column:2;grid-row:1/3;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;min-width:0}
+html body.mvn-site-theme.mvn-orange-home .mvn-approved-tiles>a{
+ display:flex;position:relative;flex-direction:column;justify-content:space-between;align-items:flex-start;gap:6px;min-height:0;
+ padding:13px;background:var(--mvn-paper-light)!important;color:var(--mvn-ink)!important;border:1px solid var(--mvn-rule);border-radius:2px;text-decoration:none
+}
+html body.mvn-site-theme.mvn-orange-home .mvn-approved-tiles>a strong{font:800 clamp(17px,1.6vw,25px)/1.05 Arial,sans-serif;letter-spacing:-.04em}
+html body.mvn-site-theme.mvn-orange-home .mvn-approved-tiles>a img{position:static;width:100%;height:auto;aspect-ratio:1;object-fit:contain;mix-blend-mode:multiply}
+html body.mvn-site-theme.mvn-orange-home .mvn-approved-tiles>a span{position:static;color:var(--mvn-ink)!important;font-size:20px!important}
+html body.mvn-site-theme.mvn-orange-home .mvn-preview-best-grid{gap:12px!important}
+html body.mvn-site-theme.mvn-orange-home .mvn-preview-best-grid>a.mvn-best-product{border-color:var(--mvn-rule)!important;border-radius:2px!important;box-shadow:none!important;background:var(--mvn-paper-light)!important}
+html body.mvn-site-theme.mvn-orange-home .mvn-best-product-photo,
+html body.mvn-site-theme.mvn-orange-home .mvn-best-product-info{background:var(--mvn-paper-light)!important}
+html body.mvn-site-theme.mvn-orange-home .mvn-best-product-photo img{background:transparent!important;mix-blend-mode:multiply}
+html body.mvn-site-theme.mvn-orange-home .mvn-best-product-info>strong{padding:0!important;letter-spacing:-.035em!important}
+html body.mvn-site-theme.mvn-orange-home .mvn-shop-guide-grid>div{border:1px solid var(--mvn-rule);border-radius:2px;padding:16px}
+html body.mvn-site-theme.mvn-orange-home .mvn-shop-guide summary{background:var(--mvn-paper-light)!important;color:var(--mvn-ink)!important;border:1px solid var(--mvn-rule)}
+html body.mvn-site-theme.mvn-orange-home :is(#mvnOpenCollection,.mvn-best-action,.gt-primary,.mvn-approved-wholesale a){
+ color:var(--mvn-ink)!important;background:transparent!important;border:1px solid var(--mvn-ink)!important;border-radius:30px!important
+}
+html body.mvn-site-theme.mvn-orange-home #mvnOpenCollection span{color:var(--mvn-ink)!important}
+html body.mvn-site-theme.mvn-orange-home .gt-banner-packs .gt-pack{mix-blend-mode:multiply}
+html body.mvn-site-theme.mvn-orange-home .mvn-approved-wholesale{display:flex;align-items:center;justify-content:space-between;gap:18px}
+html body.mvn-site-theme.mvn-orange-home .mvn-approved-wholesale h2 span{font-size:.55em}
+html body.mvn-site-theme.mvn-orange-home .mvn-approved-wholesale a{flex:none;padding:12px 18px}
+html body.mvn-site-theme.mvn-orange-home .mvn-footer-legal{border-color:var(--mvn-rule)!important}
+@media(max-width:1000px){html body.mvn-site-theme.mvn-orange-home .mvn-approved-tiles{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){
+ html body.mvn-site-theme.mvn-orange-home.retail-home>header.storehead{min-height:68px!important;padding:6px 12px!important;gap:6px!important}
+ html body.mvn-site-theme.mvn-orange-home.retail-home header.storehead .brand-identity{width:155px!important;height:52px!important;max-width:45%!important}
  html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-carousel{padding:0 14px!important}
- html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-slide{min-height:600px!important}
- html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title{top:13%;left:1%;right:1%;font-size:clamp(48px,13.5vw,98px)!important;line-height:.88!important}
- html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title em{margin-left:10%;max-width:89%;font-size:.82em!important}
- html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title-middle{margin-left:10%}
- html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-eyebrow{max-width:52%;top:3%}
- html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products .mvn-campaign-pack:first-child{top:auto;bottom:19%;right:3%;width:62%!important}
- html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products .mvn-campaign-pack:nth-child(2){left:0;bottom:19%;width:37%!important}
- html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products .mvn-campaign-pack:nth-child(3){right:1%;top:1%;width:25%!important}
- html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-photo-note{display:none}
- html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-description{width:95%;max-width:45ch;bottom:10%;font-size:12px}
- html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-cta{bottom:1%}
+ html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-slide:not([hidden]){
+ grid-template-columns:minmax(0,1fr);grid-template-rows:auto auto auto auto auto;gap:12px;min-height:0!important;padding:20px 8px 16px
+ }
+ html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title{grid-row:2;font-size:clamp(47px,13vw,92px)!important;line-height:.88!important}
+ html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title-middle{margin-left:10%;font-size:.9em!important}
+ html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-title em{margin-left:18%;font-size:.79em!important;max-width:82%}
+ html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-stage{grid-column:1;grid-row:3;max-width:420px;justify-self:center}
+ html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products{max-width:360px;align-self:center}
+ html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-products[data-count="1"] .mvn-campaign-pack:first-child{max-width:240px!important}
+ html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-description{grid-row:4;width:100%;max-width:48ch}
+ html body.mvn-site-theme.mvn-orange-home #mvnEditorial .mvn-campaign-cta{grid-row:5}
+ html body.mvn-site-theme.mvn-orange-home .mvn-home-collection-entry{grid-template-columns:minmax(0,1fr)!important;padding:24px 16px!important}
+ html body.mvn-site-theme.mvn-orange-home .mvn-home-collection-entry>div:first-child{grid-column:1;grid-row:1}
+ html body.mvn-site-theme.mvn-orange-home .mvn-approved-tiles{grid-column:1;grid-row:2}
+ html body.mvn-site-theme.mvn-orange-home #mvnOpenCollection{grid-column:1;grid-row:3}
+ html body.mvn-site-theme.mvn-orange-home .mvn-approved-wholesale{flex-direction:column;align-items:flex-start}
 }
